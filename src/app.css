@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    /* Primary - based on #95560e (Korma / rustic brown) */
+    --color-primary-50: #fdf6ee;
+    --color-primary-100: #f5e3cc;
+    --color-primary-200: #e6c397;
+    --color-primary-300: #cc9556;
+    --color-primary-400: #b5731e;
+    --color-primary-500: #95560e;
+    --color-primary-600: #7a470b;
+    --color-primary-700: #5c350a;
+    --color-primary-800: #3d2308;
+    --color-primary-900: #211305;
+
+    /* Accent - based on #b18816 (Mandalay / golden) */
+    --color-accent-50: #fdf8ea;
+    --color-accent-100: #f8ebc5;
+    --color-accent-200: #efd48a;
+    --color-accent-300: #d4a83a;
+    --color-accent-400: #b18816;
+    --color-accent-500: #946f0f;
+    --color-accent-600: #75580c;
+    --color-accent-700: #57410a;
+    --color-accent-800: #3a2c07;
+    --color-accent-900: #1f1704;
+
+    /* Moss - based on #15560b (Dark Fern / forest green) */
+    --color-moss-50: #eef5ed;
+    --color-moss-100: #d3e6d0;
+    --color-moss-200: #a3c99d;
+    --color-moss-300: #6ba361;
+    --color-moss-400: #3d7a31;
+    --color-moss-500: #24661a;
+    --color-moss-600: #15560b;
+    --color-moss-700: #114409;
+    --color-moss-800: #0d3207;
+    --color-moss-900: #081e04;
+
+    /* Warm Neutrals - parchment tones from the palette */
+    --color-warm-50: #f9f5ed;
+    --color-warm-100: #f0e8d8;
+    --color-warm-200: #e0d2b8;
+    --color-warm-300: #c9b592;
+    --color-warm-400: #ad946a;
+    --color-warm-500: #8e7550;
+    --color-warm-600: #6e5a3c;
+    --color-warm-700: #51412c;
+    --color-warm-800: #352b1e;
+    --color-warm-900: #1c1812;
+
+    /* Highlight - based on #a22a06 (Totem Pole / deep red) */
+    --color-red-50: #fdf0ec;
+    --color-red-100: #f9d5ca;
+    --color-red-200: #f0a58e;
+    --color-red-300: #d96a42;
+    --color-red-400: #bf4418;
+    --color-red-500: #a22a06;
+    --color-red-600: #841f04;
+    --color-red-700: #631703;
+    --color-red-800: #421002;
+    --color-red-900: #240901;
+
+    /* Deep accent - based on #490846 (Loulou / plum) */
+    --color-plum-50: #f5ecf5;
+    --color-plum-100: #e6cce5;
+    --color-plum-200: #c98ec8;
+    --color-plum-300: #9c4d9a;
+    --color-plum-400: #6f2a6d;
+    --color-plum-500: #490846;
+    --color-plum-600: #380636;
+    --color-plum-700: #2a0528;
+    --color-plum-800: #1c031b;
+    --color-plum-900: #0f010f;
+
+    /* Font families */
+    --font-sans:
+        "Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+/* Smooth scrolling - outside @layer to ensure it applies */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Base styles */
+@layer base {
+    body {
+        @apply bg-warm-50 text-warm-800 dark:bg-warm-900 dark:text-warm-100;
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Focus indicators for accessibility */
+    :focus-visible {
+        @apply outline-3 outline-offset-2 outline-accent-400 rounded-sm;
+    }
+
+    /* Selection colors */
+    ::selection {
+        @apply bg-accent-200 text-warm-900 dark:bg-plum-500 dark:text-warm-50;
+    }
+}
+
+/* Scroll animation utilities */
+@layer utilities {
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(1.5rem);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s ease-out;
+    }
+
+    .fade-in-up.in-view {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .fade-in-up {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+}
+
+/* Hero entrance animation */
+@keyframes hero-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-animate {
+    animation: hero-fade-in 0.8s ease-out both;
+}
+
+.hero-animate-delay-1 {
+    animation: hero-fade-in 0.8s ease-out 0.2s both;
+}
+
+.hero-animate-delay-2 {
+    animation: hero-fade-in 0.8s ease-out 0.4s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-animate,
+    .hero-animate-delay-1,
+    .hero-animate-delay-2 {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Staggered card reveal */
+.stagger-children > * {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition:
+        opacity 0.4s ease-out,
+        transform 0.4s ease-out;
+}
+
+.stagger-children.in-view > *:nth-child(1) {
+    transition-delay: 0s;
+}
+.stagger-children.in-view > *:nth-child(2) {
+    transition-delay: 0.08s;
+}
+.stagger-children.in-view > *:nth-child(3) {
+    transition-delay: 0.16s;
+}
+.stagger-children.in-view > *:nth-child(4) {
+    transition-delay: 0.24s;
+}
+.stagger-children.in-view > *:nth-child(5) {
+    transition-delay: 0.32s;
+}
+.stagger-children.in-view > *:nth-child(6) {
+    transition-delay: 0.4s;
+}
+.stagger-children.in-view > *:nth-child(7) {
+    transition-delay: 0.48s;
+}
+.stagger-children.in-view > *:nth-child(8) {
+    transition-delay: 0.56s;
+}
+
+.stagger-children.in-view > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stagger-children > * {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

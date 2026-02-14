@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Ryan Critchlow - MS Computer Science (HCI) student, researcher, and software engineer. Portfolio showcasing research, projects, and experience."
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <script>
+            (function () {
+                const saved = localStorage.getItem("theme");
+                const prefersDark = window.matchMedia(
+                    "(prefers-color-scheme: dark)",
+                ).matches;
+                if (saved === "dark" || (!saved && prefersDark)) {
+                    document.documentElement.classList.add("dark");
+                }
+            })();
+        </script>
+        %sveltekit.head%
+    </head>
+    <body data-sveltekit-prerender="true">
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>
