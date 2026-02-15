@@ -58,12 +58,12 @@
         font-family: ui-monospace, 'JetBrains Mono', monospace;
         font-size: 11px;
         line-height: 1;
-        color: var(--color-warm-400);
+        color: var(--color-warm-600);
         letter-spacing: 3px;
     }
 
     :global(.dark) .belt-track {
-        color: var(--color-warm-500);
+        color: var(--color-warm-400);
     }
 
     .box {
@@ -90,12 +90,12 @@
         font-family: ui-monospace, 'JetBrains Mono', monospace;
         font-size: 9px;
         line-height: 1;
-        color: var(--color-warm-400);
+        color: var(--color-warm-600);
         pointer-events: none;
     }
 
     :global(.dark) .belt-rollers {
-        color: var(--color-warm-500);
+        color: var(--color-warm-400);
     }
 
     .belt-animate {

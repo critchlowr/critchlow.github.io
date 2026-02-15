@@ -48,7 +48,7 @@
 	<div class="space-y-10">
 		{#each skillCategories as category}
 			<div>
-				<h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-warm-500 dark:text-warm-400">
+				<h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-warm-700 dark:text-warm-300">
 					{category.label}
 				</h3>
 				{#if category.skills}

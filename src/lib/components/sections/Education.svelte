@@ -10,11 +10,11 @@
 				<div class="flex flex-col justify-between gap-1 sm:flex-row sm:items-start">
 					<div>
 						<h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300">{edu.degree}</h3>
-						<p class="text-sm font-medium text-accent-600 dark:text-accent-400">{edu.school}</p>
+						<p class="text-sm font-medium text-accent-600 dark:text-accent-300">{edu.school}</p>
 					</div>
 					<div class="shrink-0 text-right">
-						<span class="inline-block rounded-full bg-warm-100 px-3 py-0.5 text-xs font-medium text-warm-600 dark:bg-warm-700 dark:text-warm-300">{edu.period}</span>
-						<p class="mt-1 text-xs text-warm-500 dark:text-warm-500">{edu.location}</p>
+						<span class="inline-block rounded-full bg-warm-100 px-3 py-0.5 text-sm font-medium text-warm-600 dark:bg-warm-700 dark:text-warm-300">{edu.period}</span>
+						<p class="mt-1 text-sm text-warm-600 dark:text-warm-400">{edu.location}</p>
 					</div>
 				</div>
 				{#if edu.notes && edu.notes.length > 0}

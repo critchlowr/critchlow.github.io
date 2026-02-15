@@ -13,7 +13,7 @@
 				<ContactLink {link} />
 			{/each}
 		</div>
-		<p class="mt-12 text-center text-sm text-warm-500 dark:text-plum-200">
+		<p class="mt-12 text-center text-sm text-warm-700 dark:text-plum-200">
 			&copy; {new Date().getFullYear()} Ryan Critchlow
 		</p>
 	</div>

@@ -7,7 +7,7 @@
 		<h1 class="hero-animate text-4xl font-bold tracking-tight text-primary-800 sm:text-5xl md:text-6xl dark:text-primary-200">
 			{hero.name}
 		</h1>
-		<p class="hero-animate-delay-1 mt-4 text-lg font-medium text-accent-600 sm:text-xl dark:text-accent-400">
+		<p class="hero-animate-delay-1 mt-4 text-lg font-medium text-accent-600 sm:text-xl dark:text-accent-300">
 			{hero.tagline}
 		</p>
 		<p class="hero-animate-delay-2 mx-auto mt-6 max-w-2xl text-base leading-relaxed text-warm-600 dark:text-warm-400">
