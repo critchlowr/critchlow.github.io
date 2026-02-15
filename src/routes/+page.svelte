@@ -9,8 +9,17 @@
 </script>
 
 <svelte:head>
-	<title>Ryan Critchlow | Portfolio</title>
+	<title>Ryan Critchlow | Software Engineer & HCI Researcher</title>
 	<meta name="description" content="Ryan Critchlow - MS Computer Science (HCI) student, researcher, and software engineer. Portfolio showcasing research, projects, and experience." />
+	<meta property="og:title" content="Ryan Critchlow" />
+	<meta property="og:description" content="Software Engineer & HCI Researcher" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://ryancritchlow.com" />
+	<meta property="og:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Ryan Critchlow" />
+	<meta name="twitter:description" content="Software Engineer & HCI Researcher" />
+	<meta name="twitter:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
 </svelte:head>
 
 <Hero />
