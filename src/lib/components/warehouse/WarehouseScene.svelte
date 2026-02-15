@@ -128,8 +128,8 @@
         </div>
 
         <!-- Receiving area -->
+        <div class="receiving-label">RECEIVING</div>
         <div class="receiving-area">
-            <div class="receiving-label">RECEIVING</div>
             <div class="receiving-box"></div>
             <div class="receiving-box"></div>
         </div>
@@ -184,9 +184,9 @@
         <!-- ═══ OUTBOUND (right side) ═══ -->
 
         <!-- Staging area -->
+        <div class="staging-label">STAGING</div>
         <div class="staging-area">
-            <div class="staging-label">STAGING</div>
-            {#each { length: Math.min(stagedCount, 5) } as _}
+            {#each { length: Math.min(stagedCount, 12) } as _}
                 <div class="staged-box"></div>
             {/each}
         </div>
@@ -202,7 +202,7 @@
             class:truck-arriving={truckState === 'arriving'}
         >
             <div class="truck-trailer">
-                {#each { length: Math.min(loadedCount, 6) } as _}
+                {#each { length: Math.min(loadedCount, 12) } as _}
                     <div class="loaded-box"></div>
                 {/each}
             </div>
@@ -225,11 +225,11 @@
         height: 195px;
         overflow: hidden;
         border-bottom: 1px solid var(--color-warm-200);
-        background: linear-gradient(to bottom, #87CEEB 0%, #B0E0E6 62%, transparent 62%);
+        background: linear-gradient(to bottom, #87CEEB 0%, #B0E0E6 50%, transparent 50%);
     }
 
     :global(.dark) .scene {
-        background: linear-gradient(to bottom, #1a1a3e 0%, #2a2a4e 62%, transparent 62%);
+        background: linear-gradient(to bottom, #1a1a3e 0%, #2a2a4e 50%, transparent 50%);
         border-color: var(--color-warm-700);
     }
 
@@ -252,7 +252,7 @@
         bottom: 22%;
         left: 1%;
         width: 98%;
-        height: 50%;
+        height: 62%;
         background: #D2B48C;
         border: 2px solid #8B7355;
         border-bottom: none;
@@ -262,7 +262,7 @@
 
     .building-sign {
         position: absolute;
-        top: 8px;
+        top: 6px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 12px;
@@ -277,13 +277,13 @@
 
     /* ═══ INBOUND LEFT SIDE ═══ */
 
-    /* Inbound truck — facing left (cab on left), shorter */
+    /* Inbound truck — facing left (cab on left) */
     .inbound-truck {
         position: absolute;
         bottom: 22%;
         left: 0%;
         width: 11%;
-        height: 22%;
+        height: 34%;
     }
 
     .inbound-trailer {
@@ -304,7 +304,7 @@
         left: 0;
         bottom: 10px;
         width: 38%;
-        height: 60%;
+        height: 42%;
         background: #2E86C1;
         border: 2px solid #1B4F72;
         border-radius: 4px 1px 1px 1px;
@@ -406,14 +406,15 @@
 
     .receiving-label {
         position: absolute;
-        top: -42px;
-        left: 50%;
+        bottom: calc(22% + 54px);
+        left: 26%;
         transform: translateX(-50%);
         font-size: 8px;
         font-weight: 700;
         color: #8B7355;
         font-family: var(--font-mono);
         white-space: nowrap;
+        z-index: 5;
     }
 
     :global(.dark) .receiving-label { color: var(--color-warm-400); }
@@ -576,23 +577,27 @@
         border: 1px dashed var(--color-warm-600);
         border-bottom: none;
         display: flex;
-        align-items: flex-end;
-        gap: 3px;
+        flex-wrap: wrap-reverse;
+        direction: rtl;
+        align-content: flex-start;
+        gap: 2px;
         padding: 3px;
+        overflow: hidden;
     }
 
     :global(.dark) .staging-area { border-color: var(--color-warm-400); }
 
     .staging-label {
         position: absolute;
-        top: -42px;
-        left: 50%;
+        bottom: calc(22% + 54px);
+        left: 65%;
         transform: translateX(-50%);
         font-size: 8px;
         font-weight: 700;
         color: var(--color-warm-600);
         font-family: var(--font-mono);
         white-space: nowrap;
+        z-index: 5;
     }
 
     :global(.dark) .staging-label { color: var(--color-warm-400); }
@@ -619,13 +624,13 @@
 
     :global(.dark) .outbound-dock { background: #5a4328; border-color: #3a2318; }
 
-    /* Outbound truck — shorter, cab close to trailer with small gap */
+    /* Outbound truck */
     .truck {
         position: absolute;
         bottom: 22%;
         right: 0%;
         width: 16%;
-        height: 22%;
+        height: 34%;
         transition: transform 1s ease-in-out;
     }
 
@@ -648,9 +653,12 @@
         border: 2px solid #B0B0B0;
         border-radius: 1px;
         display: flex;
-        align-items: flex-end;
+        flex-wrap: wrap-reverse;
+        direction: rtl;
+        align-content: flex-start;
         gap: 2px;
         padding: 3px;
+        overflow: hidden;
     }
 
     :global(.dark) .truck-trailer { background: #6a6a6a; border-color: #4a4a4a; }
@@ -660,7 +668,7 @@
         right: 0;
         bottom: 10px;
         width: 36%;
-        height: 65%;
+        height: 45%;
         background: #C0392B;
         border: 2px solid #96281B;
         border-radius: 1px 4px 1px 1px;

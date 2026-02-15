@@ -9,6 +9,7 @@
         inventory,
         cartPickIds,
         cartFull,
+        replenNotice,
         cartCapacity,
         onwave,
         onpick,
@@ -24,6 +25,7 @@
         inventory: InventoryItem[];
         cartPickIds: string[];
         cartFull: boolean;
+        replenNotice: { sku: string; itemName: string; qty: number } | null;
         cartCapacity: number;
         onwave: () => void;
         onpick: (pickId: string) => void;
@@ -133,6 +135,19 @@
         </div>
 
         <div class="p-4">
+            <!-- Replen scheduled notice -->
+            {#if replenNotice}
+                <div class="mb-4 rounded-lg border border-accent-300 bg-accent-50 px-4 py-3 dark:border-accent-600 dark:bg-accent-900">
+                    <div class="flex items-center gap-2">
+                        <div class="h-2.5 w-2.5 animate-pulse rounded-full bg-accent-500"></div>
+                        <p class="text-sm font-semibold text-accent-700 dark:text-accent-200">Replenishment Scheduled</p>
+                    </div>
+                    <p class="mt-1 text-xs text-accent-600 dark:text-accent-300">
+                        {replenNotice.qty}x {replenNotice.itemName} being moved to forward pick location
+                    </p>
+                </div>
+            {/if}
+
             <!-- Cart full banner -->
             {#if cartFull}
                 <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-center dark:bg-red-950">

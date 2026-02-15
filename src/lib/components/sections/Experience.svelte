@@ -10,6 +10,103 @@
     let conveyorVisible = $state(false);
     let warehouseOpen = $state(false);
 
+    // Marquee state — JS-driven for touch support
+    let marqueeTrack = $state<HTMLElement>();
+    let marqueeOffset = $state(0);
+    let marqueeVisible = $state(false);
+    let autoSpeed = 1.2; // pixels per frame
+    let currentSpeed = $state(autoSpeed);
+    let touchStartX = 0;
+    let touchStartOffset = 0;
+    let isTouching = $state(false);
+    let lastTouchX = 0;
+    let lastTouchTime = 0;
+    let touchVelocity = 0;
+    let rafId: number;
+
+    function getHalfWidth(): number {
+        if (!marqueeTrack) return 1;
+        return marqueeTrack.scrollWidth / 2;
+    }
+
+    function tickMarquee() {
+        if (!marqueeVisible) {
+            rafId = requestAnimationFrame(tickMarquee);
+            return;
+        }
+
+        if (!isTouching) {
+            // Decay touch velocity back to auto speed
+            if (Math.abs(currentSpeed - autoSpeed) > 0.05) {
+                currentSpeed += (autoSpeed - currentSpeed) * 0.03;
+            } else {
+                currentSpeed = autoSpeed;
+            }
+            marqueeOffset -= currentSpeed;
+        }
+
+        // Wrap seamlessly
+        const half = getHalfWidth();
+        if (half > 0) {
+            if (marqueeOffset <= -half) marqueeOffset += half;
+            if (marqueeOffset > 0) marqueeOffset -= half;
+        }
+
+        if (marqueeTrack) {
+            marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
+        }
+
+        rafId = requestAnimationFrame(tickMarquee);
+    }
+
+    function onTouchStart(e: TouchEvent) {
+        isTouching = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartOffset = marqueeOffset;
+        lastTouchX = touchStartX;
+        lastTouchTime = performance.now();
+        touchVelocity = 0;
+    }
+
+    function onTouchMove(e: TouchEvent) {
+        if (!isTouching) return;
+        const x = e.touches[0].clientX;
+        const now = performance.now();
+        const dt = now - lastTouchTime;
+        if (dt > 0) {
+            touchVelocity = (x - lastTouchX) / dt * 16; // normalize to ~per-frame
+        }
+        lastTouchX = x;
+        lastTouchTime = now;
+        marqueeOffset = touchStartOffset + (x - touchStartX);
+    }
+
+    function onTouchEnd() {
+        isTouching = false;
+        // Apply swipe velocity — negative because offset moves left for right-scroll
+        currentSpeed = -touchVelocity || autoSpeed;
+    }
+
+    $effect(() => {
+        rafId = requestAnimationFrame(tickMarquee);
+        return () => cancelAnimationFrame(rafId);
+    });
+
+    // Observe marquee visibility
+    let marqueeContainer = $state<HTMLElement>();
+    $effect(() => {
+        const el = marqueeContainer;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                marqueeVisible = entry.isIntersecting;
+            },
+            { threshold: 0.1 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    });
+
     const bartendingPhotos = [
         { src: '/images/Bartending/pouring.jpeg', alt: 'Ryan pouring a cocktail' },
         { src: '/images/Bartending/nickandnora_cocktail.jpeg', alt: 'Cocktail in a nick and nora glass' },
@@ -127,8 +224,14 @@
                 {/if}
             </div>
             {#if job.company.includes("Redlight")}
-                <div class="photo-marquee overflow-hidden rounded-xl">
-                    <div class="marquee-track">
+                <div
+                    class="photo-marquee min-h-[12rem] overflow-hidden rounded-xl sm:min-h-[14rem]"
+                    bind:this={marqueeContainer}
+                    ontouchstart={onTouchStart}
+                    ontouchmove={onTouchMove}
+                    ontouchend={onTouchEnd}
+                >
+                    <div class="marquee-track" bind:this={marqueeTrack}>
                         {#each bartendingPhotos as photo}
                             <button
                                 type="button"
@@ -139,7 +242,6 @@
                                     src={photo.src}
                                     alt={photo.alt}
                                     class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-                                    loading="lazy"
                                 />
                             </button>
                         {/each}
@@ -154,7 +256,6 @@
                                     src={photo.src}
                                     alt=""
                                     class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-                                    loading="lazy"
                                 />
                             </button>
                         {/each}
@@ -203,25 +304,10 @@
         display: flex;
         gap: 0.75rem;
         width: max-content;
-        animation: marquee-scroll 25s linear infinite;
+        will-change: transform;
     }
 
-    .photo-marquee:hover .marquee-track {
-        animation-play-state: paused;
-    }
-
-    @keyframes marquee-scroll {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(-50%);
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .marquee-track {
-            animation: marquee-scroll 50s linear infinite;
-        }
+    .photo-marquee {
+        touch-action: pan-y;
     }
 </style>

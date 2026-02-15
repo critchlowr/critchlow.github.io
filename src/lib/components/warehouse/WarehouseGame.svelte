@@ -52,6 +52,9 @@
     let sceneAction = $state<SceneAction>({ type: 'idle' });
     let actionKey = $state(0);
 
+    // Replen notification — shown to picker when a replen is scheduled after a partial pick
+    let replenNotice = $state<{ sku: string; itemName: string; qty: number } | null>(null);
+
     // Derived
     const stagedCount = $derived(picks.filter(p => p.status === 'Staged').length);
     const loadedCount = $derived(picks.filter(p => p.status === 'Loaded').length);
@@ -86,6 +89,7 @@
         picks = [];
         replens = [];
         cartPickIds = [];
+        replenNotice = null;
         sceneAction = { type: 'idle' };
     }
 
@@ -116,39 +120,52 @@
         // Check if this order line has unmet demand that can be replenished
         const demand = getReplenishableDemand(orderId, lineNum, orderLines, picks, inventory);
         if (demand) {
-            const replen = createReplen(demand.sku, demand.replenQty, demand.location);
-            replens = [...replens, replen];
+            // Find item name for the notice
+            const demandInv = inventory.find(i => i.sku === demand.sku);
+            const itemName = demandInv?.itemName ?? demand.sku;
 
-            triggerScene({ type: 'replen' });
+            // Show replen notice immediately
+            replenNotice = { sku: demand.sku, itemName, qty: demand.replenQty };
 
+            // Delay before kicking off the replen animation
             setTimeout(() => {
-                replen.status = 'In Transit';
-                replens = [...replens];
-            }, 400);
+                const replen = createReplen(demand.sku, demand.replenQty, demand.location);
+                replens = [...replens, replen];
 
-            setTimeout(() => {
-                completeReplen(replen, inventory, picks);
+                triggerScene({ type: 'replen' });
 
-                // Create a new Assigned pick for the replenished qty
-                const inv = inventory.find(i => i.sku === demand.sku);
-                const newPick: Pick = {
-                    pickId: nextPickId(),
-                    orderId,
-                    lineNum,
-                    sku: demand.sku,
-                    fromLocation: demand.location,
-                    qtyToPick: demand.replenQty,
-                    status: 'Assigned'
-                };
-                if (inv) inv.qtyAllocated += demand.replenQty;
-                picks = [...picks, newPick];
+                setTimeout(() => {
+                    replen.status = 'In Transit';
+                    replens = [...replens];
+                }, 400);
 
-                replens = [...replens];
-                inventory = [...inventory];
-                orderLines = [...orderLines];
+                setTimeout(() => {
+                    completeReplen(replen, inventory, picks);
 
-                refreshOrderStatuses(orders, orderLines, picks);
-                orders = [...orders];
+                    // Create a new Assigned pick for the replenished qty
+                    const inv = inventory.find(i => i.sku === demand.sku);
+                    const newPick: Pick = {
+                        pickId: nextPickId(),
+                        orderId,
+                        lineNum,
+                        sku: demand.sku,
+                        fromLocation: demand.location,
+                        qtyToPick: demand.replenQty,
+                        status: 'Assigned'
+                    };
+                    if (inv) inv.qtyAllocated += demand.replenQty;
+                    picks = [...picks, newPick];
+
+                    replens = [...replens];
+                    inventory = [...inventory];
+                    orderLines = [...orderLines];
+
+                    refreshOrderStatuses(orders, orderLines, picks);
+                    orders = [...orders];
+
+                    // Clear replen notice
+                    replenNotice = null;
+                }, 2500);
             }, 1500);
         }
     }
@@ -296,6 +313,7 @@
             {inventory}
             {cartPickIds}
             {cartFull}
+            {replenNotice}
             cartCapacity={CART_CAPACITY}
             onwave={handleWave}
             onpick={handlePick}
