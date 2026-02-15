@@ -1,5 +1,6 @@
 <a
 	href="#main-content"
+	onclick={(e) => { e.preventDefault(); document.getElementById('main-content')?.focus(); }}
 	class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-accent-500 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
 >
 	Skip to main content

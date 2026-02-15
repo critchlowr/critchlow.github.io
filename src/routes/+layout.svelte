@@ -20,7 +20,7 @@
 
 <SkipLink />
 <Nav />
-<main id="main-content">
+<main id="main-content" tabindex="-1">
 	{@render children()}
 </main>
 <Footer />
