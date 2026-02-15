@@ -9,7 +9,7 @@
 			<div class="rounded-xl border border-warm-200 bg-white p-6 transition-all hover:border-accent-300 hover:shadow-md dark:border-warm-700 dark:bg-warm-800 dark:hover:border-plum-400">
 				<div class="flex flex-col justify-between gap-1 sm:flex-row sm:items-start">
 					<div>
-						<h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300">{edu.degree}</h3>
+						<h3 class="text-lg font-bold text-primary-700 dark:text-primary-200">{edu.degree}</h3>
 						<p class="text-sm font-medium text-accent-600 dark:text-accent-300">{edu.school}</p>
 					</div>
 					<div class="shrink-0 text-right">

@@ -23,8 +23,8 @@
 >
 	<div class="fade-in-up mx-auto max-w-5xl px-4 py-16 md:py-24" use:inview>
 		<div class="mb-10 flex items-baseline gap-3">
-			<span class="text-4xl font-bold text-accent-300 dark:text-accent-700" aria-hidden="true">{number}</span>
-			<h2 id={headingId} class="text-2xl font-bold text-primary-700 dark:text-primary-300">{title}</h2>
+			<span class="text-4xl font-bold text-accent-400 dark:text-accent-300" aria-hidden="true">{number}</span>
+			<h2 id={headingId} class="text-2xl font-bold text-primary-700 dark:text-primary-200">{title}</h2>
 			<div class="h-px flex-1 bg-warm-200 dark:bg-plum-800"></div>
 		</div>
 		{@render children()}

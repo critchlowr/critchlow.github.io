@@ -42,7 +42,7 @@
 
 <header class="fixed top-0 right-0 left-0 z-40 border-b border-warm-200 bg-warm-50/90 backdrop-blur-md dark:border-warm-700 dark:bg-warm-900/90">
 	<nav aria-label="Main navigation" class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-		<a href="#hero" class="text-lg font-bold text-primary-700 dark:text-primary-300" aria-label="Ryan Critchlow - back to top">
+		<a href="#hero" class="text-lg font-bold text-primary-700 dark:text-primary-200" aria-label="Ryan Critchlow - back to top">
 			RC
 		</a>
 

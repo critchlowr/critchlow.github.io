@@ -43,7 +43,7 @@
                 >
                     <div>
                         <h3
-                            class="text-lg font-semibold text-primary-700 dark:text-primary-300"
+                            class="text-lg font-bold text-primary-700 dark:text-primary-200"
                         >
                             {job.title}
                         </h3>
