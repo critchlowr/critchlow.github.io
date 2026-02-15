@@ -12,7 +12,7 @@
         <div class="belt-content" class:belt-animate={visible}>
             <!-- First segment -->
             <div class="belt-segment">
-                <div class="belt-track">{#each { length: 200 } as _}-{/each}</div>
+                <div class="belt-track"></div>
                 <div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
                 <div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
                 <div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
@@ -20,7 +20,7 @@
             </div>
             <!-- Second segment (identical copy for seamless loop) -->
             <div class="belt-segment">
-                <div class="belt-track">{#each { length: 200 } as _}-{/each}</div>
+                <div class="belt-track"></div>
                 <div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
                 <div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
                 <div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
@@ -29,8 +29,8 @@
         </div>
         <!-- Static layer: rollers stay fixed in place -->
         <div class="belt-rollers">
-            {#each { length: 40 } as _}
-                <span>o</span>
+            {#each { length: 30 } as _}
+                <span class="roller"></span>
             {/each}
         </div>
     </div>
@@ -54,16 +54,13 @@
         position: absolute;
         bottom: 6px;
         left: 0;
-        white-space: nowrap;
-        font-family: ui-monospace, 'JetBrains Mono', monospace;
-        font-size: 11px;
-        line-height: 1;
-        color: var(--color-warm-600);
-        letter-spacing: 3px;
+        width: 100%;
+        height: 0;
+        border-top: 2px dashed var(--color-warm-600);
     }
 
     :global(.dark) .belt-track {
-        color: var(--color-warm-400);
+        border-color: var(--color-warm-400);
     }
 
     .box {
@@ -86,16 +83,20 @@
         z-index: 1;
         display: flex;
         justify-content: space-between;
-        padding: 0 2px;
-        font-family: ui-monospace, 'JetBrains Mono', monospace;
-        font-size: 9px;
-        line-height: 1;
-        color: var(--color-warm-600);
+        padding: 0 4px;
         pointer-events: none;
     }
 
-    :global(.dark) .belt-rollers {
-        color: var(--color-warm-400);
+    .roller {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        border: 1.5px solid var(--color-warm-600);
+    }
+
+    :global(.dark) .roller {
+        border-color: var(--color-warm-400);
     }
 
     .belt-animate {
