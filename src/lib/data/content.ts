@@ -171,16 +171,6 @@ export const projects: Project[] = [
   },
 ];
 
-export const interests = [
-  { label: "Hiking", emoji: "🥾" },
-  { label: "Running & Half Marathons", emoji: "🏃" },
-  { label: "Craft Cocktails", emoji: "🍸" },
-  { label: "Road Biking", emoji: "🚴" },
-  { label: "Chocolate Lab Adventures", emoji: "🐕" },
-  { label: "Reading", emoji: "📚" },
-  { label: "Video Games", emoji: "🎮" },
-];
-
 export const contact: ContactLink[] = [
   {
     label: "Email",

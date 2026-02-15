@@ -5,7 +5,7 @@
 	import Education from '$lib/components/sections/Education.svelte';
 	import Skills from '$lib/components/sections/Skills.svelte';
 	import Projects from '$lib/components/sections/Projects.svelte';
-	import Interests from '$lib/components/sections/Interests.svelte';
+
 </script>
 
 <svelte:head>
@@ -28,4 +28,3 @@
 <Education />
 <Skills />
 <Projects />
-<Interests />
