@@ -5,7 +5,7 @@
 <div
     class="select-none overflow-hidden rounded-b-xl bg-warm-100 py-3 dark:bg-warm-800"
     role="img"
-    aria-label="Animated conveyor belt with boxes"
+    aria-label="Decorative animated conveyor belt with shipping boxes"
 >
     <div class="relative h-10" aria-hidden="true">
         <!-- Animated layer: belt track + boxes scroll together -->
