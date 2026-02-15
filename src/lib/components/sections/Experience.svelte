@@ -3,9 +3,12 @@
     import { inview } from "$lib/actions/inview";
     import SectionWrapper from "$lib/components/ui/SectionWrapper.svelte";
     import ConveyorBelt from "$lib/components/ui/ConveyorBelt.svelte";
+    import WarehouseModal from "$lib/components/warehouse/WarehouseModal.svelte";
+    import WarehouseGame from "$lib/components/warehouse/WarehouseGame.svelte";
 
     let conveyorEl = $state<HTMLElement>();
     let conveyorVisible = $state(false);
+    let warehouseOpen = $state(false);
 
     const bartendingPhotos = [
         { src: '/images/Bartending/pouring.jpeg', alt: 'Ryan pouring a cocktail' },
@@ -106,6 +109,18 @@
                     </ul>
                 {/if}
                 {#if job.company.includes("Körber")}
+                    <div class="mt-4 flex justify-center">
+                        <button
+                            type="button"
+                            class="inline-flex items-center gap-2 rounded-lg border border-accent-300 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-700 transition-colors hover:bg-accent-100 hover:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 dark:border-accent-500 dark:bg-accent-900 dark:text-accent-100 dark:hover:bg-accent-800 dark:focus:ring-accent-500 dark:focus:ring-offset-warm-800"
+                            onclick={() => { warehouseOpen = true; }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm3 1h6v4H7V5zm2 6h2v2H9v-2z" clip-rule="evenodd" />
+                            </svg>
+                            Try the WMS Simulator
+                        </button>
+                    </div>
                     <div class="-mx-6 -mb-6 mt-4" bind:this={conveyorEl}>
                         <ConveyorBelt visible={conveyorVisible} />
                     </div>
@@ -149,6 +164,10 @@
         {/each}
     </div>
 </SectionWrapper>
+
+<WarehouseModal open={warehouseOpen} onclose={() => { warehouseOpen = false; }}>
+    <WarehouseGame onclose={() => { warehouseOpen = false; }} />
+</WarehouseModal>
 
 {#if lightboxOpen}
     <div
