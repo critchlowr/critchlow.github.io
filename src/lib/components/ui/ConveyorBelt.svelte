@@ -10,17 +10,17 @@
     <div class="relative h-10" aria-hidden="true">
         <!-- Animated layer: belt track + boxes scroll together -->
         <div class="belt-content" class:belt-animate={visible}>
-            <!-- First segment -->
+            <!-- Continuous track across full width -->
+            <div class="belt-track"></div>
+            <!-- First segment boxes -->
             <div class="belt-segment">
-                <div class="belt-track"></div>
                 <div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
                 <div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
                 <div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
                 <div class="box box-bounce-d bottom-3 left-[72%] h-4 w-4"></div>
             </div>
-            <!-- Second segment (identical copy for seamless loop) -->
+            <!-- Second segment boxes (seamless loop) -->
             <div class="belt-segment">
-                <div class="belt-track"></div>
                 <div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
                 <div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
                 <div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
@@ -55,12 +55,24 @@
         bottom: 6px;
         left: 0;
         width: 100%;
-        height: 0;
-        border-top: 2px dashed var(--color-warm-600);
+        height: 2px;
+        background: repeating-linear-gradient(
+            to right,
+            var(--color-warm-600) 0px,
+            var(--color-warm-600) 6px,
+            transparent 6px,
+            transparent 12px
+        );
     }
 
     :global(.dark) .belt-track {
-        border-color: var(--color-warm-400);
+        background: repeating-linear-gradient(
+            to right,
+            var(--color-warm-400) 0px,
+            var(--color-warm-400) 6px,
+            transparent 6px,
+            transparent 12px
+        );
     }
 
     .box {

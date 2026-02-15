@@ -111,7 +111,7 @@
                     </div>
                 {/if}
             </div>
-            {#if job.company.includes("Aslan")}
+            {#if job.company.includes("Redlight")}
                 <div class="photo-marquee overflow-hidden rounded-xl">
                     <div class="marquee-track">
                         {#each bartendingPhotos as photo}
