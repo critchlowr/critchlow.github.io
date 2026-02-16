@@ -98,6 +98,7 @@
                 type="button"
                 class="mt-4 rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 dark:bg-accent-600 dark:hover:bg-accent-500 dark:focus:ring-offset-warm-800"
                 onclick={onwave}
+                aria-label="Wave orders — allocate inventory and create pick tasks"
             >
                 Wave Orders
             </button>
@@ -128,6 +129,7 @@
                     type="button"
                     class="rounded bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue-600"
                     onclick={onstagecart}
+                    aria-label="Stage cart — move picked items to staging area"
                 >
                     Stage Cart
                 </button>
@@ -214,6 +216,7 @@
                                 : 'cursor-not-allowed bg-warm-300 dark:bg-warm-600'}"
                             onclick={() => onpick(currentPick.pickId)}
                             disabled={!locationHasEnough}
+                            aria-label="Confirm pick of {currentPick.qtyToPick} {currentLine.itemName} from {currentPick.fromLocation}"
                         >
                             Confirm Pick
                         </button>
@@ -221,6 +224,7 @@
                             type="button"
                             class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
                             onclick={() => onreportempty(currentPick.pickId)}
+                            aria-label="Report location {currentPick.fromLocation} empty"
                         >
                             Report Empty
                         </button>
@@ -273,6 +277,7 @@
                 type="button"
                 class="mt-4 rounded-lg bg-plum-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-plum-600 focus:outline-none focus:ring-2 focus:ring-plum-400 focus:ring-offset-2 dark:focus:ring-offset-warm-800"
                 onclick={onloadall}
+                aria-label="Load truck — move staged items into outbound truck"
             >
                 Load Truck
             </button>
@@ -292,6 +297,7 @@
                 type="button"
                 class="mt-4 rounded-lg bg-moss-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-moss-600 focus:outline-none focus:ring-2 focus:ring-moss-400 focus:ring-offset-2 dark:focus:ring-offset-warm-800"
                 onclick={onshipall}
+                aria-label="Ship all loaded orders"
             >
                 Ship All Orders
             </button>

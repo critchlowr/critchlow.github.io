@@ -229,6 +229,8 @@
                 <div
                     class="photo-marquee min-h-[12rem] overflow-hidden rounded-xl sm:min-h-[14rem]"
                     bind:this={marqueeContainer}
+                    role="region"
+                    aria-label="Bartending photo carousel"
                     ontouchstart={onTouchStart}
                     ontouchmove={onTouchMove}
                     ontouchend={onTouchEnd}
@@ -253,6 +255,7 @@
                                 onclick={() => openLightbox(photo.src, photo.alt)}
                                 class="h-48 flex-shrink-0 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400 sm:h-56"
                                 tabindex="-1"
+                                aria-hidden="true"
                             >
                                 <img
                                     src={photo.src}
@@ -292,12 +295,14 @@
                 <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
         </button>
-        <img
-            src={lightboxSrc}
-            alt={lightboxAlt}
-            class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-            onclick={(e) => e.stopPropagation()}
-        />
+        <!-- eslint-disable-next-line -- stop click from closing lightbox -->
+        <div onclick={(e) => e.stopPropagation()} role="presentation">
+            <img
+                src={lightboxSrc}
+                alt={lightboxAlt}
+                class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+            />
+        </div>
     </div>
 {/if}
 

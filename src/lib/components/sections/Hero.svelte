@@ -14,7 +14,7 @@
 			{hero.summary}
 		</p>
 		<div class="hero-animate-delay-2 mt-8">
-			<a href="#contact" onclick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }} class="inline-block rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-500 dark:bg-accent-600 dark:hover:bg-red-600">
+			<a href="#contact" class="inline-block rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-500 dark:bg-accent-600 dark:hover:bg-red-600">
 				Get in Touch
 			</a>
 		</div>

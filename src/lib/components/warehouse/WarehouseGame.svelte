@@ -274,6 +274,7 @@
             type="button"
             class="rounded-lg px-3 py-1.5 text-xs font-medium text-warm-600 transition-colors hover:bg-warm-200 dark:text-warm-400 dark:hover:bg-warm-700"
             onclick={reset}
+            aria-label="Reset warehouse simulation"
         >
             Reset
         </button>
