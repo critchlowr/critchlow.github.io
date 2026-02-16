@@ -116,6 +116,8 @@
         { src: '/images/Bartending/justinandryan1.jpeg', alt: 'Ryan and coworker Justin' },
         { src: '/images/Bartending/justinandryan2.jpeg', alt: 'Ryan and Justin behind the bar' },
         { src: '/images/Bartending/hollyandryan.jpeg', alt: 'Ryan and coworker Holly' },
+        { src: '/images/Bartending/audreyandhannahandryan.jpeg', alt: 'Ryan with Audrey and Hannah' },
+        { src: '/images/Bartending/maxandryan.jpeg', alt: 'Ryan and Max' },
     ];
 
     let lightboxSrc = $state('');
