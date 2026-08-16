@@ -3,6 +3,9 @@
 	import { inview } from '$lib/actions/inview';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
+	import Card from '$lib/components/ui/Card.svelte';
+	import Badge from '$lib/components/ui/Badge.svelte';
+	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
 
 	let conveyorEl = $state<HTMLElement>();
@@ -160,9 +163,7 @@
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
 	<div class="stagger-children space-y-4" use:inview>
 		{#each experience as job (job.company + job.title)}
-			<div
-				class="group border-warm-200 hover:border-accent-300 dark:border-warm-700 dark:bg-warm-800 dark:hover:border-plum-400 rounded-xl border bg-white p-6 transition-all hover:shadow-md"
-			>
+			<Card interactive class="group p-6">
 				<div class="flex flex-col justify-between gap-1 sm:flex-row sm:items-start">
 					<div>
 						<h3 class="text-primary-700 dark:text-primary-200 text-lg font-bold">
@@ -173,10 +174,7 @@
 						</p>
 					</div>
 					<div class="shrink-0 text-right">
-						<span
-							class="bg-warm-100 text-warm-600 dark:bg-warm-700 dark:text-warm-300 inline-block rounded-full px-3 py-0.5 text-sm font-medium"
-							>{job.period}</span
-						>
+						<Badge tone="warm" size="sm">{job.period}</Badge>
 						<p class="text-warm-600 dark:text-warm-400 mt-1 text-sm">
 							{job.location}
 						</p>
@@ -196,25 +194,16 @@
 				{#if job.tags && job.tags.length > 0}
 					<div class="mt-4 flex flex-wrap gap-1.5">
 						{#each job.tags as tag (tag)}
-							<span
-								class="bg-moss-100 text-moss-700 dark:bg-moss-800 dark:text-moss-200 rounded-full px-2.5 py-0.5 text-sm font-medium"
-								>{tag}</span
-							>
+							<Badge>{tag}</Badge>
 						{/each}
 					</div>
 				{/if}
 				{#if job.href}
 					<div class="mt-4">
-						<a
-							href={job.href}
-							class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
-						>
-							{job.hrefLabel ?? 'Read more'}
-							<span aria-hidden="true">&rarr;</span>
-						</a>
+						<ArrowLink href={job.href} label={job.hrefLabel ?? 'Read more'} size="sm" />
 					</div>
 				{/if}
-				{#if job.company.includes('Körber')}
+				{#if job.showSimulator}
 					<div class="mt-4 flex justify-center">
 						<button
 							type="button"
@@ -241,8 +230,8 @@
 						<ConveyorBelt visible={conveyorVisible} />
 					</div>
 				{/if}
-			</div>
-			{#if job.company.includes('Redlight')}
+			</Card>
+			{#if job.showBartendingPhotos}
 				<div
 					class="photo-marquee min-h-[12rem] overflow-hidden rounded-xl sm:min-h-[14rem]"
 					bind:this={marqueeContainer}

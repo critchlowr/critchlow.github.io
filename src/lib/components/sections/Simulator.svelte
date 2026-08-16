@@ -1,5 +1,7 @@
 <script lang="ts">
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
+	import Card from '$lib/components/ui/Card.svelte';
+	import Badge from '$lib/components/ui/Badge.svelte';
 	import WarehouseModal from '$lib/components/warehouse/WarehouseModal.svelte';
 	import WarehouseGame from '$lib/components/warehouse/WarehouseGame.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
@@ -10,9 +12,7 @@
 </script>
 
 <SectionWrapper id="simulator" headingId="simulator-heading" number="04" title="WMS Simulator" alt>
-	<div
-		class="border-warm-200 dark:border-warm-700 dark:bg-warm-800 rounded-xl border bg-white p-6 md:p-8"
-	>
+	<Card class="p-6 md:p-8">
 		<div class="max-w-2xl space-y-4">
 			<p class="text-warm-700 dark:text-warm-300 leading-relaxed">
 				For three years I administered warehouse management systems for four enterprise accounts.
@@ -42,11 +42,7 @@
 				>
 					{#each steps as step, i (step)}
 						<li class="flex items-center gap-1">
-							<span
-								class="bg-moss-100 text-moss-700 dark:bg-moss-800 dark:text-moss-200 rounded-full px-3 py-1 text-sm font-medium"
-							>
-								{step}
-							</span>
+							<Badge size="md">{step}</Badge>
 							{#if i < steps.length - 1}
 								<span class="text-warm-400 dark:text-warm-500" aria-hidden="true">&rarr;</span>
 							{/if}
@@ -92,7 +88,7 @@
 				</button>
 			</div>
 		</div>
-	</div>
+	</Card>
 </SectionWrapper>
 
 <WarehouseModal open={simulator.open} onclose={() => simulator.close()}>

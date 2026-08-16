@@ -73,7 +73,8 @@ export const experience: Experience[] = [
 			'Wrote and maintained knowledgebase documentation for every account I managed, and trained the secondary analysts on each account from it',
 			'Co-led a four-person initiative to develop a 30/60/90 onboarding framework, cutting new-hire ramp time by 50%, and trained four enterprise customers through a NetSuite-to-ServiceNow migration'
 		],
-		tags: ['Stakeholder Mgmt', 'Requirements', 'T-SQL', 'Reporting']
+		tags: ['Stakeholder Mgmt', 'Requirements', 'T-SQL', 'Reporting'],
+		showSimulator: true
 	},
 	{
 		title: 'Graduate Teaching Assistant',
@@ -91,7 +92,8 @@ export const experience: Experience[] = [
 		company: 'Redlight',
 		location: 'Bellingham, WA',
 		period: '2023 – 2025',
-		bullets: ['Made cocktails in a fast-paced downtown bar to finance graduate school']
+		bullets: ['Made cocktails in a fast-paced downtown bar to finance graduate school'],
+		showBartendingPhotos: true
 	},
 	{
 		title: 'Bartender',

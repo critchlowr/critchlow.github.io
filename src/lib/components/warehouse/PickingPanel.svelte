@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Order, OrderLine, Pick, InventoryItem, GamePhase } from '$lib/data/warehouse';
+	import Card from '$lib/components/ui/Card.svelte';
 
 	export interface PackQueueEntry {
 		orderId: string;
@@ -107,7 +108,7 @@
 	);
 </script>
 
-<div class="border-warm-200 dark:border-warm-700 dark:bg-warm-800 rounded-xl border bg-white">
+<Card>
 	<!-- ═══ PRE-WAVE ═══ -->
 	{#if gamePhase === 'pre-wave'}
 		<div class="p-4 py-6 text-center">
@@ -479,4 +480,4 @@
 			</button>
 		</div>
 	{/if}
-</div>
+</Card>

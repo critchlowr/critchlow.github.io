@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { publications, credentials } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
+	import Card from '$lib/components/ui/Card.svelte';
+	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 
 	const peerReviewed = publications.filter((p) => p.status === 'published');
 	const inPreparation = publications.filter((p) => p.status === 'in-preparation');
@@ -23,9 +25,7 @@
 					</h3>
 					<div class="space-y-4">
 						{#each group.items as pub (pub.title)}
-							<article
-								class="border-warm-200 hover:border-accent-300 dark:border-warm-700 dark:bg-warm-800 dark:hover:border-plum-400 rounded-xl border bg-white p-6 transition-all hover:shadow-md"
-							>
+							<Card as="article" interactive class="p-6">
 								<h4 class="text-primary-700 dark:text-primary-200 text-lg leading-snug font-bold">
 									{pub.title}
 								</h4>
@@ -48,16 +48,10 @@
 								</p>
 								{#if pub.href}
 									<p class="mt-3">
-										<a
-											href={pub.href}
-											class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-base font-semibold underline-offset-4 hover:underline"
-										>
-											{pub.hrefLabel ?? 'Read more'}
-											<span aria-hidden="true">&rarr;</span>
-										</a>
+										<ArrowLink href={pub.href} label={pub.hrefLabel ?? 'Read more'} />
 									</p>
 								{/if}
-							</article>
+							</Card>
 						{/each}
 					</div>
 				</div>

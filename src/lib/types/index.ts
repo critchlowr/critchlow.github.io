@@ -8,6 +8,10 @@ export interface Experience {
 	tags?: string[];
 	href?: string;
 	hrefLabel?: string;
+	/** Shows the "Try the WMS Simulator" button and the conveyor belt on this card. */
+	showSimulator?: boolean;
+	/** Shows the bartending photo marquee on this card. */
+	showBartendingPhotos?: boolean;
 }
 
 export interface Education {

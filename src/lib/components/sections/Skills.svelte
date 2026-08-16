@@ -2,6 +2,7 @@
 	import { inview } from '$lib/actions/inview';
 	import { skills, tools } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
+	import Badge from '$lib/components/ui/Badge.svelte';
 
 	const devIconBase = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons';
 </script>
@@ -17,11 +18,7 @@
 				</h3>
 				<div class="flex flex-wrap gap-2">
 					{#each category.items as item (item)}
-						<span
-							class="bg-moss-100 text-moss-700 dark:bg-moss-800 dark:text-moss-200 rounded-full px-4 py-1.5 text-sm font-medium"
-						>
-							{item}
-						</span>
+						<Badge size="lg">{item}</Badge>
 					{/each}
 				</div>
 			</div>
