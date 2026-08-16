@@ -135,7 +135,11 @@ export const education: Education[] = [
 export const credentials = {
 	orcid: '0009-0007-7323-9177',
 	orcidHref: 'https://orcid.org/0009-0007-7323-9177',
-	affiliation: 'Association for Computing Machinery (ACM), 2026–present'
+	// ORCID publishes the iD icon for exactly this use and licenses it openly, so it
+	// is served from static/. ACM's logo is a restricted trademark, so the membership
+	// chip is set typographically instead — see Research.svelte.
+	membership: 'ACM Member',
+	membershipDetail: 'Association for Computing Machinery, 2026–present'
 };
 
 export const skills: SkillCategory[] = [

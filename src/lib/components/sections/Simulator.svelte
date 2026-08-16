@@ -28,10 +28,17 @@
 				job.
 			</p>
 
-			<div class="pt-2">
+			<!--
+				One grid so the exception branch can start in the same column as Pick.
+				Each step is a column; the branch is a final list item placed at column 2
+				(Pick) and spanning to the end, which keeps it aligned no matter how the
+				pill widths change. Scrolls inside itself on narrow screens.
+			-->
+			<div class="overflow-x-auto pt-2">
 				<ol
-					class="flex flex-wrap items-center gap-x-1 gap-y-2"
-					aria-label="Warehouse fulfillment sequence"
+					class="grid w-max items-center gap-x-1 gap-y-2"
+					style="grid-template-columns: repeat({steps.length}, auto);"
+					aria-label="Warehouse fulfillment sequence, with the exception path when a pick location is empty"
 				>
 					{#each steps as step, i (step)}
 						<li class="flex items-center gap-1">
@@ -45,34 +52,21 @@
 							{/if}
 						</li>
 					{/each}
-				</ol>
 
-				<!-- Exception branch, hanging off Pick -->
-				<div class="mt-2 flex items-center gap-1 pl-6">
-					<span class="text-warm-400 dark:text-warm-500" aria-hidden="true">&#8627;</span>
-					<span class="text-warm-500 dark:text-warm-400 mr-1 text-sm">location empty</span>
-					<ol
-						class="flex flex-wrap items-center gap-x-1 gap-y-2"
-						aria-label="Exception path when a pick location is empty"
-					>
-						{#each branch as step, i (step)}
-							<li class="flex items-center gap-1">
-								<span
-									class="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700 dark:bg-red-950 dark:text-red-300"
-								>
-									{step}
-								</span>
-								{#if i < branch.length - 1}
-									<span class="text-warm-400 dark:text-warm-500" aria-hidden="true">&rarr;</span>
-								{/if}
-							</li>
-						{/each}
-						<li class="flex items-center gap-1">
+					<li class="flex items-center gap-1" style="grid-column: 2 / -1;">
+						<span class="text-warm-400 dark:text-warm-500" aria-hidden="true">&#8627;</span>
+						<span class="text-warm-500 dark:text-warm-400 mr-1 text-sm">location empty</span>
+						{#each branch as step (step)}
+							<span
+								class="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700 dark:bg-red-950 dark:text-red-300"
+							>
+								{step}
+							</span>
 							<span class="text-warm-400 dark:text-warm-500" aria-hidden="true">&rarr;</span>
-							<span class="text-warm-500 dark:text-warm-400 text-sm">back to Pick</span>
-						</li>
-					</ol>
-				</div>
+						{/each}
+						<span class="text-warm-500 dark:text-warm-400 text-sm">back to Pick</span>
+					</li>
+				</ol>
 			</div>
 
 			<div class="pt-2">

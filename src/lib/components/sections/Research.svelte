@@ -64,15 +64,38 @@
 			{/if}
 		{/each}
 
-		<p class="text-warm-600 dark:text-warm-400 text-sm">
-			ORCID
-			<a
-				href={credentials.orcidHref}
-				class="text-accent-700 dark:text-accent-300 font-medium underline-offset-4 hover:underline"
-				rel="noopener noreferrer">{credentials.orcid}</a
+		<ul class="flex flex-wrap items-center gap-x-3 gap-y-2">
+			<li>
+				<a
+					href={credentials.orcidHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="border-warm-200 hover:border-accent-300 dark:border-warm-700 dark:hover:border-accent-600 inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5 text-sm transition-colors"
+				>
+					<img src="/images/orcid-id.svg" alt="" class="h-4 w-4" width="16" height="16" />
+					<span class="text-warm-600 dark:text-warm-400">
+						<span class="sr-only">ORCID iD:</span>
+						{credentials.orcid}
+					</span>
+				</a>
+			</li>
+			<li
+				class="border-warm-200 dark:border-warm-700 inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5"
 			>
-			<span class="text-warm-400 dark:text-warm-600 mx-2" aria-hidden="true">·</span>
-			{credentials.affiliation}
-		</p>
+				<!--
+					ACM's logo is a restricted trademark, so this is a typographic mark rather
+					than the corporate logo.
+				-->
+				<span
+					class="bg-warm-200 text-warm-700 dark:bg-warm-700 dark:text-warm-200 inline-flex h-4 items-center rounded-full px-1.5 text-[0.6rem] font-bold tracking-tight"
+					aria-hidden="true"
+				>
+					ACM
+				</span>
+				<span class="text-warm-600 dark:text-warm-400 text-sm">
+					{credentials.membershipDetail}
+				</span>
+			</li>
+		</ul>
 	</div>
 </SectionWrapper>

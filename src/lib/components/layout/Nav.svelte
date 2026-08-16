@@ -16,35 +16,50 @@
 		return i === -1 ? '' : href.slice(i);
 	}
 
+	// Scrollspy. Recomputed from scratch on every frame rather than accumulated,
+	// so no state can get stuck: the active link is always a pure function of the
+	// current scroll position.
 	$effect(() => {
-		const sections = navLinks
-			.map((l) => document.querySelector(hashOf(l.href)) as HTMLElement)
-			.filter(Boolean);
+		const hashes = navLinks.map((l) => hashOf(l.href)).filter(Boolean);
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						activeSection = '#' + entry.target.id;
-					}
+		function update() {
+			// A section is "current" once its top passes this line down the viewport.
+			const line = window.innerHeight * 0.3;
+
+			let current = '';
+			for (const hash of hashes) {
+				const el = document.querySelector(hash);
+				if (el && el.getBoundingClientRect().top <= line) {
+					current = hash;
 				}
-			},
-			{ rootMargin: '-20% 0px -40% 0px' }
-		);
-
-		sections.forEach((s) => observer.observe(s));
-
-		function handleScroll() {
-			if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
-				activeSection = '#contact';
 			}
+
+			// The last section can be too short to ever reach the line, so at the
+			// bottom of the page it wins. Re-evaluated every frame, so scrolling back
+			// up releases it.
+			const atBottom =
+				window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+			if (atBottom && hashes.length > 0) {
+				current = hashes[hashes.length - 1];
+			}
+
+			activeSection = current;
 		}
 
-		window.addEventListener('scroll', handleScroll, { passive: true });
+		let frame = 0;
+		function schedule() {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(update);
+		}
+
+		update();
+		window.addEventListener('scroll', schedule, { passive: true });
+		window.addEventListener('resize', schedule, { passive: true });
 
 		return () => {
-			observer.disconnect();
-			window.removeEventListener('scroll', handleScroll);
+			cancelAnimationFrame(frame);
+			window.removeEventListener('scroll', schedule);
+			window.removeEventListener('resize', schedule);
 		};
 	});
 </script>
