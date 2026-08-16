@@ -4,7 +4,10 @@
 	export type SceneAction =
 		| { type: 'idle' }
 		| { type: 'pick'; fromLocation: string }
-		| { type: 'stage' }
+		/** `boxes` is the cart's contents at the moment staging started. The model has
+		    already emptied the cart by then, so the scene needs it passed in to show
+		    the cart being wheeled over with something in it. */
+		| { type: 'stage'; boxes: number }
 		| { type: 'pack' }
 		| { type: 'load' }
 		| { type: 'ship' }
@@ -12,12 +15,14 @@
 
 	let {
 		action = { type: 'idle' } as SceneAction,
+		cartCount = 0,
 		stagedCount = 0,
 		packedCount = 0,
 		loadedCount = 0,
 		inventory = [] as InventoryItem[]
 	}: {
 		action: SceneAction;
+		cartCount: number;
 		stagedCount: number;
 		packedCount: number;
 		loadedCount: number;
@@ -43,14 +48,26 @@
 	// Pack station flash when an order gets sealed
 	let packFlash = $state(false);
 
+	// The picker's cart. It sits where the picker idles, fills as items are picked,
+	// and gets wheeled to staging when the cart is staged.
+	let cartPos = $state<'at-pick' | 'at-staging'>('at-pick');
+	let cartDisplay = $state(0);
+	let wheelingCart = $state(false);
+
 	$effect(() => {
 		const a = action;
 		if (a.type === 'pick') animatePick();
-		else if (a.type === 'stage') animateStage();
+		else if (a.type === 'stage') animateStage(a.boxes);
 		else if (a.type === 'pack') animatePack();
 		else if (a.type === 'load') animateLoad();
 		else if (a.type === 'ship') animateShip();
 		else if (a.type === 'replen') animateReplen();
+	});
+
+	// Declared after the action effect so that when a stage begins, this sees
+	// wheelingCart already set and leaves the in-transit contents alone.
+	$effect(() => {
+		if (!wheelingCart) cartDisplay = cartCount;
 	});
 
 	function animatePick() {
@@ -66,13 +83,21 @@
 		}, 1000);
 	}
 
-	function animateStage() {
-		workerCarrying = true;
+	// The picker wheels the loaded cart over to staging, unloads it, and brings it back.
+	function animateStage(boxes: number) {
+		wheelingCart = true;
+		cartDisplay = boxes;
+		workerCarrying = false;
 		workerPos = 'at-staging';
+		cartPos = 'at-staging';
 		setTimeout(() => {
-			workerCarrying = false;
+			cartDisplay = 0;
+		}, 700);
+		setTimeout(() => {
 			workerPos = 'idle';
-		}, 800);
+			cartPos = 'at-pick';
+			wheelingCart = false;
+		}, 1000);
 	}
 
 	function animatePack() {
@@ -209,6 +234,23 @@
 			{#if workerCarrying}
 				<div class="carried-box"></div>
 			{/if}
+		</div>
+
+		<!-- Picker's cart. Sits where the picker idles, fills as items are picked, and
+		     gets wheeled to staging when the cart is staged. -->
+		<div
+			class="cart"
+			class:cart-at-pick={cartPos === 'at-pick'}
+			class:cart-at-staging={cartPos === 'at-staging'}
+		>
+			<div class="cart-basket">
+				{#each { length: Math.min(cartDisplay, 8) } as _, i (i)}
+					<div class="cart-box"></div>
+				{/each}
+			</div>
+			<div class="cart-handle"></div>
+			<div class="cart-wheel cw-1"></div>
+			<div class="cart-wheel cw-2"></div>
 		</div>
 
 		<!-- ═══ OUTBOUND (right side) ═══ -->
@@ -666,6 +708,93 @@
 		height: 12px;
 		background: #2f4f4f;
 		border-radius: 0 0 3px 3px;
+	}
+
+	/* ── Picker's cart ────────────────────────────────────────── */
+
+	.cart {
+		position: absolute;
+		bottom: 22%;
+		width: 26px;
+		height: 20px;
+		transition: left 0.4s ease-in-out;
+		z-index: 9;
+	}
+
+	/* Just right of the picker's idle spot (52%), so they stand at the cart. */
+	.cart-at-pick {
+		left: 56%;
+	}
+
+	.cart-at-staging {
+		left: 63%;
+	}
+
+	.cart-basket {
+		position: absolute;
+		bottom: 4px;
+		left: 0;
+		display: flex;
+		width: 26px;
+		height: 14px;
+		flex-wrap: wrap-reverse;
+		align-content: flex-start;
+		gap: 1px;
+		overflow: hidden;
+		padding: 1px;
+		border: 1px solid var(--color-warm-600);
+		border-top: none;
+		background: var(--color-warm-100);
+	}
+
+	:global(.dark) .cart-basket {
+		border-color: var(--color-warm-400);
+		background: var(--color-warm-700);
+	}
+
+	.cart-handle {
+		position: absolute;
+		right: -3px;
+		bottom: 4px;
+		width: 4px;
+		height: 17px;
+		border-top: 1px solid var(--color-warm-600);
+		border-right: 1px solid var(--color-warm-600);
+	}
+
+	:global(.dark) .cart-handle {
+		border-color: var(--color-warm-400);
+	}
+
+	.cart-wheel {
+		position: absolute;
+		bottom: 0;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--color-warm-700);
+	}
+
+	:global(.dark) .cart-wheel {
+		background: var(--color-warm-400);
+	}
+
+	.cw-1 {
+		left: 3px;
+	}
+
+	.cw-2 {
+		right: 5px;
+	}
+
+	/* Loose cartons, matching the staged box — they have not been packed yet. */
+	.cart-box {
+		width: 5px;
+		height: 5px;
+		flex-shrink: 0;
+		border: 1px solid var(--color-red-500);
+		border-radius: 1px;
+		background: var(--color-red-100);
 	}
 
 	.carried-box {

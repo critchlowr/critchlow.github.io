@@ -243,6 +243,10 @@
 	}
 
 	function handleStageCart() {
+		// Captured before the cart is emptied, so the scene can show the cart being
+		// wheeled to staging with the items still in it.
+		const carried = cartPickIds.length;
+
 		stageAll(picks);
 		cartPickIds = [];
 		picks = [...picks];
@@ -250,7 +254,7 @@
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 
-		triggerScene({ type: 'stage' });
+		triggerScene({ type: 'stage', boxes: carried });
 	}
 
 	function handlePackOrder(orderId: string, force = false) {
@@ -346,7 +350,14 @@
 
 <!-- Scene -->
 {#key actionKey}
-	<WarehouseScene action={sceneAction} {stagedCount} {packedCount} {loadedCount} {inventory} />
+	<WarehouseScene
+		action={sceneAction}
+		cartCount={cartPickIds.length}
+		{stagedCount}
+		{packedCount}
+		{loadedCount}
+		{inventory}
+	/>
 {/key}
 
 <!-- Content -->
