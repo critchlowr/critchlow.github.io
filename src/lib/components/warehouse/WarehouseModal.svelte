@@ -41,9 +41,13 @@
 			tabindex="-1"
 		></button>
 
-		<!-- Modal content -->
+		<!--
+			Fixed height rather than max-height: the window must not resize as the panel
+			below the scene changes between phases. Overflow is handled by the panel,
+			which scrolls.
+		-->
 		<div
-			class="bg-warm-50 dark:bg-warm-900 relative z-10 flex h-[100dvh] w-screen flex-col overflow-hidden shadow-2xl md:h-auto md:max-h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-2xl"
+			class="bg-warm-50 dark:bg-warm-900 relative z-10 flex h-[100dvh] w-screen flex-col overflow-hidden shadow-2xl md:h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-2xl"
 		>
 			{@render children()}
 		</div>

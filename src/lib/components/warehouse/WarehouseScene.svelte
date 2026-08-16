@@ -256,6 +256,9 @@
 		position: relative;
 		width: 100%;
 		height: 195px;
+		/* The scene is a flex child of the modal. Without this it shrinks whenever the
+		   panel below it grows, which made the warehouse change size between phases. */
+		flex-shrink: 0;
 		overflow: hidden;
 		border-bottom: 1px solid var(--color-warm-200);
 		background: linear-gradient(to bottom, #87ceeb 0%, #b0e0e6 50%, transparent 50%);
@@ -727,25 +730,29 @@
 	}
 
 	/* Packed — sealed with tape, ready for the truck */
-	.packed-box {
+	/* Goods keep one carton colour the whole way through the warehouse. What changes
+	   is the tape: a plain box is loose, a taped box is sealed. So staged boxes are
+	   plain, and packed and loaded boxes carry the same tape stripe. */
+	.packed-box,
+	.loaded-box {
 		width: 10px;
 		height: 10px;
-		background: var(--color-moss-100);
-		border: 1px solid var(--color-moss-700);
+		background: var(--color-red-100);
+		border: 1px solid var(--color-red-500);
 		border-radius: 1px;
 		flex-shrink: 0;
 		background-image: linear-gradient(
 			to bottom,
-			transparent 40%,
-			var(--color-moss-700) 40%,
-			var(--color-moss-700) 60%,
-			transparent 60%
+			transparent 45%,
+			var(--color-red-500) 45%,
+			var(--color-red-500) 55%,
+			transparent 55%
 		);
 	}
 
 	.staging-area.pack-flash {
-		border-color: var(--color-moss-500);
-		box-shadow: 0 0 6px var(--color-moss-500);
+		border-color: var(--color-red-500);
+		box-shadow: 0 0 6px var(--color-red-400);
 		transition: box-shadow 0.2s ease;
 	}
 
@@ -864,15 +871,6 @@
 		height: 4px;
 		background: #7f8c8d;
 		border-radius: 0 0 2px 0;
-	}
-
-	.loaded-box {
-		width: 10px;
-		height: 10px;
-		background: var(--color-red-100);
-		border: 1px solid var(--color-red-500);
-		border-radius: 1px;
-		flex-shrink: 0;
 	}
 
 	/* Shared wheel style */

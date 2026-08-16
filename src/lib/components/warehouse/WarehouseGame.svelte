@@ -286,7 +286,7 @@
 
 <!-- Header -->
 <div
-	class="border-warm-200 dark:border-warm-700 flex items-center justify-between border-b px-4 py-3"
+	class="border-warm-200 dark:border-warm-700 flex shrink-0 items-center justify-between border-b px-4 py-3"
 >
 	<div class="flex items-center gap-3">
 		<button
@@ -350,7 +350,12 @@
 {/key}
 
 <!-- Content -->
-<div class="flex-1 overflow-y-auto px-4 py-4">
+<!--
+	min-h-0 is what actually lets this scroll. A flex child defaults to min-height:auto,
+	so without it the panel refuses to shrink below its content and pushes the scene
+	smaller instead of scrolling.
+-->
+<div class="min-h-0 flex-1 overflow-y-auto px-4 py-4">
 	{#if gamePhase === 'victory'}
 		<VictoryScreen onreset={reset} />
 	{:else}
