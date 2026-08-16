@@ -721,16 +721,16 @@
 	.cart {
 		position: absolute;
 		bottom: 22%;
-		width: calc(var(--carton) * 3 + 14px);
-		height: calc(var(--carton) * 2 + 12px);
+		width: calc(var(--carton) * 2 + 14px);
+		height: calc(var(--carton) * 3 + 14px);
 		transition: left 0.4s ease-in-out;
 		z-index: 9;
 	}
 
-	/* Just left of the picker's idle spot (52%), so they stand at the cart and the
-	   cart still clears the staging area at 60% on a narrow scene. */
+	/* Between the picker (idle at 52%) and staging (60%), so the picker, the cart and
+	   the staging area all sit in a row in plain view. */
 	.cart-at-pick {
-		left: 50%;
+		left: 56%;
 	}
 
 	.cart-at-staging {
@@ -742,9 +742,10 @@
 		bottom: 4px;
 		left: 0;
 		display: flex;
-		/* Holds CART_CAPACITY (6): three across, two down. */
-		width: calc(var(--carton) * 3 + 10px);
-		height: calc(var(--carton) * 2 + 8px);
+		/* Holds CART_CAPACITY (6): two across, three down. Narrow enough to sit
+		   between the picker and staging without crowding either. */
+		width: calc(var(--carton) * 2 + 10px);
+		height: calc(var(--carton) * 3 + 8px);
 		flex-wrap: wrap-reverse;
 		align-content: flex-start;
 		gap: 1px;
@@ -765,7 +766,7 @@
 		right: -3px;
 		bottom: 4px;
 		width: 4px;
-		height: calc(var(--carton) * 2 + 11px);
+		height: calc(var(--carton) * 3 + 11px);
 		border-top: 1px solid var(--color-warm-600);
 		border-right: 1px solid var(--color-warm-600);
 	}
@@ -869,22 +870,34 @@
 		border: 1px solid var(--color-red-500);
 		border-radius: 1px;
 		flex-shrink: 0;
+		/* A fixed 2px band, not a percentage. At 10% of an 8px carton the tape came out
+		   sub-pixel and vanished. */
 		background-image: linear-gradient(
 			to bottom,
-			transparent 45%,
-			var(--color-red-500) 45%,
-			var(--color-red-500) 55%,
-			transparent 55%
+			transparent calc(50% - 1px),
+			var(--color-red-600) calc(50% - 1px),
+			var(--color-red-600) calc(50% + 1px),
+			transparent calc(50% + 1px)
 		);
 	}
 
+	/* On the base rule so the flash eases out as well as in. Declared only on the
+	   .pack-flash rule it snapped off the instant the class was removed. */
+	.staging-area {
+		transition:
+			box-shadow 0.25s ease,
+			border-color 0.25s ease;
+	}
+
 	.staging-area.pack-flash {
-		border-color: var(--color-red-500);
-		box-shadow: 0 0 6px var(--color-red-400);
-		transition: box-shadow 0.2s ease;
+		border-color: var(--color-red-600);
+		box-shadow: 0 0 8px 1px var(--color-red-400);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.staging-area {
+			transition: none;
+		}
 		.staging-area.pack-flash {
 			box-shadow: none;
 		}
@@ -1046,6 +1059,16 @@
 		.scene {
 			height: 150px;
 			--carton: 6px;
+		}
+		/* The scene is percentage-positioned but the picker and cart are fixed px, so
+		   on a narrow screen they crowd staging. Shift both left to keep the picker,
+		   cart and staging in a readable row. */
+		.worker-idle,
+		.worker-carrying-back {
+			left: 45%;
+		}
+		.cart-at-pick {
+			left: 52%;
 		}
 		.building-sign {
 			font-size: 9px;
