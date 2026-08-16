@@ -8,11 +8,11 @@
 		<img
 			src="/images/ryancritchlow.jpeg"
 			alt="Ryan Critchlow"
-			class="h-56 w-56 shrink-0 rounded-xl border-2 border-warm-200 object-cover shadow-md dark:border-warm-700 md:h-72 md:w-72"
+			class="border-warm-200 dark:border-warm-700 h-56 w-56 shrink-0 rounded-xl border-2 object-cover shadow-md md:h-72 md:w-72"
 		/>
 		<div class="space-y-4">
-			{#each about.paragraphs as paragraph}
-				<p class="leading-relaxed text-warm-700 dark:text-warm-300">{paragraph}</p>
+			{#each about.paragraphs as paragraph (paragraph)}
+				<p class="text-warm-700 dark:text-warm-300 leading-relaxed">{paragraph}</p>
 			{/each}
 		</div>
 	</div>

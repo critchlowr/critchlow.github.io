@@ -1,7 +1,19 @@
 // ── Types ──────────────────────────────────────────────────
 
-export type OrderStatus = 'Open' | 'Released' | 'Picking' | 'Picked' | 'Partial Stage' | 'Staged' | 'Packed' | 'Partial Pack' | 'Loaded' | 'Partial Ship' | 'Shipped';
-export type PickStatus = 'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short';
+export type OrderStatus =
+	| 'Open'
+	| 'Released'
+	| 'Picking'
+	| 'Picked'
+	| 'Partial Stage'
+	| 'Staged'
+	| 'Packed'
+	| 'Partial Pack'
+	| 'Loaded'
+	| 'Partial Ship'
+	| 'Shipped';
+export type PickStatus =
+	'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short';
 export type ReplenStatus = 'Pending' | 'In Transit' | 'Complete';
 export type GamePhase = 'pre-wave' | 'picking' | 'packing' | 'loading' | 'shipping' | 'victory';
 
@@ -26,9 +38,9 @@ export interface InventoryItem {
 	sku: string;
 	itemName: string;
 	location: string;
-	qtyAvailable: number;  // inbound/reserve stock (back of warehouse)
-	qtyOnHand: number;     // forward pick location (what the picker goes to)
-	qtyAllocated: number;  // allocated from on-hand for active picks
+	qtyAvailable: number; // inbound/reserve stock (back of warehouse)
+	qtyOnHand: number; // forward pick location (what the picker goes to)
+	qtyAllocated: number; // allocated from on-hand for active picks
 }
 
 export interface Pick {
@@ -74,25 +86,131 @@ export function createSeedOrders(): Order[] {
 
 export function createSeedOrderLines(): OrderLine[] {
 	return [
-		{ orderId: 'ORD-001', lineNum: 1, sku: 'BBP-01', itemName: 'Baby Bottle Pop', qtyOrdered: 3, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-001', lineNum: 2, sku: 'HMM-01', itemName: 'Hannah Montana Microphone', qtyOrdered: 2, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-002', lineNum: 1, sku: 'STH-01', itemName: 'Stiletto Hammer', qtyOrdered: 4, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-002', lineNum: 2, sku: 'MAYO-01', itemName: 'Mayonnaise', qtyOrdered: 2, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-002', lineNum: 3, sku: 'RTV-01', itemName: 'Really Tiny Violin', qtyOrdered: 6, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-003', lineNum: 1, sku: 'PEX-01', itemName: 'Photo of Your Ex', qtyOrdered: 5, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-003', lineNum: 2, sku: 'BBP-01', itemName: 'Baby Bottle Pop', qtyOrdered: 2, qtyPicked: 0, qtyShipped: 0 },
-		{ orderId: 'ORD-003', lineNum: 3, sku: 'HMM-01', itemName: 'Hannah Montana Microphone', qtyOrdered: 1, qtyPicked: 0, qtyShipped: 0 },
+		{
+			orderId: 'ORD-001',
+			lineNum: 1,
+			sku: 'BBP-01',
+			itemName: 'Baby Bottle Pop',
+			qtyOrdered: 3,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-001',
+			lineNum: 2,
+			sku: 'HMM-01',
+			itemName: 'Hannah Montana Microphone',
+			qtyOrdered: 2,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-002',
+			lineNum: 1,
+			sku: 'STH-01',
+			itemName: 'Stiletto Hammer',
+			qtyOrdered: 4,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-002',
+			lineNum: 2,
+			sku: 'MAYO-01',
+			itemName: 'Mayonnaise',
+			qtyOrdered: 2,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-002',
+			lineNum: 3,
+			sku: 'RTV-01',
+			itemName: 'Really Tiny Violin',
+			qtyOrdered: 6,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-003',
+			lineNum: 1,
+			sku: 'PEX-01',
+			itemName: 'Photo of Your Ex',
+			qtyOrdered: 5,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-003',
+			lineNum: 2,
+			sku: 'BBP-01',
+			itemName: 'Baby Bottle Pop',
+			qtyOrdered: 2,
+			qtyPicked: 0,
+			qtyShipped: 0
+		},
+		{
+			orderId: 'ORD-003',
+			lineNum: 3,
+			sku: 'HMM-01',
+			itemName: 'Hannah Montana Microphone',
+			qtyOrdered: 1,
+			qtyPicked: 0,
+			qtyShipped: 0
+		}
 	];
 }
 
 export function createSeedInventory(): InventoryItem[] {
 	return [
-		{ sku: 'BBP-01', itemName: 'Baby Bottle Pop', location: 'A-01-01', qtyAvailable: 5, qtyOnHand: 10, qtyAllocated: 0 },
-		{ sku: 'HMM-01', itemName: 'Hannah Montana Microphone', location: 'A-01-02', qtyAvailable: 4, qtyOnHand: 8, qtyAllocated: 0 },
-		{ sku: 'STH-01', itemName: 'Stiletto Hammer', location: 'B-02-01', qtyAvailable: 3, qtyOnHand: 6, qtyAllocated: 0 },
-		{ sku: 'MAYO-01', itemName: 'Mayonnaise', location: 'B-02-03', qtyAvailable: 2, qtyOnHand: 5, qtyAllocated: 0 },
-		{ sku: 'RTV-01', itemName: 'Really Tiny Violin', location: 'C-03-01', qtyAvailable: 6, qtyOnHand: 12, qtyAllocated: 0 },
-		{ sku: 'PEX-01', itemName: 'Photo of Your Ex', location: 'C-03-02', qtyAvailable: 3, qtyOnHand: 2, qtyAllocated: 0 },
+		{
+			sku: 'BBP-01',
+			itemName: 'Baby Bottle Pop',
+			location: 'A-01-01',
+			qtyAvailable: 5,
+			qtyOnHand: 10,
+			qtyAllocated: 0
+		},
+		{
+			sku: 'HMM-01',
+			itemName: 'Hannah Montana Microphone',
+			location: 'A-01-02',
+			qtyAvailable: 4,
+			qtyOnHand: 8,
+			qtyAllocated: 0
+		},
+		{
+			sku: 'STH-01',
+			itemName: 'Stiletto Hammer',
+			location: 'B-02-01',
+			qtyAvailable: 3,
+			qtyOnHand: 6,
+			qtyAllocated: 0
+		},
+		{
+			sku: 'MAYO-01',
+			itemName: 'Mayonnaise',
+			location: 'B-02-03',
+			qtyAvailable: 2,
+			qtyOnHand: 5,
+			qtyAllocated: 0
+		},
+		{
+			sku: 'RTV-01',
+			itemName: 'Really Tiny Violin',
+			location: 'C-03-01',
+			qtyAvailable: 6,
+			qtyOnHand: 12,
+			qtyAllocated: 0
+		},
+		{
+			sku: 'PEX-01',
+			itemName: 'Photo of Your Ex',
+			location: 'C-03-02',
+			qtyAvailable: 3,
+			qtyOnHand: 2,
+			qtyAllocated: 0
+		}
 	];
 }
 
@@ -165,20 +283,14 @@ export function waveRelease(
 /**
  * Execute a pick: update inventory and order line quantities.
  */
-export function executePick(
-	pick: Pick,
-	inventory: InventoryItem[],
-	orderLines: OrderLine[]
-): void {
+export function executePick(pick: Pick, inventory: InventoryItem[], orderLines: OrderLine[]): void {
 	const inv = inventory.find((i) => i.sku === pick.sku);
 	if (inv) {
 		inv.qtyOnHand -= pick.qtyToPick;
 		inv.qtyAllocated -= pick.qtyToPick;
 	}
 
-	const line = orderLines.find(
-		(l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum
-	);
+	const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
 	if (line) {
 		line.qtyPicked += pick.qtyToPick;
 	}
@@ -223,9 +335,7 @@ export function reportEmpty(
 		}
 
 		// Update order line
-		const line = orderLines.find(
-			(l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum
-		);
+		const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
 		if (line) {
 			line.qtyPicked += pickedQty;
 		}
@@ -272,8 +382,6 @@ export function reportEmpty(
 	return { pickedQty, canReplen };
 }
 
-
-
 /**
  * Create a replenishment task for a short SKU.
  */
@@ -291,11 +399,7 @@ export function createReplen(sku: string, qty: number, toLocation: string): Repl
  * Complete a replenishment: move qty from available (inbound) to on-hand (forward pick),
  * then convert short picks to assigned.
  */
-export function completeReplen(
-	replen: Replen,
-	inventory: InventoryItem[],
-	picks: Pick[]
-): void {
+export function completeReplen(replen: Replen, inventory: InventoryItem[], picks: Pick[]): void {
 	const inv = inventory.find((i) => i.sku === replen.sku);
 	if (inv) {
 		// Move from available (inbound) to on-hand (forward pick)
@@ -364,8 +468,6 @@ export function getShortQtyForSku(sku: string, picks: Pick[]): number {
 		.reduce((sum, p) => sum + p.qtyToPick, 0);
 }
 
-
-
 /**
  * Check if any picks across all orders have a given status.
  */
@@ -388,31 +490,20 @@ export function stageAll(picks: Pick[]): void {
  * Orders that have staged picks waiting at the pack station.
  */
 export function ordersAwaitingPack(orderIds: string[], picks: Pick[]): string[] {
-	return orderIds.filter((id) =>
-		picks.some((p) => p.orderId === id && p.status === 'Staged')
-	);
+	return orderIds.filter((id) => picks.some((p) => p.orderId === id && p.status === 'Staged'));
 }
 
 /**
  * Can this order be packed complete — is every ordered unit accounted for?
  * False when a line is still short, or when a line has unstaged work outstanding.
  */
-export function canPackComplete(
-	orderId: string,
-	orderLines: OrderLine[],
-	picks: Pick[]
-): boolean {
+export function canPackComplete(orderId: string, orderLines: OrderLine[], picks: Pick[]): boolean {
 	if (hasShortPicks(orderId, picks)) return false;
 
 	const lines = orderLines.filter((l) => l.orderId === orderId);
 	return lines.every((line) => {
 		const covered = picks
-			.filter(
-				(p) =>
-					p.orderId === orderId &&
-					p.lineNum === line.lineNum &&
-					p.status !== 'Short'
-			)
+			.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short')
 			.reduce((sum, p) => sum + p.qtyToPick, 0);
 		return covered + line.qtyShipped >= line.qtyOrdered;
 	});
@@ -432,10 +523,7 @@ export function getPackShortfall(
 
 	for (const line of lines) {
 		const covered = picks
-			.filter(
-				(p) =>
-					p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short'
-			)
+			.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short')
 			.reduce((sum, p) => sum + p.qtyToPick, 0);
 		const missing = line.qtyOrdered - covered - line.qtyShipped;
 		if (missing > 0) {
@@ -501,11 +589,7 @@ export function loadAll(picks: Pick[]): void {
  * Ship ALL loaded items across ALL orders.
  * Returns list of order IDs that were affected.
  */
-export function shipAllLoaded(
-	picks: Pick[],
-	orderLines: OrderLine[],
-	orders: Order[]
-): string[] {
+export function shipAllLoaded(picks: Pick[], orderLines: OrderLine[], orders: Order[]): string[] {
 	const affectedOrderIds = new Set<string>();
 
 	for (const pick of picks) {
@@ -513,9 +597,7 @@ export function shipAllLoaded(
 			pick.status = 'Shipped';
 			affectedOrderIds.add(pick.orderId);
 
-			const line = orderLines.find(
-				(l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum
-			);
+			const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
 			if (line) {
 				line.qtyShipped += pick.qtyToPick;
 			}
@@ -554,7 +636,8 @@ export function refreshOrderStatuses(
 		const anyShipped = lines.some((l) => l.qtyShipped > 0);
 		if (anyShipped) {
 			// If all picks are terminal (Shipped or Short), order is done — allow partial ship as "Shipped"
-			const allPicksTerminal = orderPicks.length > 0 &&
+			const allPicksTerminal =
+				orderPicks.length > 0 &&
 				orderPicks.every((p) => p.status === 'Shipped' || p.status === 'Short');
 			if (allPicksTerminal) {
 				order.status = 'Shipped';
@@ -621,15 +704,26 @@ export function orderLineStatus(
 	orderId: string,
 	orderLines: OrderLine[],
 	picks: Pick[]
-): { picked: number; staged: number; packed: number; loaded: number; shipped: number; shorted: number; total: number } {
+): {
+	picked: number;
+	staged: number;
+	packed: number;
+	loaded: number;
+	shipped: number;
+	shorted: number;
+	total: number;
+} {
 	const lines = orderLines.filter((l) => l.orderId === orderId);
 	const total = lines.length;
-	let picked = 0, staged = 0, packed = 0, loaded = 0, shipped = 0, shorted = 0;
+	let picked = 0,
+		staged = 0,
+		packed = 0,
+		loaded = 0,
+		shipped = 0,
+		shorted = 0;
 
 	for (const line of lines) {
-		const linePicks = picks.filter(
-			(p) => p.orderId === orderId && p.lineNum === line.lineNum
-		);
+		const linePicks = picks.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum);
 
 		// A line is shorted if any of its picks are Short
 		const hasShort = linePicks.some((p) => p.status === 'Short');
@@ -645,12 +739,29 @@ export function orderLineStatus(
 		const hasPicked = linePicks.some((p) => p.status === 'Picked');
 		const allShort = linePicks.every((p) => p.status === 'Short');
 
-		if (allShort) { /* only short picks — don't count as progressed */ }
-		else if (hasShipped) { shipped++; loaded++; packed++; staged++; picked++; }
-		else if (hasLoaded) { loaded++; packed++; staged++; picked++; }
-		else if (hasPacked) { packed++; staged++; picked++; }
-		else if (hasStaged) { staged++; picked++; }
-		else if (hasPicked) { picked++; }
+		if (allShort) {
+			/* only short picks — don't count as progressed */
+		} else if (hasShipped) {
+			shipped++;
+			loaded++;
+			packed++;
+			staged++;
+			picked++;
+		} else if (hasLoaded) {
+			loaded++;
+			packed++;
+			staged++;
+			picked++;
+		} else if (hasPacked) {
+			packed++;
+			staged++;
+			picked++;
+		} else if (hasStaged) {
+			staged++;
+			picked++;
+		} else if (hasPicked) {
+			picked++;
+		}
 	}
 
 	return { picked, staged, packed, loaded, shipped, shorted, total };

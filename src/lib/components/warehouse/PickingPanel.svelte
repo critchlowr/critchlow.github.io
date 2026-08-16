@@ -1,425 +1,482 @@
 <script lang="ts">
-    import type { Order, OrderLine, Pick, InventoryItem, GamePhase } from '$lib/data/warehouse';
+	import type { Order, OrderLine, Pick, InventoryItem, GamePhase } from '$lib/data/warehouse';
 
-    export interface PackQueueEntry {
-        orderId: string;
-        customer: string;
-        complete: boolean;
-        shortfall: { lineNum: number; sku: string; itemName: string; missingQty: number }[];
-    }
+	export interface PackQueueEntry {
+		orderId: string;
+		customer: string;
+		complete: boolean;
+		shortfall: { lineNum: number; sku: string; itemName: string; missingQty: number }[];
+	}
 
-    let {
-        gamePhase,
-        orders,
-        orderLines,
-        picks,
-        inventory,
-        cartPickIds,
-        cartFull,
-        replenNotice,
-        packQueue,
-        cartCapacity,
-        onwave,
-        onpick,
-        onreportempty,
-        onstagecart,
-        onpackorder,
-        onloadall,
-        onshipall,
-    }: {
-        gamePhase: GamePhase;
-        orders: Order[];
-        orderLines: OrderLine[];
-        picks: Pick[];
-        inventory: InventoryItem[];
-        cartPickIds: string[];
-        cartFull: boolean;
-        replenNotice: { sku: string; itemName: string; qty: number } | null;
-        packQueue: PackQueueEntry[];
-        cartCapacity: number;
-        onwave: () => void;
-        onpick: (pickId: string) => void;
-        onreportempty: (pickId: string) => void;
-        onstagecart: () => void;
-        onpackorder: (orderId: string, force?: boolean) => void;
-        onloadall: () => void;
-        onshipall: () => void;
-    } = $props();
+	let {
+		gamePhase,
+		orders,
+		orderLines,
+		picks,
+		inventory,
+		cartPickIds,
+		cartFull,
+		replenNotice,
+		packQueue,
+		cartCapacity,
+		onwave,
+		onpick,
+		onreportempty,
+		onstagecart,
+		onpackorder,
+		onloadall,
+		onshipall
+	}: {
+		gamePhase: GamePhase;
+		orders: Order[];
+		orderLines: OrderLine[];
+		picks: Pick[];
+		inventory: InventoryItem[];
+		cartPickIds: string[];
+		cartFull: boolean;
+		replenNotice: { sku: string; itemName: string; qty: number } | null;
+		packQueue: PackQueueEntry[];
+		cartCapacity: number;
+		onwave: () => void;
+		onpick: (pickId: string) => void;
+		onreportempty: (pickId: string) => void;
+		onstagecart: () => void;
+		onpackorder: (orderId: string, force?: boolean) => void;
+		onloadall: () => void;
+		onshipall: () => void;
+	} = $props();
 
-    // Which incomplete order the player is currently being asked to confirm shipping short.
-    let confirmingShortPack = $state<string | null>(null);
+	// Which incomplete order the player is currently being asked to confirm shipping short.
+	let confirmingShortPack = $state<string | null>(null);
 
-    const openCount = $derived(orders.filter(o => o.status === 'Open').length);
-    const totalLines = $derived(orderLines.length);
+	const openCount = $derived(orders.filter((o) => o.status === 'Open').length);
+	const totalLines = $derived(orderLines.length);
 
-    // The current pick: first Assigned pick in queue
-    const currentPick = $derived(picks.find(p => p.status === 'Assigned') ?? null);
-    const currentLine = $derived(
-        currentPick
-            ? orderLines.find(l => l.orderId === currentPick.orderId && l.lineNum === currentPick.lineNum)
-            : null
-    );
-    const currentOrder = $derived(
-        currentPick
-            ? orders.find(o => o.orderId === currentPick.orderId)
-            : null
-    );
+	// The current pick: first Assigned pick in queue
+	const currentPick = $derived(picks.find((p) => p.status === 'Assigned') ?? null);
+	const currentLine = $derived(
+		currentPick
+			? orderLines.find(
+					(l) => l.orderId === currentPick.orderId && l.lineNum === currentPick.lineNum
+				)
+			: null
+	);
+	const currentOrder = $derived(
+		currentPick ? orders.find((o) => o.orderId === currentPick.orderId) : null
+	);
 
-    // Counts
-    const assignedCount = $derived(picks.filter(p => p.status === 'Assigned').length);
-    const pickedCount = $derived(picks.filter(p => p.status === 'Picked' || p.status === 'Staged' || p.status === 'Loaded' || p.status === 'Shipped').length);
-    const totalPicks = $derived(picks.filter(p => p.status !== 'Short').length);
-    const stagedCount = $derived(picks.filter(p => p.status === 'Staged').length);
-    const packedCount = $derived(picks.filter(p => p.status === 'Packed').length);
-    const loadedCount = $derived(picks.filter(p => p.status === 'Loaded').length);
+	// Counts
+	const assignedCount = $derived(picks.filter((p) => p.status === 'Assigned').length);
+	const pickedCount = $derived(
+		picks.filter(
+			(p) =>
+				p.status === 'Picked' ||
+				p.status === 'Staged' ||
+				p.status === 'Loaded' ||
+				p.status === 'Shipped'
+		).length
+	);
+	const totalPicks = $derived(picks.filter((p) => p.status !== 'Short').length);
+	const packedCount = $derived(picks.filter((p) => p.status === 'Packed').length);
+	const loadedCount = $derived(picks.filter((p) => p.status === 'Loaded').length);
 
-    // Can the current pick be confirmed? (location must have enough on hand)
-    const locationHasEnough = $derived(
-        currentPick
-            ? (() => {
-                const inv = inventory.find(i => i.sku === currentPick.sku);
-                return inv ? inv.qtyOnHand >= currentPick.qtyToPick : false;
-            })()
-            : false
-    );
+	// Can the current pick be confirmed? (location must have enough on hand)
+	const locationHasEnough = $derived(
+		currentPick
+			? (() => {
+					const inv = inventory.find((i) => i.sku === currentPick.sku);
+					return inv ? inv.qtyOnHand >= currentPick.qtyToPick : false;
+				})()
+			: false
+	);
 
-    // Short/replen state
-    const shortPicks = $derived(picks.filter(p => p.status === 'Short'));
-    const shortSkus = $derived(
-        [...new Set(shortPicks.map(p => p.sku))]
-    );
-    const hasReplenishableShorts = $derived(
-        shortPicks.some(p => {
-            if (p.source !== 'report-empty') return false;
-            const inv = inventory.find(i => i.sku === p.sku);
-            return inv ? inv.qtyAvailable > 0 : false;
-        })
-    );
+	// Short/replen state
+	const shortPicks = $derived(picks.filter((p) => p.status === 'Short'));
+	const shortSkus = $derived([...new Set(shortPicks.map((p) => p.sku))]);
+	const hasReplenishableShorts = $derived(
+		shortPicks.some((p) => {
+			if (p.source !== 'report-empty') return false;
+			const inv = inventory.find((i) => i.sku === p.sku);
+			return inv ? inv.qtyAvailable > 0 : false;
+		})
+	);
 
-    // Are we waiting on replen? (replenishable shorts exist but no assigned picks to work on)
-    const waitingOnReplen = $derived(hasReplenishableShorts && assignedCount === 0 && cartPickIds.length === 0);
+	// Are we waiting on replen? (replenishable shorts exist but no assigned picks to work on)
+	const waitingOnReplen = $derived(
+		hasReplenishableShorts && assignedCount === 0 && cartPickIds.length === 0
+	);
 </script>
 
-<div class="rounded-xl border border-warm-200 bg-white dark:border-warm-700 dark:bg-warm-800">
+<div class="border-warm-200 dark:border-warm-700 dark:bg-warm-800 rounded-xl border bg-white">
+	<!-- ═══ PRE-WAVE ═══ -->
+	{#if gamePhase === 'pre-wave'}
+		<div class="p-4 py-6 text-center">
+			<h3 class="text-warm-800 dark:text-warm-100 text-lg font-bold">Ready to start</h3>
+			<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				{openCount} order{openCount !== 1 ? 's' : ''} waiting &middot; {totalLines} lines total
+			</p>
+			<button
+				type="button"
+				class="bg-accent-500 hover:bg-accent-600 focus:ring-accent-400 dark:bg-accent-600 dark:hover:bg-accent-500 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				onclick={onwave}
+				aria-label="Wave orders — allocate inventory and create pick tasks"
+			>
+				Wave Orders
+			</button>
+			<p class="text-warm-500 dark:text-warm-400 mt-2 text-xs">
+				Allocates inventory and creates pick tasks
+			</p>
+		</div>
 
-    <!-- ═══ PRE-WAVE ═══ -->
-    {#if gamePhase === 'pre-wave'}
-        <div class="p-4 py-6 text-center">
-            <h3 class="text-lg font-bold text-warm-800 dark:text-warm-100">Ready to start</h3>
-            <p class="mt-1 text-sm text-warm-600 dark:text-warm-300">
-                {openCount} order{openCount !== 1 ? 's' : ''} waiting &middot; {totalLines} lines total
-            </p>
-            <button
-                type="button"
-                class="mt-4 rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 dark:bg-accent-600 dark:hover:bg-accent-500 dark:focus:ring-offset-warm-800"
-                onclick={onwave}
-                aria-label="Wave orders — allocate inventory and create pick tasks"
-            >
-                Wave Orders
-            </button>
-            <p class="mt-2 text-xs text-warm-500 dark:text-warm-400">
-                Allocates inventory and creates pick tasks
-            </p>
-        </div>
+		<!-- ═══ PICKING ═══ -->
+	{:else if gamePhase === 'picking'}
+		<!-- Cart bar (compact) -->
+		<div
+			class="border-warm-200 dark:border-warm-700 flex items-center justify-between border-b px-4 py-2"
+		>
+			<div class="flex items-center gap-2">
+				<span
+					class="text-warm-600 dark:text-warm-300 text-xs font-semibold tracking-wider uppercase"
+					>Cart</span
+				>
+				<div class="flex gap-0.5">
+					{#each { length: cartCapacity } as _, i (i)}
+						<div
+							class="h-3 w-3 rounded-sm {i < cartPickIds.length
+								? 'bg-accent-400 dark:bg-accent-500'
+								: 'bg-warm-200 dark:bg-warm-600'}"
+						></div>
+					{/each}
+				</div>
+				<span class="text-warm-600 dark:text-warm-300 font-mono text-xs"
+					>{cartPickIds.length}/{cartCapacity}</span
+				>
+			</div>
+			{#if cartPickIds.length > 0}
+				<button
+					type="button"
+					class="rounded bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue-600"
+					onclick={onstagecart}
+					aria-label="Stage cart — move picked items to staging area"
+				>
+					Stage Cart
+				</button>
+			{/if}
+		</div>
 
-    <!-- ═══ PICKING ═══ -->
-    {:else if gamePhase === 'picking'}
-        <!-- Cart bar (compact) -->
-        <div class="flex items-center justify-between border-b border-warm-200 px-4 py-2 dark:border-warm-700">
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold uppercase tracking-wider text-warm-600 dark:text-warm-300">Cart</span>
-                <div class="flex gap-0.5">
-                    {#each { length: cartCapacity } as _, i}
-                        <div
-                            class="h-3 w-3 rounded-sm {i < cartPickIds.length
-                                ? 'bg-accent-400 dark:bg-accent-500'
-                                : 'bg-warm-200 dark:bg-warm-600'}"
-                        ></div>
-                    {/each}
-                </div>
-                <span class="font-mono text-xs text-warm-600 dark:text-warm-300">{cartPickIds.length}/{cartCapacity}</span>
-            </div>
-            {#if cartPickIds.length > 0}
-                <button
-                    type="button"
-                    class="rounded bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue-600"
-                    onclick={onstagecart}
-                    aria-label="Stage cart — move picked items to staging area"
-                >
-                    Stage Cart
-                </button>
-            {/if}
-        </div>
+		<div class="p-4">
+			<!-- Replen scheduled notice -->
+			{#if replenNotice}
+				<div
+					class="border-accent-300 bg-accent-50 dark:border-accent-600 dark:bg-accent-900 mb-4 rounded-lg border px-4 py-3"
+				>
+					<div class="flex items-center gap-2">
+						<div class="bg-accent-500 h-2.5 w-2.5 animate-pulse rounded-full"></div>
+						<p class="text-accent-700 dark:text-accent-200 text-sm font-semibold">
+							Replenishment Scheduled
+						</p>
+					</div>
+					<p class="text-accent-600 dark:text-accent-300 mt-1 text-xs">
+						{replenNotice.qty}x {replenNotice.itemName} being moved to forward pick location
+					</p>
+				</div>
+			{/if}
 
-        <div class="p-4">
-            <!-- Replen scheduled notice -->
-            {#if replenNotice}
-                <div class="mb-4 rounded-lg border border-accent-300 bg-accent-50 px-4 py-3 dark:border-accent-600 dark:bg-accent-900">
-                    <div class="flex items-center gap-2">
-                        <div class="h-2.5 w-2.5 animate-pulse rounded-full bg-accent-500"></div>
-                        <p class="text-sm font-semibold text-accent-700 dark:text-accent-200">Replenishment Scheduled</p>
-                    </div>
-                    <p class="mt-1 text-xs text-accent-600 dark:text-accent-300">
-                        {replenNotice.qty}x {replenNotice.itemName} being moved to forward pick location
-                    </p>
-                </div>
-            {/if}
+			<!-- Cart full banner -->
+			{#if cartFull}
+				<div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-center dark:bg-red-950">
+					<p class="text-sm font-medium text-red-600 dark:text-red-400">
+						Cart full — stage your cart before picking more
+					</p>
+					<button
+						type="button"
+						class="mt-2 rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+						onclick={onstagecart}
+					>
+						Stage Cart ({cartPickIds.length} items)
+					</button>
+				</div>
 
-            <!-- Cart full banner -->
-            {#if cartFull}
-                <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-center dark:bg-red-950">
-                    <p class="text-sm font-medium text-red-600 dark:text-red-400">Cart full — stage your cart before picking more</p>
-                    <button
-                        type="button"
-                        class="mt-2 rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
-                        onclick={onstagecart}
-                    >
-                        Stage Cart ({cartPickIds.length} items)
-                    </button>
-                </div>
+				<!-- Current pick (handheld device view) -->
+			{:else if currentPick && currentLine && currentOrder}
+				<!-- Progress -->
+				<div class="mb-3 text-center">
+					<span class="text-warm-600 dark:text-warm-300 text-xs font-medium">
+						Pick {pickedCount + 1} of {totalPicks +
+							picks.filter((p) => p.status === 'Short').length}
+					</span>
+				</div>
 
-            <!-- Current pick (handheld device view) -->
-            {:else if currentPick && currentLine && currentOrder}
-                <!-- Progress -->
-                <div class="mb-3 text-center">
-                    <span class="text-xs font-medium text-warm-600 dark:text-warm-300">
-                        Pick {pickedCount + 1} of {totalPicks + picks.filter(p => p.status === 'Short').length}
-                    </span>
-                </div>
+				<!-- Pick card -->
+				<div
+					class="border-accent-300 bg-accent-50 dark:border-accent-500 dark:bg-accent-900 rounded-lg border-2 p-4"
+				>
+					<!-- Order info -->
+					<div class="mb-3 flex items-center justify-between">
+						<span class="text-accent-700 dark:text-accent-200 font-mono text-xs font-semibold"
+							>{currentPick.orderId}</span
+						>
+						<span class="text-warm-600 dark:text-warm-200 text-xs">{currentOrder.customer}</span>
+					</div>
 
-                <!-- Pick card -->
-                <div class="rounded-lg border-2 border-accent-300 bg-accent-50 p-4 dark:border-accent-500 dark:bg-accent-900">
-                    <!-- Order info -->
-                    <div class="mb-3 flex items-center justify-between">
-                        <span class="font-mono text-xs font-semibold text-accent-700 dark:text-accent-200">{currentPick.orderId}</span>
-                        <span class="text-xs text-warm-600 dark:text-warm-200">{currentOrder.customer}</span>
-                    </div>
+					<!-- Item -->
+					<div class="mb-4 text-center">
+						<p class="text-warm-800 dark:text-warm-50 text-lg font-bold">{currentLine.itemName}</p>
+						<p class="text-warm-600 dark:text-warm-200 mt-1 font-mono text-sm">{currentPick.sku}</p>
+					</div>
 
-                    <!-- Item -->
-                    <div class="mb-4 text-center">
-                        <p class="text-lg font-bold text-warm-800 dark:text-warm-50">{currentLine.itemName}</p>
-                        <p class="mt-1 font-mono text-sm text-warm-600 dark:text-warm-200">{currentPick.sku}</p>
-                    </div>
+					<!-- Location, ordered, pick qty -->
+					<div class="mb-4 flex justify-center gap-6">
+						<div class="text-center">
+							<p
+								class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+							>
+								Location
+							</p>
+							<p class="text-warm-800 dark:text-warm-50 mt-0.5 font-mono text-lg font-bold">
+								{currentPick.fromLocation}
+							</p>
+						</div>
+						<div class="text-center">
+							<p
+								class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+							>
+								Ordered
+							</p>
+							<p class="text-warm-800 dark:text-warm-50 mt-0.5 font-mono text-lg font-bold">
+								{currentLine.qtyOrdered}
+							</p>
+						</div>
+						<div class="text-center">
+							<p
+								class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+							>
+								Pick Qty
+							</p>
+							<p class="text-warm-800 dark:text-warm-50 mt-0.5 font-mono text-lg font-bold">
+								{currentPick.qtyToPick}
+							</p>
+						</div>
+					</div>
 
-                    <!-- Location, ordered, pick qty -->
-                    <div class="mb-4 flex justify-center gap-6">
-                        <div class="text-center">
-                            <p class="text-xs font-semibold uppercase tracking-wider text-warm-600 dark:text-accent-200">Location</p>
-                            <p class="mt-0.5 font-mono text-lg font-bold text-warm-800 dark:text-warm-50">{currentPick.fromLocation}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-xs font-semibold uppercase tracking-wider text-warm-600 dark:text-accent-200">Ordered</p>
-                            <p class="mt-0.5 font-mono text-lg font-bold text-warm-800 dark:text-warm-50">{currentLine.qtyOrdered}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-xs font-semibold uppercase tracking-wider text-warm-600 dark:text-accent-200">Pick Qty</p>
-                            <p class="mt-0.5 font-mono text-lg font-bold text-warm-800 dark:text-warm-50">{currentPick.qtyToPick}</p>
-                        </div>
-                    </div>
+					<!-- Action buttons -->
+					{#if !locationHasEnough}
+						<p class="mb-2 text-center text-xs font-medium text-red-500 dark:text-red-400">
+							Location short — report empty to continue
+						</p>
+					{/if}
+					<div class="flex gap-2">
+						<button
+							type="button"
+							class="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none {locationHasEnough
+								? 'bg-moss-500 hover:bg-moss-600 focus:ring-moss-400'
+								: 'bg-warm-300 dark:bg-warm-600 cursor-not-allowed'}"
+							onclick={() => onpick(currentPick.pickId)}
+							disabled={!locationHasEnough}
+							aria-label="Confirm pick of {currentPick.qtyToPick} {currentLine.itemName} from {currentPick.fromLocation}"
+						>
+							Confirm Pick
+						</button>
+						<button
+							type="button"
+							class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+							onclick={() => onreportempty(currentPick.pickId)}
+							aria-label="Report location {currentPick.fromLocation} empty"
+						>
+							Report Empty
+						</button>
+					</div>
+				</div>
 
-                    <!-- Action buttons -->
-                    {#if !locationHasEnough}
-                        <p class="mb-2 text-center text-xs font-medium text-red-500 dark:text-red-400">
-                            Location short — report empty to continue
-                        </p>
-                    {/if}
-                    <div class="flex gap-2">
-                        <button
-                            type="button"
-                            class="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:outline-none focus:ring-2 {locationHasEnough
-                                ? 'bg-moss-500 hover:bg-moss-600 focus:ring-moss-400'
-                                : 'cursor-not-allowed bg-warm-300 dark:bg-warm-600'}"
-                            onclick={() => onpick(currentPick.pickId)}
-                            disabled={!locationHasEnough}
-                            aria-label="Confirm pick of {currentPick.qtyToPick} {currentLine.itemName} from {currentPick.fromLocation}"
-                        >
-                            Confirm Pick
-                        </button>
-                        <button
-                            type="button"
-                            class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                            onclick={() => onreportempty(currentPick.pickId)}
-                            aria-label="Report location {currentPick.fromLocation} empty"
-                        >
-                            Report Empty
-                        </button>
-                    </div>
-                </div>
+				<!-- Waiting on replenishment -->
+			{:else if waitingOnReplen}
+				<div class="py-4 text-center">
+					<h3 class="text-warm-800 dark:text-warm-100 text-base font-bold">
+						Waiting for Replenishment
+					</h3>
+					<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+						Inventory is being restocked for {shortSkus.length} item{shortSkus.length !== 1
+							? 's'
+							: ''}
+					</p>
+					<div class="mt-3 flex justify-center">
+						<div
+							class="bg-accent-50 dark:bg-accent-900 inline-flex items-center gap-2 rounded-full px-4 py-1.5"
+						>
+							<div class="bg-accent-500 h-2 w-2 animate-pulse rounded-full"></div>
+							<span class="text-accent-700 dark:text-accent-300 text-xs font-medium"
+								>Replen in progress</span
+							>
+						</div>
+					</div>
+				</div>
 
-            <!-- Waiting on replenishment -->
-            {:else if waitingOnReplen}
-                <div class="py-4 text-center">
-                    <h3 class="text-base font-bold text-warm-800 dark:text-warm-100">Waiting for Replenishment</h3>
-                    <p class="mt-1 text-sm text-warm-600 dark:text-warm-300">
-                        Inventory is being restocked for {shortSkus.length} item{shortSkus.length !== 1 ? 's' : ''}
-                    </p>
-                    <div class="mt-3 flex justify-center">
-                        <div class="inline-flex items-center gap-2 rounded-full bg-accent-50 px-4 py-1.5 dark:bg-accent-900">
-                            <div class="h-2 w-2 animate-pulse rounded-full bg-accent-500"></div>
-                            <span class="text-xs font-medium text-accent-700 dark:text-accent-300">Replen in progress</span>
-                        </div>
-                    </div>
-                </div>
+				<!-- All picks done, stage to continue -->
+			{:else if cartPickIds.length > 0}
+				<div class="py-4 text-center">
+					<p class="text-moss-700 dark:text-moss-300 text-sm font-medium">
+						All items picked! Stage your cart to continue.
+					</p>
+					<button
+						type="button"
+						class="mt-3 rounded-lg bg-blue-500 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+						onclick={onstagecart}
+					>
+						Stage Cart ({cartPickIds.length} items)
+					</button>
+				</div>
+			{:else}
+				<div class="py-4 text-center">
+					<p class="text-moss-700 dark:text-moss-300 text-sm font-medium">
+						All picks complete and staged!
+					</p>
+				</div>
+			{/if}
+		</div>
 
-            <!-- All picks done, stage to continue -->
-            {:else if cartPickIds.length > 0}
-                <div class="py-4 text-center">
-                    <p class="text-sm font-medium text-moss-700 dark:text-moss-300">All items picked! Stage your cart to continue.</p>
-                    <button
-                        type="button"
-                        class="mt-3 rounded-lg bg-blue-500 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
-                        onclick={onstagecart}
-                    >
-                        Stage Cart ({cartPickIds.length} items)
-                    </button>
-                </div>
+		<!-- ═══ PACKING ═══ -->
+	{:else if gamePhase === 'packing'}
+		<div class="border-warm-200 dark:border-warm-700 border-b px-4 py-3">
+			<h3 class="text-warm-800 dark:text-warm-100 text-base font-bold">Pack Station</h3>
+			<p class="text-warm-600 dark:text-warm-300 mt-0.5 text-xs">
+				Nothing goes on the truck until it is packed. An order that is missing stock can wait for
+				replenishment, or ship short.
+			</p>
+		</div>
 
-            {:else}
-                <div class="py-4 text-center">
-                    <p class="text-sm font-medium text-moss-700 dark:text-moss-300">All picks complete and staged!</p>
-                </div>
-            {/if}
-        </div>
+		<div class="space-y-3 p-4">
+			{#each packQueue as entry (entry.orderId)}
+				{@const missingUnits = entry.shortfall.reduce((s, l) => s + l.missingQty, 0)}
+				<div
+					class="rounded-lg border-2 p-4 {entry.complete
+						? 'border-moss-300 bg-moss-50 dark:border-moss-600 dark:bg-moss-900'
+						: 'border-red-300 bg-red-50 dark:border-red-600 dark:bg-red-950'}"
+				>
+					<div class="mb-2 flex items-center justify-between">
+						<span class="text-warm-700 dark:text-warm-200 font-mono text-xs font-semibold">
+							{entry.orderId}
+						</span>
+						<span class="text-warm-600 dark:text-warm-300 text-xs">{entry.customer}</span>
+					</div>
 
-    <!-- ═══ PACKING ═══ -->
-    {:else if gamePhase === 'packing'}
-        <div class="border-b border-warm-200 px-4 py-3 dark:border-warm-700">
-            <h3 class="text-base font-bold text-warm-800 dark:text-warm-100">Pack Station</h3>
-            <p class="mt-0.5 text-xs text-warm-600 dark:text-warm-300">
-                Nothing goes on the truck until it is packed. An order that is missing stock can wait
-                for replenishment, or ship short.
-            </p>
-        </div>
+					{#if entry.complete}
+						<p class="text-moss-700 dark:text-moss-200 mb-3 text-sm font-medium">
+							All lines accounted for. Ready to pack.
+						</p>
+						<button
+							type="button"
+							class="bg-moss-500 hover:bg-moss-600 focus:ring-moss-400 w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
+							onclick={() => onpackorder(entry.orderId)}
+							aria-label="Pack {entry.orderId} complete"
+						>
+							Pack Order
+						</button>
+					{:else}
+						<p class="mb-2 text-sm font-medium text-red-700 dark:text-red-300">
+							Short {missingUnits} unit{missingUnits !== 1 ? 's' : ''} across
+							{entry.shortfall.length} line{entry.shortfall.length !== 1 ? 's' : ''}
+						</p>
+						<ul class="mb-3 space-y-0.5">
+							{#each entry.shortfall as line (line.lineNum)}
+								<li class="font-mono text-xs text-red-600 dark:text-red-400">
+									{line.sku} &middot; {line.itemName} &minus;{line.missingQty}
+								</li>
+							{/each}
+						</ul>
 
-        <div class="space-y-3 p-4">
-            {#each packQueue as entry (entry.orderId)}
-                {@const missingUnits = entry.shortfall.reduce((s, l) => s + l.missingQty, 0)}
-                <div
-                    class="rounded-lg border-2 p-4 {entry.complete
-                        ? 'border-moss-300 bg-moss-50 dark:border-moss-600 dark:bg-moss-900'
-                        : 'border-red-300 bg-red-50 dark:border-red-600 dark:bg-red-950'}"
-                >
-                    <div class="mb-2 flex items-center justify-between">
-                        <span class="font-mono text-xs font-semibold text-warm-700 dark:text-warm-200">
-                            {entry.orderId}
-                        </span>
-                        <span class="text-xs text-warm-600 dark:text-warm-300">{entry.customer}</span>
-                    </div>
+						{#if confirmingShortPack === entry.orderId}
+							<p class="mb-2 text-xs font-medium text-red-700 dark:text-red-300">
+								This closes the order short. The missing units will not ship and cannot be
+								recovered.
+							</p>
+							<div class="flex gap-2">
+								<button
+									type="button"
+									class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+									onclick={() => {
+										onpackorder(entry.orderId, true);
+										confirmingShortPack = null;
+									}}
+								>
+									Confirm Ship Short
+								</button>
+								<button
+									type="button"
+									class="border-warm-300 text-warm-700 hover:bg-warm-100 dark:border-warm-600 dark:text-warm-200 dark:hover:bg-warm-700 flex-1 rounded-lg border py-2 text-sm font-semibold transition-colors"
+									onclick={() => {
+										confirmingShortPack = null;
+									}}
+								>
+									Cancel
+								</button>
+							</div>
+						{:else}
+							<div class="flex gap-2">
+								<button
+									type="button"
+									class="bg-warm-200 text-warm-500 dark:bg-warm-700 dark:text-warm-400 flex-1 cursor-not-allowed rounded-lg py-2 text-sm font-semibold"
+									disabled
+								>
+									Waiting on Replen
+								</button>
+								<button
+									type="button"
+									class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+									onclick={() => {
+										confirmingShortPack = entry.orderId;
+									}}
+									aria-label="Pack {entry.orderId} short and ship partial"
+								>
+									Pack Short
+								</button>
+							</div>
+						{/if}
+					{/if}
+				</div>
+			{/each}
 
-                    {#if entry.complete}
-                        <p class="mb-3 text-sm font-medium text-moss-700 dark:text-moss-200">
-                            All lines accounted for. Ready to pack.
-                        </p>
-                        <button
-                            type="button"
-                            class="w-full rounded-lg bg-moss-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-moss-600 focus:outline-none focus:ring-2 focus:ring-moss-400"
-                            onclick={() => onpackorder(entry.orderId)}
-                            aria-label="Pack {entry.orderId} complete"
-                        >
-                            Pack Order
-                        </button>
-                    {:else}
-                        <p class="mb-2 text-sm font-medium text-red-700 dark:text-red-300">
-                            Short {missingUnits} unit{missingUnits !== 1 ? 's' : ''} across
-                            {entry.shortfall.length} line{entry.shortfall.length !== 1 ? 's' : ''}
-                        </p>
-                        <ul class="mb-3 space-y-0.5">
-                            {#each entry.shortfall as line}
-                                <li class="font-mono text-xs text-red-600 dark:text-red-400">
-                                    {line.sku} &middot; {line.itemName} &minus;{line.missingQty}
-                                </li>
-                            {/each}
-                        </ul>
+			{#if packedCount > 0}
+				<p class="text-warm-500 dark:text-warm-400 pt-1 text-center text-xs">
+					{packedCount} item{packedCount !== 1 ? 's' : ''} packed and waiting for the truck
+				</p>
+			{/if}
+		</div>
 
-                        {#if confirmingShortPack === entry.orderId}
-                            <p class="mb-2 text-xs font-medium text-red-700 dark:text-red-300">
-                                This closes the order short. The missing units will not ship and cannot be
-                                recovered.
-                            </p>
-                            <div class="flex gap-2">
-                                <button
-                                    type="button"
-                                    class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                                    onclick={() => {
-                                        onpackorder(entry.orderId, true);
-                                        confirmingShortPack = null;
-                                    }}
-                                >
-                                    Confirm Ship Short
-                                </button>
-                                <button
-                                    type="button"
-                                    class="flex-1 rounded-lg border border-warm-300 py-2 text-sm font-semibold text-warm-700 transition-colors hover:bg-warm-100 dark:border-warm-600 dark:text-warm-200 dark:hover:bg-warm-700"
-                                    onclick={() => { confirmingShortPack = null; }}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        {:else}
-                            <div class="flex gap-2">
-                                <button
-                                    type="button"
-                                    class="flex-1 cursor-not-allowed rounded-lg bg-warm-200 py-2 text-sm font-semibold text-warm-500 dark:bg-warm-700 dark:text-warm-400"
-                                    disabled
-                                >
-                                    Waiting on Replen
-                                </button>
-                                <button
-                                    type="button"
-                                    class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                                    onclick={() => { confirmingShortPack = entry.orderId; }}
-                                    aria-label="Pack {entry.orderId} short and ship partial"
-                                >
-                                    Pack Short
-                                </button>
-                            </div>
-                        {/if}
-                    {/if}
-                </div>
-            {/each}
+		<!-- ═══ LOADING ═══ -->
+	{:else if gamePhase === 'loading'}
+		<div class="p-4 py-6 text-center">
+			<h3 class="text-warm-800 dark:text-warm-100 text-lg font-bold">Packing complete!</h3>
+			<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				{packedCount} item{packedCount !== 1 ? 's' : ''} packed and ready to load
+			</p>
+			<button
+				type="button"
+				class="bg-plum-500 hover:bg-plum-600 focus:ring-plum-400 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				onclick={onloadall}
+				aria-label="Load truck — move packed items into outbound truck"
+			>
+				Load Truck
+			</button>
+			<p class="text-warm-500 dark:text-warm-400 mt-2 text-xs">
+				Move all packed cartons into the outbound truck
+			</p>
+		</div>
 
-            {#if packedCount > 0}
-                <p class="pt-1 text-center text-xs text-warm-500 dark:text-warm-400">
-                    {packedCount} item{packedCount !== 1 ? 's' : ''} packed and waiting for the truck
-                </p>
-            {/if}
-        </div>
-
-    <!-- ═══ LOADING ═══ -->
-    {:else if gamePhase === 'loading'}
-        <div class="p-4 py-6 text-center">
-            <h3 class="text-lg font-bold text-warm-800 dark:text-warm-100">Packing complete!</h3>
-            <p class="mt-1 text-sm text-warm-600 dark:text-warm-300">
-                {packedCount} item{packedCount !== 1 ? 's' : ''} packed and ready to load
-            </p>
-            <button
-                type="button"
-                class="mt-4 rounded-lg bg-plum-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-plum-600 focus:outline-none focus:ring-2 focus:ring-plum-400 focus:ring-offset-2 dark:focus:ring-offset-warm-800"
-                onclick={onloadall}
-                aria-label="Load truck — move packed items into outbound truck"
-            >
-                Load Truck
-            </button>
-            <p class="mt-2 text-xs text-warm-500 dark:text-warm-400">
-                Move all packed cartons into the outbound truck
-            </p>
-        </div>
-
-    <!-- ═══ SHIPPING ═══ -->
-    {:else if gamePhase === 'shipping'}
-        <div class="p-4 py-6 text-center">
-            <h3 class="text-lg font-bold text-warm-800 dark:text-warm-100">Truck loaded!</h3>
-            <p class="mt-1 text-sm text-warm-600 dark:text-warm-300">
-                {loadedCount} item{loadedCount !== 1 ? 's' : ''} ready to ship
-            </p>
-            <button
-                type="button"
-                class="mt-4 rounded-lg bg-moss-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-moss-600 focus:outline-none focus:ring-2 focus:ring-moss-400 focus:ring-offset-2 dark:focus:ring-offset-warm-800"
-                onclick={onshipall}
-                aria-label="Ship all loaded orders"
-            >
-                Ship All Orders
-            </button>
-        </div>
-    {/if}
+		<!-- ═══ SHIPPING ═══ -->
+	{:else if gamePhase === 'shipping'}
+		<div class="p-4 py-6 text-center">
+			<h3 class="text-warm-800 dark:text-warm-100 text-lg font-bold">Truck loaded!</h3>
+			<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				{loadedCount} item{loadedCount !== 1 ? 's' : ''} ready to ship
+			</p>
+			<button
+				type="button"
+				class="bg-moss-500 hover:bg-moss-600 focus:ring-moss-400 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				onclick={onshipall}
+				aria-label="Ship all loaded orders"
+			>
+				Ship All Orders
+			</button>
+		</div>
+	{/if}
 </div>

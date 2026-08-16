@@ -11,27 +11,29 @@
 <SectionWrapper id="work" headingId="work-heading" number="03" title="Selected Work">
 	{#if featured}
 		<article
-			class="mb-4 rounded-xl border-2 border-accent-300 bg-accent-50 p-6 dark:border-accent-600 dark:bg-accent-950 md:p-8"
+			class="border-accent-300 bg-accent-50 dark:border-accent-600 dark:bg-accent-950 mb-4 rounded-xl border-2 p-6 md:p-8"
 		>
 			<div class="mb-3 flex flex-wrap items-center gap-2">
-				<span class="rounded-full bg-accent-600 px-2.5 py-0.5 text-sm font-semibold text-white dark:bg-accent-500">
+				<span
+					class="bg-accent-600 dark:bg-accent-500 rounded-full px-2.5 py-0.5 text-sm font-semibold text-white"
+				>
 					Peer-reviewed
 				</span>
-				<span class="text-sm font-medium text-accent-700 dark:text-accent-300">ASSETS 2026</span>
+				<span class="text-accent-700 dark:text-accent-300 text-sm font-medium">ASSETS 2026</span>
 			</div>
-			<h3 class="text-xl font-bold leading-snug text-primary-800 dark:text-primary-100">
+			<h3 class="text-primary-800 dark:text-primary-100 text-xl leading-snug font-bold">
 				{featured.title}
 			</h3>
-			<p class="mt-2 text-base text-warm-700 dark:text-warm-300">{featured.authors}</p>
+			<p class="text-warm-700 dark:text-warm-300 mt-2 text-base">{featured.authors}</p>
 			{#if featured.summary}
-				<p class="mt-3 max-w-3xl text-base leading-relaxed text-warm-700 dark:text-warm-300">
+				<p class="text-warm-700 dark:text-warm-300 mt-3 max-w-3xl text-base leading-relaxed">
 					{featured.summary}
 				</p>
 			{/if}
 			<p class="mt-4">
 				<a
 					href="#research"
-					class="inline-flex items-center gap-1.5 text-base font-semibold text-accent-700 underline-offset-4 hover:underline dark:text-accent-300"
+					class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-base font-semibold underline-offset-4 hover:underline"
 				>
 					Full citation and my contribution
 					<span aria-hidden="true">&darr;</span>
@@ -41,19 +43,19 @@
 	{/if}
 
 	<div class="grid gap-4 sm:grid-cols-2">
-		{#each selectedWork as project}
+		{#each selectedWork as project (project.title)}
 			<div
-				class="flex flex-col rounded-xl border border-warm-200 bg-white p-6 transition-all hover:border-accent-300 hover:shadow-md dark:border-warm-700 dark:bg-warm-800 dark:hover:border-accent-600"
+				class="border-warm-200 hover:border-accent-300 dark:border-warm-700 dark:bg-warm-800 dark:hover:border-accent-600 flex flex-col rounded-xl border bg-white p-6 transition-all hover:shadow-md"
 			>
 				<div class="mb-3 flex items-start justify-between gap-2">
-					<h3 class="text-lg font-bold text-primary-700 dark:text-primary-200">{project.title}</h3>
+					<h3 class="text-primary-700 dark:text-primary-200 text-lg font-bold">{project.title}</h3>
 					<span
-						class="shrink-0 rounded-full bg-accent-100 px-2.5 py-0.5 text-sm font-medium text-accent-700 dark:bg-accent-900 dark:text-accent-300"
+						class="bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300 shrink-0 rounded-full px-2.5 py-0.5 text-sm font-medium"
 					>
 						{project.period}
 					</span>
 				</div>
-				<p class="mb-3 text-base leading-relaxed text-warm-600 dark:text-warm-400">
+				<p class="text-warm-600 dark:text-warm-400 mb-3 text-base leading-relaxed">
 					{project.description}
 				</p>
 
@@ -61,7 +63,7 @@
 					<p class="mb-3">
 						<button
 							type="button"
-							class="inline-flex items-center gap-1.5 text-base font-semibold text-accent-700 underline-offset-4 hover:underline dark:text-accent-300"
+							class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-base font-semibold underline-offset-4 hover:underline"
 							onclick={() => simulator.launch()}
 						>
 							{project.hrefLabel ?? 'Play it'}
@@ -74,7 +76,7 @@
 							href={project.href}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center gap-1.5 text-base font-semibold text-accent-700 underline-offset-4 hover:underline dark:text-accent-300"
+							class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-base font-semibold underline-offset-4 hover:underline"
 						>
 							{project.hrefLabel ?? 'Visit site'}
 							<svg
@@ -99,7 +101,7 @@
 					<p class="mb-3">
 						<a
 							href={project.href}
-							class="inline-flex items-center gap-1.5 text-base font-semibold text-accent-700 underline-offset-4 hover:underline dark:text-accent-300"
+							class="text-accent-700 dark:text-accent-300 inline-flex items-center gap-1.5 text-base font-semibold underline-offset-4 hover:underline"
 						>
 							{project.hrefLabel ?? 'Read more'}
 							<span aria-hidden="true">&rarr;</span>
@@ -107,10 +109,12 @@
 					</p>
 				{/if}
 
-				<div class="mt-auto flex flex-wrap gap-1.5 border-t border-warm-100 pt-3 dark:border-warm-700">
-					{#each project.tools.split(', ') as tool}
+				<div
+					class="border-warm-100 dark:border-warm-700 mt-auto flex flex-wrap gap-1.5 border-t pt-3"
+				>
+					{#each project.tools.split(', ') as tool (tool)}
 						<span
-							class="rounded-full bg-moss-100 px-2.5 py-0.5 text-sm font-medium text-moss-700 dark:bg-moss-800 dark:text-moss-200"
+							class="bg-moss-100 text-moss-700 dark:bg-moss-800 dark:text-moss-200 rounded-full px-2.5 py-0.5 text-sm font-medium"
 						>
 							{tool}
 						</span>

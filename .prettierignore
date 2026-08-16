@@ -1,0 +1,11 @@
+# Package managers
+package-lock.json
+
+# Build output and framework artifacts
+build/
+.svelte-kit/
+node_modules/
+
+# Binary / generated assets
+static/
+*.pdf

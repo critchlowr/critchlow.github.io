@@ -56,6 +56,12 @@
 	<meta name="twitter:title" content="Ryan Critchlow" />
 	<meta name="twitter:description" content="Product · Research · Enterprise Systems" />
 	<meta name="twitter:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
+	<!--
+		personSchema is a static object defined above, not user input, so there is no
+		injection surface here. The `<\/script>` escape is required: without it the HTML
+		parser closes the surrounding script block early.
+	-->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags, no-useless-escape -->
 	{@html `<script type="application/ld+json">${JSON.stringify(personSchema)}<\/script>`}
 </svelte:head>
 
