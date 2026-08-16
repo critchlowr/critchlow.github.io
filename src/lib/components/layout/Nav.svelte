@@ -9,8 +9,17 @@
 		mobileOpen = false;
 	}
 
+	// Nav hrefs are root-relative ("/#about") so they also work from sub-pages.
+	// querySelector needs the bare hash.
+	function hashOf(href: string) {
+		const i = href.indexOf('#');
+		return i === -1 ? '' : href.slice(i);
+	}
+
 	$effect(() => {
-		const sections = navLinks.map((l) => document.querySelector(l.href) as HTMLElement).filter(Boolean);
+		const sections = navLinks
+			.map((l) => document.querySelector(hashOf(l.href)) as HTMLElement)
+			.filter(Boolean);
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -42,7 +51,7 @@
 
 <header class="fixed top-0 right-0 left-0 z-40 border-b border-warm-200 bg-warm-50/90 backdrop-blur-md dark:border-warm-700 dark:bg-warm-900/90">
 	<nav aria-label="Main navigation" class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-		<a href="#hero" class="text-lg font-bold text-primary-700 dark:text-primary-200" aria-label="Ryan Critchlow - back to top">
+		<a href="/#hero" class="text-lg font-bold text-primary-700 dark:text-primary-200" aria-label="Ryan Critchlow - back to top">
 			RC
 		</a>
 
@@ -51,10 +60,10 @@
 			{#each navLinks as link}
 				<a
 					href={link.href}
-					class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors {activeSection === link.href
+					class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors {activeSection === hashOf(link.href)
 						? 'bg-accent-100 text-accent-700 dark:bg-plum-600 dark:text-plum-100'
 						: 'text-warm-600 hover:bg-warm-100 hover:text-warm-800 dark:text-warm-400 dark:hover:bg-warm-800 dark:hover:text-warm-200'}"
-					aria-current={activeSection === link.href ? 'true' : undefined}
+					aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
 				>
 					{link.label}
 				</a>
@@ -95,10 +104,10 @@
 				<a
 					href={link.href}
 					onclick={closeMobile}
-					class="block rounded-md px-3 py-2 text-sm font-medium transition-colors {activeSection === link.href
+					class="block rounded-md px-3 py-2 text-sm font-medium transition-colors {activeSection === hashOf(link.href)
 						? 'bg-accent-100 text-accent-700 dark:bg-plum-600 dark:text-plum-100'
 						: 'text-warm-600 hover:bg-warm-100 dark:text-warm-400 dark:hover:bg-warm-800'}"
-					aria-current={activeSection === link.href ? 'true' : undefined}
+					aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
 				>
 					{link.label}
 				</a>

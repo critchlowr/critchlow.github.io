@@ -1,9 +1,9 @@
 // ── Types ──────────────────────────────────────────────────
 
-export type OrderStatus = 'Open' | 'Released' | 'Picking' | 'Picked' | 'Partial Stage' | 'Staged' | 'Loaded' | 'Partial Ship' | 'Shipped';
-export type PickStatus = 'Assigned' | 'Picked' | 'Staged' | 'Loaded' | 'Shipped' | 'Short';
+export type OrderStatus = 'Open' | 'Released' | 'Picking' | 'Picked' | 'Partial Stage' | 'Staged' | 'Packed' | 'Partial Pack' | 'Loaded' | 'Partial Ship' | 'Shipped';
+export type PickStatus = 'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short';
 export type ReplenStatus = 'Pending' | 'In Transit' | 'Complete';
-export type GamePhase = 'pre-wave' | 'picking' | 'loading' | 'shipping' | 'victory';
+export type GamePhase = 'pre-wave' | 'picking' | 'packing' | 'loading' | 'shipping' | 'victory';
 
 export interface Order {
 	orderId: string;
@@ -385,11 +385,113 @@ export function stageAll(picks: Pick[]): void {
 }
 
 /**
- * Load ALL staged items across all orders.
+ * Orders that have staged picks waiting at the pack station.
+ */
+export function ordersAwaitingPack(orderIds: string[], picks: Pick[]): string[] {
+	return orderIds.filter((id) =>
+		picks.some((p) => p.orderId === id && p.status === 'Staged')
+	);
+}
+
+/**
+ * Can this order be packed complete — is every ordered unit accounted for?
+ * False when a line is still short, or when a line has unstaged work outstanding.
+ */
+export function canPackComplete(
+	orderId: string,
+	orderLines: OrderLine[],
+	picks: Pick[]
+): boolean {
+	if (hasShortPicks(orderId, picks)) return false;
+
+	const lines = orderLines.filter((l) => l.orderId === orderId);
+	return lines.every((line) => {
+		const covered = picks
+			.filter(
+				(p) =>
+					p.orderId === orderId &&
+					p.lineNum === line.lineNum &&
+					p.status !== 'Short'
+			)
+			.reduce((sum, p) => sum + p.qtyToPick, 0);
+		return covered + line.qtyShipped >= line.qtyOrdered;
+	});
+}
+
+/**
+ * How many units of an order are missing, and which lines they belong to.
+ * Drives the shortfall warning on the pack station.
+ */
+export function getPackShortfall(
+	orderId: string,
+	orderLines: OrderLine[],
+	picks: Pick[]
+): { lineNum: number; sku: string; itemName: string; missingQty: number }[] {
+	const lines = orderLines.filter((l) => l.orderId === orderId);
+	const shortfall: { lineNum: number; sku: string; itemName: string; missingQty: number }[] = [];
+
+	for (const line of lines) {
+		const covered = picks
+			.filter(
+				(p) =>
+					p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short'
+			)
+			.reduce((sum, p) => sum + p.qtyToPick, 0);
+		const missing = line.qtyOrdered - covered - line.qtyShipped;
+		if (missing > 0) {
+			shortfall.push({
+				lineNum: line.lineNum,
+				sku: line.sku,
+				itemName: line.itemName,
+				missingQty: missing
+			});
+		}
+	}
+
+	return shortfall;
+}
+
+/**
+ * Pack one order. Packing is order-scoped: it asks whether the order is whole
+ * enough to ship, which is where a short finally costs something.
+ *
+ * - Complete order: staged picks become Packed.
+ * - Incomplete and force=false: refuses, so the player can wait for replen.
+ * - Incomplete and force=true: packs what is there and the order ships partial.
+ */
+export function packOrder(
+	orderId: string,
+	orderLines: OrderLine[],
+	picks: Pick[],
+	force = false
+): { packed: boolean; packedCount: number; shortfall: number } {
+	const shortfall = getPackShortfall(orderId, orderLines, picks).reduce(
+		(sum, s) => sum + s.missingQty,
+		0
+	);
+
+	if (shortfall > 0 && !force) {
+		return { packed: false, packedCount: 0, shortfall };
+	}
+
+	let packedCount = 0;
+	for (const pick of picks) {
+		if (pick.orderId === orderId && pick.status === 'Staged') {
+			pick.status = 'Packed';
+			packedCount++;
+		}
+	}
+
+	return { packed: packedCount > 0, packedCount, shortfall };
+}
+
+/**
+ * Load ALL packed items across all orders. Staged-but-unpacked stock stays put —
+ * nothing goes on the truck until it has been packed.
  */
 export function loadAll(picks: Pick[]): void {
 	for (const pick of picks) {
-		if (pick.status === 'Staged') {
+		if (pick.status === 'Packed') {
 			pick.status = 'Loaded';
 		}
 	}
@@ -477,13 +579,20 @@ export function refreshOrderStatuses(
 
 		// Determine highest status among picks
 		const hasLoaded = orderPicks.some((p) => p.status === 'Loaded');
+		const hasPacked = orderPicks.some((p) => p.status === 'Packed');
 		const hasStaged = orderPicks.some((p) => p.status === 'Staged');
 		const hasPicked = orderPicks.some((p) => p.status === 'Picked');
 		const hasAssigned = orderPicks.some((p) => p.status === 'Assigned');
+		const hasShort = orderPicks.some((p) => p.status === 'Short');
 		const hasActiveWork = hasAssigned || hasPicked;
 
 		if (hasLoaded) {
 			order.status = 'Loaded';
+		} else if (hasPacked && hasShort) {
+			// Packed short — the player chose to ship it incomplete.
+			order.status = 'Partial Pack';
+		} else if (hasPacked) {
+			order.status = 'Packed';
 		} else if (hasStaged && hasActiveWork) {
 			order.status = 'Partial Stage';
 		} else if (hasStaged) {
@@ -512,10 +621,10 @@ export function orderLineStatus(
 	orderId: string,
 	orderLines: OrderLine[],
 	picks: Pick[]
-): { picked: number; staged: number; loaded: number; shipped: number; shorted: number; total: number } {
+): { picked: number; staged: number; packed: number; loaded: number; shipped: number; shorted: number; total: number } {
 	const lines = orderLines.filter((l) => l.orderId === orderId);
 	const total = lines.length;
-	let picked = 0, staged = 0, loaded = 0, shipped = 0, shorted = 0;
+	let picked = 0, staged = 0, packed = 0, loaded = 0, shipped = 0, shorted = 0;
 
 	for (const line of lines) {
 		const linePicks = picks.filter(
@@ -531,16 +640,18 @@ export function orderLineStatus(
 		// Use the "best" (most advanced) pick status for this line
 		const hasShipped = linePicks.some((p) => p.status === 'Shipped');
 		const hasLoaded = linePicks.some((p) => p.status === 'Loaded');
+		const hasPacked = linePicks.some((p) => p.status === 'Packed');
 		const hasStaged = linePicks.some((p) => p.status === 'Staged');
 		const hasPicked = linePicks.some((p) => p.status === 'Picked');
 		const allShort = linePicks.every((p) => p.status === 'Short');
 
 		if (allShort) { /* only short picks — don't count as progressed */ }
-		else if (hasShipped) { shipped++; loaded++; staged++; picked++; }
-		else if (hasLoaded) { loaded++; staged++; picked++; }
+		else if (hasShipped) { shipped++; loaded++; packed++; staged++; picked++; }
+		else if (hasLoaded) { loaded++; packed++; staged++; picked++; }
+		else if (hasPacked) { packed++; staged++; picked++; }
 		else if (hasStaged) { staged++; picked++; }
 		else if (hasPicked) { picked++; }
 	}
 
-	return { picked, staged, loaded, shipped, shorted, total };
+	return { picked, staged, packed, loaded, shipped, shorted, total };
 }

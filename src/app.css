@@ -203,6 +203,22 @@ html {
 .stagger-children.in-view > *:nth-child(8) {
     transition-delay: 0.56s;
 }
+.stagger-children.in-view > *:nth-child(9) {
+    transition-delay: 0.64s;
+}
+.stagger-children.in-view > *:nth-child(10) {
+    transition-delay: 0.72s;
+}
+.stagger-children.in-view > *:nth-child(11) {
+    transition-delay: 0.8s;
+}
+.stagger-children.in-view > *:nth-child(12) {
+    transition-delay: 0.88s;
+}
+/* Anything past 12 shares the last delay rather than firing with none. */
+.stagger-children.in-view > *:nth-child(n + 13) {
+    transition-delay: 0.96s;
+}
 
 .stagger-children.in-view > * {
     opacity: 1;

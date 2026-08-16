@@ -20,6 +20,9 @@
             case 'Shipped':
             case 'Partial Ship':
                 done = p.loaded; label = 'loaded'; break;
+            case 'Packed':
+            case 'Partial Pack':
+                done = p.packed; label = 'packed'; break;
             case 'Staged':
             case 'Partial Stage':
                 done = p.staged; label = 'staged'; break;

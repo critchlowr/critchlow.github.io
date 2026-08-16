@@ -5,11 +5,12 @@
         | { type: 'idle' }
         | { type: 'pick'; fromLocation: string }
         | { type: 'stage' }
+        | { type: 'pack' }
         | { type: 'load' }
         | { type: 'ship' }
         | { type: 'replen' };
 
-    let { action = { type: 'idle' } as SceneAction, stagedCount = 0, loadedCount = 0, inventory = [] as InventoryItem[] }: { action: SceneAction; stagedCount: number; loadedCount: number; inventory: InventoryItem[] } = $props();
+    let { action = { type: 'idle' } as SceneAction, stagedCount = 0, packedCount = 0, loadedCount = 0, inventory = [] as InventoryItem[] }: { action: SceneAction; stagedCount: number; packedCount: number; loadedCount: number; inventory: InventoryItem[] } = $props();
 
     // Picker worker states
     let workerPos = $state<'idle' | 'at-shelf' | 'carrying-back' | 'at-staging'>('idle');
@@ -25,10 +26,14 @@
     // Shelf glow on replen
     let shelfFlash = $state(false);
 
+    // Pack station flash when an order gets sealed
+    let packFlash = $state(false);
+
     $effect(() => {
         const a = action;
         if (a.type === 'pick') animatePick();
         else if (a.type === 'stage') animateStage();
+        else if (a.type === 'pack') animatePack();
         else if (a.type === 'load') animateLoad();
         else if (a.type === 'ship') animateShip();
         else if (a.type === 'replen') animateReplen();
@@ -54,6 +59,17 @@
             workerCarrying = false;
             workerPos = 'idle';
         }, 800);
+    }
+
+    function animatePack() {
+        workerPos = 'at-staging';
+        packFlash = true;
+        setTimeout(() => {
+            packFlash = false;
+        }, 700);
+        setTimeout(() => {
+            workerPos = 'idle';
+        }, 900);
     }
 
     function animateLoad() {
@@ -183,10 +199,13 @@
 
         <!-- ═══ OUTBOUND (right side) ═══ -->
 
-        <!-- Staging area -->
+        <!-- Staging area — loose boxes waiting, sealed boxes packed and ready to load -->
         <div class="staging-label">STAGING</div>
-        <div class="staging-area">
-            {#each { length: Math.min(stagedCount, 12) } as _}
+        <div class="staging-area" class:pack-flash={packFlash}>
+            {#each { length: Math.min(packedCount, 12) } as _}
+                <div class="packed-box"></div>
+            {/each}
+            {#each { length: Math.min(stagedCount, 12 - Math.min(packedCount, 12)) } as _}
                 <div class="staged-box"></div>
             {/each}
         </div>
@@ -609,6 +628,35 @@
         border: 1px solid var(--color-red-500);
         border-radius: 1px;
         flex-shrink: 0;
+    }
+
+    /* Packed — sealed with tape, ready for the truck */
+    .packed-box {
+        width: 10px;
+        height: 10px;
+        background: var(--color-moss-100);
+        border: 1px solid var(--color-moss-700);
+        border-radius: 1px;
+        flex-shrink: 0;
+        background-image: linear-gradient(
+            to bottom,
+            transparent 40%,
+            var(--color-moss-700) 40%,
+            var(--color-moss-700) 60%,
+            transparent 60%
+        );
+    }
+
+    .staging-area.pack-flash {
+        border-color: var(--color-moss-500);
+        box-shadow: 0 0 6px var(--color-moss-500);
+        transition: box-shadow 0.2s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .staging-area.pack-flash {
+            box-shadow: none;
+        }
     }
 
     /* Outbound dock */

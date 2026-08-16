@@ -14,9 +14,6 @@
 			{#each about.paragraphs as paragraph}
 				<p class="leading-relaxed text-warm-700 dark:text-warm-300">{paragraph}</p>
 			{/each}
-			<p class="leading-relaxed text-warm-700 dark:text-warm-300">
-				When I'm not coding or researching, you'll find me on a trail with my chocolate lab, training for my next half marathon, or behind a bar crafting cocktails. I'm into road biking, reading, and the occasional long video game session. I like staying active and being outside as much as I can.
-			</p>
 		</div>
 	</div>
 </SectionWrapper>

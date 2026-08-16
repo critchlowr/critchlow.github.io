@@ -7,6 +7,8 @@
         'Picking': 'bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300',
         'Picked': 'bg-moss-100 text-moss-700 dark:bg-moss-900 dark:text-moss-300',
         'Partial Stage': 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+        'Packed': 'bg-moss-100 text-moss-700 dark:bg-moss-900 dark:text-moss-300',
+        'Partial Pack': 'bg-plum-100 text-plum-700 dark:bg-plum-900 dark:text-plum-300',
         'Partial Ship': 'bg-plum-100 text-plum-700 dark:bg-plum-900 dark:text-plum-300',
         'Shipped': 'bg-moss-100 text-moss-700 dark:bg-moss-900 dark:text-moss-300',
         'Assigned': 'bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300',

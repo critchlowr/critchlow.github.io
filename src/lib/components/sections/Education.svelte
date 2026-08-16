@@ -3,7 +3,7 @@
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 </script>
 
-<SectionWrapper id="education" headingId="education-heading" number="03" title="Education">
+<SectionWrapper id="education" headingId="education-heading" number="07" title="Education" alt>
 	<div class="space-y-4">
 		{#each education as edu}
 			<div class="rounded-xl border border-warm-200 bg-white p-6 transition-all hover:border-accent-300 hover:shadow-md dark:border-warm-700 dark:bg-warm-800 dark:hover:border-plum-400">

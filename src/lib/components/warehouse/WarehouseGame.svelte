@@ -17,6 +17,9 @@
         createReplen,
         completeReplen,
         stageAll,
+        packOrder,
+        canPackComplete,
+        getPackShortfall,
         loadAll,
         shipAllLoaded,
         refreshOrderStatuses,
@@ -57,7 +60,20 @@
 
     // Derived
     const stagedCount = $derived(picks.filter(p => p.status === 'Staged').length);
+    const packedCount = $derived(picks.filter(p => p.status === 'Packed').length);
     const loadedCount = $derived(picks.filter(p => p.status === 'Loaded').length);
+
+    // Orders sitting at the pack station, with whether each can go out complete.
+    const packQueue = $derived(
+        orders
+            .filter(o => picks.some(p => p.orderId === o.orderId && p.status === 'Staged'))
+            .map(o => ({
+                orderId: o.orderId,
+                customer: o.customer,
+                complete: canPackComplete(o.orderId, orderLines, picks),
+                shortfall: getPackShortfall(o.orderId, orderLines, picks)
+            }))
+    );
 
     const gamePhase = $derived.by<GamePhase>(() => {
         if (allOrdersShipped(orders)) return 'victory';
@@ -71,7 +87,9 @@
             (() => { const inv = inventory.find(i => i.sku === p.sku); return inv ? inv.qtyAvailable > 0 : false; })()
         );
         if (hasReplenInFlight) return 'picking';
-        if (anyPicksWithStatus(picks, 'Staged')) return 'loading';
+        // Staged stock waits at the pack station before anything can load.
+        if (anyPicksWithStatus(picks, 'Staged')) return 'packing';
+        if (anyPicksWithStatus(picks, 'Packed')) return 'loading';
         if (anyPicksWithStatus(picks, 'Loaded')) return 'shipping';
         return 'picking';
     });
@@ -230,6 +248,17 @@
         triggerScene({ type: 'stage' });
     }
 
+    function handlePackOrder(orderId: string, force = false) {
+        const result = packOrder(orderId, orderLines, picks, force);
+        if (!result.packed) return;
+
+        picks = [...picks];
+        refreshOrderStatuses(orders, orderLines, picks);
+        orders = [...orders];
+
+        triggerScene({ type: 'pack' });
+    }
+
     function handleLoadAll() {
         loadAll(picks);
         picks = [...picks];
@@ -294,7 +323,7 @@
 
 <!-- Scene -->
 {#key actionKey}
-    <WarehouseScene action={sceneAction} {stagedCount} {loadedCount} {inventory} />
+    <WarehouseScene action={sceneAction} {stagedCount} {packedCount} {loadedCount} {inventory} />
 {/key}
 
 <!-- Content -->
@@ -315,11 +344,13 @@
             {cartPickIds}
             {cartFull}
             {replenNotice}
+            {packQueue}
             cartCapacity={CART_CAPACITY}
             onwave={handleWave}
             onpick={handlePick}
             onreportempty={handleReportEmpty}
             onstagecart={handleStageCart}
+            onpackorder={handlePackOrder}
             onloadall={handleLoadAll}
             onshipall={handleShipAll}
         />
