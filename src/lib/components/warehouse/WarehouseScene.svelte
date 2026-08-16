@@ -244,7 +244,7 @@
 			class:cart-at-staging={cartPos === 'at-staging'}
 		>
 			<div class="cart-basket">
-				{#each { length: Math.min(cartDisplay, 8) } as _, i (i)}
+				{#each { length: Math.min(cartDisplay, 6) } as _, i (i)}
 					<div class="cart-box"></div>
 				{/each}
 			</div>
@@ -295,6 +295,12 @@
 
 <style>
 	.scene {
+		/* One carton size for every outbound container — cart, staging and truck.
+		   Previously the cart used 5px while staging and the truck used 10px, so the
+		   same goods changed size as they moved. Driving all of them from here means
+		   they cannot drift apart again. */
+		--carton: 8px;
+
 		position: relative;
 		width: 100%;
 		height: 195px;
@@ -715,15 +721,16 @@
 	.cart {
 		position: absolute;
 		bottom: 22%;
-		width: 26px;
-		height: 20px;
+		width: calc(var(--carton) * 3 + 14px);
+		height: calc(var(--carton) * 2 + 12px);
 		transition: left 0.4s ease-in-out;
 		z-index: 9;
 	}
 
-	/* Just right of the picker's idle spot (52%), so they stand at the cart. */
+	/* Just left of the picker's idle spot (52%), so they stand at the cart and the
+	   cart still clears the staging area at 60% on a narrow scene. */
 	.cart-at-pick {
-		left: 56%;
+		left: 50%;
 	}
 
 	.cart-at-staging {
@@ -735,8 +742,9 @@
 		bottom: 4px;
 		left: 0;
 		display: flex;
-		width: 26px;
-		height: 14px;
+		/* Holds CART_CAPACITY (6): three across, two down. */
+		width: calc(var(--carton) * 3 + 10px);
+		height: calc(var(--carton) * 2 + 8px);
 		flex-wrap: wrap-reverse;
 		align-content: flex-start;
 		gap: 1px;
@@ -757,7 +765,7 @@
 		right: -3px;
 		bottom: 4px;
 		width: 4px;
-		height: 17px;
+		height: calc(var(--carton) * 2 + 11px);
 		border-top: 1px solid var(--color-warm-600);
 		border-right: 1px solid var(--color-warm-600);
 	}
@@ -785,16 +793,6 @@
 
 	.cw-2 {
 		right: 5px;
-	}
-
-	/* Loose cartons, matching the staged box — they have not been packed yet. */
-	.cart-box {
-		width: 5px;
-		height: 5px;
-		flex-shrink: 0;
-		border: 1px solid var(--color-red-500);
-		border-radius: 1px;
-		background: var(--color-red-100);
 	}
 
 	.carried-box {
@@ -849,9 +847,10 @@
 		color: var(--color-warm-400);
 	}
 
-	.staged-box {
-		width: 10px;
-		height: 10px;
+	.staged-box,
+	.cart-box {
+		width: var(--carton);
+		height: var(--carton);
 		background: var(--color-red-100);
 		border: 1px solid var(--color-red-500);
 		border-radius: 1px;
@@ -864,8 +863,8 @@
 	   plain, and packed and loaded boxes carry the same tape stripe. */
 	.packed-box,
 	.loaded-box {
-		width: 10px;
-		height: 10px;
+		width: var(--carton);
+		height: var(--carton);
 		background: var(--color-red-100);
 		border: 1px solid var(--color-red-500);
 		border-radius: 1px;
@@ -1046,6 +1045,7 @@
 	@media (max-width: 640px) {
 		.scene {
 			height: 150px;
+			--carton: 6px;
 		}
 		.building-sign {
 			font-size: 9px;
