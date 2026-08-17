@@ -59,7 +59,9 @@
 	let replenNotice = $state<{ sku: string; itemName: string; qty: number } | null>(null);
 
 	// Derived
-	const stagedCount = $derived(picks.filter((p) => p.status === 'Staged').length);
+	// SKU lists rather than counts, so the scene can colour each carton by item.
+	const cartSkus = $derived(cartPickIds.map((id) => picks.find((p) => p.pickId === id)?.sku ?? ''));
+	const stagedSkus = $derived(picks.filter((p) => p.status === 'Staged').map((p) => p.sku));
 	const packedCount = $derived(picks.filter((p) => p.status === 'Packed').length);
 	const loadedCount = $derived(picks.filter((p) => p.status === 'Loaded').length);
 
@@ -130,7 +132,7 @@
 
 		// Captured before the item is added, so the scene can hold the cart at its
 		// previous contents until the picker has walked the item back.
-		const cartBefore = cartPickIds.length;
+		const cartBefore = cartSkus.slice();
 		const { orderId, lineNum } = pick;
 		executePick(pick, inventory, orderLines);
 		cartPickIds = [...cartPickIds, pickId];
@@ -141,7 +143,7 @@
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 
-		triggerScene({ type: 'pick', fromLocation: pick.fromLocation, cartBefore });
+		triggerScene({ type: 'pick', fromLocation: pick.fromLocation, sku: pick.sku, cartBefore });
 
 		// Check if this order line has unmet demand that can be replenished
 		const demand = getReplenishableDemand(orderId, lineNum, orderLines, picks, inventory);
@@ -248,7 +250,7 @@
 	function handleStageCart() {
 		// Captured before the cart is emptied, so the scene can show the cart being
 		// wheeled to staging with the items still in it.
-		const carried = cartPickIds.length;
+		const carried = cartSkus.slice();
 
 		stageAll(picks);
 		cartPickIds = [];
@@ -355,8 +357,8 @@
 {#key actionKey}
 	<WarehouseScene
 		action={sceneAction}
-		cartCount={cartPickIds.length}
-		{stagedCount}
+		{cartSkus}
+		{stagedSkus}
 		{packedCount}
 		{loadedCount}
 		{inventory}

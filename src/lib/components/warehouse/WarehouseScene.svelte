@@ -5,12 +5,13 @@
 		| { type: 'idle' }
 		/** `cartBefore` is the cart's contents before this pick. The model adds the
 		    item to the cart on click, so without it the carton would appear in the cart
-		    before the picker has walked back with it. */
-		| { type: 'pick'; fromLocation: string; cartBefore: number }
+		    before the picker has walked back with it. SKUs rather than a count, so each
+		    carton can keep its colour. */
+		| { type: 'pick'; fromLocation: string; sku: string; cartBefore: string[] }
 		/** `boxes` is the cart's contents at the moment staging started. The model has
 		    already emptied the cart by then, so the scene needs it passed in to show
 		    the cart being wheeled over with something in it. */
-		| { type: 'stage'; boxes: number }
+		| { type: 'stage'; boxes: string[] }
 		| { type: 'pack' }
 		| { type: 'load' }
 		| { type: 'ship' }
@@ -18,19 +19,45 @@
 
 	let {
 		action = { type: 'idle' } as SceneAction,
-		cartCount = 0,
-		stagedCount = 0,
+		cartSkus = [] as string[],
+		stagedSkus = [] as string[],
 		packedCount = 0,
 		loadedCount = 0,
 		inventory = [] as InventoryItem[]
 	}: {
 		action: SceneAction;
-		cartCount: number;
-		stagedCount: number;
+		cartSkus: string[];
+		stagedSkus: string[];
 		packedCount: number;
 		loadedCount: number;
 		inventory: InventoryItem[];
 	} = $props();
+
+	/* Loose goods are colour-coded by SKU so you can follow an item from the rack into
+	   the cart and on to staging. Packing erases the distinction: everything becomes
+	   the same taped carton, which is the point of the pack step. Defined here rather
+	   than as CSS classes because Svelte prunes selectors it cannot statically match,
+	   and these are applied dynamically. */
+	const SKU_TONES = [
+		{ fill: '#a3c99d', edge: '#3d7a31' },
+		{ fill: '#c98ec8', edge: '#6f2a6d' },
+		{ fill: '#efd48a', edge: '#b18816' },
+		{ fill: '#a8c4e6', edge: '#3f6ea8' }
+	];
+
+	function tone(sku: string) {
+		const i = inventory.findIndex((it) => it.sku === sku);
+		const t = SKU_TONES[(i < 0 ? 0 : i) % SKU_TONES.length];
+		return `--fill: ${t.fill}; --edge: ${t.edge};`;
+	}
+
+	/* Cartons shown per rack column, as a coarse gauge of stock on hand. */
+	function stockBars(qty: number) {
+		if (qty <= 0) return 0;
+		if (qty <= 3) return 1;
+		if (qty <= 7) return 2;
+		return 3;
+	}
 
 	// Picker worker states
 	let workerPos = $state<'idle' | 'at-shelf' | 'carrying-back' | 'at-staging'>('idle');
@@ -54,14 +81,15 @@
 	// The picker's cart. It sits where the picker idles, fills as items are picked,
 	// and gets wheeled to staging when the cart is staged.
 	let cartPos = $state<'at-pick' | 'at-staging'>('at-pick');
-	let cartDisplay = $state(0);
+	let cartDisplay = $state<string[]>([]);
+	let carriedSku = $state('');
 	// Freezes cartDisplay while the picker is mid-walk, so the cart's contents change
 	// when they arrive rather than when the button is clicked.
 	let holdCart = $state(false);
 
 	$effect(() => {
 		const a = action;
-		if (a.type === 'pick') animatePick(a.cartBefore);
+		if (a.type === 'pick') animatePick(a.sku, a.cartBefore);
 		else if (a.type === 'stage') animateStage(a.boxes);
 		else if (a.type === 'pack') animatePack();
 		else if (a.type === 'load') animateLoad();
@@ -72,14 +100,15 @@
 	// Declared after the action effects so that when a walk begins, this sees
 	// holdCart already set and leaves the in-transit contents alone.
 	$effect(() => {
-		if (!holdCart) cartDisplay = cartCount;
+		if (!holdCart) cartDisplay = cartSkus;
 	});
 
 	// Walk to the rack empty-handed, pick the item up there, carry it back, and only
 	// then drop it in the cart.
-	function animatePick(cartBefore: number) {
+	function animatePick(sku: string, cartBefore: string[]) {
 		holdCart = true;
 		cartDisplay = cartBefore;
+		carriedSku = sku;
 		workerPos = 'at-shelf';
 		workerCarrying = false;
 		setTimeout(() => {
@@ -94,14 +123,14 @@
 	}
 
 	// The picker wheels the loaded cart over to staging, unloads it, and brings it back.
-	function animateStage(boxes: number) {
+	function animateStage(boxes: string[]) {
 		holdCart = true;
 		cartDisplay = boxes;
 		workerCarrying = false;
 		workerPos = 'at-staging';
 		cartPos = 'at-staging';
 		setTimeout(() => {
-			cartDisplay = 0;
+			cartDisplay = [];
 		}, 700);
 		setTimeout(() => {
 			workerPos = 'idle';
@@ -221,10 +250,10 @@
 		<!-- Shelf/rack — each slot shows inventory -->
 		<div class="shelf" class:shelf-flash={shelfFlash}>
 			{#each inventory as item (item.sku)}
-				<div class="shelf-slot">
-					{#if item.qtyOnHand > 0}
-						<div class="shelf-box" title="{item.itemName} ({item.qtyOnHand})"></div>
-					{/if}
+				<div class="shelf-col" title="{item.itemName} ({item.qtyOnHand})">
+					{#each { length: stockBars(item.qtyOnHand) } as _, i (i)}
+						<div class="shelf-box" style={tone(item.sku)}></div>
+					{/each}
 				</div>
 			{/each}
 		</div>
@@ -242,7 +271,7 @@
 			<div class="worker-body"></div>
 			<div class="worker-legs"></div>
 			{#if workerCarrying}
-				<div class="carried-box"></div>
+				<div class="carried-box" style={tone(carriedSku)}></div>
 			{/if}
 		</div>
 
@@ -254,8 +283,8 @@
 			class:cart-at-staging={cartPos === 'at-staging'}
 		>
 			<div class="cart-basket">
-				{#each { length: Math.min(cartDisplay, 6) } as _, i (i)}
-					<div class="cart-box"></div>
+				{#each cartDisplay.slice(0, 6) as sku, i (i)}
+					<div class="cart-box" style={tone(sku)}></div>
 				{/each}
 			</div>
 			<div class="cart-handle"></div>
@@ -271,8 +300,8 @@
 			{#each { length: Math.min(packedCount, 12) } as _, i (i)}
 				<div class="packed-box"></div>
 			{/each}
-			{#each { length: Math.min(stagedCount, 12 - Math.min(packedCount, 12)) } as _, i (i)}
-				<div class="staged-box"></div>
+			{#each stagedSkus.slice(0, 12 - Math.min(packedCount, 12)) as sku, i (i)}
+				<div class="staged-box" style={tone(sku)}></div>
 			{/each}
 		</div>
 
@@ -607,13 +636,14 @@
 		left: 34%;
 		/* Sized from the carton, not from scene width. As a percentage the rack
 		   stretched to ~210px on a wide modal while staying 58px tall, which is what
-		   made the shelf cartons balloon out of proportion to every other box. */
-		width: calc(var(--carton) * 2 + 17px);
-		height: calc(var(--carton) * 3 + 40px);
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(3, 1fr);
-		gap: 3px;
+		   made the shelf cartons balloon out of proportion to every other box.
+		   One column per SKU, three cartons tall. */
+		width: calc(var(--carton) * 6 + 25px);
+		height: calc(var(--carton) * 3 + 22px);
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2px;
 		padding: 3px;
 		background: #8b6914;
 		border: 2px solid #6b4914;
@@ -629,25 +659,39 @@
 		box-shadow: 0 0 14px 3px var(--color-accent-400);
 	}
 
-	.shelf-slot {
+	.shelf-col {
+		display: flex;
+		height: 100%;
+		flex: 1;
+		flex-direction: column-reverse;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 2px;
 		background: #c4a55a;
 		border: 1px solid #a48530;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		padding-bottom: 1px;
 	}
 
-	:global(.dark) .shelf-slot {
+	:global(.dark) .shelf-col {
 		background: #8a7540;
 		border-color: #6a5530;
 	}
 
-	.shelf-box {
+	/* Loose goods, still identifiable as a particular SKU. --fill and --edge are set
+	   inline per carton; the reds are the fallback for anything unmatched. */
+	.shelf-box,
+	.carried-box,
+	.cart-box,
+	.staged-box {
 		width: var(--carton);
 		height: var(--carton);
-		background: var(--color-red-100);
-		border: 1px solid var(--color-red-400);
+		flex-shrink: 0;
+		border: 1px solid var(--edge, var(--color-red-500));
 		border-radius: 1px;
+		background: var(--fill, var(--color-red-100));
+	}
+
+	.shelf-box {
 		transition:
 			opacity 0.3s,
 			transform 0.3s;
@@ -813,11 +857,6 @@
 		position: absolute;
 		top: 3px;
 		right: calc(var(--carton) * -1 - 3px);
-		width: var(--carton);
-		height: var(--carton);
-		background: var(--color-red-100);
-		border: 1px solid var(--color-red-500);
-		border-radius: 1px;
 	}
 
 	/* ═══ OUTBOUND RIGHT SIDE ═══ */
@@ -860,16 +899,6 @@
 
 	:global(.dark) .staging-label {
 		color: var(--color-warm-400);
-	}
-
-	.staged-box,
-	.cart-box {
-		width: var(--carton);
-		height: var(--carton);
-		background: var(--color-red-100);
-		border: 1px solid var(--color-red-500);
-		border-radius: 1px;
-		flex-shrink: 0;
 	}
 
 	/* Packed — sealed with tape, ready for the truck */
@@ -1074,9 +1103,18 @@
 			height: 150px;
 			--carton: 6px;
 		}
-		/* The scene is percentage-positioned but the picker and cart are fixed px, so
-		   on a narrow screen they crowd staging. Shift both left to keep the picker,
-		   cart and staging in a readable row. */
+		/* The scene is percentage-positioned but its contents are fixed px, so on a
+		   narrow screen everything crowds. Shift the whole left-to-right chain so
+		   receiving, the rack, the picker, the cart and staging stay in a readable row. */
+		.receiving-area {
+			left: 19%;
+		}
+		.shelf {
+			left: 27%;
+		}
+		.worker-at-shelf {
+			left: 36%;
+		}
 		.worker-idle,
 		.worker-carrying-back {
 			left: 45%;
