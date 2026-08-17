@@ -1,4 +1,25 @@
 <script lang="ts">
+	import SectionRail from '$lib/components/ui/SectionRail.svelte';
+
+	/*
+		Rail entries. The ids are attached to the <h2> elements below by hand rather
+		than derived at mount, so the rail is present in the prerendered HTML that
+		adapter-static emits — on a page about accessibility research, a table of
+		contents that only exists once JS runs is the wrong trade.
+
+		Labels are shortened where the heading is long; the full heading text is
+		unchanged and remains the visible one.
+	*/
+	const sections = [
+		{ id: 'gestalt-language-processing', label: 'Gestalt language processing' },
+		{ id: 'where-that-left-us', label: 'Where that left us' },
+		{ id: 'introducing-identity-and-language', label: 'Introducing identity and language' },
+		{ id: 'the-participatory-evaluation', label: 'The participatory evaluation' },
+		{ id: 'findings', label: 'Findings' },
+		{ id: 'design-recommendations', label: 'Design recommendations' },
+		{ id: 'method-takeaways', label: 'Method takeaways' }
+	];
+
 	const meta = [
 		{ label: 'When', value: 'Winter 2025 – June 2026' },
 		{ label: 'Where', value: 'WWU KIND Lab' },
@@ -23,7 +44,8 @@
 	<meta property="og:image" content="https://ryancritchlow.com/images/you-and-i/title.webp" />
 </svelte:head>
 
-<article class="bg-surface/80 dark:bg-surface/70">
+<article class="bg-surface/80 dark:bg-surface/70 relative">
+	<SectionRail items={sections} label="On this page" headingId="case-rail-heading" wide />
 	<div class="mx-auto max-w-4xl px-4 py-16 pt-28 md:py-24 md:pt-32">
 		<a
 			href="/#work"
@@ -57,7 +79,10 @@
 			height="788"
 		/>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+		<h2
+			id="gestalt-language-processing"
+			class="text-ink-strong font-display mt-14 text-3xl font-semibold"
+		>
 			Gestalt language processing and pronoun reversal
 		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
@@ -76,7 +101,9 @@
 			attention is itself foundational to learning pronouns.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">Where that left us</h2>
+		<h2 id="where-that-left-us" class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+			Where that left us
+		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
 			Three separate systematic reviews from 2024 showed that existing language tools for autistic
 			children target vocabulary and social skills, not gestalts or perspective-taking. There is
@@ -97,7 +124,10 @@
 			gestalt learners. That is what You and I does.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+		<h2
+			id="introducing-identity-and-language"
+			class="text-ink-strong font-display mt-14 text-3xl font-semibold"
+		>
 			Introducing identity and language
 		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
@@ -155,7 +185,10 @@
 			wrong item, the feedback redirects them back into the story rather than marking them wrong.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+		<h2
+			id="the-participatory-evaluation"
+			class="text-ink-strong font-display mt-14 text-3xl font-semibold"
+		>
 			The participatory evaluation
 		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
@@ -185,7 +218,9 @@
 			group on sticky notes and we built an affinity diagram, which we reviewed together.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">Findings</h2>
+		<h2 id="findings" class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+			Findings
+		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
 			We conducted in-home participatory design sessions with four families: three with autistic
 			gestalt learners and one with Down syndrome. Data was collected through pre- and post-gameplay
@@ -201,7 +236,10 @@
 			content entirely.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+		<h2
+			id="design-recommendations"
+			class="text-ink-strong font-display mt-14 text-3xl font-semibold"
+		>
 			Design recommendations
 		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
@@ -225,7 +263,9 @@
 			accommodations and difficulty per learner, not by age.
 		</p>
 
-		<h2 class="text-ink-strong font-display mt-14 text-3xl font-semibold">Method takeaways</h2>
+		<h2 id="method-takeaways" class="text-ink-strong font-display mt-14 text-3xl font-semibold">
+			Method takeaways
+		</h2>
 		<p class="text-ink mt-4 leading-relaxed">
 			Caregiver support groups were what actually yielded participants, and families screen research
 			for its stance on neurodiversity. We recommend researchers state that up front, leading with a

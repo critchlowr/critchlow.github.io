@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { navLinks } from '$lib/data/content';
 	import ThemeToggle from './ThemeToggle.svelte';
+	import { scrollProgress } from '$lib/scroll/progress.svelte';
 
 	let activeSection = $state('');
 	let mobileOpen = $state(false);
@@ -154,6 +155,16 @@
 			{/each}
 		</div>
 	{/if}
+
+	<!--
+		Reading progress, below lg only — at lg and up the section rails carry this
+		and a third indicator would just be noise.
+
+		aria-hidden, and deliberately NOT role="progressbar": that role needs an
+		accessible name and an aria-valuenow kept in sync, and axe flags a nameless
+		one. This duplicates the scrollbar; it is decoration.
+	-->
+	<div class="read-bar lg:hidden" style="--read: {scrollProgress.value}" aria-hidden="true"></div>
 </header>
 
 <style>
@@ -182,5 +193,20 @@
 		.nav-link::after {
 			transition: none;
 		}
+	}
+
+	/*
+		Scale rather than width, so this is a compositor-only property and costs
+		nothing per frame. transform-origin puts the growth on the left.
+	*/
+	.read-bar {
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		transform-origin: left center;
+		transform: scaleX(var(--read, 0));
+		background: var(--color-accent-500);
 	}
 </style>

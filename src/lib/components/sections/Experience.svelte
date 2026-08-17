@@ -7,7 +7,15 @@
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
+	import SectionRail from '$lib/components/ui/SectionRail.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
+
+	// Labelled by company, not title: there are two Bartender roles and two
+	// Carpenter roles, but every company string is unique.
+	const railItems = experience.map((job, i) => ({
+		id: `experience-${i}`,
+		label: job.company
+	}));
 
 	let conveyorEl = $state<HTMLElement>();
 	let conveyorVisible = $state(false);
@@ -196,6 +204,14 @@
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
+	{#snippet rail()}
+		<SectionRail
+			items={railItems}
+			label="Experience timeline"
+			headingId="experience-rail-heading"
+		/>
+	{/snippet}
+
 	<!--
 		Cards, not rules. This section sits on the alt ground, so a raised surface is
 		what gives each role an edge against the tint behind it — and with seven entries
@@ -203,7 +219,13 @@
 	-->
 	<ul class="stagger space-y-5" use:inview>
 		{#each experience as job, jobIndex (job.company + job.title)}
-			<Card as="li" interactive class="group p-6 md:p-7" style="--i: {jobIndex}">
+			<Card
+				as="li"
+				interactive
+				id="experience-{jobIndex}"
+				class="group scroll-mt-28 p-6 md:p-7"
+				style="--i: {jobIndex}"
+			>
 				<div
 					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:gap-6 sm:text-left"
 				>

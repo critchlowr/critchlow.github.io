@@ -7,6 +7,7 @@
 	import SkipLink from '$lib/components/layout/SkipLink.svelte';
 	import Ambient from '$lib/components/layout/Ambient.svelte';
 	import { goToHash } from '$lib/scroll/scroller';
+	import { initScrollProgress } from '$lib/scroll/progress.svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -46,6 +47,9 @@
 		document.addEventListener('click', onClick, true);
 		return () => document.removeEventListener('click', onClick, true);
 	});
+
+	// One shared scroll listener for the ambient lamps and the mobile reading bar.
+	$effect(() => initScrollProgress());
 
 	onMount(() => {
 		theme.init();
