@@ -23,7 +23,7 @@
 	<meta property="og:image" content="https://ryancritchlow.com/images/you-and-i/title.webp" />
 </svelte:head>
 
-<article class="bg-surface">
+<article class="bg-surface/80 dark:bg-surface/70">
 	<div class="mx-auto max-w-4xl px-4 py-16 pt-28 md:py-24 md:pt-32">
 		<a
 			href="/#work"

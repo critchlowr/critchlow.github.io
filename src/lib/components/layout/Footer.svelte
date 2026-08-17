@@ -4,7 +4,11 @@
 	import ContactLink from '$lib/components/ui/ContactLink.svelte';
 </script>
 
-<footer id="contact" class="bg-footer relative overflow-hidden" aria-labelledby="contact-heading">
+<footer
+	id="contact"
+	class="bg-footer/90 relative overflow-hidden"
+	aria-labelledby="contact-heading"
+>
 	<div class="wash" aria-hidden="true"></div>
 
 	<div class="relative mx-auto max-w-5xl px-5 py-24">

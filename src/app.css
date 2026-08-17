@@ -168,13 +168,19 @@
 	--color-brand-strong: var(--t-brand-strong);
 	--color-link: var(--t-link);
 	--color-footer: var(--t-footer);
+	--color-band: var(--t-band);
 }
 
 :root {
 	--t-surface: var(--color-warm-50);
 	--t-surface-raised: #ffffff;
-	--t-edge: var(--color-warm-200);
-	--t-edge-hover: var(--color-accent-400);
+	/*
+		warm-300, not warm-200. A white card on the warm-100 band was delineated only by
+		its border, and warm-200 sat 1.12:1 from that band — the card edge effectively
+		disappeared on alternating sections. warm-300 gives 1.37:1.
+	*/
+	--t-edge: var(--color-warm-300);
+	--t-edge-hover: var(--color-accent-500);
 	--t-ink: var(--color-warm-800);
 	--t-ink-muted: var(--color-warm-700);
 	--t-ink-strong: var(--color-primary-800);
@@ -185,13 +191,22 @@
 	--t-link: var(--color-plum-800);
 	/* The footer gets a ground of its own so the page ends somewhere. */
 	--t-footer: var(--color-warm-200);
+	/* Alternating section band. Lighter than the page ground in light mode. */
+	--t-band: var(--color-warm-100);
 }
 
 :root.dark {
 	--t-surface: var(--color-warm-950);
-	--t-surface-raised: var(--color-warm-900);
-	--t-edge: var(--color-warm-800);
-	--t-edge-hover: var(--color-accent-500);
+	/*
+		warm-800, not warm-900. At warm-900 a card sat 1.17:1 from the alt band it was
+		standing on — effectively invisible — and the ambient layer closed that to 1.12
+		by lifting the ground onto the card colour. Cards now sit two stops above the
+		page and the band moves the other way (see --t-band), so alternation and card
+		separation stop competing for the same few luminance steps.
+	*/
+	--t-surface-raised: var(--color-warm-800);
+	--t-edge: var(--color-warm-600);
+	--t-edge-hover: var(--color-accent-400);
 	--t-ink: var(--color-warm-200);
 	--t-ink-muted: var(--color-warm-300);
 	--t-ink-strong: var(--color-primary-200);
@@ -203,6 +218,12 @@
 		page ground — the hue would shift but the band would not read as separate.
 	*/
 	--t-footer: #43284a;
+	/*
+		The dark band goes *darker* than the page, not lighter. Going lighter walks it
+		straight into the card fill; going darker means the alternation also reads as
+		"this section catches less of the ambient light", which is the effect anyway.
+	*/
+	--t-band: #1b1620;
 }
 
 html {

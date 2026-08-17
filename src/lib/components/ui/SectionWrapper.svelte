@@ -30,7 +30,7 @@
 <section
 	{id}
 	aria-labelledby={headingId}
-	class={alt ? 'bg-warm-100 dark:bg-warm-900' : 'bg-surface'}
+	class={alt ? 'bg-band/80' : 'bg-surface/65 dark:bg-surface/55'}
 >
 	<div class="mx-auto {measures[width]} px-5 py-20 md:py-28">
 		<div class="mb-12 flex items-baseline gap-4" use:inview={{ dir: 'up' }}>

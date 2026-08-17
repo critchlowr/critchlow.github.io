@@ -18,7 +18,10 @@
 	// `@container` lets the contents respond to the column they sit in rather than the
 	// viewport — the Work grid goes two-up at sm, so viewport width stopped being a
 	// useful signal for anything inside a card.
-	const shell = '@container rounded-xl border border-edge bg-surface-raised';
+	// A resting shadow, not just a hover one: in light mode a white card on a parchment
+	// band is separated by very little luminance, and the shadow does work that a 1px
+	// border cannot.
+	const shell = '@container rounded-xl border border-edge bg-surface-raised shadow-sm';
 
 	// Hover is a lift plus a shadow on the spring easing, not a colour swap. The border
 	// still moves, but through the --t-edge-hover token, whose contrast against the
