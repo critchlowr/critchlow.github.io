@@ -29,79 +29,72 @@
 		The cool counterpoint is `plum` — warm earth needs something cold to push against,
 		but a Miami-Blue sky ramp read as baby blue in dark mode, so Loulou does that job
 		instead at reduced chroma. One cool voice, not two.
-
-		Chroma is set per ramp, not globally. Pushing Korma as hard as Dark Fern turns the
-		brown into orange, and pushing Loulou hard turns it hot pink — so the boosts are
-		1.62 for moss (it has the furthest to go to read as grass), 1.5 for the gold, 1.28
-		for the brown, 1.18 for the ember, 0.9 for the neutral, 0.86 for the plum. Every
-		value is gamut-mapped by reducing chroma until it fits sRGB rather than clamping
-		channels, which would push lightness off the curve the whole scheme depends on.
 	*/
 
 	/* primary — Korma, rustic brown */
-	--color-primary-50: #fff8f3;
-	--color-primary-100: #fff1e6;
-	--color-primary-200: #ffe1c8;
+	--color-primary-50: #fff8f1;
+	--color-primary-100: #fff0e1;
+	--color-primary-200: #ffdfc0;
 	--color-primary-300: #ffc594;
-	--color-primary-400: #f49f4e;
-	--color-primary-500: #d17b19;
-	--color-primary-600: #b06400;
-	--color-primary-700: #935200;
-	--color-primary-800: #7b4400;
-	--color-primary-900: #673a07;
-	--color-primary-950: #381b00;
+	--color-primary-400: #eca361;
+	--color-primary-500: #cb7e31;
+	--color-primary-600: #ad6618;
+	--color-primary-700: #905410;
+	--color-primary-800: #774614;
+	--color-primary-900: #623d19;
+	--color-primary-950: #361c03;
 
 	/* accent — Mandalay, harvest gold */
-	--color-accent-50: #fff9ed;
-	--color-accent-100: #fff3d9;
-	--color-accent-200: #ffe4aa;
-	--color-accent-300: #ffcb49;
-	--color-accent-400: #e2ac00;
-	--color-accent-500: #b78b00;
-	--color-accent-600: #987300;
-	--color-accent-700: #7f5f00;
-	--color-accent-800: #6a4f00;
-	--color-accent-900: #5a4300;
-	--color-accent-950: #2f2100;
+	--color-accent-50: #fef9ef;
+	--color-accent-100: #fef3dc;
+	--color-accent-200: #fbe5b5;
+	--color-accent-300: #f1ce82;
+	--color-accent-400: #dbae40;
+	--color-accent-500: #ba8a00;
+	--color-accent-600: #9e7100;
+	--color-accent-700: #845e00;
+	--color-accent-800: #6d4e00;
+	--color-accent-900: #5a4301;
+	--color-accent-950: #312100;
 
 	/* moss — Dark Fern, field green */
-	--color-moss-50: #f0ffed;
-	--color-moss-100: #deffd9;
-	--color-moss-200: #bcfbb3;
-	--color-moss-300: #94ec88;
-	--color-moss-400: #66d257;
-	--color-moss-500: #39af28;
-	--color-moss-600: #1c9302;
-	--color-moss-700: #147a00;
-	--color-moss-800: #106600;
-	--color-moss-900: #17550e;
-	--color-moss-950: #012d00;
+	--color-moss-50: #f5fcf4;
+	--color-moss-100: #e9fae6;
+	--color-moss-200: #d1f3cb;
+	--color-moss-300: #afe3a7;
+	--color-moss-400: #85ca7b;
+	--color-moss-500: #5da853;
+	--color-moss-600: #478c3d;
+	--color-moss-700: #397531;
+	--color-moss-800: #31612b;
+	--color-moss-900: #2d5128;
+	--color-moss-950: #112a0e;
 
 	/* warm — parchment neutral, low chroma so it can carry large areas */
-	--color-warm-50: #fdf9f3;
-	--color-warm-100: #fbf3e7;
-	--color-warm-200: #f4e5d0;
-	--color-warm-300: #e3d0b3;
-	--color-warm-400: #c8b190;
-	--color-warm-500: #a68f6d;
-	--color-warm-600: #8b7656;
-	--color-warm-700: #746146;
-	--color-warm-800: #60513a;
-	--color-warm-900: #514533;
-	--color-warm-950: #2a2216;
+	--color-warm-50: #fbf9f6;
+	--color-warm-100: #f8f3ed;
+	--color-warm-200: #efe6d8;
+	--color-warm-300: #dfd0bc;
+	--color-warm-400: #c5b298;
+	--color-warm-500: #a39074;
+	--color-warm-600: #88765d;
+	--color-warm-700: #71624c;
+	--color-warm-800: #5e5240;
+	--color-warm-900: #4e4538;
+	--color-warm-950: #292219;
 
 	/* ember — Totem Pole, was `red` */
-	--color-ember-50: #fff8f6;
-	--color-ember-100: #fff0ed;
-	--color-ember-200: #ffdfd7;
-	--color-ember-300: #ffc2b2;
-	--color-ember-400: #ff9479;
-	--color-ember-500: #f05b37;
-	--color-ember-600: #cf421e;
-	--color-ember-700: #ae3413;
-	--color-ember-800: #912c11;
-	--color-ember-900: #782916;
-	--color-ember-950: #440d01;
+	--color-ember-50: #fff6f1;
+	--color-ember-100: #ffebe2;
+	--color-ember-200: #ffd4c2;
+	--color-ember-300: #ffb398;
+	--color-ember-400: #ff8866;
+	--color-ember-500: #ee5e3a;
+	--color-ember-600: #cc4624;
+	--color-ember-700: #ab381b;
+	--color-ember-800: #8d311a;
+	--color-ember-900: #732e1d;
+	--color-ember-950: #411106;
 
 	/*
 		plum — Loulou, the cool counterpoint for links and tags. Chroma is pulled to
@@ -109,17 +102,17 @@
 		hue goes hot pink as it lightens, which is wrong next to Korma and Mandalay.
 		Muted, it stays aubergine at the dark end and lilac at the light end.
 	*/
-	--color-plum-50: #fef7ff;
-	--color-plum-100: #fdefff;
-	--color-plum-200: #fbdbff;
-	--color-plum-300: #edc1f3;
-	--color-plum-400: #d3a0db;
-	--color-plum-500: #b17db8;
-	--color-plum-600: #95659c;
-	--color-plum-700: #7c5382;
-	--color-plum-800: #67456c;
-	--color-plum-900: #563b5a;
-	--color-plum-950: #2e1b31;
+	--color-plum-50: #fdf8fe;
+	--color-plum-100: #fbf0fc;
+	--color-plum-200: #f4dff6;
+	--color-plum-300: #e4c7e8;
+	--color-plum-400: #cba7cf;
+	--color-plum-500: #aa83af;
+	--color-plum-600: #916897;
+	--color-plum-700: #7b5481;
+	--color-plum-800: #68446d;
+	--color-plum-900: #583a5c;
+	--color-plum-950: #301a33;
 
 	/* Typefaces */
 	--font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

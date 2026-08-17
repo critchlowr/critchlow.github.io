@@ -192,7 +192,7 @@
 						{#each job.bullets as bullet (bullet)}
 							<li class="text-ink-muted text-body flex gap-2.5">
 								<span
-									class="bg-moss-600 mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full"
+									class="bg-ember-500 mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full"
 									aria-hidden="true"
 								></span>
 								<span>{bullet}</span>

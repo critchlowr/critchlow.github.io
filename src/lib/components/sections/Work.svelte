@@ -72,7 +72,7 @@
 
 					<div class="border-edge mt-auto flex flex-wrap gap-1.5 border-t pt-4">
 						{#each project.tools.split(', ') as tool (tool)}
-							<Badge>{tool}</Badge>
+							<Badge tone="plum">{tool}</Badge>
 						{/each}
 					</div>
 				</Card>
