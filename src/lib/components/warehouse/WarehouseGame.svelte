@@ -155,7 +155,7 @@
 			// Show replen notice immediately
 			replenNotice = { sku: demand.sku, itemName, qty: demand.replenQty };
 
-			// Delay before kicking off the replen animation
+			// Held until the pick animation has finished and the slot is visibly empty.
 			setTimeout(() => {
 				const replen = createReplen(demand.sku, demand.replenQty, demand.location);
 				replens = [...replens, replen];
@@ -193,8 +193,9 @@
 
 					// Clear replen notice
 					replenNotice = null;
-				}, 2500);
-			}, 1500);
+					// Matches the moment the runner sets the carton down in the slot.
+				}, 1500);
+			}, 2000);
 		}
 	}
 
@@ -220,27 +221,31 @@
 			const replen = createReplen(pick.sku, replenQty, location);
 			replens = [...replens, replen];
 
-			triggerScene({ type: 'replen', sku: pick.sku });
-
+			// Beat first, so the slot is visibly empty before the runner sets off.
 			setTimeout(() => {
-				replen.status = 'In Transit';
-				replens = [...replens];
-			}, 400);
+				triggerScene({ type: 'replen', sku: pick.sku });
 
-			setTimeout(() => {
-				completeReplen(replen, inventory, picks);
+				setTimeout(() => {
+					replen.status = 'In Transit';
+					replens = [...replens];
+				}, 400);
 
-				// Move newly re-assigned picks to end of array so they queue after current picks
-				const reassigned = picks.filter((p) => p.sku === pick.sku && p.status === 'Assigned');
-				const rest = picks.filter((p) => !(p.sku === pick.sku && p.status === 'Assigned'));
-				picks = [...rest, ...reassigned];
+				setTimeout(() => {
+					completeReplen(replen, inventory, picks);
 
-				replens = [...replens];
-				inventory = [...inventory];
+					// Move newly re-assigned picks to end of array so they queue after current picks
+					const reassigned = picks.filter((p) => p.sku === pick.sku && p.status === 'Assigned');
+					const rest = picks.filter((p) => !(p.sku === pick.sku && p.status === 'Assigned'));
+					picks = [...rest, ...reassigned];
 
-				refreshOrderStatuses(orders, orderLines, picks);
-				orders = [...orders];
-			}, 1500);
+					replens = [...replens];
+					inventory = [...inventory];
+
+					refreshOrderStatuses(orders, orderLines, picks);
+					orders = [...orders];
+					// Matches the moment the runner sets the carton down in the slot.
+				}, 1500);
+			}, 900);
 		}
 
 		refreshOrderStatuses(orders, orderLines, picks);

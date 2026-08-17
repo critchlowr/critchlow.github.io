@@ -94,6 +94,7 @@
 	let carriedSku = $state('');
 	let pickColumn = $state(0);
 	let replenColumn = $state(0);
+	let replenSku = $state('');
 	// Freezes cartDisplay while the picker is mid-walk, so the cart's contents change
 	// when they arrive rather than when the button is clicked.
 	let holdCart = $state(false);
@@ -185,24 +186,35 @@
 		}, 2400);
 	}
 
+	// The mirror image of the picker: collect a carton at receiving, carry it to the
+	// SKU's rack column, drop it there, walk back empty-handed. The drop at 1500ms is
+	// when the game completes the replenishment, so the column refills under the
+	// worker's hands rather than after they have gone home.
 	function animateReplen(sku: string) {
-		// Receiving worker picks up from inbound, walks to that SKU's column, drops off,
-		// walks back.
 		replenColumn = columnOf(sku);
+		replenSku = sku;
+
+		// Lifts a carton at receiving.
 		replenCarrying = true;
-		replenWorkerPos = 'walking-to-shelf';
+		replenWorkerPos = 'at-inbound';
+
+		// Carries it across to the rack.
 		setTimeout(() => {
-			replenWorkerPos = 'at-shelf';
-			shelfFlash = true;
-		}, 900);
+			replenWorkerPos = 'walking-to-shelf';
+		}, 600);
+		// Sets it down in the slot.
 		setTimeout(() => {
 			replenCarrying = false;
-			replenWorkerPos = 'walking-back';
-			shelfFlash = false;
+			shelfFlash = true;
 		}, 1500);
+		// Heads back to receiving.
+		setTimeout(() => {
+			shelfFlash = false;
+			replenWorkerPos = 'walking-back';
+		}, 2100);
 		setTimeout(() => {
 			replenWorkerPos = 'at-inbound';
-		}, 2200);
+		}, 2800);
 	}
 </script>
 
@@ -262,7 +274,7 @@
 			<div class="worker-body replen-body"></div>
 			<div class="worker-legs"></div>
 			{#if replenCarrying}
-				<div class="carried-box"></div>
+				<div class="carried-box" style={tone(replenSku)}></div>
 			{/if}
 		</div>
 
