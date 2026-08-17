@@ -11,9 +11,18 @@
 		items,
 		label,
 		headingId,
-		/** How much of each label to show at rest. Case-study titles need more room. */
-		wide = false
-	}: { items: RailItem[]; label: string; headingId: string; wide?: boolean } = $props();
+		/**
+		 * Half-width of the content column this rail sits beside — `default` for
+		 * max-w-5xl (32rem), `prose` for the case study's max-w-4xl (28rem). The rail
+		 * anchors its right edge to the column's left edge, so it needs to know.
+		 */
+		measure = 'default'
+	}: {
+		items: RailItem[];
+		label: string;
+		headingId: string;
+		measure?: 'default' | 'prose';
+	} = $props();
 
 	const spy = createSpy(() =>
 		items.map((i) => document.getElementById(i.id)).filter((el): el is HTMLElement => !!el)
@@ -48,9 +57,14 @@
 	invisible to the browser's stick/unstick calculation, so the rail overshoots
 	its container by half its own height and bleeds into whatever follows.
 -->
-<nav class="rail-track hidden lg:block" aria-labelledby={headingId}>
+<nav
+	class="rail-track"
+	class:m-default={measure === 'default'}
+	class:m-prose={measure === 'prose'}
+	aria-labelledby={headingId}
+>
 	<div class="rail-sticky">
-		<div class="rail-inner" class:rail-wide={wide}>
+		<div class="rail-inner">
 			<h2 id={headingId} class="sr-only">{label}</h2>
 
 			<!--
@@ -105,15 +119,51 @@
 		*/
 		--rail-dim: color-mix(in srgb, var(--t-brand) 70%, transparent);
 
+		--rail-gap: 1rem;
+
 		position: absolute;
 		inset-block: 0;
-		/* Parks in the gutter beside the content column rather than at the window
-		   edge, and collapses to a fixed inset once the viewport stops being wide
-		   enough for a gutter to exist. */
-		left: max(1.5rem, calc(50vw - 41rem));
-		/* Without this the rail is a dead strip roughly 40px wide running down the
-		   page, silently swallowing clicks on anything beneath it. */
+		/*
+			Anchored by its RIGHT edge to the content column's LEFT edge, not by `left`
+			to the viewport. The column is centred and capped, so its left edge sits at
+			`50% + half-width` measured from the right — put the rail just outside that
+			and it can never sit on top of the text, at any width.
+		*/
+		right: calc(50% + var(--rail-half) + var(--rail-gap));
+		/*
+			Take whatever the gutter actually offers, between a legible floor and a
+			sensible ceiling, rather than picking one width and hoping. The middle term
+			is exactly the space left over beside the column.
+		*/
+		width: clamp(7rem, calc(50vw - var(--rail-half) - var(--rail-gap)), 11rem);
+		/* Without this the rail is a dead strip down the page, silently swallowing
+		   clicks on anything beneath it. */
 		pointer-events: none;
+
+		/* Shown only where the gutter is genuinely wide enough — see below. */
+		display: none;
+	}
+
+	.m-default {
+		--rail-half: 32rem;
+	}
+	.m-prose {
+		--rail-half: 28rem;
+	}
+
+	/*
+		Appears only once the gutter can hold the 7rem floor: half the column, plus
+		the gap, plus the rail, on both sides. That is 2 x (32 + 1 + 7) = 80rem for
+		the max-w-5xl sections; the narrower case-study column clears it sooner, but
+		both use 80rem so there is exactly one threshold on the site — below it the
+		reading bar in Nav.svelte takes over, above it the rails do, and there is no
+		width where you get both or neither.
+	*/
+	@media (min-width: 80rem) {
+		.m-default,
+		.m-prose {
+			display: block;
+		}
 	}
 
 	.rail-sticky {
@@ -126,10 +176,6 @@
 
 	.rail-inner {
 		pointer-events: auto;
-		width: 11rem;
-	}
-	.rail-wide {
-		width: 13rem;
 	}
 
 	.rail-count {

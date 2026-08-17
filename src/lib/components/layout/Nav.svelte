@@ -157,14 +157,15 @@
 	{/if}
 
 	<!--
-		Reading progress, below lg only — at lg and up the section rails carry this
-		and a third indicator would just be noise.
+		Reading progress, shown only below the width where the section rails appear —
+		the same 80rem threshold SectionRail uses, so exactly one of the two is ever
+		on screen.
 
 		aria-hidden, and deliberately NOT role="progressbar": that role needs an
 		accessible name and an aria-valuenow kept in sync, and axe flags a nameless
 		one. This duplicates the scrollbar; it is decoration.
 	-->
-	<div class="read-bar lg:hidden" style="--read: {scrollProgress.value}" aria-hidden="true"></div>
+	<div class="read-bar" style="--read: {scrollProgress.value}" aria-hidden="true"></div>
 </header>
 
 <style>
@@ -207,6 +208,13 @@
 		height: 2px;
 		transform-origin: left center;
 		transform: scaleX(var(--read, 0));
-		background: var(--color-accent-500);
+		background: var(--t-brand);
+	}
+
+	/* Hand over to the section rails at exactly the width they appear. */
+	@media (min-width: 80rem) {
+		.read-bar {
+			display: none;
+		}
 	}
 </style>
