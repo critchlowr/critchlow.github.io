@@ -286,6 +286,18 @@
 	/* --t-focus / --t-focus-halo are deliberately not redefined here — see :root. */
 }
 
+:root {
+	/*
+		Height of the fixed header in Nav.svelte: py-3 (12px x2) plus its tallest
+		child, the 36px ThemeToggle, plus the 1px bottom border = 61px. Read by
+		scroller.ts as well, so the JS scroll offset and the CSS padding below
+		cannot drift apart.
+	*/
+	--nav-h: 3.8125rem;
+	/* Breathing room between the header and whatever you just jumped to. */
+	--nav-gap: 1.25rem;
+}
+
 html {
 	/*
 		No `scroll-behavior: smooth` here. Anchor scrolling runs through the rAF
@@ -301,7 +313,7 @@ html {
 		entirely underneath the header — every control on this site is shorter than
 		61px. That is SC 2.4.11 Focus Not Obscured.
 	*/
-	scroll-padding-top: 5rem;
+	scroll-padding-top: calc(var(--nav-h) + var(--nav-gap));
 }
 
 @layer base {
