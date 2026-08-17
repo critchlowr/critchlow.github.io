@@ -15,6 +15,14 @@
 
 	onMount(() => {
 		theme.init();
+
+		// For the sort of reader who opens devtools on a portfolio — which, for these
+		// roles, is a decent share of them.
+		console.log(
+			'%cORD-000  ·  1 line  ·  Staged\n%cYou found the pick list. Say hello: critchlow.rc@gmail.com',
+			'font-family:monospace;font-weight:700;color:#845e00',
+			'font-family:monospace;color:#135c73'
+		);
 	});
 </script>
 

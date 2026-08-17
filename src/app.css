@@ -1,86 +1,210 @@
 @import 'tailwindcss';
 
+/* Self-hosted so the declared stack is the stack that actually loads. Previously
+   --font-sans named Inter but nothing ever fetched it, so every visitor without
+   Inter installed locally was reading system-ui. */
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@plugin '@tailwindcss/typography';
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-	/* Primary - based on #95560e (Korma / rustic brown) */
-	--color-primary-50: #fdf6ee;
-	--color-primary-100: #f5e3cc;
-	--color-primary-200: #e6c397;
-	--color-primary-300: #cc9556;
-	--color-primary-400: #b5731e;
-	--color-primary-500: #95560e;
-	--color-primary-600: #7a470b;
-	--color-primary-700: #5c350a;
-	--color-primary-800: #3d2308;
-	--color-primary-900: #211305;
+	/*
+		Palette "Valley". The six seed hues are unchanged from the original extraction
+		— Korma #95560e, Mandalay #b18816, Dark Fern #15560b, Totem Pole #a22a06,
+		Loulou #490846, plus a parchment neutral — but every ramp is regenerated in
+		OKLCH against Tailwind's own lightness curve. Two consequences worth knowing:
 
-	/* Accent - based on #b18816 (Mandalay / golden) */
-	--color-accent-50: #fdf8ea;
-	--color-accent-100: #f8ebc5;
-	--color-accent-200: #efd48a;
-	--color-accent-300: #d4a83a;
-	--color-accent-400: #b18816;
-	--color-accent-500: #946f0f;
-	--color-accent-600: #75580c;
-	--color-accent-700: #57410a;
-	--color-accent-800: #3a2c07;
-	--color-accent-900: #1f1704;
+		1. A stop number now means the same weight on every ramp, and the same weight
+		   it means on stock Tailwind colours. The old ramps ran far darker (plum-400
+		   sat at 41% lightness where Tailwind's 400 is 77%), which is how an invisible
+		   1.04:1 hover border got shipped.
+		2. `red` is now `ember`. The old name collided with Tailwind's built-in red:
+		   @theme extends rather than replaces, so `bg-red-950` silently resolved to
+		   stock Tailwind red instead of Totem Pole.
 
-	/* Moss - based on #15560b (Dark Fern / forest green) */
-	--color-moss-50: #eef5ed;
-	--color-moss-100: #d3e6d0;
-	--color-moss-200: #a3c99d;
-	--color-moss-300: #6ba361;
-	--color-moss-400: #3d7a31;
-	--color-moss-500: #24661a;
-	--color-moss-600: #15560b;
-	--color-moss-700: #114409;
-	--color-moss-800: #0d3207;
-	--color-moss-900: #081e04;
+		The cool counterpoint is `plum` — warm earth needs something cold to push against,
+		but a Miami-Blue sky ramp read as baby blue in dark mode, so Loulou does that job
+		instead at reduced chroma. One cool voice, not two.
+	*/
 
-	/* Warm Neutrals - parchment tones from the palette */
-	--color-warm-50: #f9f5ed;
-	--color-warm-100: #f0e8d8;
-	--color-warm-200: #e0d2b8;
-	--color-warm-300: #c9b592;
-	--color-warm-400: #ad946a;
-	--color-warm-500: #8e7550;
-	--color-warm-600: #6e5a3c;
-	--color-warm-700: #51412c;
-	--color-warm-800: #352b1e;
-	--color-warm-900: #1c1812;
+	/* primary — Korma, rustic brown */
+	--color-primary-50: #fff8f1;
+	--color-primary-100: #fff0e1;
+	--color-primary-200: #ffdfc0;
+	--color-primary-300: #ffc594;
+	--color-primary-400: #eca361;
+	--color-primary-500: #cb7e31;
+	--color-primary-600: #ad6618;
+	--color-primary-700: #905410;
+	--color-primary-800: #774614;
+	--color-primary-900: #623d19;
+	--color-primary-950: #361c03;
 
-	/* Highlight - based on #a22a06 (Totem Pole / deep red) */
-	--color-red-50: #fdf0ec;
-	--color-red-100: #f9d5ca;
-	--color-red-200: #f0a58e;
-	--color-red-300: #d96a42;
-	--color-red-400: #bf4418;
-	--color-red-500: #a22a06;
-	--color-red-600: #841f04;
-	--color-red-700: #631703;
-	--color-red-800: #421002;
-	--color-red-900: #240901;
+	/* accent — Mandalay, harvest gold */
+	--color-accent-50: #fef9ef;
+	--color-accent-100: #fef3dc;
+	--color-accent-200: #fbe5b5;
+	--color-accent-300: #f1ce82;
+	--color-accent-400: #dbae40;
+	--color-accent-500: #ba8a00;
+	--color-accent-600: #9e7100;
+	--color-accent-700: #845e00;
+	--color-accent-800: #6d4e00;
+	--color-accent-900: #5a4301;
+	--color-accent-950: #312100;
 
-	/* Deep accent - based on #490846 (Loulou / plum) */
-	--color-plum-50: #f5ecf5;
-	--color-plum-100: #e6cce5;
-	--color-plum-200: #c98ec8;
-	--color-plum-300: #9c4d9a;
-	--color-plum-400: #6f2a6d;
-	--color-plum-500: #490846;
-	--color-plum-600: #380636;
-	--color-plum-700: #2a0528;
-	--color-plum-800: #1c031b;
-	--color-plum-900: #0f010f;
+	/* moss — Dark Fern, field green */
+	--color-moss-50: #f5fcf4;
+	--color-moss-100: #e9fae6;
+	--color-moss-200: #d1f3cb;
+	--color-moss-300: #afe3a7;
+	--color-moss-400: #85ca7b;
+	--color-moss-500: #5da853;
+	--color-moss-600: #478c3d;
+	--color-moss-700: #397531;
+	--color-moss-800: #31612b;
+	--color-moss-900: #2d5128;
+	--color-moss-950: #112a0e;
 
-	/* Font families */
-	--font-sans: 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', sans-serif;
-	--font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+	/* warm — parchment neutral, low chroma so it can carry large areas */
+	--color-warm-50: #fbf9f6;
+	--color-warm-100: #f8f3ed;
+	--color-warm-200: #efe6d8;
+	--color-warm-300: #dfd0bc;
+	--color-warm-400: #c5b298;
+	--color-warm-500: #a39074;
+	--color-warm-600: #88765d;
+	--color-warm-700: #71624c;
+	--color-warm-800: #5e5240;
+	--color-warm-900: #4e4538;
+	--color-warm-950: #292219;
+
+	/* ember — Totem Pole, was `red` */
+	--color-ember-50: #fff6f1;
+	--color-ember-100: #ffebe2;
+	--color-ember-200: #ffd4c2;
+	--color-ember-300: #ffb398;
+	--color-ember-400: #ff8866;
+	--color-ember-500: #ee5e3a;
+	--color-ember-600: #cc4624;
+	--color-ember-700: #ab381b;
+	--color-ember-800: #8d311a;
+	--color-ember-900: #732e1d;
+	--color-ember-950: #411106;
+
+	/*
+		plum — Loulou, the cool counterpoint for links and tags. Chroma is pulled to
+		~0.82 of the other ramps and the hue nudged 8° off magenta: at full chroma this
+		hue goes hot pink as it lightens, which is wrong next to Korma and Mandalay.
+		Muted, it stays aubergine at the dark end and lilac at the light end.
+	*/
+	--color-plum-50: #fdf8fe;
+	--color-plum-100: #fbf0fc;
+	--color-plum-200: #f4dff6;
+	--color-plum-300: #e4c7e8;
+	--color-plum-400: #cba7cf;
+	--color-plum-500: #aa83af;
+	--color-plum-600: #916897;
+	--color-plum-700: #7b5481;
+	--color-plum-800: #68446d;
+	--color-plum-900: #583a5c;
+	--color-plum-950: #301a33;
+
+	/* Typefaces */
+	--font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+	--font-mono: 'JetBrains Mono Variable', 'Fira Code', Consolas, monospace;
+
+	/*
+		Named steps rather than redefined numerics. Overriding --text-base et al would
+		silently resize every existing utility in the warehouse simulator; adding steps
+		makes each use site state its intent instead.
+	*/
+	--text-display: 4.25rem;
+	--text-display--line-height: 1.02;
+	--text-display--letter-spacing: -0.03em;
+	--text-numeral: 3.5rem;
+	--text-numeral--line-height: 0.9;
+	--text-numeral--letter-spacing: -0.02em;
+	--text-title: 2.25rem;
+	--text-title--line-height: 1.15;
+	--text-title--letter-spacing: -0.02em;
+	--text-lede: 1.25rem;
+	--text-lede--line-height: 1.55;
+	--text-body: 1.0625rem;
+	--text-body--line-height: 1.68;
+
+	/* Motion. Timing lives here so components stop restating it. */
+	--ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+	--ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
-/* Smooth scrolling - outside @layer to ensure it applies */
+/*
+	Semantic tokens. Components ask for a role — a surface, a border, muted ink — and
+	the role resolves per theme here, once. This is what stops the class of bug where
+	someone picks `plum-400` for a dark-mode hover and ships 1.04:1 without noticing:
+	contrast gets verified at this layer instead of at every call site.
+
+	`@theme inline` emits `var(--t-surface)` into the utility rather than baking the
+	value, so `bg-surface` follows the .dark toggle.
+
+	The `--t-` prefix is not decoration: WarehouseScene sets bare `--edge` and `--fill`
+	inline on every carton to carry its SKU tone, so an unprefixed `:root { --edge }`
+	would inherit into those elements and override the fallback.
+*/
+@theme inline {
+	--color-surface: var(--t-surface);
+	--color-surface-raised: var(--t-surface-raised);
+	--color-edge: var(--t-edge);
+	--color-edge-hover: var(--t-edge-hover);
+	--color-ink: var(--t-ink);
+	--color-ink-muted: var(--t-ink-muted);
+	--color-ink-strong: var(--t-ink-strong);
+	--color-brand: var(--t-brand);
+	--color-brand-strong: var(--t-brand-strong);
+	--color-link: var(--t-link);
+	--color-footer: var(--t-footer);
+}
+
+:root {
+	--t-surface: var(--color-warm-50);
+	--t-surface-raised: #ffffff;
+	--t-edge: var(--color-warm-200);
+	--t-edge-hover: var(--color-accent-400);
+	--t-ink: var(--color-warm-800);
+	--t-ink-muted: var(--color-warm-700);
+	--t-ink-strong: var(--color-primary-800);
+	/* accent-600 measured 3.95:1 on the alt ground — brand carries company names at
+	   16px, not just the big numerals, so it has to clear 4.5 rather than 3. */
+	--t-brand: var(--color-accent-700);
+	--t-brand-strong: var(--color-accent-800);
+	--t-link: var(--color-plum-800);
+	/* The footer gets a ground of its own so the page ends somewhere. */
+	--t-footer: var(--color-warm-200);
+}
+
+:root.dark {
+	--t-surface: var(--color-warm-950);
+	--t-surface-raised: var(--color-warm-900);
+	--t-edge: var(--color-warm-800);
+	--t-edge-hover: var(--color-accent-500);
+	--t-ink: var(--color-warm-200);
+	--t-ink-muted: var(--color-warm-300);
+	--t-ink-strong: var(--color-primary-200);
+	--t-brand: var(--color-accent-300);
+	--t-brand-strong: var(--color-accent-700);
+	--t-link: var(--color-plum-300);
+	/*
+		A deep aubergine between plum-950 and plum-900. plum-950 sits 1.01:1 from the
+		page ground — the hue would shift but the band would not read as separate.
+	*/
+	--t-footer: #43284a;
+}
+
 html {
 	scroll-behavior: smooth;
 }
@@ -91,143 +215,109 @@ html {
 	}
 }
 
-/* Base styles */
 @layer base {
 	body {
-		@apply bg-warm-50 text-warm-800 dark:bg-warm-900 dark:text-warm-100;
+		background-color: var(--t-surface);
+		color: var(--t-ink);
 		font-family: var(--font-sans);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
 
-	/* Focus indicators for accessibility */
 	:focus-visible {
-		@apply outline-accent-400 rounded-sm outline-3 outline-offset-2;
+		@apply outline-accent-500 rounded-sm outline-3 outline-offset-2;
 	}
 
-	/* Selection colors */
 	::selection {
-		@apply bg-accent-200 text-warm-900 dark:bg-plum-500 dark:text-warm-50;
+		@apply bg-accent-200 text-warm-950 dark:bg-plum-800 dark:text-warm-50;
+	}
+
+	h1,
+	h2,
+	h3 {
+		text-wrap: balance;
 	}
 }
 
-/* Scroll animation utilities */
 @layer utilities {
-	.fade-in-up {
+	/*
+		Reveal-on-scroll. Direction comes from a data attribute so one class covers
+		every variant, and the transition delay reads a --i index so a container can
+		stagger its children without a stack of nth-child rules.
+	*/
+	.reveal {
 		opacity: 0;
-		transform: translateY(1.5rem);
 		transition:
-			opacity 0.6s ease-out,
-			transform 0.6s ease-out;
+			opacity 0.55s var(--ease-soft),
+			transform 0.55s var(--ease-soft);
+		transition-delay: calc(var(--i, 0) * 65ms);
+		will-change: opacity, transform;
 	}
 
-	.fade-in-up.in-view {
+	.reveal[data-dir='up'] {
+		transform: translateY(1.75rem);
+	}
+	.reveal[data-dir='left'] {
+		transform: translateX(-1.5rem);
+	}
+	.reveal[data-dir='right'] {
+		transform: translateX(1.5rem);
+	}
+	.reveal[data-dir='scale'] {
+		transform: scale(0.965);
+	}
+
+	.reveal.in-view {
 		opacity: 1;
-		transform: translateY(0);
+		transform: none;
+	}
+
+	/* Container staggers its own children; each child carries its index inline. */
+	.stagger > * {
+		opacity: 0;
+		transform: translateY(1rem);
+		transition:
+			opacity 0.45s var(--ease-soft),
+			transform 0.45s var(--ease-soft);
+		transition-delay: calc(var(--i, 0) * 65ms);
+	}
+
+	.stagger.in-view > * {
+		opacity: 1;
+		transform: none;
+	}
+
+	/*
+		Reduced motion keeps the reveal and drops the movement. Vestibular guidance
+		targets translation and scale, not opacity, so a cross-fade is both safe and
+		far better than the previous behaviour, which bypassed the observer entirely
+		and popped the whole page in at once.
+	*/
+	@media (prefers-reduced-motion: reduce) {
+		.reveal,
+		.stagger > * {
+			transform: none !important;
+			transition: opacity 0.4s linear !important;
+			transition-delay: calc(var(--i, 0) * 45ms) !important;
+		}
+	}
+
+	/* The hairline beside a section heading draws itself in. */
+	.rule-draw {
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.7s var(--ease-soft) 0.15s;
+	}
+
+	.rule-draw.in-view,
+	.in-view .rule-draw {
+		transform: scaleX(1);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.fade-in-up {
-			opacity: 1;
+		.rule-draw {
 			transform: none;
 			transition: none;
 		}
-	}
-}
-
-/* Hero entrance animation */
-@keyframes hero-fade-in {
-	from {
-		opacity: 0;
-		transform: translateY(1rem);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.hero-animate {
-	animation: hero-fade-in 0.8s ease-out both;
-}
-
-.hero-animate-delay-1 {
-	animation: hero-fade-in 0.8s ease-out 0.2s both;
-}
-
-.hero-animate-delay-2 {
-	animation: hero-fade-in 0.8s ease-out 0.4s both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.hero-animate,
-	.hero-animate-delay-1,
-	.hero-animate-delay-2 {
-		animation: none;
-		opacity: 1;
-		transform: none;
-	}
-}
-
-/* Staggered card reveal */
-.stagger-children > * {
-	opacity: 0;
-	transform: translateY(1rem);
-	transition:
-		opacity 0.4s ease-out,
-		transform 0.4s ease-out;
-}
-
-.stagger-children.in-view > *:nth-child(1) {
-	transition-delay: 0s;
-}
-.stagger-children.in-view > *:nth-child(2) {
-	transition-delay: 0.08s;
-}
-.stagger-children.in-view > *:nth-child(3) {
-	transition-delay: 0.16s;
-}
-.stagger-children.in-view > *:nth-child(4) {
-	transition-delay: 0.24s;
-}
-.stagger-children.in-view > *:nth-child(5) {
-	transition-delay: 0.32s;
-}
-.stagger-children.in-view > *:nth-child(6) {
-	transition-delay: 0.4s;
-}
-.stagger-children.in-view > *:nth-child(7) {
-	transition-delay: 0.48s;
-}
-.stagger-children.in-view > *:nth-child(8) {
-	transition-delay: 0.56s;
-}
-.stagger-children.in-view > *:nth-child(9) {
-	transition-delay: 0.64s;
-}
-.stagger-children.in-view > *:nth-child(10) {
-	transition-delay: 0.72s;
-}
-.stagger-children.in-view > *:nth-child(11) {
-	transition-delay: 0.8s;
-}
-.stagger-children.in-view > *:nth-child(12) {
-	transition-delay: 0.88s;
-}
-/* Anything past 12 shares the last delay rather than firing with none. */
-.stagger-children.in-view > *:nth-child(n + 13) {
-	transition-delay: 0.96s;
-}
-
-.stagger-children.in-view > * {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.stagger-children > * {
-		opacity: 1;
-		transform: none;
-		transition: none;
 	}
 }

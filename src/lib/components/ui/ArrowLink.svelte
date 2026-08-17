@@ -24,10 +24,15 @@
 	// so `text-${size}` would never be emitted into the stylesheet.
 	const sizes = { sm: 'text-sm', base: 'text-base' };
 
+	// The arrow nudges on hover — the smallest possible signal that this goes somewhere.
+	// Grouped so the glyph animates from a hover anywhere on the link, not just on itself.
 	const classes = $derived(
-		'inline-flex items-center gap-1.5 font-semibold text-accent-700 underline-offset-4 ' +
-			`hover:underline dark:text-accent-300 ${sizes[size]}`
+		'group text-link inline-flex items-center gap-1.5 font-semibold underline-offset-4 ' +
+			`hover:underline ${sizes[size]}`
 	);
+	const glyph =
+		'inline-block transition-transform duration-200 ease-spring ' +
+		'group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0';
 </script>
 
 {#if href}
@@ -56,12 +61,12 @@
 			</svg>
 			<span class="sr-only">(opens in a new tab)</span>
 		{:else}
-			<span aria-hidden="true">{direction === 'down' ? '↓' : '→'}</span>
+			<span class={glyph} aria-hidden="true">{direction === 'down' ? '↓' : '→'}</span>
 		{/if}
 	</a>
 {:else}
 	<button type="button" class={classes} {onclick}>
 		{label}
-		<span aria-hidden="true">{direction === 'down' ? '↓' : '→'}</span>
+		<span class={glyph} aria-hidden="true">{direction === 'down' ? '↓' : '→'}</span>
 	</button>
 {/if}

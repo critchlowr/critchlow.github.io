@@ -2,8 +2,8 @@
 	import { experience } from '$lib/data/content';
 	import { inview } from '$lib/actions/inview';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
+	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
@@ -161,32 +161,39 @@
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
-	<div class="stagger-children space-y-4" use:inview>
-		{#each experience as job (job.company + job.title)}
-			<Card interactive class="group p-6">
+	<!--
+		Cards, not rules. This section sits on the alt ground, so a raised surface is
+		what gives each role an edge against the tint behind it — and with seven entries
+		the boundaries are what make the column scannable.
+	-->
+	<ul class="stagger space-y-5" use:inview>
+		{#each experience as job, jobIndex (job.company + job.title)}
+			<Card as="li" interactive class="group p-6 md:p-7" style="--i: {jobIndex}">
 				<div
-					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left"
+					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:gap-6 sm:text-left"
 				>
 					<div>
-						<h3 class="text-primary-700 dark:text-primary-200 text-lg font-bold">
+						<h3 class="text-ink-strong font-display text-2xl font-semibold">
 							{job.title}
 						</h3>
-						<p class="text-accent-600 dark:text-accent-300 text-sm font-medium">
+						<p class="text-brand mt-1 text-base font-medium">
 							{job.company}
 						</p>
 					</div>
 					<div class="shrink-0 sm:text-right">
 						<Badge tone="warm" size="sm">{job.period}</Badge>
-						<p class="text-warm-600 dark:text-warm-400 mt-1 text-sm">
+						<p class="text-ink-muted mt-1.5 text-sm">
 							{job.location}
 						</p>
 					</div>
 				</div>
 				{#if job.bullets.length > 0}
-					<ul class="mt-4 space-y-2">
+					<ul class="mt-5 space-y-2.5">
 						{#each job.bullets as bullet (bullet)}
-							<li class="text-warm-600 dark:text-warm-400 flex gap-2 text-sm leading-relaxed">
-								<span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" aria-hidden="true"
+							<li class="text-ink-muted text-body flex gap-2.5">
+								<span
+									class="bg-ember-500 mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full"
+									aria-hidden="true"
 								></span>
 								<span>{bullet}</span>
 							</li>
@@ -194,22 +201,22 @@
 					</ul>
 				{/if}
 				{#if job.tags && job.tags.length > 0}
-					<div class="mt-4 flex flex-wrap gap-1.5">
+					<div class="mt-5 flex flex-wrap gap-1.5">
 						{#each job.tags as tag (tag)}
-							<Badge>{tag}</Badge>
+							<Badge tone="plum">{tag}</Badge>
 						{/each}
 					</div>
 				{/if}
 				{#if job.href}
-					<div class="mt-4">
+					<div class="mt-5">
 						<ArrowLink href={job.href} label={job.hrefLabel ?? 'Read more'} size="sm" />
 					</div>
 				{/if}
 				{#if job.showSimulator}
-					<div class="mt-4 flex justify-center">
+					<div class="mt-6 flex justify-center">
 						<button
 							type="button"
-							class="border-accent-300 bg-accent-50 text-accent-700 hover:bg-accent-100 hover:border-accent-400 focus:ring-accent-400 dark:border-accent-500 dark:bg-accent-900 dark:text-accent-100 dark:hover:bg-accent-800 dark:focus:ring-accent-500 dark:focus:ring-offset-warm-800 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 focus:ring-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 dark:focus:ring-offset-warm-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 							onclick={() => simulator.launch()}
 						>
 							<svg
@@ -228,55 +235,62 @@
 							Try the WMS Simulator
 						</button>
 					</div>
-					<div class="-mx-6 mt-4 -mb-6" bind:this={conveyorEl}>
+					<!--
+						Bled to the card edges rather than boxed again inside it — a border
+						within a border reads as clutter.
+					-->
+					<div
+						class="mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
+						bind:this={conveyorEl}
+					>
 						<ConveyorBelt visible={conveyorVisible} />
 					</div>
 				{/if}
-			</Card>
-			{#if job.showBartendingPhotos}
-				<div
-					class="photo-marquee min-h-[12rem] overflow-hidden rounded-xl sm:min-h-[14rem]"
-					bind:this={marqueeContainer}
-					role="region"
-					aria-label="Bartending photo carousel"
-					ontouchstart={onTouchStart}
-					ontouchmove={onTouchMove}
-					ontouchend={onTouchEnd}
-				>
-					<div class="marquee-track" bind:this={marqueeTrack}>
-						{#each bartendingPhotos as photo (photo.src)}
-							<button
-								type="button"
-								onclick={() => openLightbox(photo.src, photo.alt)}
-								class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-							>
-								<img
-									src={photo.src}
-									alt={photo.alt}
-									class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-								/>
-							</button>
-						{/each}
-						{#each bartendingPhotos as photo (photo.src)}
-							<button
-								type="button"
-								onclick={() => openLightbox(photo.src, photo.alt)}
-								class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-								tabindex="-1"
-								aria-hidden="true"
-							>
-								<img
-									src={photo.src}
-									alt=""
-									class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-								/>
-							</button>
-						{/each}
+				{#if job.showBartendingPhotos}
+					<div
+						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
+						bind:this={marqueeContainer}
+						role="region"
+						aria-label="Bartending photo carousel"
+						ontouchstart={onTouchStart}
+						ontouchmove={onTouchMove}
+						ontouchend={onTouchEnd}
+					>
+						<div class="marquee-track" bind:this={marqueeTrack}>
+							{#each bartendingPhotos as photo (photo.src)}
+								<button
+									type="button"
+									onclick={() => openLightbox(photo.src, photo.alt)}
+									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+								>
+									<img
+										src={photo.src}
+										alt={photo.alt}
+										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
+									/>
+								</button>
+							{/each}
+							{#each bartendingPhotos as photo (photo.src)}
+								<button
+									type="button"
+									onclick={() => openLightbox(photo.src, photo.alt)}
+									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									tabindex="-1"
+									aria-hidden="true"
+								>
+									<img
+										src={photo.src}
+										alt=""
+										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
+									/>
+								</button>
+							{/each}
+						</div>
 					</div>
-				</div>
-			{/if}
+				{/if}
+			</Card>
 		{/each}
-	</div>
+	</ul>
 </SectionWrapper>
 
 {#if lightboxOpen}

@@ -77,7 +77,7 @@
 								class="h-1.5 w-3 rounded-full {i < progress.done
 									? 'bg-moss-400 dark:bg-moss-500'
 									: isShorted
-										? 'bg-red-300 dark:bg-red-700'
+										? 'bg-ember-300 dark:bg-ember-700'
 										: 'bg-warm-200 dark:bg-warm-600'}"
 							></div>
 						{/each}

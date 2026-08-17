@@ -1,41 +1,47 @@
 <script lang="ts">
 	import { hero } from '$lib/data/content';
+	import { inview } from '$lib/actions/inview';
 </script>
 
 <section
 	id="hero"
-	class="flex min-h-[80vh] items-center justify-center px-4 pt-20"
+	class="relative flex min-h-[88vh] items-center overflow-hidden px-5 pt-24 pb-16"
 	aria-label="Introduction"
 >
-	<div class="max-w-3xl text-center">
+	<div class="wash" aria-hidden="true"></div>
+
+	<div class="relative mx-auto w-full max-w-4xl">
 		<h1
-			class="hero-animate text-primary-800 dark:text-primary-200 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
+			class="text-ink-strong font-display text-display font-semibold"
+			use:inview={{ dir: 'up', i: 0 }}
 		>
 			{hero.name}
 		</h1>
-		<p
-			class="hero-animate-delay-1 text-accent-600 dark:text-accent-300 mt-4 text-lg font-medium sm:text-xl"
-		>
+
+		<p class="text-brand mt-5 text-xl font-medium" use:inview={{ dir: 'up', i: 1 }}>
 			{hero.tagline}
 		</p>
-		<p
-			class="hero-animate-delay-2 text-warm-600 dark:text-warm-400 mx-auto mt-6 max-w-2xl text-base leading-relaxed"
-		>
+
+		<div class="bg-edge rule-draw mt-8 h-px w-full" use:inview aria-hidden="true"></div>
+
+		<p class="text-ink text-body mt-8 max-w-2xl" use:inview={{ dir: 'up', i: 2 }}>
 			{hero.summary}
 		</p>
-		<p class="hero-animate-delay-2 text-warm-600 dark:text-warm-400 mx-auto mt-6 max-w-xl text-sm">
+
+		<p class="text-ink-muted mt-5 max-w-xl text-base" use:inview={{ dir: 'up', i: 3 }}>
 			{hero.availability}
 		</p>
-		<div class="hero-animate-delay-2 mt-8 flex flex-wrap items-center justify-center gap-3">
+
+		<div class="mt-10 flex flex-wrap items-center gap-3" use:inview={{ dir: 'up', i: 4 }}>
 			<a
 				href="#contact"
-				class="bg-accent-500 dark:bg-accent-600 inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-500 dark:hover:bg-red-600"
+				class="bg-accent-700 hover:bg-accent-800 ease-spring inline-block rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 			>
 				Get in Touch
 			</a>
 			<a
 				href={hero.resumeHref}
-				class="border-warm-300 text-warm-700 hover:border-accent-400 hover:text-accent-700 dark:border-warm-600 dark:text-warm-300 dark:hover:border-accent-500 dark:hover:text-accent-300 inline-flex items-center gap-2 rounded-lg border px-6 py-2.5 text-sm font-semibold transition-colors"
+				class="border-edge text-ink-muted hover:border-edge-hover hover:text-ink-strong ease-spring inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-sm font-semibold transition-[color,border-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -57,3 +63,51 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	/*
+		Two soft washes — harvest gold from the upper left, sky from the lower right.
+		The palette's whole premise is warm earth against a cool counterpoint, so the
+		hero states that before any content does. Static; nothing here animates.
+	*/
+	.wash {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background:
+			radial-gradient(
+				66rem 36rem at 10% -12%,
+				color-mix(in oklab, var(--color-accent-300) 62%, transparent),
+				transparent 72%
+			),
+			radial-gradient(
+				54rem 34rem at 94% 110%,
+				color-mix(in oklab, var(--color-plum-300) 52%, transparent),
+				transparent 72%
+			),
+			radial-gradient(
+				40rem 26rem at 72% -4%,
+				color-mix(in oklab, var(--color-moss-200) 26%, transparent),
+				transparent 70%
+			);
+	}
+
+	:global(.dark) .wash {
+		background:
+			radial-gradient(
+				66rem 36rem at 10% -12%,
+				color-mix(in oklab, var(--color-accent-700) 58%, transparent),
+				transparent 72%
+			),
+			radial-gradient(
+				54rem 34rem at 94% 110%,
+				color-mix(in oklab, var(--color-plum-700) 62%, transparent),
+				transparent 72%
+			),
+			radial-gradient(
+				40rem 26rem at 72% -4%,
+				color-mix(in oklab, var(--color-moss-800) 34%, transparent),
+				transparent 70%
+			);
+	}
+</style>

@@ -7,42 +7,39 @@
 	const devIconBase = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons';
 </script>
 
-<SectionWrapper id="skills" headingId="skills-heading" number="06" title="Skills" alt>
-	<div class="space-y-10">
+<SectionWrapper id="skills" headingId="skills-heading" number="06" title="Skills" alt width="wide">
+	<div class="space-y-12">
 		{#each skills as category (category.label)}
-			<div>
-				<h3
-					class="text-warm-700 dark:text-warm-300 mb-4 text-sm font-semibold tracking-wider uppercase"
-				>
+			<div use:inview={{ dir: 'up' }}>
+				<h3 class="text-ink-muted mb-4 font-mono text-xs font-semibold tracking-[0.14em] uppercase">
 					{category.label}
 				</h3>
-				<div class="flex flex-wrap gap-2">
-					{#each category.items as item (item)}
-						<Badge size="lg">{item}</Badge>
+				<div class="stagger flex flex-wrap gap-2" use:inview>
+					{#each category.items as item, i (item)}
+						<span style="--i: {i}"><Badge size="lg">{item}</Badge></span>
 					{/each}
 				</div>
 			</div>
 		{/each}
 
 		<div>
-			<h3
-				class="text-warm-700 dark:text-warm-300 mb-4 text-sm font-semibold tracking-wider uppercase"
-			>
+			<h3 class="text-ink-muted mb-4 font-mono text-xs font-semibold tracking-[0.14em] uppercase">
 				Data &amp; Tools
 			</h3>
-			<div class="stagger-children grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4" use:inview>
-				{#each tools as tool (tool.name)}
+			<div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4" use:inview>
+				{#each tools as tool, i (tool.name)}
 					<div
-						class="border-warm-200 hover:border-accent-300 dark:border-warm-700 dark:bg-warm-800 dark:hover:border-accent-600 flex items-center gap-3 rounded-lg border bg-white px-4 py-3 transition-all hover:shadow-sm"
+						class="group border-edge bg-surface-raised hover:border-edge-hover ease-spring flex items-center gap-3 rounded-lg border px-4 py-3 transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+						style="--i: {i}"
 					>
 						<img
 							src="{devIconBase}/{tool.icon}.svg"
 							alt=""
-							class="h-7 w-7"
+							class="ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
 							loading="lazy"
 							aria-hidden="true"
 						/>
-						<span class="text-warm-700 dark:text-warm-300 text-sm font-medium">{tool.name}</span>
+						<span class="text-ink text-sm font-medium">{tool.name}</span>
 					</div>
 				{/each}
 			</div>

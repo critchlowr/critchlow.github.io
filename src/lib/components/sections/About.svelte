@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { about } from '$lib/data/content';
+	import { inview } from '$lib/actions/inview';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 </script>
 
 <SectionWrapper id="about" headingId="about-heading" number="01" title="About Me">
-	<div class="flex flex-col items-center gap-6 md:flex-row md:items-center">
-		<img
-			src="/images/ryancritchlow.jpeg"
-			alt="Ryan Critchlow"
-			class="border-warm-200 dark:border-warm-700 h-56 w-56 shrink-0 rounded-xl border-2 object-cover shadow-md md:h-72 md:w-72"
-		/>
-		<div class="space-y-4">
+	<div class="flex flex-col items-center gap-10 md:flex-row md:items-start">
+		<div class="shrink-0" use:inview={{ dir: 'left' }}>
+			<img
+				src="/images/ryancritchlow.jpeg"
+				alt="Ryan Critchlow"
+				class="border-edge h-56 w-56 rounded-2xl border object-cover shadow-lg md:h-72 md:w-72"
+			/>
+		</div>
+		<div class="space-y-5" use:inview={{ dir: 'right' }}>
 			{#each about.paragraphs as paragraph (paragraph)}
-				<p class="text-warm-700 dark:text-warm-300 leading-relaxed">{paragraph}</p>
+				<p class="text-ink text-body">{paragraph}</p>
 			{/each}
 		</div>
 	</div>

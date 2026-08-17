@@ -64,16 +64,14 @@
 	});
 </script>
 
-<header
-	class="border-warm-200 bg-warm-50/90 dark:border-warm-700 dark:bg-warm-900/90 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md"
->
+<header class="border-edge bg-surface/85 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md">
 	<nav
 		aria-label="Main navigation"
-		class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3"
+		class="mx-auto flex max-w-5xl items-center justify-between px-5 py-3"
 	>
 		<a
 			href="/#hero"
-			class="text-primary-700 dark:text-primary-200 text-lg font-bold"
+			class="text-ink-strong font-display text-xl font-semibold"
 			aria-label="Ryan Critchlow - back to top"
 		>
 			RC
@@ -84,10 +82,10 @@
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
-					class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors {activeSection ===
+					class="nav-link relative px-3 py-1.5 text-sm font-medium transition-colors {activeSection ===
 					hashOf(link.href)
-						? 'bg-accent-100 text-accent-700 dark:bg-plum-600 dark:text-plum-100'
-						: 'text-warm-600 hover:bg-warm-100 hover:text-warm-800 dark:text-warm-400 dark:hover:bg-warm-800 dark:hover:text-warm-200'}"
+						? 'text-ink-strong is-active'
+						: 'text-ink-muted hover:text-ink-strong'}"
 					aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
 				>
 					{link.label}
@@ -104,7 +102,7 @@
 				aria-expanded={mobileOpen}
 				aria-controls="mobile-menu"
 				aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-				class="text-warm-600 hover:bg-warm-200 dark:text-warm-300 dark:hover:bg-warm-700 rounded-lg p-2"
+				class="text-ink-muted hover:bg-warm-200 dark:hover:bg-warm-800 rounded-lg p-2 transition-colors"
 			>
 				{#if mobileOpen}
 					<svg
@@ -140,18 +138,15 @@
 
 	<!-- Mobile menu -->
 	{#if mobileOpen}
-		<div
-			id="mobile-menu"
-			class="border-warm-200 bg-warm-50 dark:border-warm-700 dark:bg-warm-900 border-t px-4 py-2 md:hidden"
-		>
+		<div id="mobile-menu" class="border-edge bg-surface border-t px-5 py-2 md:hidden">
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
 					onclick={closeMobile}
 					class="block rounded-md px-3 py-2 text-sm font-medium transition-colors {activeSection ===
 					hashOf(link.href)
-						? 'bg-accent-100 text-accent-700 dark:bg-plum-600 dark:text-plum-100'
-						: 'text-warm-600 hover:bg-warm-100 dark:text-warm-400 dark:hover:bg-warm-800'}"
+						? 'bg-accent-100 text-accent-800 dark:bg-accent-950 dark:text-accent-200'
+						: 'text-ink-muted hover:bg-warm-100 dark:hover:bg-warm-900'}"
 					aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
 				>
 					{link.label}
@@ -160,3 +155,32 @@
 		</div>
 	{/if}
 </header>
+
+<style>
+	/*
+		The active-section marker grows from the centre rather than appearing. The
+		scrollspy updates continuously while scrolling, so a hard swap between links
+		reads as a flicker; a 220ms grow reads as the page tracking where you are.
+	*/
+	.nav-link::after {
+		content: '';
+		position: absolute;
+		inset-inline: 0.75rem;
+		bottom: 0.15rem;
+		height: 2px;
+		border-radius: 2px;
+		background: var(--color-accent-500);
+		transform: scaleX(0);
+		transition: transform 0.22s var(--ease-spring);
+	}
+
+	.nav-link.is-active::after {
+		transform: scaleX(1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nav-link::after {
+			transition: none;
+		}
+	}
+</style>

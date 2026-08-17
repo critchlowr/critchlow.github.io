@@ -78,13 +78,13 @@
 	.box {
 		position: absolute;
 		border-radius: 3px;
-		border: 1px solid var(--color-red-500);
-		background-color: var(--color-red-50);
+		border: 1px solid var(--color-ember-500);
+		background-color: var(--color-ember-50);
 	}
 
 	:global(.dark) .box {
-		border-color: var(--color-red-400);
-		background-color: var(--color-red-900);
+		border-color: var(--color-ember-400);
+		background-color: var(--color-ember-900);
 	}
 
 	.belt-rollers {

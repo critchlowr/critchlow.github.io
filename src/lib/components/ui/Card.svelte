@@ -9,20 +9,26 @@
 		as?: 'div' | 'article' | 'li';
 		/** Layout classes — padding, flex, spacing. Styling of the shell itself lives here. */
 		class?: string;
+		/** Inline custom properties, e.g. the `--i` stagger index inside a `.stagger` list. */
+		style?: string;
 	}
 
-	let { children, interactive = false, as = 'div', class: extra = '' }: Props = $props();
+	let { children, interactive = false, as = 'div', class: extra = '', style }: Props = $props();
 
-	const shell = 'rounded-xl border border-warm-200 bg-white dark:border-warm-700 dark:bg-warm-800';
+	// `@container` lets the contents respond to the column they sit in rather than the
+	// viewport — the Work grid goes two-up at sm, so viewport width stopped being a
+	// useful signal for anything inside a card.
+	const shell = '@container rounded-xl border border-edge bg-surface-raised';
 
-	// The dark hover was previously split between plum-400 and accent-600 across
-	// components. plum-400 sits at 1.04:1 against the resting warm-700 border, so the
-	// hover was invisible in dark mode. accent-600 gives 1.47:1, the closest match to
-	// the 1.63:1 delta the light theme already uses.
+	// Hover is a lift plus a shadow on the spring easing, not a colour swap. The border
+	// still moves, but through the --t-edge-hover token, whose contrast against the
+	// resting edge is verified once in app.css rather than guessed at per component.
 	const hover =
-		'transition-all hover:border-accent-300 hover:shadow-md dark:hover:border-accent-600';
+		'transition-[transform,box-shadow,border-color] duration-200 ease-spring ' +
+		'hover:border-edge-hover hover:-translate-y-0.5 hover:shadow-lg ' +
+		'motion-reduce:transition-none motion-reduce:hover:translate-y-0';
 </script>
 
-<svelte:element this={as} class="{shell} {interactive ? hover : ''} {extra}">
+<svelte:element this={as} class="{shell} {interactive ? hover : ''} {extra}" {style}>
 	{@render children()}
 </svelte:element>

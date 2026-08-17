@@ -185,8 +185,8 @@
 
 			<!-- Cart full banner -->
 			{#if cartFull}
-				<div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-center dark:bg-red-950">
-					<p class="text-sm font-medium text-red-600 dark:text-red-400">
+				<div class="bg-ember-50 dark:bg-ember-950 mb-4 rounded-lg px-4 py-3 text-center">
+					<p class="text-ember-600 dark:text-ember-400 text-sm font-medium">
 						Cart full — stage your cart before picking more
 					</p>
 					<button
@@ -262,7 +262,7 @@
 
 					<!-- Action buttons -->
 					{#if !locationHasEnough}
-						<p class="mb-2 text-center text-xs font-medium text-red-500 dark:text-red-400">
+						<p class="text-ember-500 dark:text-ember-400 mb-2 text-center text-xs font-medium">
 							Location short — report empty to continue
 						</p>
 					{/if}
@@ -280,7 +280,7 @@
 						</button>
 						<button
 							type="button"
-							class="flex-1 rounded-lg bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+							class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
 							onclick={() => onreportempty(currentPick.pickId)}
 							aria-label="Report location {currentPick.fromLocation} empty"
 						>
@@ -351,7 +351,7 @@
 				<div
 					class="rounded-lg border-2 p-4 {entry.complete
 						? 'border-moss-300 bg-moss-50 dark:border-moss-600 dark:bg-moss-900'
-						: 'border-red-300 bg-red-50 dark:border-red-600 dark:bg-red-950'}"
+						: 'border-ember-300 bg-ember-50 dark:border-ember-600 dark:bg-ember-950'}"
 				>
 					<div class="mb-2 flex items-center justify-between">
 						<span class="text-warm-700 dark:text-warm-200 font-mono text-xs font-semibold">
@@ -373,27 +373,27 @@
 							Pack Order
 						</button>
 					{:else}
-						<p class="mb-2 text-sm font-medium text-red-700 dark:text-red-300">
+						<p class="text-ember-700 dark:text-ember-300 mb-2 text-sm font-medium">
 							Short {missingUnits} unit{missingUnits !== 1 ? 's' : ''} across
 							{entry.shortfall.length} line{entry.shortfall.length !== 1 ? 's' : ''}
 						</p>
 						<ul class="mb-3 space-y-0.5">
 							{#each entry.shortfall as line (line.lineNum)}
-								<li class="font-mono text-xs text-red-600 dark:text-red-400">
+								<li class="text-ember-600 dark:text-ember-400 font-mono text-xs">
 									{line.sku} &middot; {line.itemName} &minus;{line.missingQty}
 								</li>
 							{/each}
 						</ul>
 
 						{#if confirmingShortPack === entry.orderId}
-							<p class="mb-2 text-xs font-medium text-red-700 dark:text-red-300">
+							<p class="text-ember-700 dark:text-ember-300 mb-2 text-xs font-medium">
 								This closes the order short. The missing units will not ship and cannot be
 								recovered.
 							</p>
 							<div class="flex gap-2">
 								<button
 									type="button"
-									class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+									class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
 									onclick={() => {
 										onpackorder(entry.orderId, true);
 										confirmingShortPack = null;
@@ -422,7 +422,7 @@
 								</button>
 								<button
 									type="button"
-									class="flex-1 rounded-lg bg-red-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
+									class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
 									onclick={() => {
 										confirmingShortPack = entry.orderId;
 									}}

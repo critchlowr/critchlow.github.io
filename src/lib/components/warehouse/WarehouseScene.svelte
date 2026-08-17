@@ -739,9 +739,9 @@
 		width: var(--carton);
 		height: var(--carton);
 		flex-shrink: 0;
-		border: 1px solid var(--edge, var(--color-red-500));
+		border: 1px solid var(--edge, var(--color-ember-500));
 		border-radius: 1px;
-		background: var(--fill, var(--color-red-100));
+		background: var(--fill, var(--color-ember-100));
 	}
 
 	.shelf-box {
@@ -750,10 +750,13 @@
 			transform 0.3s;
 	}
 
-	:global(.dark) .shelf-box {
-		background: var(--color-red-900);
-		border-color: var(--color-red-500);
-	}
+	/*
+		No dark-mode override here on purpose. There used to be one that repainted every
+		shelf box a single flat red, which threw away the per-SKU --fill/--edge and made
+		the rack unreadable in dark mode — the cart, staging, and carried boxes never had
+		it, so only the shelves lost their colour. The tones are light pastels and read
+		fine on the dark rack.
+	*/
 
 	/* Picker worker */
 	.worker {
@@ -967,8 +970,8 @@
 	.loaded-box {
 		width: var(--carton);
 		height: var(--carton);
-		background: var(--color-red-100);
-		border: 1px solid var(--color-red-500);
+		background: var(--color-ember-100);
+		border: 1px solid var(--color-ember-500);
 		border-radius: 1px;
 		flex-shrink: 0;
 		/* A fixed 2px band, not a percentage. At 10% of an 8px carton the tape came out
@@ -976,8 +979,8 @@
 		background-image: linear-gradient(
 			to bottom,
 			transparent calc(50% - 1px),
-			var(--color-red-600) calc(50% - 1px),
-			var(--color-red-600) calc(50% + 1px),
+			var(--color-ember-600) calc(50% - 1px),
+			var(--color-ember-600) calc(50% + 1px),
 			transparent calc(50% + 1px)
 		);
 	}
@@ -991,8 +994,8 @@
 	}
 
 	.staging-area.pack-flash {
-		border-color: var(--color-red-600);
-		box-shadow: 0 0 8px 1px var(--color-red-400);
+		border-color: var(--color-ember-600);
+		box-shadow: 0 0 8px 1px var(--color-ember-400);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
