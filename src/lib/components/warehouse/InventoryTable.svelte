@@ -4,7 +4,19 @@
 	let { inventory }: { inventory: InventoryItem[] } = $props();
 </script>
 
-<div class="overflow-x-auto">
+<!--
+	tabindex="0" is required here, not optional: a scroll container with no
+	focusable children cannot be scrolled by keyboard, so this content was
+	unreachable without a pointer (SC 2.1.1, axe scrollable-region-focusable).
+	The compiler rule below cannot tell a scroll container from a decorative div.
+-->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+<div
+	class="overflow-x-auto"
+	tabindex="0"
+	role="region"
+	aria-label="Inventory, scrolls horizontally"
+>
 	<table class="w-full text-left text-sm">
 		<thead>
 			<tr

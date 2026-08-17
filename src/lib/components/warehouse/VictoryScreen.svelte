@@ -1,5 +1,13 @@
 <script lang="ts">
 	let { onreset }: { onreset: () => void } = $props();
+
+	// The victory screen replaces the whole panel, so the button that triggered it
+	// is destroyed and focus falls to <body>. Landing on the heading both restores
+	// focus and announces the outcome.
+	let heading = $state<HTMLElement>();
+	$effect(() => {
+		heading?.focus();
+	});
 </script>
 
 <div class="flex flex-col items-center justify-center gap-6 py-12 text-center">
@@ -17,7 +25,13 @@
 	</div>
 
 	<div>
-		<h3 class="text-warm-800 dark:text-warm-100 text-2xl font-bold">All Orders Shipped!</h3>
+		<h3
+			bind:this={heading}
+			tabindex="-1"
+			class="text-warm-800 dark:text-warm-100 text-2xl font-bold"
+		>
+			All Orders Shipped!
+		</h3>
 		<p class="text-warm-600 dark:text-warm-400 mt-2 text-sm">
 			You successfully managed the warehouse. Every order picked, staged, loaded, and shipped.
 		</p>

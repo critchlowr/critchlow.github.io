@@ -26,14 +26,48 @@
 	let touchVelocity = 0;
 	let rafId: number;
 
+	/*
+		Three reasons the belt can be stopped, kept separate because they are not the
+		same thing and must not clobber one another:
+
+		- `paused` is the user's explicit choice via the button. WCAG 2.2.2 Pause,
+		  Stop, Hide applies here — this scrolls automatically, runs well past five
+		  seconds, and sits alongside other content, so a control to stop it is a
+		  Level A requirement, not a nicety.
+		- `reduceMotion` is the OS preference. Read live rather than once, so a
+		  mid-session change is honoured.
+		- `focusWithin` stops the belt while a photo button has keyboard focus.
+		  Without it the focused element translates out of the clipped container
+		  while still focused, which is SC 2.4.11.
+	*/
+	let paused = $state(false);
+	let focusWithin = $state(false);
+	let reduceMotion = $state(false);
+
+	$effect(() => {
+		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+		reduceMotion = mq.matches;
+		const onChange = () => (reduceMotion = mq.matches);
+		mq.addEventListener('change', onChange);
+		return () => mq.removeEventListener('change', onChange);
+	});
+
+	const marqueeRunning = $derived(!paused && !reduceMotion && !focusWithin);
+
 	function getHalfWidth(): number {
 		if (!marqueeTrack) return 1;
 		return marqueeTrack.scrollWidth / 2;
 	}
 
 	function tickMarquee() {
-		if (!marqueeVisible) {
+		// Still scheduled while stopped, so a drag can move the belt and the wrap
+		// logic below keeps running — stopping the animation must not freeze the
+		// component, only the automatic movement.
+		if (!marqueeVisible || !marqueeRunning) {
 			rafId = requestAnimationFrame(tickMarquee);
+			if (marqueeTrack && isTouching) {
+				marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
+			}
 			return;
 		}
 
@@ -248,15 +282,62 @@
 					</div>
 				{/if}
 				{#if job.showBartendingPhotos}
+					<!--
+						min-h is a rem taller than the h-48/sm:h-56 buttons inside it. They used
+						to be exactly equal, so with the container clipped the focus ring on a
+						photo was cut off top and bottom.
+					-->
 					<div
-						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
+						class="photo-marquee relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[13rem] overflow-hidden rounded-b-xl sm:min-h-[15rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
 						bind:this={marqueeContainer}
 						role="region"
 						aria-label="Bartending photo carousel"
 						ontouchstart={onTouchStart}
 						ontouchmove={onTouchMove}
 						ontouchend={onTouchEnd}
+						onfocusin={() => (focusWithin = true)}
+						onfocusout={() => (focusWithin = false)}
 					>
+						<!--
+							WCAG 2.2.2 Pause, Stop, Hide. Last in the DOM but positioned top-right,
+							so it does not land between the photos and whatever precedes them in the
+							tab order. Hidden entirely when the OS asks for reduced motion, because
+							then there is no movement to pause.
+						-->
+						{#if !reduceMotion}
+							<button
+								type="button"
+								onclick={() => (paused = !paused)}
+								aria-pressed={paused}
+								class="bg-warm-900/70 hover:bg-warm-900/90 absolute top-2 right-2 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors"
+							>
+								<span class="sr-only"
+									>{paused ? 'Play' : 'Pause'} the bartending photo carousel</span
+								>
+								{#if paused}
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-5 w-5"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<path d="M8 5v14l11-7z" />
+									</svg>
+								{:else}
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-5 w-5"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<rect x="6" y="5" width="4" height="14" rx="1" />
+										<rect x="14" y="5" width="4" height="14" rx="1" />
+									</svg>
+								{/if}
+							</button>
+						{/if}
 						<div class="marquee-track" bind:this={marqueeTrack}>
 							{#each bartendingPhotos as photo (photo.src)}
 								<button

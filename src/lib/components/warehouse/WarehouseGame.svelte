@@ -58,6 +58,36 @@
 	// Replen notification — shown to picker when a replen is scheduled after a partial pick
 	let replenNotice = $state<{ sku: string; itemName: string; qty: number } | null>(null);
 
+	/*
+		Screen-reader announcements.
+
+		These live here rather than in PickingPanel because a live region has to be
+		in the DOM *before* its contents change — a region created at the same moment
+		as its first message is not reliably announced. PickingPanel's phase branches
+		are created and destroyed by {#if}, so a region inside one would be silent.
+
+		Two regions, deliberately separate so they cannot overwrite each other:
+		`announcement` is polite narration of what just happened, and `blocker` is an
+		alert for the one condition that stops the user working — a full cart.
+	*/
+	let announcement = $state('');
+	let announceToggle = false;
+
+	function announce(msg: string) {
+		// Some screen readers suppress a repeat of identical text. A trailing
+		// zero-width space alternates the string without changing what is read.
+		announceToggle = !announceToggle;
+		announcement = announceToggle ? msg + '​' : msg;
+	}
+
+	function itemNameFor(sku: string) {
+		return inventory.find((i) => i.sku === sku)?.itemName ?? sku;
+	}
+
+	// Mirrors the cart-full panel in PickingPanel, which is a dead end until the
+	// cart is staged — the one state change worth interrupting for.
+	const blocker = $derived(cartFull ? 'Cart full. Stage your cart before picking more.' : '');
+
 	// Derived
 	// SKU lists rather than counts, so the scene can colour each carton by item.
 	const cartSkus = $derived(cartPickIds.map((id) => picks.find((p) => p.pickId === id)?.sku ?? ''));
@@ -116,6 +146,7 @@
 		cartPickIds = [];
 		replenNotice = null;
 		sceneAction = { type: 'idle' };
+		announce('Simulation reset. Ready to release a new wave.');
 	}
 
 	function handleWave() {
@@ -124,6 +155,8 @@
 		orders = [...orders];
 		orderLines = [...orderLines];
 		inventory = [...inventory];
+
+		announce(`Wave released. ${newPicks.length} pick tasks created.`);
 	}
 
 	function handlePick(pickId: string) {
@@ -145,6 +178,11 @@
 
 		triggerScene({ type: 'pick', fromLocation: pick.fromLocation, sku: pick.sku, cartBefore });
 
+		announce(
+			`Picked ${pick.qtyToPick} ${itemNameFor(pick.sku)} from ${pick.fromLocation}. ` +
+				`Cart ${cartPickIds.length} of ${CART_CAPACITY}.`
+		);
+
 		// Check if this order line has unmet demand that can be replenished
 		const demand = getReplenishableDemand(orderId, lineNum, orderLines, picks, inventory);
 		if (demand) {
@@ -154,6 +192,9 @@
 
 			// Show replen notice immediately
 			replenNotice = { sku: demand.sku, itemName, qty: demand.replenQty };
+			announce(
+				`Replenishment scheduled: ${demand.replenQty} ${itemName} moving to ${demand.location}.`
+			);
 
 			// Held until the pick animation has finished and the slot is visibly empty.
 			setTimeout(() => {
@@ -193,6 +234,9 @@
 
 					// Clear replen notice
 					replenNotice = null;
+					announce(
+						`Replenishment complete. ${itemName} back at ${demand.location}. Pick re-issued.`
+					);
 					// Matches the moment the runner sets the carton down in the slot.
 				}, 1500);
 			}, 2000);
@@ -248,6 +292,12 @@
 			}, 900);
 		}
 
+		announce(
+			`Location ${pick.fromLocation} reported empty. ` +
+				(pickedQty > 0 ? `${pickedQty} of ${pick.qtyToPick} picked. ` : 'Nothing picked. ') +
+				(canReplen ? 'Replenishment scheduled.' : 'Line will ship short.')
+		);
+
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 	}
@@ -265,6 +315,7 @@
 		orders = [...orders];
 
 		triggerScene({ type: 'stage', boxes: carried });
+		announce(`Cart staged. ${carried.length} items moved to staging.`);
 	}
 
 	function handlePackOrder(orderId: string, force = false) {
@@ -276,6 +327,7 @@
 		orders = [...orders];
 
 		triggerScene({ type: 'pack' });
+		announce(force ? `${orderId} packed short.` : `${orderId} packed complete.`);
 	}
 
 	function handleLoadAll() {
@@ -286,6 +338,7 @@
 		orders = [...orders];
 
 		triggerScene({ type: 'load' });
+		announce(`Truck loaded with ${loadedCount} cartons.`);
 	}
 
 	function handleShipAll() {
@@ -295,8 +348,18 @@
 		orders = [...orders];
 
 		triggerScene({ type: 'ship' });
+		announce('All loaded orders shipped.');
 	}
 </script>
+
+<!--
+	Live regions. Rendered unconditionally and outside every {#if}, because a
+	region inserted at the same moment as its first message is not reliably
+	announced. Kept apart so a polite narration and an alert cannot overwrite
+	each other mid-sentence.
+-->
+<p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
+<p class="sr-only" role="alert">{blocker}</p>
 
 <!-- Header -->
 <div

@@ -72,7 +72,7 @@
 		<a
 			href="/#hero"
 			class="text-ink-strong font-display text-xl font-semibold"
-			aria-label="Ryan Critchlow - back to top"
+			aria-label="RC — Ryan Critchlow, back to top"
 		>
 			RC
 		</a>
