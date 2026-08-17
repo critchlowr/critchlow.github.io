@@ -102,25 +102,32 @@
 		transform: translate3d(calc(var(--p) * 40vmax), calc(var(--p) * -18vmax), 0);
 	}
 
-	/* Long, mutually prime-ish periods so the arrangement does not visibly loop. */
+	/*
+		Long, mutually prime-ish periods so the arrangement does not visibly loop.
+
+		Light mode uses the 400/300 stops rather than 300/200. Raising opacity on the
+		paler stops does almost nothing — they are already close to the ground, so more
+		of the same near-white changes little. One stop deeper is what actually makes
+		the wash visible on a light page.
+	*/
 	.l1 .glow {
-		background: radial-gradient(circle, var(--color-accent-300) 0%, transparent 68%);
-		opacity: 0.4;
+		background: radial-gradient(circle, var(--color-accent-400) 0%, transparent 68%);
+		opacity: 0.52;
 		animation: drift-a 47s ease-in-out infinite;
 	}
 	.l2 .glow {
-		background: radial-gradient(circle, var(--color-plum-300) 0%, transparent 68%);
-		opacity: 0.34;
+		background: radial-gradient(circle, var(--color-plum-400) 0%, transparent 68%);
+		opacity: 0.48;
 		animation: drift-b 61s ease-in-out infinite;
 	}
 	.l3 .glow {
-		background: radial-gradient(circle, var(--color-moss-200) 0%, transparent 68%);
-		opacity: 0.3;
+		background: radial-gradient(circle, var(--color-moss-300) 0%, transparent 68%);
+		opacity: 0.42;
 		animation: drift-c 53s ease-in-out infinite;
 	}
 	.l4 .glow {
-		background: radial-gradient(circle, var(--color-ember-200) 0%, transparent 68%);
-		opacity: 0.26;
+		background: radial-gradient(circle, var(--color-ember-300) 0%, transparent 68%);
+		opacity: 0.36;
 		animation: drift-d 71s ease-in-out infinite;
 	}
 

@@ -28,16 +28,12 @@
 </script>
 
 <!--
-	The dark plain band sits at 68% rather than 55%. The lamps run at full intensity,
-	and this is what stops their light lifting the ground onto the card fill. It damps
-	the ambient only behind body copy — the hero and footer carry no section band at
-	all, so they show the lamps undimmed.
+	The plain band sits at 68%. The lamps run at full intensity in both themes, and
+	this is what stops their light lifting the ground onto the card fill. It damps the
+	ambient only behind body copy — the hero and footer carry no section band at all,
+	so they show the lamps undimmed.
 -->
-<section
-	{id}
-	aria-labelledby={headingId}
-	class={alt ? 'bg-band/80' : 'bg-surface/65 dark:bg-surface/68'}
->
+<section {id} aria-labelledby={headingId} class={alt ? 'bg-band/80' : 'bg-surface/68'}>
 	<div class="mx-auto {measures[width]} px-5 py-20 md:py-28">
 		<div class="mb-12 flex items-baseline gap-4" use:inview={{ dir: 'up' }}>
 			<span
