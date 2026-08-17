@@ -3,7 +3,10 @@
 
 	export type SceneAction =
 		| { type: 'idle' }
-		| { type: 'pick'; fromLocation: string }
+		/** `cartBefore` is the cart's contents before this pick. The model adds the
+		    item to the cart on click, so without it the carton would appear in the cart
+		    before the picker has walked back with it. */
+		| { type: 'pick'; fromLocation: string; cartBefore: number }
 		/** `boxes` is the cart's contents at the moment staging started. The model has
 		    already emptied the cart by then, so the scene needs it passed in to show
 		    the cart being wheeled over with something in it. */
@@ -52,11 +55,13 @@
 	// and gets wheeled to staging when the cart is staged.
 	let cartPos = $state<'at-pick' | 'at-staging'>('at-pick');
 	let cartDisplay = $state(0);
-	let wheelingCart = $state(false);
+	// Freezes cartDisplay while the picker is mid-walk, so the cart's contents change
+	// when they arrive rather than when the button is clicked.
+	let holdCart = $state(false);
 
 	$effect(() => {
 		const a = action;
-		if (a.type === 'pick') animatePick();
+		if (a.type === 'pick') animatePick(a.cartBefore);
 		else if (a.type === 'stage') animateStage(a.boxes);
 		else if (a.type === 'pack') animatePack();
 		else if (a.type === 'load') animateLoad();
@@ -64,13 +69,17 @@
 		else if (a.type === 'replen') animateReplen();
 	});
 
-	// Declared after the action effect so that when a stage begins, this sees
-	// wheelingCart already set and leaves the in-transit contents alone.
+	// Declared after the action effects so that when a walk begins, this sees
+	// holdCart already set and leaves the in-transit contents alone.
 	$effect(() => {
-		if (!wheelingCart) cartDisplay = cartCount;
+		if (!holdCart) cartDisplay = cartCount;
 	});
 
-	function animatePick() {
+	// Walk to the rack empty-handed, pick the item up there, carry it back, and only
+	// then drop it in the cart.
+	function animatePick(cartBefore: number) {
+		holdCart = true;
+		cartDisplay = cartBefore;
 		workerPos = 'at-shelf';
 		workerCarrying = false;
 		setTimeout(() => {
@@ -80,12 +89,13 @@
 		setTimeout(() => {
 			workerPos = 'idle';
 			workerCarrying = false;
+			holdCart = false;
 		}, 1000);
 	}
 
 	// The picker wheels the loaded cart over to staging, unloads it, and brings it back.
 	function animateStage(boxes: number) {
-		wheelingCart = true;
+		holdCart = true;
 		cartDisplay = boxes;
 		workerCarrying = false;
 		workerPos = 'at-staging';
@@ -96,7 +106,7 @@
 		setTimeout(() => {
 			workerPos = 'idle';
 			cartPos = 'at-pick';
-			wheelingCart = false;
+			holdCart = false;
 		}, 1000);
 	}
 
@@ -514,8 +524,8 @@
 		position: absolute;
 		bottom: 22%;
 		left: 22%;
-		width: 8%;
-		height: 16%;
+		width: calc(var(--carton) * 2 + 14px);
+		height: calc(var(--carton) * 2 + 12px);
 		border: 1px dashed #8b7355;
 		border-bottom: none;
 		display: flex;
@@ -546,8 +556,8 @@
 	}
 
 	.receiving-box {
-		width: 10px;
-		height: 10px;
+		width: var(--carton);
+		height: var(--carton);
 		background: var(--color-accent-100);
 		border: 1px solid var(--color-accent-500);
 		border-radius: 1px;
@@ -595,11 +605,14 @@
 		position: absolute;
 		bottom: 22%;
 		left: 34%;
-		width: 14%;
-		height: 30%;
+		/* Sized from the carton, not from scene width. As a percentage the rack
+		   stretched to ~210px on a wide modal while staying 58px tall, which is what
+		   made the shelf cartons balloon out of proportion to every other box. */
+		width: calc(var(--carton) * 2 + 17px);
+		height: calc(var(--carton) * 3 + 40px);
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-template-rows: repeat(2, 1fr);
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(3, 1fr);
 		gap: 3px;
 		padding: 3px;
 		background: #8b6914;
@@ -630,8 +643,8 @@
 	}
 
 	.shelf-box {
-		width: 70%;
-		height: 65%;
+		width: var(--carton);
+		height: var(--carton);
 		background: var(--color-red-100);
 		border: 1px solid var(--color-red-400);
 		border-radius: 1px;
@@ -799,9 +812,9 @@
 	.carried-box {
 		position: absolute;
 		top: 3px;
-		right: -12px;
-		width: 12px;
-		height: 12px;
+		right: calc(var(--carton) * -1 - 3px);
+		width: var(--carton);
+		height: var(--carton);
 		background: var(--color-red-100);
 		border: 1px solid var(--color-red-500);
 		border-radius: 1px;
@@ -814,8 +827,9 @@
 		position: absolute;
 		bottom: 22%;
 		left: 60%;
-		width: 10%;
-		height: 16%;
+		/* Holds the 12 cartons it renders: four across, three down. */
+		width: calc(var(--carton) * 4 + 15px);
+		height: calc(var(--carton) * 3 + 12px);
 		border: 1px dashed var(--color-warm-600);
 		border-bottom: none;
 		display: flex;

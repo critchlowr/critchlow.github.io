@@ -128,6 +128,9 @@
 		const pick = picks.find((p) => p.pickId === pickId);
 		if (!pick || pick.status !== 'Assigned') return;
 
+		// Captured before the item is added, so the scene can hold the cart at its
+		// previous contents until the picker has walked the item back.
+		const cartBefore = cartPickIds.length;
 		const { orderId, lineNum } = pick;
 		executePick(pick, inventory, orderLines);
 		cartPickIds = [...cartPickIds, pickId];
@@ -138,7 +141,7 @@
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 
-		triggerScene({ type: 'pick', fromLocation: pick.fromLocation });
+		triggerScene({ type: 'pick', fromLocation: pick.fromLocation, cartBefore });
 
 		// Check if this order line has unmet demand that can be replenished
 		const demand = getReplenishableDemand(orderId, lineNum, orderLines, picks, inventory);
