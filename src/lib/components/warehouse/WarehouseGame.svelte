@@ -361,50 +361,42 @@
 <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
 <p class="sr-only" role="alert">{blocker}</p>
 
-<!-- Header -->
+<!--
+	Header.
+
+	`min-w-0 truncate` on the title and `shrink-0` on the controls are load-bearing,
+	not tidying. A flex item defaults to min-width:auto and refuses to shrink below
+	its content, so on a 320px screen the untruncated warehouse name pushed Reset
+	past the panel's right edge — and the panel is overflow-hidden, so it was simply
+	gone rather than merely cramped.
+-->
 <div
-	class="border-warm-200 dark:border-warm-700 flex shrink-0 items-center justify-between border-b px-4 py-3"
+	class="border-warm-200 dark:border-warm-700 flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2"
 >
-	<div class="flex items-center gap-3">
+	<h2
+		id="wms-dialog-title"
+		class="text-warm-800 dark:text-warm-100 min-w-0 truncate text-sm font-bold sm:text-base"
+	>
+		{WAREHOUSE_NAME}
+	</h2>
+
+	<!--
+		Both controls now exist at every breakpoint, and both are 44px. Mobile used to
+		get a back-arrow and no ✕ at all, while Reset was a borderless 12px label — so
+		even when they were on screen, neither read as a control. 44px also clears
+		SC 2.5.8's 24x24 floor with room to spare.
+	-->
+	<div class="flex shrink-0 items-center gap-1.5">
 		<button
 			type="button"
-			class="text-warm-500 hover:bg-warm-200 hover:text-warm-700 dark:text-warm-400 dark:hover:bg-warm-700 dark:hover:text-warm-200 rounded-lg p-1.5 transition-colors md:hidden"
-			onclick={onclose}
-			aria-label="Close simulator"
-		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-5 w-5"
-				viewBox="0 0 20 20"
-				fill="currentColor"
-				aria-hidden="true"
-			>
-				<path
-					fill-rule="evenodd"
-					d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-					clip-rule="evenodd"
-				/>
-			</svg>
-		</button>
-		<h2
-			id="wms-dialog-title"
-			class="text-warm-800 dark:text-warm-100 text-sm font-bold sm:text-base"
-		>
-			{WAREHOUSE_NAME}
-		</h2>
-	</div>
-	<div class="flex items-center gap-2">
-		<button
-			type="button"
-			class="text-warm-600 hover:bg-warm-200 dark:text-warm-400 dark:hover:bg-warm-700 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+			class="border-warm-300 text-warm-700 hover:border-warm-500 hover:bg-warm-200 dark:border-warm-600 dark:text-warm-300 dark:hover:bg-warm-700 inline-flex h-11 items-center rounded-lg border px-3 text-xs font-semibold transition-colors"
 			onclick={reset}
-			aria-label="Reset warehouse simulation"
 		>
 			Reset
 		</button>
 		<button
 			type="button"
-			class="text-warm-500 hover:bg-warm-200 hover:text-warm-700 dark:text-warm-400 dark:hover:bg-warm-700 dark:hover:text-warm-200 hidden rounded-lg p-1.5 transition-colors md:block"
+			class="text-warm-600 hover:bg-warm-200 hover:text-warm-900 dark:text-warm-300 dark:hover:bg-warm-700 dark:hover:text-warm-100 inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors"
 			onclick={onclose}
 			aria-label="Close simulator"
 		>
@@ -415,6 +407,7 @@
 				fill="none"
 				stroke="currentColor"
 				stroke-width="2"
+				stroke-linecap="round"
 				aria-hidden="true"
 			>
 				<line x1="18" y1="6" x2="6" y2="18" />

@@ -1159,6 +1159,20 @@
 		}
 	}
 
+	/*
+		Short landscape — a phone turned sideways. The scene is a decorative,
+		aria-hidden diorama, so dropping it costs no information and frees the height
+		the game actually needs. This replaces a blocking "turn your phone upright"
+		overlay, which restricted operation to one orientation and so failed SC 1.3.4;
+		"it renders badly in landscape" is a layout limitation, not the essential-use
+		exception. The panel below already scrolls, so the game just works.
+	*/
+	@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+		.scene {
+			display: none;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.scene {
 			height: 150px;
