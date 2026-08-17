@@ -183,14 +183,16 @@
 		}, 800);
 	}
 
+	// The trailer takes 1s to clear the frame. Hold the dock empty for a beat before
+	// the next one backs in, otherwise it reads as the same truck bouncing.
 	function animateShip() {
 		truckState = 'leaving';
 		setTimeout(() => {
 			truckState = 'arriving';
-		}, 1200);
+		}, 2800);
 		setTimeout(() => {
 			truckState = 'parked';
-		}, 2400);
+		}, 4000);
 	}
 
 	// The mirror image of the picker: collect a carton at receiving, carry it to the
@@ -1158,20 +1160,33 @@
 		.scene {
 			height: 150px;
 			--carton: 6px;
-			--rack-left: 27%;
+			--rack-left: 32%;
 		}
 		/* The scene is percentage-positioned but its contents are fixed px, so on a
-		   narrow screen everything crowds. Shift the whole left-to-right chain so
-		   receiving, the rack, the picker, the cart and staging stay in a readable row. */
+		   narrow screen everything crowds. Spread the chain across the space that is
+		   actually there: the rack clears the replen runner parked at 24%, and the
+		   picker, cart and staging move out toward the truck at 84%. */
 		.receiving-area {
 			left: 19%;
 		}
 		.worker-idle,
 		.worker-carrying-back {
-			left: 45%;
+			left: 55%;
 		}
 		.cart-at-pick {
-			left: 52%;
+			left: 62%;
+		}
+		.staging-area {
+			left: 70%;
+		}
+		.staging-label {
+			left: 75%;
+		}
+		.worker-at-staging {
+			left: 72%;
+		}
+		.cart-at-staging {
+			left: 73%;
 		}
 		.building-sign {
 			font-size: 9px;
