@@ -127,19 +127,19 @@
 	/* Dark mode carries the effect — an unlit dark ground was the whole complaint. */
 	:global(.dark) .l1 .glow {
 		background: radial-gradient(circle, var(--color-accent-600) 0%, transparent 68%);
-		opacity: 0.3;
+		opacity: 0.5;
 	}
 	:global(.dark) .l2 .glow {
 		background: radial-gradient(circle, var(--color-plum-600) 0%, transparent 68%);
-		opacity: 0.3;
+		opacity: 0.5;
 	}
 	:global(.dark) .l3 .glow {
 		background: radial-gradient(circle, var(--color-moss-700) 0%, transparent 68%);
-		opacity: 0.26;
+		opacity: 0.42;
 	}
 	:global(.dark) .l4 .glow {
 		background: radial-gradient(circle, var(--color-ember-800) 0%, transparent 68%);
-		opacity: 0.22;
+		opacity: 0.38;
 	}
 
 	@keyframes drift-a {
