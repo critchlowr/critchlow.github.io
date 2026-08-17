@@ -181,18 +181,28 @@
 	*/
 	--t-edge: var(--color-warm-300);
 	--t-edge-hover: var(--color-accent-500);
-	--t-ink: var(--color-warm-800);
-	--t-ink-muted: var(--color-warm-700);
-	--t-ink-strong: var(--color-primary-800);
+	/*
+		Inks sit a stop lower than a plain parchment page would need. That is what pays
+		for the golden band below: at warm-700 muted text measured 4.50:1 on it, right
+		on the line. Dark brown on gold parchment is the register anyway.
+	*/
+	--t-ink: var(--color-warm-900);
+	--t-ink-muted: var(--color-warm-800);
+	--t-ink-strong: var(--color-primary-900);
 	/* accent-600 measured 3.95:1 on the alt ground — brand carries company names at
 	   16px, not just the big numerals, so it has to clear 4.5 rather than 3. */
-	--t-brand: var(--color-accent-700);
+	--t-brand: var(--color-accent-800);
 	--t-brand-strong: var(--color-accent-800);
 	--t-link: var(--color-plum-800);
 	/* The footer gets a ground of its own so the page ends somewhere. */
-	--t-footer: var(--color-warm-200);
-	/* Alternating section band. Lighter than the page ground in light mode. */
-	--t-band: var(--color-warm-100);
+	--t-footer: #e3d5b0;
+	/*
+		Alternating band. warm-100 against warm-50 measured 1.02:1 — the two grounds were
+		effectively the same colour and the sections did not read as alternating at all.
+		This is a proper golden parchment: deeper, and with real chroma rather than a
+		near-neutral tint.
+	*/
+	--t-band: #eee0b8;
 }
 
 :root.dark {
@@ -219,11 +229,11 @@
 	*/
 	--t-footer: #43284a;
 	/*
-		The dark band goes *darker* than the page, not lighter. Going lighter walks it
-		straight into the card fill; going darker means the alternation also reads as
-		"this section catches less of the ambient light", which is the effect anyway.
+		Lighter than the page, the conventional direction. This only works because cards
+		moved up to warm-800: when cards were warm-900 this band sat on top of them and
+		the card edge vanished. Card separation here is 2.05:1 via the border.
 	*/
-	--t-band: #1b1620;
+	--t-band: var(--color-warm-900);
 }
 
 html {
