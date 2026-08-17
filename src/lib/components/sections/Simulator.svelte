@@ -70,7 +70,7 @@
 				<div class="pt-2">
 					<button
 						type="button"
-						class="bg-accent-700 hover:bg-accent-800 focus:ring-accent-500 dark:focus:ring-offset-warm-950 ease-spring inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+						class="bg-accent-700 hover:bg-accent-800 ease-spring inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 						onclick={() => simulator.launch()}
 					>
 						<svg

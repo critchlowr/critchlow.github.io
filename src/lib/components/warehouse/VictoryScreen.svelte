@@ -25,7 +25,7 @@
 
 	<button
 		type="button"
-		class="bg-accent-500 hover:bg-accent-600 dark:bg-accent-600 dark:hover:bg-accent-500 rounded-lg px-6 py-3 font-semibold text-white transition-colors"
+		class="bg-action hover:bg-action-hover rounded-lg px-6 py-3 font-semibold text-white transition-colors"
 		onclick={onreset}
 	>
 		Play Again

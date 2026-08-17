@@ -323,7 +323,10 @@
 				/>
 			</svg>
 		</button>
-		<h2 class="text-warm-800 dark:text-warm-100 text-sm font-bold sm:text-base">
+		<h2
+			id="wms-dialog-title"
+			class="text-warm-800 dark:text-warm-100 text-sm font-bold sm:text-base"
+		>
 			{WAREHOUSE_NAME}
 		</h2>
 	</div>

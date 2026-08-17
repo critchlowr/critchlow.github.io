@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { experience } from '$lib/data/content';
 	import { inview } from '$lib/actions/inview';
+	import { dialog } from '$lib/actions/dialog';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
@@ -216,7 +217,7 @@
 					<div class="mt-6 flex justify-center">
 						<button
 							type="button"
-							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 focus:ring-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 dark:focus:ring-offset-warm-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 							onclick={() => simulator.launch()}
 						>
 							<svg
@@ -261,7 +262,7 @@
 								<button
 									type="button"
 									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									class="h-48 flex-shrink-0 cursor-pointer rounded-lg sm:h-56"
 								>
 									<img
 										src={photo.src}
@@ -274,7 +275,7 @@
 								<button
 									type="button"
 									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									class="h-48 flex-shrink-0 cursor-pointer rounded-lg sm:h-56"
 									tabindex="-1"
 									aria-hidden="true"
 								>
@@ -294,15 +295,32 @@
 </SectionWrapper>
 
 {#if lightboxOpen}
+	<!--
+		The lightbox renders here, at the end of the component, but it is opened from
+		a photo button far above. Without `use:dialog` focus stayed on that button, so
+		reaching this Close control meant tabbing through the nine remaining photos and
+		every section below — all of it behind the overlay.
+
+		The `e.target === e.currentTarget` guard is what lets the image sit directly in
+		the backdrop: a click on the photo is not a click on the backdrop, so the old
+		stopPropagation wrapper (and its blanket eslint-disable, which suppressed every
+		rule on that line) is no longer needed.
+	-->
+	<!--
+		Escape comes from `use:dialog` and the Close button is the first thing focused
+		on open, so the click handler is a pointer convenience, not the only exit.
+	-->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-		onclick={closeLightbox}
-		onkeydown={(e) => {
-			if (e.key === 'Escape') closeLightbox();
-		}}
 		role="dialog"
+		aria-modal="true"
 		aria-label="Photo preview"
 		tabindex="-1"
+		use:dialog={{ onclose: closeLightbox }}
+		onclick={(e) => {
+			if (e.target === e.currentTarget) closeLightbox();
+		}}
 	>
 		<button
 			type="button"
@@ -323,14 +341,11 @@
 				<line x1="6" y1="6" x2="18" y2="18" />
 			</svg>
 		</button>
-		<!-- eslint-disable-next-line -- stop click from closing lightbox -->
-		<div onclick={(e) => e.stopPropagation()} role="presentation">
-			<img
-				src={lightboxSrc}
-				alt={lightboxAlt}
-				class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-			/>
-		</div>
+		<img
+			src={lightboxSrc}
+			alt={lightboxAlt}
+			class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+		/>
 	</div>
 {/if}
 

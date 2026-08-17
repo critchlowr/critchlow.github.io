@@ -1,15 +1,12 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { dialog } from '$lib/actions/dialog';
 
 	let {
 		open = false,
 		onclose,
 		children
 	}: { open: boolean; onclose: () => void; children: Snippet } = $props();
-
-	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Escape') onclose();
-	}
 
 	$effect(() => {
 		if (open) {
@@ -24,23 +21,34 @@
 </script>
 
 {#if open}
+	<!--
+		Clicking the backdrop closes, guarded on `e.target === e.currentTarget` so a
+		click anywhere inside the panel does not bubble up as a backdrop click. This
+		replaces a full-bleed `<button>` that sat behind the panel: it was
+		`tabindex="-1"` yet still in the accessibility tree, so it read as a third
+		unreachable control named "Close simulator". A real Close button lives in the
+		header, which is what keeps 2.1.1 satisfied without it.
+
+		`aria-labelledby` points at the heading WarehouseGame already renders, so the
+		dialog's name and its visible title cannot drift apart.
+	-->
+	<!--
+		The keyboard path is Escape, bound inside `use:dialog`, plus the Close button
+		in the header. This click handler is a redundant pointer affordance, so there
+		is nothing keyboard-only users are locked out of.
+	-->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
 		role="dialog"
 		aria-modal="true"
-		aria-label="Warehouse Management Simulator"
+		aria-labelledby="wms-dialog-title"
 		tabindex="-1"
-		onkeydown={handleKeydown}
+		use:dialog={{ onclose }}
+		onclick={(e) => {
+			if (e.target === e.currentTarget) onclose();
+		}}
 	>
-		<!-- Backdrop click to close -->
-		<button
-			type="button"
-			class="absolute inset-0 cursor-default"
-			onclick={onclose}
-			aria-label="Close simulator"
-			tabindex="-1"
-		></button>
-
 		<!--
 			Fixed height rather than max-height: the window must not resize as the panel
 			below the scene changes between phases. Overflow is handled by the panel,

@@ -169,6 +169,22 @@
 	--color-link: var(--t-link);
 	--color-footer: var(--t-footer);
 	--color-band: var(--t-band);
+	/*
+		Action fills. Every white-on-colour button routes through these rather than
+		reaching for a raw ramp stop. The -500 stops are where white text stops
+		clearing 4.5:1 — the simulator was built before the token layer existed and
+		had ten controls sitting between 2.92:1 and 3.68:1 because of it.
+	*/
+	--color-action: var(--t-action);
+	--color-action-hover: var(--t-action-hover);
+	--color-action-go: var(--t-action-go);
+	--color-action-go-hover: var(--t-action-go-hover);
+	--color-action-warn: var(--t-action-warn);
+	--color-action-warn-hover: var(--t-action-warn-hover);
+	--color-action-neutral: var(--t-action-neutral);
+	--color-action-neutral-hover: var(--t-action-neutral-hover);
+	--color-action-ship: var(--t-action-ship);
+	--color-action-ship-hover: var(--t-action-ship-hover);
 }
 
 :root {
@@ -203,6 +219,39 @@
 		near-neutral tint.
 	*/
 	--t-band: #eee0b8;
+
+	/*
+		Action fills carrying white text. Measured against #fff: accent-700 5.86,
+		moss-700 5.58, ember-700 6.34, blue-700 6.70, plum-700 6.13 — all clear 4.5:1.
+		Deliberately not redefined for dark mode: a fill dark enough for white text is
+		dark enough in either theme, and splitting them is how the -500 bug got in.
+	*/
+	--t-action: var(--color-accent-700);
+	--t-action-hover: var(--color-accent-800);
+	--t-action-go: var(--color-moss-700);
+	--t-action-go-hover: var(--color-moss-800);
+	--t-action-warn: var(--color-ember-700);
+	--t-action-warn-hover: var(--color-ember-800);
+	--t-action-neutral: var(--color-blue-700);
+	--t-action-neutral-hover: var(--color-blue-800);
+	--t-action-ship: var(--color-plum-700);
+	--t-action-ship-hover: var(--color-plum-800);
+
+	/*
+		Focus indicator, two tones — and deliberately the SAME two in both themes.
+
+		A single hue cannot work here: the indicator has to sit against parchment
+		bands, white cards, near-black page grounds, and the simulator's saturated
+		button fills. Swapping tones per theme does not fix it either, because within
+		one theme a light card and a dark button want opposite orders.
+
+		The dual-tone ring solves it by construction: white and near-black cannot both
+		fail 3:1 against the same colour, so whatever the indicator lands on, one of
+		the two bands is clearly visible. The halo sits inside against the element, the
+		ring outside against the page.
+	*/
+	--t-focus: var(--color-accent-950);
+	--t-focus-halo: #ffffff;
 }
 
 :root.dark {
@@ -234,16 +283,25 @@
 		the card edge vanished. Card separation here is 2.05:1 via the border.
 	*/
 	--t-band: var(--color-warm-900);
+	/* --t-focus / --t-focus-halo are deliberately not redefined here — see :root. */
 }
 
 html {
-	scroll-behavior: smooth;
-}
+	/*
+		No `scroll-behavior: smooth` here. Anchor scrolling runs through the rAF
+		scroller in $lib/scroll/scroller.ts, which needs control of duration and
+		easing that CSS does not offer — and per CSSOM View the first step of every
+		scroll is "abort any ongoing smooth scroll", so leaving this in would have
+		each of the scroller's ~60 writes per second cancel the previous one.
 
-@media (prefers-reduced-motion: reduce) {
-	html {
-		scroll-behavior: auto;
-	}
+		scroll-padding-top clears the fixed header in Nav.svelte (~61px) with room to
+		breathe. It matters beyond fragment links: when the browser scrolls a focused
+		element into view it uses the scroll port, not the visually unobstructed area,
+		so Shift+Tab used to park focused controls flush against the top edge and
+		entirely underneath the header — every control on this site is shorter than
+		61px. That is SC 2.4.11 Focus Not Obscured.
+	*/
+	scroll-padding-top: 5rem;
 }
 
 @layer base {
@@ -255,8 +313,27 @@ html {
 		-moz-osx-font-smoothing: grayscale;
 	}
 
+	/*
+		One indicator for the whole site. Two tones rather than one hue, because no
+		single colour clears 3:1 against parchment bands, white cards, and the
+		simulator's saturated button fills at once — the halo is what guarantees an
+		edge on the fills.
+
+		No border-radius here. The rule used to set `rounded-sm`, which was harmless
+		only because Tailwind's utilities layer outranks base, so anything carrying
+		its own rounded-* kept it — and anything that did not got silently squared by
+		a focus rule.
+	*/
 	:focus-visible {
-		@apply outline-accent-500 rounded-sm outline-3 outline-offset-2;
+		/*
+			Geometry matters here. The box-shadow spread paints 0-3px out from the
+			border edge, and the outline paints 3-6px, so the bands are concentric and
+			ordered: element | halo | ring | page. That ordering is what puts a light
+			band against dark button fills and a dark band against light grounds.
+		*/
+		outline: 3px solid var(--t-focus);
+		outline-offset: 3px;
+		box-shadow: 0 0 0 3px var(--t-focus-halo);
 	}
 
 	::selection {
