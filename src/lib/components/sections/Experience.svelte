@@ -164,7 +164,9 @@
 	<div class="stagger-children space-y-4" use:inview>
 		{#each experience as job (job.company + job.title)}
 			<Card interactive class="group p-6">
-				<div class="flex flex-col justify-between gap-1 sm:flex-row sm:items-start">
+				<div
+					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left"
+				>
 					<div>
 						<h3 class="text-primary-700 dark:text-primary-200 text-lg font-bold">
 							{job.title}
@@ -173,7 +175,7 @@
 							{job.company}
 						</p>
 					</div>
-					<div class="shrink-0 text-right">
+					<div class="shrink-0 sm:text-right">
 						<Badge tone="warm" size="sm">{job.period}</Badge>
 						<p class="text-warm-600 dark:text-warm-400 mt-1 text-sm">
 							{job.location}
