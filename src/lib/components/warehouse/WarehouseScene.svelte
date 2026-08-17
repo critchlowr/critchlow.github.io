@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import type { InventoryItem } from '$lib/data/warehouse';
 
 	export type SceneAction =
@@ -99,14 +100,20 @@
 	// when they arrive rather than when the button is clicked.
 	let holdCart = $state(false);
 
+	// Only `action` may retrigger an animation. The dispatch is untracked because the
+	// animations call columnOf(), which reads `inventory` — that made inventory a
+	// dependency of this effect, so completing a replenishment (which reassigns
+	// inventory) re-ran it and played the whole trip a second time.
 	$effect(() => {
 		const a = action;
-		if (a.type === 'pick') animatePick(a.sku, a.cartBefore);
-		else if (a.type === 'stage') animateStage(a.boxes);
-		else if (a.type === 'pack') animatePack();
-		else if (a.type === 'load') animateLoad();
-		else if (a.type === 'ship') animateShip();
-		else if (a.type === 'replen') animateReplen(a.sku);
+		untrack(() => {
+			if (a.type === 'pick') animatePick(a.sku, a.cartBefore);
+			else if (a.type === 'stage') animateStage(a.boxes);
+			else if (a.type === 'pack') animatePack();
+			else if (a.type === 'load') animateLoad();
+			else if (a.type === 'ship') animateShip();
+			else if (a.type === 'replen') animateReplen(a.sku);
+		});
 	});
 
 	// Declared after the action effects so that when a walk begins, this sees
