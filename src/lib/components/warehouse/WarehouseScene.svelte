@@ -15,7 +15,7 @@
 		| { type: 'pack' }
 		| { type: 'load' }
 		| { type: 'ship' }
-		| { type: 'replen' };
+		| { type: 'replen'; sku: string };
 
 	let {
 		action = { type: 'idle' } as SceneAction,
@@ -39,11 +39,20 @@
 	   than as CSS classes because Svelte prunes selectors it cannot statically match,
 	   and these are applied dynamically. */
 	const SKU_TONES = [
-		{ fill: '#a3c99d', edge: '#3d7a31' },
-		{ fill: '#c98ec8', edge: '#6f2a6d' },
-		{ fill: '#efd48a', edge: '#b18816' },
-		{ fill: '#a8c4e6', edge: '#3f6ea8' }
+		{ fill: '#a3c99d', edge: '#3d7a31' }, // green
+		{ fill: '#c98ec8', edge: '#6f2a6d' }, // plum
+		{ fill: '#efd48a', edge: '#b18816' }, // amber
+		{ fill: '#a8c4e6', edge: '#3f6ea8' }, // blue
+		{ fill: '#f0b49a', edge: '#c05a28' }, // terracotta
+		{ fill: '#bfb3d9', edge: '#5b4a8a' } // periwinkle
 	];
+
+	/** Which rack column holds this SKU. Drives both the colour and where the workers
+	    walk to, so the picker and the replen runner go to the right slot. */
+	function columnOf(sku: string) {
+		const i = inventory.findIndex((it) => it.sku === sku);
+		return i < 0 ? 0 : i;
+	}
 
 	function tone(sku: string) {
 		const i = inventory.findIndex((it) => it.sku === sku);
@@ -83,6 +92,8 @@
 	let cartPos = $state<'at-pick' | 'at-staging'>('at-pick');
 	let cartDisplay = $state<string[]>([]);
 	let carriedSku = $state('');
+	let pickColumn = $state(0);
+	let replenColumn = $state(0);
 	// Freezes cartDisplay while the picker is mid-walk, so the cart's contents change
 	// when they arrive rather than when the button is clicked.
 	let holdCart = $state(false);
@@ -94,7 +105,7 @@
 		else if (a.type === 'pack') animatePack();
 		else if (a.type === 'load') animateLoad();
 		else if (a.type === 'ship') animateShip();
-		else if (a.type === 'replen') animateReplen();
+		else if (a.type === 'replen') animateReplen(a.sku);
 	});
 
 	// Declared after the action effects so that when a walk begins, this sees
@@ -109,17 +120,24 @@
 		holdCart = true;
 		cartDisplay = cartBefore;
 		carriedSku = sku;
-		workerPos = 'at-shelf';
+		pickColumn = columnOf(sku);
 		workerCarrying = false;
+		workerPos = 'at-shelf';
+
+		// Arrives at the column and lifts the carton.
 		setTimeout(() => {
 			workerCarrying = true;
+		}, 700);
+		// Beat at the rack, then walks back with it.
+		setTimeout(() => {
 			workerPos = 'carrying-back';
-		}, 500);
+		}, 1300);
+		// Reaches the cart and puts it in.
 		setTimeout(() => {
 			workerPos = 'idle';
 			workerCarrying = false;
 			holdCart = false;
-		}, 1000);
+		}, 1750);
 	}
 
 	// The picker wheels the loaded cart over to staging, unloads it, and brings it back.
@@ -167,8 +185,10 @@
 		}, 2400);
 	}
 
-	function animateReplen() {
-		// Receiving worker picks up from inbound, walks to shelf, drops off, walks back
+	function animateReplen(sku: string) {
+		// Receiving worker picks up from inbound, walks to that SKU's column, drops off,
+		// walks back.
+		replenColumn = columnOf(sku);
 		replenCarrying = true;
 		replenWorkerPos = 'walking-to-shelf';
 		setTimeout(() => {
@@ -231,6 +251,7 @@
 		<!-- Receiving/replen worker -->
 		<div
 			class="replen-worker"
+			style="--col-i: {replenColumn}"
 			class:rw-at-inbound={replenWorkerPos === 'at-inbound'}
 			class:rw-walking-to-shelf={replenWorkerPos === 'walking-to-shelf'}
 			class:rw-at-shelf={replenWorkerPos === 'at-shelf'}
@@ -261,6 +282,7 @@
 		<!-- Picker worker -->
 		<div
 			class="worker"
+			style="--col-i: {pickColumn}"
 			class:worker-idle={workerPos === 'idle'}
 			class:worker-at-shelf={workerPos === 'at-shelf'}
 			class:worker-carrying-back={workerPos === 'carrying-back'}
@@ -339,6 +361,9 @@
 		   same goods changed size as they moved. Driving all of them from here means
 		   they cannot drift apart again. */
 		--carton: 8px;
+		/* Where the rack starts. Worker shelf positions are derived from it so they
+		   land on the right column at any breakpoint. */
+		--rack-left: 34%;
 
 		position: relative;
 		width: 100%;
@@ -607,10 +632,16 @@
 		left: 24%;
 	}
 	.rw-walking-to-shelf {
-		left: 46%;
+		left: calc(
+			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
+				12px
+		);
 	}
 	.rw-at-shelf {
-		left: 46%;
+		left: calc(
+			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
+				12px
+		);
 	}
 	.rw-walking-back {
 		left: 24%;
@@ -633,16 +664,15 @@
 	.shelf {
 		position: absolute;
 		bottom: 22%;
-		left: 34%;
-		/* Sized from the carton, not from scene width. As a percentage the rack
-		   stretched to ~210px on a wide modal while staying 58px tall, which is what
-		   made the shelf cartons balloon out of proportion to every other box.
-		   One column per SKU, three cartons tall. */
-		width: calc(var(--carton) * 6 + 25px);
+		left: var(--rack-left);
+		/* max-content rather than a calculated width. With an explicit width that came
+		   up short, the columns shrank - and a flex item cannot shrink past its
+		   content, so columns holding cartons held their size while empty ones
+		   collapsed to their borders and looked deleted. */
+		width: max-content;
 		height: calc(var(--carton) * 3 + 22px);
 		display: flex;
-		align-items: flex-end;
-		justify-content: space-between;
+		align-items: stretch;
 		gap: 2px;
 		padding: 3px;
 		background: #8b6914;
@@ -661,8 +691,10 @@
 
 	.shelf-col {
 		display: flex;
-		height: 100%;
-		flex: 1;
+		/* Fixed and non-flexible, so an empty slot is exactly as wide as a full one and
+		   reads as an empty shelf rather than vanishing. */
+		width: calc(var(--carton) + 4px);
+		flex: none;
 		flex-direction: column-reverse;
 		align-items: center;
 		justify-content: flex-start;
@@ -715,8 +747,13 @@
 	.worker-idle {
 		left: 52%;
 	}
+	/* Centre of column --col-i: rack padding and border, then one column pitch per
+	   index, then half a column, less half the worker's width. */
 	.worker-at-shelf {
-		left: 38%;
+		left: calc(
+			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
+				12px
+		);
 	}
 	.worker-carrying-back {
 		left: 52%;
@@ -1102,18 +1139,13 @@
 		.scene {
 			height: 150px;
 			--carton: 6px;
+			--rack-left: 27%;
 		}
 		/* The scene is percentage-positioned but its contents are fixed px, so on a
 		   narrow screen everything crowds. Shift the whole left-to-right chain so
 		   receiving, the rack, the picker, the cart and staging stay in a readable row. */
 		.receiving-area {
 			left: 19%;
-		}
-		.shelf {
-			left: 27%;
-		}
-		.worker-at-shelf {
-			left: 36%;
 		}
 		.worker-idle,
 		.worker-carrying-back {

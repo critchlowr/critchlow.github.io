@@ -160,7 +160,7 @@
 				const replen = createReplen(demand.sku, demand.replenQty, demand.location);
 				replens = [...replens, replen];
 
-				triggerScene({ type: 'replen' });
+				triggerScene({ type: 'replen', sku: demand.sku });
 
 				setTimeout(() => {
 					replen.status = 'In Transit';
@@ -220,7 +220,7 @@
 			const replen = createReplen(pick.sku, replenQty, location);
 			replens = [...replens, replen];
 
-			triggerScene({ type: 'replen' });
+			triggerScene({ type: 'replen', sku: pick.sku });
 
 			setTimeout(() => {
 				replen.status = 'In Transit';
