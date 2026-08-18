@@ -238,6 +238,16 @@
 	--t-action-ship-hover: var(--color-plum-800);
 
 	/*
+		The rail's hover chip. Warm cream on a gold hairline rather than the neutral
+		white card treatment — the chip floats over body copy, so reading as its own
+		warm object rather than as another card is the point. Measures better than the
+		neutral version it replaced: definition against the worst ground went 1.31 to
+		1.42, because a gold edge separates from parchment where warm-300 nearly did not.
+	*/
+	--t-chip: var(--color-accent-100);
+	--t-chip-edge: var(--color-accent-400);
+
+	/*
 		Focus indicator, two tones — and deliberately the SAME two in both themes.
 
 		A single hue cannot work here: the indicator has to sit against parchment
@@ -283,6 +293,11 @@
 		the card edge vanished. Card separation here is 2.05:1 via the border.
 	*/
 	--t-band: var(--color-warm-900);
+	/* Deep espresso, warmer than the warm-800 cards, so the chip still reads as a
+	   floating object rather than another card surface. */
+	--t-chip: var(--color-accent-950);
+	--t-chip-edge: var(--color-accent-700);
+
 	/* --t-focus / --t-focus-halo are deliberately not redefined here — see :root. */
 }
 

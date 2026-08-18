@@ -366,9 +366,9 @@
 		opacity: 1;
 		transform: none;
 		padding: 0.375rem 0.5rem;
-		border: 1px solid var(--t-edge);
+		border: 1px solid var(--t-chip-edge);
 		border-radius: 0.375rem;
-		background: var(--t-surface-raised);
+		background: var(--t-chip);
 		box-shadow:
 			0 1px 2px rgb(0 0 0 / 0.06),
 			0 4px 12px rgb(0 0 0 / 0.1);
