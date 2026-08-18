@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
+	import { scrollable } from '$lib/actions/scrollable';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
@@ -10,6 +11,8 @@
 	// The main sequence. Shorting is not a step in it — see the branch below.
 	const steps = ['Wave', 'Pick', 'Stage', 'Pack', 'Load', 'Ship'];
 	const branch = ['Short', 'Replenish'];
+
+	const FLOW_LABEL = 'Warehouse fulfillment sequence diagram, scrolls horizontally';
 </script>
 
 <SectionWrapper id="simulator" headingId="simulator-heading" number="04" title="WMS Simulator" alt>
@@ -36,19 +39,7 @@
 					(Pick) and spanning to the end, which keeps it aligned no matter how the
 					pill widths change. Scrolls inside itself on narrow screens.
 				-->
-				<!--
-					tabindex="0" is required here, not optional: a scroll container with no
-					focusable children cannot be scrolled by keyboard, so this content was
-					unreachable without a pointer (SC 2.1.1, axe scrollable-region-focusable).
-					The compiler rule below cannot tell a scroll container from a decorative div.
-				-->
-				<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-				<div
-					class="overflow-x-auto pt-2"
-					tabindex="0"
-					role="group"
-					aria-label="Warehouse fulfillment sequence diagram, scrolls horizontally"
-				>
+				<div class="overflow-x-auto pt-2" use:scrollable={{ label: FLOW_LABEL, role: 'group' }}>
 					<ol
 						class="grid w-max items-center gap-x-1 gap-y-2"
 						style="grid-template-columns: repeat({steps.length}, auto);"
