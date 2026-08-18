@@ -308,6 +308,18 @@
 	}
 
 	/*
+		The active label stays visible. This is the single thing that stops the rail
+		reading as decoration: at rest, a hover-only rail is just a column of grey
+		dots, which is exactly the "I can't see it doing anything" problem.
+	*/
+	.rail-dot[aria-current] .rail-label {
+		opacity: 1;
+		transform: none;
+		color: var(--t-ink-strong);
+		font-weight: 600;
+	}
+
+	/*
 		Hovered or focused, the label stops being a clamped column entry and becomes a
 		floating chip: full text, no truncation, and an opaque ground of its own.
 
@@ -328,15 +340,31 @@
 	.rail-dot:hover .rail-label,
 	.rail-dot:focus-visible .rail-label {
 		position: absolute;
-		left: 1.375rem;
-		top: 50%;
+		/*
+			Centred by auto margins against inset-block:0, NOT by translateY(-50%).
+			The transform route looks broken: position:absolute applies instantly while
+			transform is still being transitioned, so the chip appears at top:50% with
+			no transform — a row below where the text was — and then slides up. Auto
+			margins put it in the right place on the first frame, and the spec resolves
+			them to equal (possibly negative) values, so it stays centred even when the
+			chip is taller than the 1.75rem row.
+		*/
+		inset-block: 0;
+		height: fit-content;
+		margin-block: auto;
+		/*
+			Pulled left by the chip's own padding and border so the FIRST CHARACTER
+			lands exactly where the resting label's first character was. The text then
+			appears to gain a background in place rather than shifting sideways.
+		*/
+		left: calc(1.375rem - 0.5rem - 1px);
 		z-index: 1;
 		display: block;
 		width: max-content;
 		max-width: 15rem;
 		overflow: visible;
 		opacity: 1;
-		transform: translateY(-50%);
+		transform: none;
 		padding: 0.375rem 0.5rem;
 		border: 1px solid var(--t-edge);
 		border-radius: 0.375rem;
@@ -344,18 +372,6 @@
 		box-shadow:
 			0 1px 2px rgb(0 0 0 / 0.06),
 			0 4px 12px rgb(0 0 0 / 0.1);
-		color: var(--t-ink-strong);
-		font-weight: 600;
-	}
-
-	/*
-		The active label stays visible. This is the single thing that stops the rail
-		reading as decoration: at rest, a hover-only rail is just a column of grey
-		dots, which is exactly the "I can't see it doing anything" problem.
-	*/
-	.rail-dot[aria-current] .rail-label {
-		opacity: 1;
-		transform: none;
 		color: var(--t-ink-strong);
 		font-weight: 600;
 	}
