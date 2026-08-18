@@ -137,8 +137,15 @@
 		*/
 		width: clamp(7rem, calc(50vw - var(--rail-half) - var(--rail-gap)), 11rem);
 		/* Without this the rail is a dead strip down the page, silently swallowing
-		   clicks on anything beneath it. */
+		   clicks on anything beneath it. Only .rail-inner takes pointer events back. */
 		pointer-events: none;
+		/*
+			The content column is a later sibling, so it would otherwise paint over the
+			rail — which matters only for the hover chip, since that is the one part
+			that deliberately overhangs the column. Safe to raise the whole rail because
+			everything except .rail-inner is click-through.
+		*/
+		z-index: 20;
 
 		/* Shown only where the gutter is genuinely wide enough — see below. */
 		display: none;
@@ -300,11 +307,45 @@
 		transform: scale(1.9);
 	}
 
+	/*
+		Hovered or focused, the label stops being a clamped column entry and becomes a
+		floating chip: full text, no truncation, and an opaque ground of its own.
+
+		Going `position: absolute` is what lets it break the rail's 7-11rem width — at
+		rest the label has to live inside the gutter, but there is no room there for
+		"Western Washington University — KIND Lab", so on hover it overhangs the
+		content column instead. That overhang is exactly why it needs a real
+		background, border and shadow rather than bare text: it is now sitting on top
+		of body copy.
+
+		Switching `display` off -webkit-box drops the line clamp, and `width:
+		max-content` with a max-width lets short labels stay compact while long ones
+		wrap to a readable measure.
+
+		The chip is a descendant of the <a>, so moving the pointer onto it keeps the
+		hover alive — WCAG 1.4.13 Hoverable, which a sibling tooltip would fail.
+	*/
 	.rail-dot:hover .rail-label,
 	.rail-dot:focus-visible .rail-label {
+		position: absolute;
+		left: 1.375rem;
+		top: 50%;
+		z-index: 1;
+		display: block;
+		width: max-content;
+		max-width: 15rem;
+		overflow: visible;
 		opacity: 1;
-		transform: none;
+		transform: translateY(-50%);
+		padding: 0.375rem 0.5rem;
+		border: 1px solid var(--t-edge);
+		border-radius: 0.375rem;
+		background: var(--t-surface-raised);
+		box-shadow:
+			0 1px 2px rgb(0 0 0 / 0.06),
+			0 4px 12px rgb(0 0 0 / 0.1);
 		color: var(--t-ink-strong);
+		font-weight: 600;
 	}
 
 	/*
