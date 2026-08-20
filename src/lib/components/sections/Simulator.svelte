@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
+	import { scrollable } from '$lib/actions/scrollable';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
@@ -10,6 +11,8 @@
 	// The main sequence. Shorting is not a step in it — see the branch below.
 	const steps = ['Wave', 'Pick', 'Stage', 'Pack', 'Load', 'Ship'];
 	const branch = ['Short', 'Replenish'];
+
+	const FLOW_LABEL = 'Warehouse fulfillment sequence diagram, scrolls horizontally';
 </script>
 
 <SectionWrapper id="simulator" headingId="simulator-heading" number="04" title="WMS Simulator" alt>
@@ -36,7 +39,7 @@
 					(Pick) and spanning to the end, which keeps it aligned no matter how the
 					pill widths change. Scrolls inside itself on narrow screens.
 				-->
-				<div class="overflow-x-auto pt-2">
+				<div class="overflow-x-auto pt-2" use:scrollable={{ label: FLOW_LABEL, role: 'group' }}>
 					<ol
 						class="grid w-max items-center gap-x-1 gap-y-2"
 						style="grid-template-columns: repeat({steps.length}, auto);"
@@ -46,13 +49,13 @@
 							<li class="flex items-center gap-1">
 								<Badge tone="accent" size="md">{step}</Badge>
 								{#if i < steps.length - 1}
-									<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+									<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 								{/if}
 							</li>
 						{/each}
 
 						<li class="flex items-center gap-1" style="grid-column: 2 / -1;">
-							<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&#8627;</span>
+							<span class="text-ink-muted" aria-hidden="true">&#8627;</span>
 							<span class="text-ink-muted mr-1 text-sm">location empty</span>
 							{#each branch as step (step)}
 								<span
@@ -60,7 +63,7 @@
 								>
 									{step}
 								</span>
-								<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+								<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 							{/each}
 							<span class="text-ink-muted text-sm">back to Pick</span>
 						</li>
@@ -70,7 +73,7 @@
 				<div class="pt-2">
 					<button
 						type="button"
-						class="bg-accent-700 hover:bg-accent-800 focus:ring-accent-500 dark:focus:ring-offset-warm-950 ease-spring inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+						class="bg-accent-700 hover:bg-accent-800 ease-spring inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 						onclick={() => simulator.launch()}
 					>
 						<svg

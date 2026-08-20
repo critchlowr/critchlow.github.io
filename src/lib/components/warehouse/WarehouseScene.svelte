@@ -451,7 +451,7 @@
 	}
 
 	:global(.dark) .building-sign {
-		color: #d4b896;
+		color: var(--color-warm-300);
 	}
 
 	/* ═══ INBOUND LEFT SIDE ═══ */
@@ -620,14 +620,14 @@
 		transform: translateX(-50%);
 		font-size: 8px;
 		font-weight: 700;
-		color: #8b7355;
+		color: #5a3a1a;
 		font-family: var(--font-mono);
 		white-space: nowrap;
 		z-index: 5;
 	}
 
 	:global(.dark) .receiving-label {
-		color: var(--color-warm-400);
+		color: var(--color-warm-300);
 	}
 
 	.receiving-box {
@@ -952,14 +952,14 @@
 		transform: translateX(-50%);
 		font-size: 8px;
 		font-weight: 700;
-		color: var(--color-warm-600);
+		color: #5a3a1a;
 		font-family: var(--font-mono);
 		white-space: nowrap;
 		z-index: 5;
 	}
 
 	:global(.dark) .staging-label {
-		color: var(--color-warm-400);
+		color: var(--color-warm-300);
 	}
 
 	/* Packed — sealed with tape, ready for the truck */
@@ -1159,6 +1159,20 @@
 		}
 	}
 
+	/*
+		Short landscape — a phone turned sideways. The scene is a decorative,
+		aria-hidden diorama, so dropping it costs no information and frees the height
+		the game actually needs. This replaces a blocking "turn your phone upright"
+		overlay, which restricted operation to one orientation and so failed SC 1.3.4;
+		"it renders badly in landscape" is a layout limitation, not the essential-use
+		exception. The panel below already scrolls, so the game just works.
+	*/
+	@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+		.scene {
+			display: none;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.scene {
 			height: 150px;
@@ -1192,8 +1206,16 @@
 			left: 73%;
 		}
 		.building-sign {
-			font-size: 9px;
+			font-size: 10px;
 		}
+		/*
+			These two stay at 6px on purpose. The whole .scene is aria-hidden
+			decoration inside a 150px-tall diorama, and every fact they label is
+			also delivered as >=14px text in PickingPanel and OrderStatusBar.
+			Growing them here only buys overlap with the half-dozen other elements
+			this media query repositions. WAVE flags them as small text; that alert
+			is accepted, not an oversight.
+		*/
 		.staging-label,
 		.receiving-label {
 			font-size: 6px;

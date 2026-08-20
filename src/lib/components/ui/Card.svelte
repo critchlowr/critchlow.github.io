@@ -11,9 +11,11 @@
 		class?: string;
 		/** Inline custom properties, e.g. the `--i` stagger index inside a `.stagger` list. */
 		style?: string;
+		/** Anchor target, so a rail or a link can address this card. */
+		id?: string;
 	}
 
-	let { children, interactive = false, as = 'div', class: extra = '', style }: Props = $props();
+	let { children, interactive = false, as = 'div', class: extra = '', style, id }: Props = $props();
 
 	// `@container` lets the contents respond to the column they sit in rather than the
 	// viewport — the Work grid goes two-up at sm, so viewport width stopped being a
@@ -32,6 +34,6 @@
 		'motion-reduce:transition-none motion-reduce:hover:translate-y-0';
 </script>
 
-<svelte:element this={as} class="{shell} {interactive ? hover : ''} {extra}" {style}>
+<svelte:element this={as} {id} class="{shell} {interactive ? hover : ''} {extra}" {style}>
 	{@render children()}
 </svelte:element>

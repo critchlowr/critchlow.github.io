@@ -16,9 +16,20 @@
 		 * which is too wide for reading and too narrow for the skills wall.
 		 */
 		width?: 'prose' | 'default' | 'wide';
+		/** Optional progress rail, rendered as a direct child so the section bounds it. */
+		rail?: Snippet;
 	}
 
-	let { id, headingId, number, title, children, alt = false, width = 'default' }: Props = $props();
+	let {
+		id,
+		headingId,
+		number,
+		title,
+		children,
+		alt = false,
+		width = 'default',
+		rail
+	}: Props = $props();
 
 	const measures = {
 		prose: 'max-w-3xl',
@@ -33,7 +44,13 @@
 	ambient only behind body copy — the hero and footer carry no section band at all,
 	so they show the lamps undimmed.
 -->
-<section {id} aria-labelledby={headingId} class={alt ? 'bg-band/80' : 'bg-surface/68'}>
+<!--
+	`relative` makes this section the containing block for anything absolutely
+	positioned inside it — which is what bounds a sticky rail to the section and
+	stops it reaching the footer. See SectionRail.
+-->
+<section {id} aria-labelledby={headingId} class="relative {alt ? 'bg-band/80' : 'bg-surface/68'}">
+	{@render rail?.()}
 	<div class="mx-auto {measures[width]} px-5 py-20 md:py-28">
 		<div class="mb-12 flex items-baseline gap-4" use:inview={{ dir: 'up' }}>
 			<span

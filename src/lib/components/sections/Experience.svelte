@@ -1,12 +1,21 @@
 <script lang="ts">
 	import { experience } from '$lib/data/content';
 	import { inview } from '$lib/actions/inview';
+	import { dialog } from '$lib/actions/dialog';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
+	import SectionRail from '$lib/components/ui/SectionRail.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
+
+	// Labelled by company, not title: there are two Bartender roles and two
+	// Carpenter roles, but every company string is unique.
+	const railItems = experience.map((job, i) => ({
+		id: `experience-${i}`,
+		label: job.company
+	}));
 
 	let conveyorEl = $state<HTMLElement>();
 	let conveyorVisible = $state(false);
@@ -25,14 +34,48 @@
 	let touchVelocity = 0;
 	let rafId: number;
 
+	/*
+		Three reasons the belt can be stopped, kept separate because they are not the
+		same thing and must not clobber one another:
+
+		- `paused` is the user's explicit choice via the button. WCAG 2.2.2 Pause,
+		  Stop, Hide applies here — this scrolls automatically, runs well past five
+		  seconds, and sits alongside other content, so a control to stop it is a
+		  Level A requirement, not a nicety.
+		- `reduceMotion` is the OS preference. Read live rather than once, so a
+		  mid-session change is honoured.
+		- `focusWithin` stops the belt while a photo button has keyboard focus.
+		  Without it the focused element translates out of the clipped container
+		  while still focused, which is SC 2.4.11.
+	*/
+	let paused = $state(false);
+	let focusWithin = $state(false);
+	let reduceMotion = $state(false);
+
+	$effect(() => {
+		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+		reduceMotion = mq.matches;
+		const onChange = () => (reduceMotion = mq.matches);
+		mq.addEventListener('change', onChange);
+		return () => mq.removeEventListener('change', onChange);
+	});
+
+	const marqueeRunning = $derived(!paused && !reduceMotion && !focusWithin);
+
 	function getHalfWidth(): number {
 		if (!marqueeTrack) return 1;
 		return marqueeTrack.scrollWidth / 2;
 	}
 
 	function tickMarquee() {
-		if (!marqueeVisible) {
+		// Still scheduled while stopped, so a drag can move the belt and the wrap
+		// logic below keeps running — stopping the animation must not freeze the
+		// component, only the automatic movement.
+		if (!marqueeVisible || !marqueeRunning) {
 			rafId = requestAnimationFrame(tickMarquee);
+			if (marqueeTrack && isTouching) {
+				marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
+			}
 			return;
 		}
 
@@ -127,6 +170,69 @@
 		{ src: '/images/Bartending/maxandryan.jpeg', alt: 'Ryan and Max' }
 	];
 
+	/*
+		Roving tabindex over the reel.
+
+		Ten photos meant ten consecutive tab stops sitting between two job entries
+		that have none of their own, so a keyboard user paid eleven presses to walk
+		past a decorative gallery on the way to the rest of the section. The reel is
+		now a single stop: Tab enters it, arrow keys move within it, Tab leaves.
+
+		Only one button carries tabindex="0" at a time. This is Tab-order only — a
+		screen reader's own navigation still reaches all ten, because roving tabindex
+		does not remove anything from the accessibility tree.
+	*/
+	let activePhoto = $state(0);
+	let photoButtons = $state<HTMLButtonElement[]>([]);
+
+	function onPhotoFocus(i: number) {
+		activePhoto = i;
+		revealPhoto(photoButtons[i]);
+	}
+
+	/*
+		Bring a focused photo fully inside the clipped container.
+
+		The reel pauses on focus, but pausing only freezes it wherever it happened to
+		be — a photo could be focused while half-clipped or entirely off the edge,
+		which is SC 2.4.11 Focus Not Obscured. Arrow keys make that far more likely
+		than Tab did, since moving along the reel is now the normal way to browse it.
+	*/
+	function revealPhoto(btn: HTMLButtonElement | undefined) {
+		if (!btn || !marqueeTrack || !marqueeContainer) return;
+
+		const view = marqueeContainer.clientWidth;
+		const pad = 12;
+		const left = btn.offsetLeft;
+		const width = btn.offsetWidth;
+
+		if (left + marqueeOffset < pad) {
+			marqueeOffset = pad - left;
+		} else if (left + width + marqueeOffset > view - pad) {
+			marqueeOffset = view - pad - left - width;
+		} else {
+			return;
+		}
+
+		// Written directly because the rAF loop returns early while the reel is
+		// paused, which it always is at this point — focus is inside it.
+		marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
+	}
+
+	function onPhotoKeydown(e: KeyboardEvent) {
+		const last = bartendingPhotos.length - 1;
+		let next: number;
+
+		if (e.key === 'ArrowRight') next = activePhoto === last ? 0 : activePhoto + 1;
+		else if (e.key === 'ArrowLeft') next = activePhoto === 0 ? last : activePhoto - 1;
+		else if (e.key === 'Home') next = 0;
+		else if (e.key === 'End') next = last;
+		else return;
+
+		e.preventDefault();
+		photoButtons[next]?.focus();
+	}
+
 	let lightboxSrc = $state('');
 	let lightboxAlt = $state('');
 	let lightboxOpen = $state(false);
@@ -161,6 +267,14 @@
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
+	{#snippet rail()}
+		<SectionRail
+			items={railItems}
+			label="Experience timeline"
+			headingId="experience-rail-heading"
+		/>
+	{/snippet}
+
 	<!--
 		Cards, not rules. This section sits on the alt ground, so a raised surface is
 		what gives each role an edge against the tint behind it — and with seven entries
@@ -168,7 +282,13 @@
 	-->
 	<ul class="stagger space-y-5" use:inview>
 		{#each experience as job, jobIndex (job.company + job.title)}
-			<Card as="li" interactive class="group p-6 md:p-7" style="--i: {jobIndex}">
+			<Card
+				as="li"
+				interactive
+				id="experience-{jobIndex}"
+				class="group scroll-mt-28 p-6 md:p-7"
+				style="--i: {jobIndex}"
+			>
 				<div
 					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:gap-6 sm:text-left"
 				>
@@ -216,7 +336,7 @@
 					<div class="mt-6 flex justify-center">
 						<button
 							type="button"
-							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 focus:ring-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 dark:focus:ring-offset-warm-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 							onclick={() => simulator.launch()}
 						>
 							<svg
@@ -247,21 +367,72 @@
 					</div>
 				{/if}
 				{#if job.showBartendingPhotos}
+					<!--
+						min-h is a rem taller than the h-48/sm:h-56 buttons inside it. They used
+						to be exactly equal, so with the container clipped the focus ring on a
+						photo was cut off top and bottom.
+					-->
 					<div
-						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
+						class="photo-marquee relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[13rem] overflow-hidden rounded-b-xl sm:min-h-[15rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
 						bind:this={marqueeContainer}
 						role="region"
-						aria-label="Bartending photo carousel"
+						aria-label="Bartending photos. Use the left and right arrow keys to browse."
 						ontouchstart={onTouchStart}
 						ontouchmove={onTouchMove}
 						ontouchend={onTouchEnd}
+						onfocusin={() => (focusWithin = true)}
+						onfocusout={() => (focusWithin = false)}
 					>
+						<!--
+							WCAG 2.2.2 Pause, Stop, Hide. Last in the DOM but positioned top-right,
+							so it does not land between the photos and whatever precedes them in the
+							tab order. Hidden entirely when the OS asks for reduced motion, because
+							then there is no movement to pause.
+						-->
+						{#if !reduceMotion}
+							<button
+								type="button"
+								onclick={() => (paused = !paused)}
+								aria-pressed={paused}
+								class="bg-warm-900/70 hover:bg-warm-900/90 absolute top-2 right-2 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors"
+							>
+								<span class="sr-only"
+									>{paused ? 'Play' : 'Pause'} the bartending photo carousel</span
+								>
+								{#if paused}
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-5 w-5"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<path d="M8 5v14l11-7z" />
+									</svg>
+								{:else}
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-5 w-5"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<rect x="6" y="5" width="4" height="14" rx="1" />
+										<rect x="14" y="5" width="4" height="14" rx="1" />
+									</svg>
+								{/if}
+							</button>
+						{/if}
 						<div class="marquee-track" bind:this={marqueeTrack}>
-							{#each bartendingPhotos as photo (photo.src)}
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
+									bind:this={photoButtons[i]}
 									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									onfocus={() => onPhotoFocus(i)}
+									onkeydown={onPhotoKeydown}
+									tabindex={i === activePhoto ? 0 : -1}
+									class="h-48 flex-shrink-0 cursor-pointer rounded-lg sm:h-56"
 								>
 									<img
 										src={photo.src}
@@ -270,20 +441,23 @@
 									/>
 								</button>
 							{/each}
+							<!--
+								The second copy of the reel, which is what makes the loop seamless.
+								Deliberately NOT buttons: these slides are never activated, never
+								focused, and already hidden from assistive tech, so a <button> here
+								is a control that exists for nobody. It also cost ten "Empty button"
+								errors in WAVE, which scans aria-hidden content by design — the
+								right answer to that is not to unhide them (which would put ten
+								duplicate photo controls in the tab order) but to stop pretending
+								they are interactive at all.
+
+								Box model must stay identical to the real slides above: the marquee
+								wrap point is computed from marqueeTrack.scrollWidth.
+							-->
 							{#each bartendingPhotos as photo (photo.src)}
-								<button
-									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-									tabindex="-1"
-									aria-hidden="true"
-								>
-									<img
-										src={photo.src}
-										alt=""
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
+								<div class="h-48 flex-shrink-0 rounded-lg sm:h-56" aria-hidden="true">
+									<img src={photo.src} alt="" class="h-full w-auto rounded-lg object-cover" />
+								</div>
 							{/each}
 						</div>
 					</div>
@@ -294,15 +468,32 @@
 </SectionWrapper>
 
 {#if lightboxOpen}
+	<!--
+		The lightbox renders here, at the end of the component, but it is opened from
+		a photo button far above. Without `use:dialog` focus stayed on that button, so
+		reaching this Close control meant tabbing through the nine remaining photos and
+		every section below — all of it behind the overlay.
+
+		The `e.target === e.currentTarget` guard is what lets the image sit directly in
+		the backdrop: a click on the photo is not a click on the backdrop, so the old
+		stopPropagation wrapper (and its blanket eslint-disable, which suppressed every
+		rule on that line) is no longer needed.
+	-->
+	<!--
+		Escape comes from `use:dialog` and the Close button is the first thing focused
+		on open, so the click handler is a pointer convenience, not the only exit.
+	-->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-		onclick={closeLightbox}
-		onkeydown={(e) => {
-			if (e.key === 'Escape') closeLightbox();
-		}}
 		role="dialog"
+		aria-modal="true"
 		aria-label="Photo preview"
 		tabindex="-1"
+		use:dialog={{ onclose: closeLightbox }}
+		onclick={(e) => {
+			if (e.target === e.currentTarget) closeLightbox();
+		}}
 	>
 		<button
 			type="button"
@@ -323,14 +514,11 @@
 				<line x1="6" y1="6" x2="18" y2="18" />
 			</svg>
 		</button>
-		<!-- eslint-disable-next-line -- stop click from closing lightbox -->
-		<div onclick={(e) => e.stopPropagation()} role="presentation">
-			<img
-				src={lightboxSrc}
-				alt={lightboxAlt}
-				class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-			/>
-		</div>
+		<img
+			src={lightboxSrc}
+			alt={lightboxAlt}
+			class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+		/>
 	</div>
 {/if}
 

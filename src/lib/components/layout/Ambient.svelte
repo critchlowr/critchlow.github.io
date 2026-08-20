@@ -12,37 +12,15 @@
 	 *   or `hue-rotate()` — radial gradients are already soft, and a filter on a fixed
 	 *   full-screen layer forces a repaint every frame.
 	 * - Scroll writes one custom property, rAF-throttled, and the CSS does the rest.
+	 *   That progress value is shared with the mobile reading bar via
+	 *   $lib/scroll/progress, so the two do not run duplicate scroll listeners.
 	 * - Drift and scroll transforms live on separate nested elements. A keyframe
 	 *   animation on `transform` would otherwise clobber the scroll-driven value.
 	 */
-	let progress = $state(0);
-
-	$effect(() => {
-		let frame = 0;
-
-		function update() {
-			const max = document.documentElement.scrollHeight - window.innerHeight;
-			progress = max > 0 ? window.scrollY / max : 0;
-		}
-
-		function schedule() {
-			cancelAnimationFrame(frame);
-			frame = requestAnimationFrame(update);
-		}
-
-		update();
-		window.addEventListener('scroll', schedule, { passive: true });
-		window.addEventListener('resize', schedule, { passive: true });
-
-		return () => {
-			cancelAnimationFrame(frame);
-			window.removeEventListener('scroll', schedule);
-			window.removeEventListener('resize', schedule);
-		};
-	});
+	import { scrollProgress } from '$lib/scroll/progress.svelte';
 </script>
 
-<div class="ambient" style="--p: {progress}" aria-hidden="true">
+<div class="ambient" style="--p: {scrollProgress.value}" aria-hidden="true">
 	<span class="lamp l1"><span class="glow"></span></span>
 	<span class="lamp l2"><span class="glow"></span></span>
 	<span class="lamp l3"><span class="glow"></span></span>
