@@ -170,6 +170,69 @@
 		{ src: '/images/Bartending/maxandryan.jpeg', alt: 'Ryan and Max' }
 	];
 
+	/*
+		Roving tabindex over the reel.
+
+		Ten photos meant ten consecutive tab stops sitting between two job entries
+		that have none of their own, so a keyboard user paid eleven presses to walk
+		past a decorative gallery on the way to the rest of the section. The reel is
+		now a single stop: Tab enters it, arrow keys move within it, Tab leaves.
+
+		Only one button carries tabindex="0" at a time. This is Tab-order only — a
+		screen reader's own navigation still reaches all ten, because roving tabindex
+		does not remove anything from the accessibility tree.
+	*/
+	let activePhoto = $state(0);
+	let photoButtons = $state<HTMLButtonElement[]>([]);
+
+	function onPhotoFocus(i: number) {
+		activePhoto = i;
+		revealPhoto(photoButtons[i]);
+	}
+
+	/*
+		Bring a focused photo fully inside the clipped container.
+
+		The reel pauses on focus, but pausing only freezes it wherever it happened to
+		be — a photo could be focused while half-clipped or entirely off the edge,
+		which is SC 2.4.11 Focus Not Obscured. Arrow keys make that far more likely
+		than Tab did, since moving along the reel is now the normal way to browse it.
+	*/
+	function revealPhoto(btn: HTMLButtonElement | undefined) {
+		if (!btn || !marqueeTrack || !marqueeContainer) return;
+
+		const view = marqueeContainer.clientWidth;
+		const pad = 12;
+		const left = btn.offsetLeft;
+		const width = btn.offsetWidth;
+
+		if (left + marqueeOffset < pad) {
+			marqueeOffset = pad - left;
+		} else if (left + width + marqueeOffset > view - pad) {
+			marqueeOffset = view - pad - left - width;
+		} else {
+			return;
+		}
+
+		// Written directly because the rAF loop returns early while the reel is
+		// paused, which it always is at this point — focus is inside it.
+		marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
+	}
+
+	function onPhotoKeydown(e: KeyboardEvent) {
+		const last = bartendingPhotos.length - 1;
+		let next: number;
+
+		if (e.key === 'ArrowRight') next = activePhoto === last ? 0 : activePhoto + 1;
+		else if (e.key === 'ArrowLeft') next = activePhoto === 0 ? last : activePhoto - 1;
+		else if (e.key === 'Home') next = 0;
+		else if (e.key === 'End') next = last;
+		else return;
+
+		e.preventDefault();
+		photoButtons[next]?.focus();
+	}
+
 	let lightboxSrc = $state('');
 	let lightboxAlt = $state('');
 	let lightboxOpen = $state(false);
@@ -313,7 +376,7 @@
 						class="photo-marquee relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[13rem] overflow-hidden rounded-b-xl sm:min-h-[15rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
 						bind:this={marqueeContainer}
 						role="region"
-						aria-label="Bartending photo carousel"
+						aria-label="Bartending photos. Use the left and right arrow keys to browse."
 						ontouchstart={onTouchStart}
 						ontouchmove={onTouchMove}
 						ontouchend={onTouchEnd}
@@ -361,10 +424,14 @@
 							</button>
 						{/if}
 						<div class="marquee-track" bind:this={marqueeTrack}>
-							{#each bartendingPhotos as photo (photo.src)}
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
+									bind:this={photoButtons[i]}
 									onclick={() => openLightbox(photo.src, photo.alt)}
+									onfocus={() => onPhotoFocus(i)}
+									onkeydown={onPhotoKeydown}
+									tabindex={i === activePhoto ? 0 : -1}
 									class="h-48 flex-shrink-0 cursor-pointer rounded-lg sm:h-56"
 								>
 									<img
@@ -374,20 +441,23 @@
 									/>
 								</button>
 							{/each}
+							<!--
+								The second copy of the reel, which is what makes the loop seamless.
+								Deliberately NOT buttons: these slides are never activated, never
+								focused, and already hidden from assistive tech, so a <button> here
+								is a control that exists for nobody. It also cost ten "Empty button"
+								errors in WAVE, which scans aria-hidden content by design — the
+								right answer to that is not to unhide them (which would put ten
+								duplicate photo controls in the tab order) but to stop pretending
+								they are interactive at all.
+
+								Box model must stay identical to the real slides above: the marquee
+								wrap point is computed from marqueeTrack.scrollWidth.
+							-->
 							{#each bartendingPhotos as photo (photo.src)}
-								<button
-									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="h-48 flex-shrink-0 cursor-pointer rounded-lg sm:h-56"
-									tabindex="-1"
-									aria-hidden="true"
-								>
-									<img
-										src={photo.src}
-										alt=""
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
+								<div class="h-48 flex-shrink-0 rounded-lg sm:h-56" aria-hidden="true">
+									<img src={photo.src} alt="" class="h-full w-auto rounded-lg object-cover" />
+								</div>
 							{/each}
 						</div>
 					</div>

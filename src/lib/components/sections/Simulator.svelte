@@ -49,13 +49,13 @@
 							<li class="flex items-center gap-1">
 								<Badge tone="accent" size="md">{step}</Badge>
 								{#if i < steps.length - 1}
-									<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+									<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 								{/if}
 							</li>
 						{/each}
 
 						<li class="flex items-center gap-1" style="grid-column: 2 / -1;">
-							<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&#8627;</span>
+							<span class="text-ink-muted" aria-hidden="true">&#8627;</span>
 							<span class="text-ink-muted mr-1 text-sm">location empty</span>
 							{#each branch as step (step)}
 								<span
@@ -63,7 +63,7 @@
 								>
 									{step}
 								</span>
-								<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+								<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 							{/each}
 							<span class="text-ink-muted text-sm">back to Pick</span>
 						</li>

@@ -32,7 +32,7 @@
 		>
 			All Orders Shipped!
 		</h3>
-		<p class="text-warm-600 dark:text-warm-400 mt-2 text-sm">
+		<p class="text-warm-700 dark:text-warm-300 mt-2 text-sm">
 			You successfully managed the warehouse. Every order picked, staged, loaded, and shipped.
 		</p>
 	</div>

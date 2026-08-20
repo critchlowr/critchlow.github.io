@@ -200,10 +200,13 @@
 		color: var(--t-brand);
 		font-weight: 700;
 	}
-	.rail-count-sep,
-	.rail-count-all {
-		opacity: 0.65;
-	}
+	/*
+		No opacity here. Fading the separator and the total to 0.65 dropped this text
+		to 2.89:1 — it is aria-hidden, but it is still visible text, and 1.4.3 exempts
+		only text that is invisible to everyone. The hierarchy does not need it: the
+		current number is already bold and carries --t-brand, so it reads as the
+		emphasis against plain muted ink either way.
+	*/
 
 	.rail-list {
 		position: relative;

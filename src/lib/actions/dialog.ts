@@ -53,7 +53,25 @@ function inertOutside(node: HTMLElement) {
 	return () => touched.forEach((s) => (s.inert = false));
 }
 
-export function dialog(node: HTMLElement, opts: { onclose: () => void }) {
+export function dialog(
+	node: HTMLElement,
+	opts: {
+		onclose: () => void;
+		/**
+		 * Where focus lands on open.
+		 *
+		 * `'first'` (default) is the conventional choice and right for a dialog
+		 * whose first control is its Close button — the lightbox.
+		 *
+		 * `'container'` focuses the labelled dialog element itself, so entry
+		 * announces the dialog's name rather than a control. Use it when the first
+		 * tabbable is something a user would not want to activate by reflex: the
+		 * simulator's first control is Reset, and landing a keyboard user on a
+		 * button that discards their progress is not a neutral default.
+		 */
+		initialFocus?: 'first' | 'container';
+	}
+) {
 	// Captured before anything moves, so close can put it back where it was.
 	const returnTo = document.activeElement as HTMLElement | null;
 	const releaseInert = inertOutside(node);
@@ -88,7 +106,8 @@ export function dialog(node: HTMLElement, opts: { onclose: () => void }) {
 
 	// Focus in: the first control if there is one, otherwise the container, so
 	// Escape has somewhere to land and the dialog's name is announced on entry.
-	(tabbable(node)[0] ?? node).focus();
+	const target = opts.initialFocus === 'container' ? node : (tabbable(node)[0] ?? node);
+	target.focus();
 	node.addEventListener('keydown', onkeydown);
 
 	return {

@@ -70,6 +70,8 @@
 						<span class="sr-only">ORCID iD:</span>
 						{credentials.orcid}
 					</span>
+					<!-- Same wording as ArrowLink, so both external links announce identically. -->
+					<span class="sr-only">(opens in a new tab)</span>
 				</a>
 			</li>
 			<li class="border-edge inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5">

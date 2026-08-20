@@ -12,7 +12,12 @@
 			(function () {
 				const saved = localStorage.getItem('theme');
 				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-				if (saved === 'dark' || (!saved && prefersDark)) {
+				// ?theme=dark|light forces a theme for headless accessibility runs, which
+				// have no localStorage and cannot drive the toggle. No real visitor ever
+				// carries this param, so the stored/system path below is unchanged.
+				const forced = new URLSearchParams(location.search).get('theme');
+				const dark = forced ? forced === 'dark' : saved === 'dark' || (!saved && prefersDark);
+				if (dark) {
 					document.documentElement.classList.add('dark');
 				}
 			})();

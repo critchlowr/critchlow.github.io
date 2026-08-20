@@ -42,7 +42,7 @@
 		aria-modal="true"
 		aria-labelledby="wms-dialog-title"
 		tabindex="-1"
-		use:dialog={{ onclose }}
+		use:dialog={{ onclose, initialFocus: 'container' }}
 		onclick={(e) => {
 			if (e.target === e.currentTarget) onclose();
 		}}

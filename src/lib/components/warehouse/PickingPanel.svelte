@@ -151,7 +151,7 @@
 				<h3 tabindex="-1" class="text-warm-800 dark:text-warm-100 text-lg font-bold">
 					Ready to start
 				</h3>
-				<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				<p class="text-warm-700 dark:text-warm-300 mt-1 text-sm">
 					{openCount} order{openCount !== 1 ? 's' : ''} waiting &middot; {totalLines} lines total
 				</p>
 				<button
@@ -162,7 +162,7 @@
 				>
 					Wave Orders
 				</button>
-				<p class="text-warm-500 dark:text-warm-400 mt-2 text-xs">
+				<p class="text-warm-700 dark:text-warm-300 mt-2 text-xs">
 					Allocates inventory and creates pick tasks
 				</p>
 			</div>
@@ -175,7 +175,7 @@
 			>
 				<div class="flex items-center gap-2">
 					<span
-						class="text-warm-600 dark:text-warm-300 text-xs font-semibold tracking-wider uppercase"
+						class="text-warm-700 dark:text-warm-300 text-xs font-semibold tracking-wider uppercase"
 						>Cart</span
 					>
 					<div class="flex gap-0.5">
@@ -187,7 +187,7 @@
 							></div>
 						{/each}
 					</div>
-					<span class="text-warm-600 dark:text-warm-300 font-mono text-xs"
+					<span class="text-warm-700 dark:text-warm-300 font-mono text-xs"
 						>{cartPickIds.length}/{cartCapacity}</span
 					>
 				</div>
@@ -240,7 +240,7 @@
 				{:else if currentPick && currentLine && currentOrder}
 					<!-- Progress -->
 					<div class="mb-3 text-center">
-						<span class="text-warm-600 dark:text-warm-300 text-xs font-medium">
+						<span class="text-warm-700 dark:text-warm-300 text-xs font-medium">
 							Pick {pickedCount + 1} of {totalPicks +
 								picks.filter((p) => p.status === 'Short').length}
 						</span>
@@ -255,7 +255,7 @@
 							<span class="text-accent-700 dark:text-accent-200 font-mono text-xs font-semibold"
 								>{currentPick.orderId}</span
 							>
-							<span class="text-warm-600 dark:text-warm-200 text-xs">{currentOrder.customer}</span>
+							<span class="text-warm-700 dark:text-warm-200 text-xs">{currentOrder.customer}</span>
 						</div>
 
 						<!-- Item -->
@@ -263,7 +263,7 @@
 							<p class="text-warm-800 dark:text-warm-50 text-lg font-bold">
 								{currentLine.itemName}
 							</p>
-							<p class="text-warm-600 dark:text-warm-200 mt-1 font-mono text-sm">
+							<p class="text-warm-700 dark:text-warm-200 mt-1 font-mono text-sm">
 								{currentPick.sku}
 							</p>
 						</div>
@@ -272,7 +272,7 @@
 						<div class="mb-4 flex justify-center gap-6">
 							<div class="text-center">
 								<p
-									class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+									class="text-warm-700 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
 								>
 									Location
 								</p>
@@ -282,7 +282,7 @@
 							</div>
 							<div class="text-center">
 								<p
-									class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+									class="text-warm-700 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
 								>
 									Ordered
 								</p>
@@ -292,7 +292,7 @@
 							</div>
 							<div class="text-center">
 								<p
-									class="text-warm-600 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
+									class="text-warm-700 dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
 								>
 									Pick Qty
 								</p>
@@ -337,7 +337,7 @@
 						<h3 tabindex="-1" class="text-warm-800 dark:text-warm-100 text-base font-bold">
 							Waiting for Replenishment
 						</h3>
-						<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+						<p class="text-warm-700 dark:text-warm-300 mt-1 text-sm">
 							Inventory is being restocked for {shortSkus.length} item{shortSkus.length !== 1
 								? 's'
 								: ''}
@@ -383,7 +383,7 @@
 				<h3 tabindex="-1" class="text-warm-800 dark:text-warm-100 text-base font-bold">
 					Pack Station
 				</h3>
-				<p class="text-warm-600 dark:text-warm-300 mt-0.5 text-xs">
+				<p class="text-warm-700 dark:text-warm-300 mt-0.5 text-xs">
 					Nothing goes on the truck until it is packed. An order that is missing stock can wait for
 					replenishment, or ship short.
 				</p>
@@ -401,7 +401,7 @@
 							<span class="text-warm-700 dark:text-warm-200 font-mono text-xs font-semibold">
 								{entry.orderId}
 							</span>
-							<span class="text-warm-600 dark:text-warm-300 text-xs">{entry.customer}</span>
+							<span class="text-warm-700 dark:text-warm-300 text-xs">{entry.customer}</span>
 						</div>
 
 						{#if entry.complete}
@@ -459,7 +459,7 @@
 								<div class="flex gap-2">
 									<button
 										type="button"
-										class="bg-warm-200 text-warm-500 dark:bg-warm-700 dark:text-warm-400 flex-1 cursor-not-allowed rounded-lg py-2 text-sm font-semibold"
+										class="bg-warm-200 text-warm-700 dark:bg-warm-700 dark:text-warm-300 flex-1 cursor-not-allowed rounded-lg py-2 text-sm font-semibold"
 										disabled
 									>
 										Waiting on Replen
@@ -481,7 +481,7 @@
 				{/each}
 
 				{#if packedCount > 0}
-					<p class="text-warm-500 dark:text-warm-400 pt-1 text-center text-xs">
+					<p class="text-warm-700 dark:text-warm-300 pt-1 text-center text-xs">
 						{packedCount} item{packedCount !== 1 ? 's' : ''} packed and waiting for the truck
 					</p>
 				{/if}
@@ -493,7 +493,7 @@
 				<h3 tabindex="-1" class="text-warm-800 dark:text-warm-100 text-lg font-bold">
 					Packing complete!
 				</h3>
-				<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				<p class="text-warm-700 dark:text-warm-300 mt-1 text-sm">
 					{packedCount} item{packedCount !== 1 ? 's' : ''} packed and ready to load
 				</p>
 				<button
@@ -504,7 +504,7 @@
 				>
 					Load Truck
 				</button>
-				<p class="text-warm-500 dark:text-warm-400 mt-2 text-xs">
+				<p class="text-warm-700 dark:text-warm-300 mt-2 text-xs">
 					Move all packed cartons into the outbound truck
 				</p>
 			</div>
@@ -515,7 +515,7 @@
 				<h3 tabindex="-1" class="text-warm-800 dark:text-warm-100 text-lg font-bold">
 					Truck loaded!
 				</h3>
-				<p class="text-warm-600 dark:text-warm-300 mt-1 text-sm">
+				<p class="text-warm-700 dark:text-warm-300 mt-1 text-sm">
 					{loadedCount} item{loadedCount !== 1 ? 's' : ''} ready to ship
 				</p>
 				<button

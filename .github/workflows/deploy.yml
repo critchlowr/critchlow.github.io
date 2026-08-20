@@ -29,6 +29,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Cheap gates, no browser required. `check` is what surfaces Svelte's own
+      # a11y_* compiler warnings; without it they are only ever seen locally.
+      - name: Lint
+        run: npm run lint
+
+      - name: Type and a11y check
+        run: npm run check
+
+      - name: Contrast tokens
+        run: npm run contrast
+
       - name: Build
         run: npm run build
 

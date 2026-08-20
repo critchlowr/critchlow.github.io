@@ -61,13 +61,13 @@
 		<div
 			class="border-warm-200 dark:border-warm-700 dark:bg-warm-800 flex items-center gap-3 rounded-lg border bg-white px-3 py-2"
 		>
-			<span class="text-warm-600 dark:text-warm-300 font-mono text-xs font-semibold"
+			<span class="text-warm-700 dark:text-warm-300 font-mono text-xs font-semibold"
 				>{order.orderId}</span
 			>
-			<span class="text-warm-500 dark:text-warm-400 truncate text-sm">{order.customer}</span>
+			<span class="text-warm-700 dark:text-warm-300 truncate text-sm">{order.customer}</span>
 			<div class="ml-auto flex items-center gap-2">
 				{#if progress.total > 0}
-					<span class="text-warm-500 dark:text-warm-400 text-xs"
+					<span class="text-warm-700 dark:text-warm-300 text-xs"
 						>{progress.done}/{progress.total} {progress.label}</span
 					>
 					<div class="flex gap-0.5">

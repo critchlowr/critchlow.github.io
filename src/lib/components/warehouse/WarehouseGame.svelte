@@ -178,10 +178,19 @@
 
 		triggerScene({ type: 'pick', fromLocation: pick.fromLocation, sku: pick.sku, cartBefore });
 
-		announce(
+		/*
+			Built as one string and announced once at the end, rather than announced
+			here and again inside the replenishment branch.
+
+			Two announce() calls in the same synchronous block are not two
+			announcements: the second replaces the live region's text content before
+			the screen reader has read the first, so the pick result was silently
+			dropped every time a replenishment fired — precisely the picks where the
+			user most needs to hear what happened.
+		*/
+		let narration =
 			`Picked ${pick.qtyToPick} ${itemNameFor(pick.sku)} from ${pick.fromLocation}. ` +
-				`Cart ${cartPickIds.length} of ${CART_CAPACITY}.`
-		);
+			`Cart ${cartPickIds.length} of ${CART_CAPACITY}.`;
 
 		// Check if this order line has unmet demand that can be replenished
 		const demand = getReplenishableDemand(orderId, lineNum, orderLines, picks, inventory);
@@ -192,9 +201,7 @@
 
 			// Show replen notice immediately
 			replenNotice = { sku: demand.sku, itemName, qty: demand.replenQty };
-			announce(
-				`Replenishment scheduled: ${demand.replenQty} ${itemName} moving to ${demand.location}.`
-			);
+			narration += ` Replenishment scheduled: ${demand.replenQty} ${itemName} moving to ${demand.location}.`;
 
 			// Held until the pick animation has finished and the slot is visibly empty.
 			setTimeout(() => {
@@ -241,6 +248,8 @@
 				}, 1500);
 			}, 2000);
 		}
+
+		announce(narration);
 	}
 
 	function handleReportEmpty(pickId: string) {
@@ -315,7 +324,9 @@
 		orders = [...orders];
 
 		triggerScene({ type: 'stage', boxes: carried });
-		announce(`Cart staged. ${carried.length} items moved to staging.`);
+		announce(
+			`Cart staged. ${carried.length} ${carried.length === 1 ? 'item' : 'items'} moved to staging.`
+		);
 	}
 
 	function handlePackOrder(orderId: string, force = false) {
@@ -396,7 +407,7 @@
 		</button>
 		<button
 			type="button"
-			class="text-warm-600 hover:bg-warm-200 hover:text-warm-900 dark:text-warm-300 dark:hover:bg-warm-700 dark:hover:text-warm-100 inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors"
+			class="text-warm-700 hover:bg-warm-200 hover:text-warm-900 dark:text-warm-300 dark:hover:bg-warm-700 dark:hover:text-warm-100 inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors"
 			onclick={onclose}
 			aria-label="Close simulator"
 		>
@@ -466,7 +477,7 @@
 		<!-- Collapsible inventory -->
 		<details class="mt-4">
 			<summary
-				class="text-warm-500 hover:text-warm-700 dark:text-warm-400 dark:hover:text-warm-200 cursor-pointer text-sm font-medium"
+				class="text-warm-700 hover:text-warm-900 dark:text-warm-300 dark:hover:text-warm-100 cursor-pointer text-sm font-medium"
 			>
 				View Inventory
 			</summary>
