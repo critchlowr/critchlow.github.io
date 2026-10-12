@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { theme } from '$lib/stores/theme.svelte';
 
+	// State first, then what activating does. "Click" assumed a mouse.
 	const labels: Record<string, string> = {
-		light: 'Light mode (click for dark)',
-		dark: 'Dark mode (click for system)',
-		system: 'System mode (click for light)'
+		light: 'Theme: light. Switch to dark',
+		dark: 'Theme: dark. Switch to system',
+		system: 'Theme: system. Switch to light'
 	};
 </script>
 
