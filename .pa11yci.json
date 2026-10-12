@@ -3,6 +3,8 @@
 		"standard": "WCAG2AA",
 		"runners": ["axe", "htmlcs"],
 		"timeout": 30000,
+		"wait": 1500,
+		"levelCapWhenNeedsReview": "warning",
 		"chromeLaunchConfig": {
 			"args": ["--no-sandbox"]
 		}
