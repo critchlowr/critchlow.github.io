@@ -232,18 +232,18 @@ export const selectedWork: Project[] = [
 
 export const publications: Publication[] = [
 	{
-		id: 'pub-ableism-sneaking-in',
-		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Katherine Baker, and Kristen Shinohara',
+		id: 'pub-ableism-unchecked',
+		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Kristen Shinohara, and Catherine M. Baker',
 		title:
-			'Ableism Sneaking In: A Literature Review of Disability Misconceptions in Computing Education',
+			'Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing Education',
 		venue:
-			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Porto, Portugal, October 2026',
+			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
 		status: 'published',
 		honor: 'Nominated for the Social Impact Award',
 		funding:
 			'Supported by the National Science Foundation under Award Nos. 2121549, 2121606, 2121428, 2439816, 2439817, and 2439818.',
 		summary:
-			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
+			"Two studies of how accessibility education shapes students' assumptions about disability. In a Computer Systems course, many of 53 students' reflections showed real knowledge gains, yet a considerable portion also contained deficit-based language and unsubstantiated claims about assistive technology. A review of 35 accessibility education papers then found six categories of ableism, such as excluding disabled participants and normalizing inaccessibility, built into intervention designs, evaluation instruments, and study framing.",
 		contribution:
 			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
