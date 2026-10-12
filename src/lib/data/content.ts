@@ -21,7 +21,7 @@ export const about = {
 	heading: 'About Me',
 	paragraphs: [
 		'My research interests are accessibility and participatory design, especially involving the people a technology is for before it gets built. I did a similar kind of work as a support analyst, gathering requirements from warehouse teams.',
-		"I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. When HR blocked my move into software development because I didn't have a CS degree, I went back to Western for an M.S. instead. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
+		"I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. When HR blocked my move into software development because I didn't have a CS degree, I went back to Western for an M.S. instead. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
 		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns, then scrapped my own approved study design because I had planned the whole thing for those kids without involving any of them. The replacement put me in four families' living rooms watching them play.",
 		"When I'm not working you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking, reading, and the occasional long video game session. I like being outside as much as I can."
 	]
@@ -29,7 +29,7 @@ export const about = {
 
 export const experience: Experience[] = [
 	{
-		title: 'Carpenter',
+		title: 'Journeyman Carpenter',
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
