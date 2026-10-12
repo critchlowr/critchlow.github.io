@@ -235,6 +235,7 @@ export const selectedWork: Project[] = [
 
 export const publications: Publication[] = [
 	{
+		id: 'pub-ableism-sneaking-in',
 		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Katherine Baker, and Kristen Shinohara',
 		title:
 			'Ableism Sneaking In: A Literature Review of Disability Misconceptions in Computing Education',
@@ -247,6 +248,7 @@ export const publications: Publication[] = [
 			'Applied an iteratively developed codebook via inductive coding to all 35 papers in the review corpus and helped identify six recurring patterns of ableism. Findings were reviewed by a second researcher for consistency. This is my first conference presentation.'
 	},
 	{
+		id: 'pub-you-and-i',
 		authors: 'Ryan Critchlow, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl',
 		title:
 			'You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns for Autistic Children',
@@ -258,6 +260,7 @@ export const publications: Publication[] = [
 		hrefLabel: 'You and I case study'
 	},
 	{
+		id: 'pub-motivation-alt-text',
 		authors: 'Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and Ryan Critchlow',
 		title:
 			'Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage Authoring Behavior',

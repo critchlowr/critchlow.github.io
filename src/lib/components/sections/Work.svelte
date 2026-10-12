@@ -36,7 +36,7 @@
 				</p>
 			{/if}
 			<p class="mt-4">
-				<ArrowLink href="#research" direction="down" label="Full citation and my contribution" />
+				<ArrowLink href="#{featured.id}" direction="down" label="Full citation and my contribution" />
 			</p>
 		</article>
 	{/if}

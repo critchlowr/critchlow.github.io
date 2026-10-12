@@ -37,6 +37,8 @@ export interface Project {
 }
 
 export interface Publication {
+	/** Anchor for the Research card, so other sections can link straight to it. */
+	id: string;
 	authors: string;
 	title: string;
 	venue: string;

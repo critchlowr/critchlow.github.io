@@ -27,7 +27,7 @@
 					<div class="stagger space-y-5" use:inview>
 						{#each group.items as pub, i (pub.title)}
 							<div style="--i: {i}">
-								<Card as="article" interactive class="p-6 md:p-7">
+								<Card as="article" id={pub.id} interactive class="p-6 md:p-7">
 									<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
 										{pub.title}
 									</h4>
