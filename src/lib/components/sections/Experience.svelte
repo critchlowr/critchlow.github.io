@@ -268,10 +268,7 @@
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
 	{#snippet rail()}
-		<SectionRail
-			items={railItems}
-			label="Experience timeline"
-		/>
+		<SectionRail items={railItems} label="Experience timeline" />
 	{/snippet}
 
 	<!--

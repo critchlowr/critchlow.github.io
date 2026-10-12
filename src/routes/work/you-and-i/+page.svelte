@@ -45,11 +45,7 @@
 </svelte:head>
 
 <article class="bg-surface/80 dark:bg-surface/70 relative">
-	<SectionRail
-		items={sections}
-		label="On this page"
-		measure="prose"
-	/>
+	<SectionRail items={sections} label="On this page" measure="prose" />
 	<div class="mx-auto max-w-4xl px-4 py-16 pt-28 md:py-24 md:pt-32">
 		<a
 			href="/#work"
