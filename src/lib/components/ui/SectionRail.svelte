@@ -10,7 +10,6 @@
 	let {
 		items,
 		label,
-		headingId,
 		/**
 		 * Half-width of the content column this rail sits beside — `default` for
 		 * max-w-5xl (32rem), `prose` for the case study's max-w-4xl (28rem). The rail
@@ -20,7 +19,6 @@
 	}: {
 		items: RailItem[];
 		label: string;
-		headingId: string;
 		measure?: 'default' | 'prose';
 	} = $props();
 
@@ -43,6 +41,10 @@
 </script>
 
 <!--
+	Named with aria-label, not a hidden <h2>: the rail renders before the
+	section's own heading, so a heading here put "Experience timeline" ahead of
+	"Experience" in the heading outline.
+
 	Footer-proof by construction.
 
 	`.rail-track` is absolutely positioned and spans its containing block exactly,
@@ -61,12 +63,10 @@
 	class="rail-track"
 	class:m-default={measure === 'default'}
 	class:m-prose={measure === 'prose'}
-	aria-labelledby={headingId}
+	aria-label={label}
 >
 	<div class="rail-sticky">
 		<div class="rail-inner">
-			<h2 id={headingId} class="sr-only">{label}</h2>
-
 			<!--
 				The counter is the most direct answer to "how many are left" — more direct
 				than any visual encoding, and on-brand for a site whose whole language is

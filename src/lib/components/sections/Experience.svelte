@@ -271,7 +271,6 @@
 		<SectionRail
 			items={railItems}
 			label="Experience timeline"
-			headingId="experience-rail-heading"
 		/>
 	{/snippet}
 

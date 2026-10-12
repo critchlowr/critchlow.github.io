@@ -48,7 +48,6 @@
 	<SectionRail
 		items={sections}
 		label="On this page"
-		headingId="case-rail-heading"
 		measure="prose"
 	/>
 	<div class="mx-auto max-w-4xl px-4 py-16 pt-28 md:py-24 md:pt-32">

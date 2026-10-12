@@ -29,7 +29,7 @@ Test both themes. Force one with `?theme=dark` or `?theme=light` on any URL.
 
 - [ ] `VO+U` → Headings on `/`. Exactly one `h1` ("Ryan Critchlow"). Levels descend without gaps. The list reads as a table of contents someone could navigate by.
 - [ ] Repeat on `/resume` and `/work/you-and-i`.
-- [ ] On `/work/you-and-i` the rail heading ("On this page") is announced before the `h1`. Confirm this reads as a table of contents and not as the page title.
+- [ ] On `/work/you-and-i` the rail is a navigation landmark named "On this page" (VO rotor → Landmarks), not a heading. The first heading in the rotor should be the `h1` "You and I".
 
 ## 3. Links
 
