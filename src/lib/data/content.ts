@@ -13,7 +13,7 @@ export const hero = {
 	summary:
 		'I spent three years administering warehouse management systems at Körber, running four enterprise accounts and turning what warehouse managers needed into specs, SQL reporting, and scoped work. Then I went back for an M.S. in Computer Science and spent a year and a half owning a research project end to end: planning the build, recruiting families, running the study, and coding the analysis. I like the part of the job where you decide what gets built and why.',
 	availability:
-		'Open to product, solutions, analytics, and accessibility roles. Pacific Northwest or remote.',
+		'Open to research opportunities in human-centered design, including PhD programs, and to technical roles where I work directly with the people who use the product. Based in Bellingham, WA.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
