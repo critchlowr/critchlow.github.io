@@ -308,10 +308,10 @@ export const contact: ContactLink[] = [
 
 export const navLinks = [
 	{ label: 'About', href: '/#about' },
-	{ label: 'Experience', href: '/#experience' },
-	{ label: 'Work', href: '/#work' },
-	{ label: 'Simulator', href: '/#simulator' },
 	{ label: 'Research', href: '/#research' },
+	{ label: 'Work', href: '/#work' },
+	{ label: 'Experience', href: '/#experience' },
+	{ label: 'Simulator', href: '/#simulator' },
 	{ label: 'Skills', href: '/#skills' },
 	{ label: 'Education', href: '/#education' },
 	{ label: 'Contact', href: '/#contact' }

@@ -266,7 +266,7 @@
 	});
 </script>
 
-<SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
+<SectionWrapper id="experience" headingId="experience-heading" number="04" title="Experience" alt>
 	{#snippet rail()}
 		<SectionRail items={railItems} label="Experience timeline" />
 	{/snippet}

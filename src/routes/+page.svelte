@@ -71,9 +71,9 @@
 
 <Hero />
 <About />
-<Experience />
-<Work />
-<Simulator />
 <Research />
+<Work />
+<Experience />
+<Simulator />
 <Skills />
 <Education />

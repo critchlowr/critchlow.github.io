@@ -15,7 +15,7 @@
 	const FLOW_LABEL = 'Warehouse fulfillment sequence diagram, scrolls horizontally';
 </script>
 
-<SectionWrapper id="simulator" headingId="simulator-heading" number="04" title="WMS Simulator" alt>
+<SectionWrapper id="simulator" headingId="simulator-heading" number="05" title="WMS Simulator">
 	<div use:inview={{ dir: 'up' }}>
 		<Card class="p-6 md:p-8">
 			<div class="max-w-2xl space-y-5">

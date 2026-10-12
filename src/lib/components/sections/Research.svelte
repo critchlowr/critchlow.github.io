@@ -14,7 +14,7 @@
 	];
 </script>
 
-<SectionWrapper id="research" headingId="research-heading" number="05" title="Research">
+<SectionWrapper id="research" headingId="research-heading" number="02" title="Research" alt>
 	<div class="space-y-12">
 		{#each groups as group (group.label)}
 			{#if group.items.length > 0}
