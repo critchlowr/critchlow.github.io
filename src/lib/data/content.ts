@@ -54,7 +54,7 @@ export const experience: Experience[] = [
 		],
 		tags: ['Research', 'Delivery', 'Requirements'],
 		href: '/work/you-and-i',
-		hrefLabel: 'Read the case study'
+		hrefLabel: 'You and I case study'
 	},
 	{
 		title: 'Support Analyst L4',
@@ -197,7 +197,7 @@ export const selectedWork: Project[] = [
 		period: '2025 – 2026',
 		bullets: [],
 		href: '/work/you-and-i',
-		hrefLabel: 'Read the case study'
+		hrefLabel: 'You and I case study'
 	},
 	{
 		title: 'WMS Simulator',
@@ -255,7 +255,7 @@ export const publications: Publication[] = [
 		contribution:
 			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.',
 		href: '/work/you-and-i',
-		hrefLabel: 'How the project was run'
+		hrefLabel: 'You and I case study'
 	},
 	{
 		authors: 'Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and Ryan Critchlow',
