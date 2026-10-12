@@ -49,6 +49,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Browser gates against the built site, light and dark. pa11y brings its own
+      # Chrome through puppeteer; the axe audit runs on Playwright's Chromium.
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: pa11y (WCAG 2 AA, axe + htmlcs)
+        run: npm run pa11y
+
+      - name: axe audit, including the simulator dialog
+        run: npm run axe
+
       # Nothing to publish from a pull request, so skip the upload entirely. The
       # steps above have already done the useful work by this point.
       - name: Upload artifact
