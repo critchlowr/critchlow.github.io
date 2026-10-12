@@ -245,7 +245,7 @@ export const publications: Publication[] = [
 		summary:
 			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
 		contribution:
-			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed the coding for consistency. This is my first conference presentation.'
+			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
 	{
 		id: 'pub-you-and-i',
