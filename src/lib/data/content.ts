@@ -9,9 +9,9 @@ import type {
 
 export const hero = {
 	name: 'Ryan Critchlow',
-	tagline: 'Product · Research · Enterprise Systems',
+	tagline: 'HCI · UX Research · Accessibility',
 	summary:
-		'I spent three years administering warehouse management systems at Körber, running four enterprise accounts and turning what warehouse managers needed into specs, SQL reporting, and scoped work. Then I went back for an M.S. in Computer Science and spent a year and a half owning a research project end to end: planning the build, recruiting families, running the study, and coding the analysis. I like the part of the job where you decide what gets built and why.',
+		"I'm an HCI researcher working on accessibility and participatory design. For my M.S. in Computer Science, I built You and I, a game for autistic gestalt language learners, and ran its in-home participatory evaluation with four families, from recruitment through thematic analysis. I'm a co-author of Ableism Unchecked, a review of disability misconceptions in computing education at ASSETS 2026. Before grad school I spent three years at Körber turning what warehouse teams needed into specs and reporting.",
 	availability:
 		'Open to research opportunities in human-centered design, including PhD programs, and to technical roles where I work directly with the people who use the product. Based in Bellingham, WA.',
 	resumeHref: '/Ryans_Resume_2026.pdf'

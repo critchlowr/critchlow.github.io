@@ -9,7 +9,7 @@
 	import Education from '$lib/components/sections/Education.svelte';
 
 	const description =
-		'Ryan Critchlow turns what people need into scoped, buildable work. Three years running enterprise warehouse management accounts, an M.S. in Computer Science, and a graduate research practice in accessible educational technology.';
+		'Ryan Critchlow is an HCI and UX researcher working on accessibility and participatory design, with an M.S. in Computer Science from Western Washington University.';
 
 	const personSchema = {
 		'@context': 'https://schema.org',
@@ -18,23 +18,21 @@
 		url: 'https://ryancritchlow.com',
 		image: 'https://ryancritchlow.com/images/ryancritchlow.jpeg',
 		email: 'mailto:critchlow.rc@gmail.com',
-		jobTitle: 'Product, Solutions, and Business Analysis',
+		jobTitle: 'HCI and UX Researcher',
 		identifier: 'https://orcid.org/0009-0007-7323-9177',
 		alumniOf: {
 			'@type': 'CollegeOrUniversity',
 			name: 'Western Washington University'
 		},
 		knowsAbout: [
-			'Product Management',
-			'Requirements Gathering',
-			'Business Analysis',
-			'Business Intelligence',
-			'Solutions Engineering',
-			'Warehouse Management Systems',
-			'SQL',
 			'Human-Computer Interaction',
+			'UX Research',
 			'Accessibility',
-			'Participatory Design'
+			'Participatory Design',
+			'Qualitative Research',
+			'User Interviews',
+			'Thematic Analysis',
+			'Survey Design'
 		],
 		sameAs: [
 			'https://linkedin.com/in/ryan-critchlow',
@@ -45,16 +43,22 @@
 </script>
 
 <svelte:head>
-	<title>Ryan Critchlow | Product · Research · Enterprise Systems</title>
+	<title>Ryan Critchlow | HCI and UX Researcher</title>
 	<meta name="description" content={description} />
 	<meta property="og:title" content="Ryan Critchlow" />
-	<meta property="og:description" content="Product · Research · Enterprise Systems" />
+	<meta
+		property="og:description"
+		content="HCI and UX research, accessibility, participatory design"
+	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://ryancritchlow.com" />
 	<meta property="og:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Ryan Critchlow" />
-	<meta name="twitter:description" content="Product · Research · Enterprise Systems" />
+	<meta
+		name="twitter:description"
+		content="HCI and UX research, accessibility, participatory design"
+	/>
 	<meta name="twitter:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
 	<!--
 		personSchema is a static object defined above, not user input, so there is no
