@@ -26,11 +26,10 @@
 					it, and what gets picked is packed and shipped.
 				</p>
 				<p class="text-ink text-body">
-					So I built the flow instead of describing it. The interesting part is the exception. If
-					the picker reaches the location and it is empty, that line shorts, replenishment refills
-					the location, and the pick gets tried again. If it cannot be refilled in time, someone has
-					to decide whether the customer waits or gets a partial shipment. That decision is the
-					whole job.
+					The simulator walks through that flow, including what happens when a picker reaches an
+					empty location: the line shorts, replenishment refills the location, and the pick is tried
+					again. If the location can't be refilled in time, you choose whether the order waits or
+					ships partial.
 				</p>
 
 				<!--
