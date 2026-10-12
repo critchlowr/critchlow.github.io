@@ -168,7 +168,7 @@ export const skills: SkillCategory[] = [
 			'Survey Design',
 			'Iterative Prototyping',
 			'IRB Protocols',
-			'WCAG 2.1 Accessibility Standards'
+			'WCAG 2.2 Accessibility Standards'
 		]
 	}
 ];
@@ -179,8 +179,9 @@ export const tools = [
 	{ name: 'C#', icon: 'csharp/csharp-original' },
 	{ name: 'Java', icon: 'java/java-original' },
 	{ name: 'JavaScript', icon: 'javascript/javascript-original' },
-	{ name: 'Power BI', icon: 'azure/azure-original' },
-	{ name: 'Tableau', icon: 'firebase/firebase-original' },
+	// Devicon has no Power BI or Tableau mark; a wrong logo is worse than none.
+	{ name: 'Power BI' },
+	{ name: 'Tableau' },
 	{ name: 'MySQL', icon: 'mysql/mysql-original' },
 	{ name: 'Git', icon: 'git/git-original' },
 	{ name: 'Unity', icon: 'unity/unity-original' },

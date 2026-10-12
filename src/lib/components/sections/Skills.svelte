@@ -29,16 +29,18 @@
 			<div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4" use:inview>
 				{#each tools as tool, i (tool.name)}
 					<div
-						class="group border-edge bg-surface-raised hover:border-edge-hover ease-spring flex items-center gap-3 rounded-lg border px-4 py-3 transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+						class="group border-edge bg-surface-raised hover:border-edge-hover ease-spring flex min-h-13 items-center gap-3 rounded-lg border px-4 py-3 transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
 						style="--i: {i}"
 					>
-						<img
-							src="{devIconBase}/{tool.icon}.svg"
-							alt=""
-							class="ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-							loading="lazy"
-							aria-hidden="true"
-						/>
+						{#if tool.icon}
+							<img
+								src="{devIconBase}/{tool.icon}.svg"
+								alt=""
+								class="ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+								loading="lazy"
+								aria-hidden="true"
+							/>
+						{/if}
 						<span class="text-ink text-sm font-medium">{tool.name}</span>
 					</div>
 				{/each}
