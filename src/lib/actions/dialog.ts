@@ -18,11 +18,16 @@ const TABBABLE =
 	'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
 	'textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
 
+// Content inside a closed <details> still reports client rects but cannot take
+// focus. Counting it as the last tabbable let Tab escape the dialog.
+function inClosedDetails(el: HTMLElement) {
+	const details = el.closest('details:not([open])');
+	return !!details && !(el.tagName === 'SUMMARY' && el.parentElement === details);
+}
+
 function tabbable(root: HTMLElement) {
-	// getClientRects() is the cheap "is it actually rendered" test — it catches
-	// display:none, an unmounted subtree, and zero-size elements in one go.
 	return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE)).filter(
-		(el) => el.getClientRects().length > 0
+		(el) => el.getClientRects().length > 0 && !inClosedDetails(el)
 	);
 }
 
