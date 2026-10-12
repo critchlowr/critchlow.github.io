@@ -25,9 +25,7 @@ const require = createRequire(import.meta.url);
 const axeSource = require('node:fs').readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = process.env.A11Y_BASE ?? 'http://localhost:4173';
-const DEFAULT_URLS = ['/', '/?theme=dark', '/work/you-and-i', '/work/you-and-i?theme=dark'].map(
-	(p) => BASE + p
-);
+const DEFAULT_URLS = ['/', '/?theme=dark'].map((p) => BASE + p);
 
 const urls = process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_URLS;
 

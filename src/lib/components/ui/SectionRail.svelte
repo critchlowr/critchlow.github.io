@@ -7,20 +7,7 @@
 		label: string;
 	}
 
-	let {
-		items,
-		label,
-		/**
-		 * Half-width of the content column this rail sits beside — `default` for
-		 * max-w-5xl (32rem), `prose` for the case study's max-w-4xl (28rem). The rail
-		 * anchors its right edge to the column's left edge, so it needs to know.
-		 */
-		measure = 'default'
-	}: {
-		items: RailItem[];
-		label: string;
-		measure?: 'default' | 'prose';
-	} = $props();
+	let { items, label }: { items: RailItem[]; label: string } = $props();
 
 	const spy = createSpy(() =>
 		items.map((i) => document.getElementById(i.id)).filter((el): el is HTMLElement => !!el)
@@ -68,12 +55,7 @@
 	invisible to the browser's stick/unstick calculation, so the rail overshoots
 	its container by half its own height and bleeds into whatever follows.
 -->
-<nav
-	class="rail-track"
-	class:m-default={measure === 'default'}
-	class:m-prose={measure === 'prose'}
-	aria-label={label}
->
+<nav class="rail-track" aria-label={label}>
 	<div class="rail-sticky">
 		<!-- The listeners only re-arm the chip; they are not controls. -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -136,6 +118,8 @@
 		--rail-dim: color-mix(in srgb, var(--t-brand) 70%, transparent);
 
 		--rail-gap: 1rem;
+		/* Half the max-w-5xl column the rail sits beside. */
+		--rail-half: 32rem;
 
 		position: absolute;
 		inset-block: 0;
@@ -167,24 +151,15 @@
 		display: none;
 	}
 
-	.m-default {
-		--rail-half: 32rem;
-	}
-	.m-prose {
-		--rail-half: 28rem;
-	}
-
 	/*
 		Appears only once the gutter can hold the 7rem floor: half the column, plus
 		the gap, plus the rail, on both sides. That is 2 x (32 + 1 + 7) = 80rem for
-		the max-w-5xl sections; the narrower case-study column clears it sooner, but
-		both use 80rem so there is exactly one threshold on the site — below it the
+		the max-w-5xl sections, and it is the one threshold on the site — below it the
 		reading bar in Nav.svelte takes over, above it the rails do, and there is no
 		width where you get both or neither.
 	*/
 	@media (min-width: 80rem) {
-		.m-default,
-		.m-prose {
+		.rail-track {
 			display: block;
 		}
 	}

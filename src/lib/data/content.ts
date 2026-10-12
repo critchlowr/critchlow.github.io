@@ -52,9 +52,7 @@ export const experience: Experience[] = [
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
 			'Translated practitioner insights from speech-language pathologists and co-design sessions into a working prototype in C#, Unity, and WebGL, leading technical implementation and art direction'
 		],
-		tags: ['Research', 'Delivery', 'Requirements'],
-		href: '/work/you-and-i',
-		hrefLabel: 'You and I case study'
+		tags: ['Research', 'Delivery', 'Requirements']
 	},
 	{
 		title: 'Support Analyst L4',
@@ -196,9 +194,7 @@ export const selectedWork: Project[] = [
 			'A Unity game that helps autistic gestalt language learners practice pronouns, built for an in-home participatory evaluation with four families. I owned it end to end, including the art.',
 		tools: 'Unity, C#, WebGL',
 		period: '2025 – 2026',
-		bullets: [],
-		href: '/work/you-and-i',
-		hrefLabel: 'You and I case study'
+		bullets: []
 	},
 	{
 		title: 'WMS Simulator',
@@ -256,9 +252,7 @@ export const publications: Publication[] = [
 		venue: 'Target venue TBD, in preparation',
 		status: 'in-preparation',
 		contribution:
-			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.',
-		href: '/work/you-and-i',
-		hrefLabel: 'You and I case study'
+			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
 	},
 	{
 		id: 'pub-motivation-alt-text',

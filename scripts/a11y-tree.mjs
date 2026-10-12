@@ -29,10 +29,7 @@ const KILL_MOTION =
 	'*,*::before,*::after{transition:none!important;animation:none!important}' +
 	'.reveal,.stagger>*{opacity:1!important;transform:none!important}';
 
-const ROUTES = [
-	['home', '/'],
-	['you-and-i', '/work/you-and-i']
-];
+const ROUTES = [['home', '/']];
 
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();

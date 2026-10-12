@@ -28,8 +28,7 @@ Test both themes. Force one with `?theme=dark` or `?theme=light` on any URL.
 ## 2. Heading structure
 
 - [ ] `VO+U` → Headings on `/`. Exactly one `h1` ("Ryan Critchlow"). Levels descend without gaps. The list reads as a table of contents someone could navigate by.
-- [ ] Repeat on `/resume` and `/work/you-and-i`.
-- [ ] On `/work/you-and-i` the rail is a navigation landmark named "On this page" (VO rotor → Landmarks), not a heading. The first heading in the rotor should be the `h1` "You and I".
+- [ ] At 1280px or wider, the Experience rail is a navigation landmark named "Experience timeline" (VO rotor → Landmarks), not a heading.
 
 ## 3. Links
 
