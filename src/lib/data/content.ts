@@ -52,7 +52,7 @@ export const experience: Experience[] = [
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
 			'Translated practitioner insights from speech-language pathologists and co-design sessions into a working prototype in C#, Unity, and WebGL, leading technical implementation and art direction'
 		],
-		tags: ['Research', 'Delivery', 'Requirements']
+		tags: ['Participatory Design', 'Qualitative Research', 'Study Design']
 	},
 	{
 		title: 'Support Analyst L4',
@@ -144,19 +144,6 @@ export const credentials = {
 
 export const skills: SkillCategory[] = [
 	{
-		label: 'Product & Process',
-		items: [
-			'Requirements Gathering',
-			'Stakeholder Management',
-			'Prioritization & Tradeoff Analysis',
-			'Scope & Change Control',
-			'Cross-Functional Collaboration',
-			'Agile Ceremonies',
-			'Escalation Management',
-			'Onboarding & Training'
-		]
-	},
-	{
 		label: 'Research & Synthesis',
 		items: [
 			'Qualitative Research',
@@ -167,6 +154,19 @@ export const skills: SkillCategory[] = [
 			'Iterative Prototyping',
 			'IRB Protocols',
 			'WCAG 2.2 Accessibility Standards'
+		]
+	},
+	{
+		label: 'Collaboration & Process',
+		items: [
+			'Requirements Gathering',
+			'Stakeholder Management',
+			'Prioritization & Tradeoff Analysis',
+			'Scope & Change Control',
+			'Cross-Functional Collaboration',
+			'Agile Ceremonies',
+			'Escalation Management',
+			'Onboarding & Training'
 		]
 	}
 ];
