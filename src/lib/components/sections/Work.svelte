@@ -25,6 +25,12 @@
 					Peer-reviewed
 				</span>
 				<span class="text-accent-800 dark:text-accent-300 text-sm font-medium">ASSETS 2026</span>
+				{#if featured.honor}
+					<span class="text-accent-800 dark:text-accent-300 text-sm font-medium">
+						<span aria-hidden="true">·</span>
+						{featured.honor}
+					</span>
+				{/if}
 			</div>
 			<h3 class="text-ink-strong font-display text-2xl leading-snug font-semibold">
 				{featured.title}

@@ -35,6 +35,9 @@
 									<p class="text-brand mt-1 text-base italic">
 										{pub.venue}
 									</p>
+									{#if pub.honor}
+										<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
+									{/if}
 									{#if pub.summary}
 										<p class="text-ink text-body mt-3">
 											{pub.summary}

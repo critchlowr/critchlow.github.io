@@ -43,6 +43,8 @@ export interface Publication {
 	title: string;
 	venue: string;
 	status: 'published' | 'in-preparation';
+	/** An award or nomination, shown on the featured card and the Research card. */
+	honor?: string;
 	summary?: string;
 	contribution: string;
 	href?: string;
