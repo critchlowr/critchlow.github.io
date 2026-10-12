@@ -47,6 +47,8 @@ export interface Publication {
 	contribution: string;
 	href?: string;
 	hrefLabel?: string;
+	/** Opens in a new tab and gets an external-link affordance. */
+	external?: boolean;
 }
 
 export interface ContactLink {

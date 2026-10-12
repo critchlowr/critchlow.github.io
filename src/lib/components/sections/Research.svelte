@@ -46,7 +46,11 @@
 									</p>
 									{#if pub.href}
 										<p class="mt-4">
-											<ArrowLink href={pub.href} label={pub.hrefLabel ?? 'Read more'} />
+											<ArrowLink
+												href={pub.href}
+												external={pub.external}
+												label={pub.hrefLabel ?? 'Read more'}
+											/>
 										</p>
 									{/if}
 								</Card>
