@@ -47,6 +47,9 @@
 										<span class="text-ink-strong font-semibold">My contribution:</span>
 										{pub.contribution}
 									</p>
+									{#if pub.funding}
+										<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
+									{/if}
 									{#if pub.href}
 										<p class="mt-4">
 											<ArrowLink

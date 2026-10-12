@@ -45,6 +45,8 @@ export interface Publication {
 	status: 'published' | 'in-preparation';
 	/** An award or nomination, shown on the featured card and the Research card. */
 	honor?: string;
+	/** Funding acknowledgment, as stated in the paper. */
+	funding?: string;
 	summary?: string;
 	contribution: string;
 	href?: string;

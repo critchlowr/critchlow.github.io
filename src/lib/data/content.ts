@@ -240,6 +240,8 @@ export const publications: Publication[] = [
 			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Porto, Portugal, October 2026',
 		status: 'published',
 		honor: 'Nominated for the Social Impact Award',
+		funding:
+			'Supported by the National Science Foundation under Award Nos. 2121549, 2121606, 2121428, 2439816, 2439817, and 2439818.',
 		summary:
 			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
 		contribution:
