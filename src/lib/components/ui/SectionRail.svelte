@@ -38,7 +38,16 @@
 	}
 
 	const pad = (n: number) => String(n).padStart(2, '0');
+
+	// SC 1.4.13: the hover/focus chip overlaps body copy, so Escape must hide it
+	// without moving the pointer or focus. It comes back on the next hover or focus.
+	let chipsHidden = $state(false);
+	function onWindowKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') chipsHidden = true;
+	}
 </script>
+
+<svelte:window onkeydown={onWindowKeydown} />
 
 <!--
 	Named with aria-label, not a hidden <h2>: the rail renders before the
@@ -66,7 +75,14 @@
 	aria-label={label}
 >
 	<div class="rail-sticky">
-		<div class="rail-inner">
+		<!-- The listeners only re-arm the chip; they are not controls. -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			class="rail-inner"
+			class:chips-hidden={chipsHidden}
+			onpointerleave={() => (chipsHidden = false)}
+			onfocusin={() => (chipsHidden = false)}
+		>
 			<!--
 				The counter is the most direct answer to "how many are left" — more direct
 				than any visual encoding, and on-brand for a site whose whole language is
@@ -340,8 +356,8 @@
 		The chip is a descendant of the <a>, so moving the pointer onto it keeps the
 		hover alive — WCAG 1.4.13 Hoverable, which a sibling tooltip would fail.
 	*/
-	.rail-dot:hover .rail-label,
-	.rail-dot:focus-visible .rail-label {
+	.rail-inner:not(.chips-hidden) .rail-dot:hover .rail-label,
+	.rail-inner:not(.chips-hidden) .rail-dot:focus-visible .rail-label {
 		position: absolute;
 		/*
 			Centred by auto margins against inset-block:0, NOT by translateY(-50%).
