@@ -288,11 +288,22 @@ html {
 	.reveal[data-dir='up'] {
 		transform: translateY(1.75rem);
 	}
-	.reveal[data-dir='left'] {
-		transform: translateX(-1.5rem);
-	}
+	/*
+		Sideways reveals only make sense when the elements sit side by side. Below md
+		they stack, so a horizontal offset just leaves centred content visibly off
+		centre and spilling past the right edge until it settles. Rise instead.
+	*/
+	.reveal[data-dir='left'],
 	.reveal[data-dir='right'] {
-		transform: translateX(1.5rem);
+		transform: translateY(1.75rem);
+	}
+	@media (width >= 48rem) {
+		.reveal[data-dir='left'] {
+			transform: translateX(-1.5rem);
+		}
+		.reveal[data-dir='right'] {
+			transform: translateX(1.5rem);
+		}
 	}
 	.reveal[data-dir='scale'] {
 		transform: scale(0.965);
