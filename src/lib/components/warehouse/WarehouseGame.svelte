@@ -4,7 +4,6 @@
 		type OrderLine,
 		type InventoryItem,
 		type Pick,
-		type Replen,
 		type GamePhase,
 		WAREHOUSE_NAME,
 		createSeedOrders,
@@ -23,7 +22,8 @@
 		loadAll,
 		shipAllLoaded,
 		refreshOrderStatuses,
-		allOrdersShipped,
+		allOrdersResolved,
+		holdOrder,
 		anyPicksWithStatus,
 		getShortQtyForSku,
 		getReplenishableDemand,
@@ -35,7 +35,8 @@
 	import OrderStatusBar from './OrderStatusBar.svelte';
 	import PickingPanel from './PickingPanel.svelte';
 	import InventoryTable from './InventoryTable.svelte';
-	import VictoryScreen from './VictoryScreen.svelte';
+	import RunSummary from './RunSummary.svelte';
+	import type { RunLog } from './RunSummary.svelte';
 
 	let { onclose }: { onclose: () => void } = $props();
 
@@ -44,31 +45,50 @@
 	let orderLines = $state<OrderLine[]>(createSeedOrderLines());
 	let inventory = $state<InventoryItem[]>(createSeedInventory());
 	let picks = $state<Pick[]>([]);
-	let replens = $state<Replen[]>([]);
+	/*
+		Replenishments scheduled but not yet on the shelf. A counter, not the Replen
+		objects: those are mutated from timers after being stored in $state, and a
+		$state proxy does not see changes made to the original object.
+	*/
+	let replensInFlight = $state(0);
 
 	// Cart state
 	const CART_CAPACITY = 6;
 	let cartPickIds = $state<string[]>([]);
 	const cartFull = $derived(cartPickIds.length >= CART_CAPACITY);
+	// True between the last pick of a cart and the cart arriving at staging.
+	let staging = $state(false);
+
+	// What happened during the run, for the summary at the end.
+	const emptyLog = (): RunLog => ({ emptyReports: [], replenishments: [], decisions: [] });
+	let log = $state<RunLog>(emptyLog());
+
+	/*
+		Every delayed step goes through later(), tagged with the run it belongs to.
+		Reset starts a new run, so a replenishment or staging timer from the old one
+		lands as a no-op instead of changing the new shift's stock.
+	*/
+	let runId = 0;
+	function later(fn: () => void, ms: number) {
+		const run = runId;
+		setTimeout(() => {
+			if (run === runId) fn();
+		}, ms);
+	}
+
+	// Matches the picker's walk back to the cart in WarehouseScene.
+	const PICK_WALK_MS = 1800;
 
 	// Scene state
 	let sceneAction = $state<SceneAction>({ type: 'idle' });
-	let actionKey = $state(0);
 
 	// Replen notification — shown to picker when a replen is scheduled after a partial pick
 	let replenNotice = $state<{ sku: string; itemName: string; qty: number } | null>(null);
 
 	/*
-		Screen-reader announcements.
-
-		These live here rather than in PickingPanel because a live region has to be
-		in the DOM *before* its contents change — a region created at the same moment
-		as its first message is not reliably announced. PickingPanel's phase branches
-		are created and destroyed by {#if}, so a region inside one would be silent.
-
-		Two regions, deliberately separate so they cannot overwrite each other:
-		`announcement` is polite narration of what just happened, and `blocker` is an
-		alert for the one condition that stops the user working — a full cart.
+		Screen-reader narration. The live region lives here rather than in
+		PickingPanel because a region has to be in the DOM before its text changes,
+		and PickingPanel's branches are created and destroyed by {#if}.
 	*/
 	let announcement = $state('');
 	let announceToggle = false;
@@ -84,14 +104,11 @@
 		return inventory.find((i) => i.sku === sku)?.itemName ?? sku;
 	}
 
-	// Mirrors the cart-full panel in PickingPanel, which is a dead end until the
-	// cart is staged — the one state change worth interrupting for.
-	const blocker = $derived(cartFull ? 'Cart full. Stage your cart before picking more.' : '');
-
 	// Derived
 	// SKU lists rather than counts, so the scene can colour each carton by item.
 	const cartSkus = $derived(cartPickIds.map((id) => picks.find((p) => p.pickId === id)?.sku ?? ''));
 	const stagedSkus = $derived(picks.filter((p) => p.status === 'Staged').map((p) => p.sku));
+	const heldSkus = $derived(picks.filter((p) => p.status === 'Held').map((p) => p.sku));
 	const packedCount = $derived(picks.filter((p) => p.status === 'Packed').length);
 	const loadedCount = $derived(picks.filter((p) => p.status === 'Loaded').length);
 
@@ -108,7 +125,7 @@
 	);
 
 	const gamePhase = $derived.by<GamePhase>(() => {
-		if (allOrdersShipped(orders)) return 'victory';
+		if (allOrdersResolved(orders)) return 'victory';
 		if (picks.length === 0) return 'pre-wave';
 		if (anyPicksWithStatus(picks, 'Assigned')) return 'picking';
 		if (cartPickIds.length > 0) return 'picking';
@@ -127,23 +144,25 @@
 		// Staged stock waits at the pack station before anything can load.
 		if (anyPicksWithStatus(picks, 'Staged')) return 'packing';
 		if (anyPicksWithStatus(picks, 'Packed')) return 'loading';
-		if (anyPicksWithStatus(picks, 'Loaded')) return 'shipping';
 		return 'picking';
 	});
 
+	// A fresh object every time, so the scene's effect re-runs even for a repeat action.
 	function triggerScene(action: SceneAction) {
-		actionKey++;
 		sceneAction = { ...action };
 	}
 
 	function reset() {
+		runId++;
 		resetCounters();
 		orders = createSeedOrders();
 		orderLines = createSeedOrderLines();
 		inventory = createSeedInventory();
 		picks = [];
-		replens = [];
+		replensInFlight = 0;
 		cartPickIds = [];
+		staging = false;
+		log = emptyLog();
 		replenNotice = null;
 		sceneAction = { type: 'idle' };
 		announce('Simulation reset. Ready to release a new wave.');
@@ -201,21 +220,17 @@
 
 			// Show replen notice immediately
 			replenNotice = { sku: demand.sku, itemName, qty: demand.replenQty };
+			replensInFlight++;
 			narration += ` Replenishment scheduled: ${demand.replenQty} ${itemName} moving to ${demand.location}.`;
 
 			// Held until the pick animation has finished and the slot is visibly empty.
-			setTimeout(() => {
+			later(() => {
 				const replen = createReplen(demand.sku, demand.replenQty, demand.location);
-				replens = [...replens, replen];
+				log.replenishments.push({ itemName, qty: demand.replenQty, location: demand.location });
 
 				triggerScene({ type: 'replen', sku: demand.sku });
 
-				setTimeout(() => {
-					replen.status = 'In Transit';
-					replens = [...replens];
-				}, 400);
-
-				setTimeout(() => {
+				later(() => {
 					completeReplen(replen, inventory, picks);
 
 					// Create a new Assigned pick for the replenished qty
@@ -231,8 +246,8 @@
 					};
 					if (inv) inv.qtyAllocated += demand.replenQty;
 					picks = [...picks, newPick];
+					replensInFlight--;
 
-					replens = [...replens];
 					inventory = [...inventory];
 					orderLines = [...orderLines];
 
@@ -244,12 +259,32 @@
 					announce(
 						`Replenishment complete. ${itemName} back at ${demand.location}. Pick re-issued.`
 					);
+					stageIfDone();
 					// Matches the moment the runner sets the carton down in the slot.
 				}, 1500);
 			}, 2000);
 		}
 
 		announce(narration);
+		stageIfDone();
+	}
+
+	/*
+		Staging happens on its own: once the cart is full, or once there is nothing
+		left to pick and no replenishment on the way. It used to be a button the
+		player pressed after every few picks, which added clicks without adding a
+		decision. Delayed so the picker finishes walking the last item back first.
+	*/
+	function stageIfDone() {
+		if (staging || cartPickIds.length === 0) return;
+		const nothingToPick = !anyPicksWithStatus(picks, 'Assigned');
+		if (!cartFull && !(nothingToPick && replensInFlight === 0)) return;
+
+		staging = true;
+		later(() => {
+			staging = false;
+			handleStageCart();
+		}, PICK_WALK_MS);
 	}
 
 	function handleReportEmpty(pickId: string) {
@@ -266,36 +301,36 @@
 			cartPickIds = [...cartPickIds, pick.pickId];
 		}
 
+		log.emptyReports.push({ location: pick.fromLocation, itemName: itemNameFor(pick.sku) });
+		triggerScene({ type: 'short', sku: pick.sku });
+
 		if (canReplen) {
 			const finalShortQty = getShortQtyForSku(pick.sku, picks);
 			const inv = inventory.find((i) => i.sku === pick.sku);
 			const location = inv?.location ?? 'A-01-01';
 			const replenQty = inv ? Math.min(finalShortQty, inv.qtyAvailable) : finalShortQty;
 			const replen = createReplen(pick.sku, replenQty, location);
-			replens = [...replens, replen];
+			replensInFlight++;
+			log.replenishments.push({ itemName: itemNameFor(pick.sku), qty: replenQty, location });
 
 			// Beat first, so the slot is visibly empty before the runner sets off.
-			setTimeout(() => {
+			later(() => {
 				triggerScene({ type: 'replen', sku: pick.sku });
 
-				setTimeout(() => {
-					replen.status = 'In Transit';
-					replens = [...replens];
-				}, 400);
-
-				setTimeout(() => {
+				later(() => {
 					completeReplen(replen, inventory, picks);
 
 					// Move newly re-assigned picks to end of array so they queue after current picks
 					const reassigned = picks.filter((p) => p.sku === pick.sku && p.status === 'Assigned');
 					const rest = picks.filter((p) => !(p.sku === pick.sku && p.status === 'Assigned'));
 					picks = [...rest, ...reassigned];
+					replensInFlight--;
 
-					replens = [...replens];
 					inventory = [...inventory];
 
 					refreshOrderStatuses(orders, orderLines, picks);
 					orders = [...orders];
+					stageIfDone();
 					// Matches the moment the runner sets the carton down in the slot.
 				}, 1500);
 			}, 900);
@@ -309,6 +344,7 @@
 
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
+		stageIfDone();
 	}
 
 	function handleStageCart() {
@@ -329,48 +365,79 @@
 		);
 	}
 
-	function handlePackOrder(orderId: string, force = false) {
-		const result = packOrder(orderId, orderLines, picks, force);
-		if (!result.packed) return;
-
+	// Packs every order that has all its lines. Short orders wait for a decision.
+	function handlePackReady() {
+		const ready = packQueue.filter((e) => e.complete).map((e) => e.orderId);
+		for (const orderId of ready) packOrder(orderId, orderLines, picks);
 		picks = [...picks];
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 
 		triggerScene({ type: 'pack' });
-		announce(force ? `${orderId} packed short.` : `${orderId} packed complete.`);
+		announce(`Packed ${ready.join(', ')}.`);
 	}
 
-	function handleLoadAll() {
-		loadAll(picks);
-		picks = [...picks];
+	function missingFor(orderId: string) {
+		return getPackShortfall(orderId, orderLines, picks).map((s) => ({
+			itemName: s.itemName,
+			qty: s.missingQty
+		}));
+	}
 
+	function customerOf(orderId: string) {
+		return orders.find((o) => o.orderId === orderId)?.customer ?? orderId;
+	}
+
+	function handleShipShort(orderId: string) {
+		const missing = missingFor(orderId);
+		const result = packOrder(orderId, orderLines, picks, true);
+		if (!result.packed) return;
+
+		log.decisions.push({
+			orderId,
+			customer: customerOf(orderId),
+			choice: 'shipped-short',
+			missing
+		});
+		picks = [...picks];
 		refreshOrderStatuses(orders, orderLines, picks);
 		orders = [...orders];
 
-		triggerScene({ type: 'load' });
-		announce(`Truck loaded with ${loadedCount} cartons.`);
+		triggerScene({ type: 'pack' });
+		announce(`${orderId} packed short.`);
 	}
 
-	function handleShipAll() {
+	function handleHold(orderId: string) {
+		log.decisions.push({
+			orderId,
+			customer: customerOf(orderId),
+			choice: 'held',
+			missing: missingFor(orderId)
+		});
+		holdOrder(orderId, orders, picks);
+		picks = [...picks];
+		orders = [...orders];
+
+		triggerScene({ type: 'hold' });
+		announce(`${orderId} held in staging until stock arrives.`);
+	}
+
+	// Loading and shipping were two buttons with nothing to decide between them.
+	function handleLoadAndShip() {
+		loadAll(picks);
+		const cartons = picks.filter((p) => p.status === 'Loaded').length;
 		shipAllLoaded(picks, orderLines, orders);
 		picks = [...picks];
 		orderLines = [...orderLines];
 		orders = [...orders];
 
 		triggerScene({ type: 'ship' });
-		announce('All loaded orders shipped.');
+		announce(`Truck loaded with ${cartons} cartons and shipped.`);
 	}
 </script>
 
-<!--
-	Live regions. Rendered unconditionally and outside every {#if}, because a
-	region inserted at the same moment as its first message is not reliably
-	announced. Kept apart so a polite narration and an alert cannot overwrite
-	each other mid-sentence.
--->
+<!-- Outside every {#if}: a region inserted along with its first message is not reliably announced. -->
 <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
-<p class="sr-only" role="alert">{blocker}</p>
 
 <!--
 	Header.
@@ -428,17 +495,16 @@
 	</div>
 </div>
 
-<!-- Scene -->
-{#key actionKey}
-	<WarehouseScene
-		action={sceneAction}
-		{cartSkus}
-		{stagedSkus}
-		{packedCount}
-		{loadedCount}
-		{inventory}
-	/>
-{/key}
+<!-- Scene. Stays mounted for the whole run so overlapping trips can play out. -->
+<WarehouseScene
+	action={sceneAction}
+	{cartSkus}
+	{stagedSkus}
+	{heldSkus}
+	{packedCount}
+	{loadedCount}
+	{inventory}
+/>
 
 <!-- Content -->
 <!--
@@ -448,7 +514,7 @@
 -->
 <div class="min-h-0 flex-1 overflow-y-auto px-4 py-4">
 	{#if gamePhase === 'victory'}
-		<VictoryScreen onreset={reset} />
+		<RunSummary {orders} {orderLines} {picks} {log} onreset={reset} />
 	{:else}
 		<!-- Order status cards (always visible) -->
 		<OrderStatusBar {orders} {orderLines} {picks} />
@@ -461,17 +527,17 @@
 			{picks}
 			{inventory}
 			{cartPickIds}
-			{cartFull}
+			{staging}
 			{replenNotice}
 			{packQueue}
 			cartCapacity={CART_CAPACITY}
 			onwave={handleWave}
 			onpick={handlePick}
 			onreportempty={handleReportEmpty}
-			onstagecart={handleStageCart}
-			onpackorder={handlePackOrder}
-			onloadall={handleLoadAll}
-			onshipall={handleShipAll}
+			onpackready={handlePackReady}
+			onshipshort={handleShipShort}
+			onhold={handleHold}
+			onloadandship={handleLoadAndShip}
 		/>
 
 		<!-- Collapsible inventory -->

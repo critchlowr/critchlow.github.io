@@ -11,11 +11,13 @@ export type OrderStatus =
 	| 'Partial Pack'
 	| 'Loaded'
 	| 'Partial Ship'
-	| 'Shipped';
+	| 'Shipped'
+	/** Kept back to ship complete once stock arrives, rather than shipped short. */
+	| 'Held';
 export type PickStatus =
-	'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short';
+	'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short' | 'Held';
 export type ReplenStatus = 'Pending' | 'In Transit' | 'Complete';
-export type GamePhase = 'pre-wave' | 'picking' | 'packing' | 'loading' | 'shipping' | 'victory';
+export type GamePhase = 'pre-wave' | 'picking' | 'packing' | 'loading' | 'victory';
 
 export interface Order {
 	orderId: string;
@@ -41,6 +43,13 @@ export interface InventoryItem {
 	qtyAvailable: number; // inbound/reserve stock (back of warehouse)
 	qtyOnHand: number; // forward pick location (what the picker goes to)
 	qtyAllocated: number; // allocated from on-hand for active picks
+	/** Units the system counts in the pick location that are not physically there. */
+	qtyMissing?: number;
+}
+
+/** What is actually on the shelf, as opposed to what the system thinks. */
+export function physicalOnHand(inv: InventoryItem): number {
+	return Math.max(0, inv.qtyOnHand - (inv.qtyMissing ?? 0));
 }
 
 export interface Pick {
@@ -193,7 +202,10 @@ export function createSeedInventory(): InventoryItem[] {
 			location: 'B-02-03',
 			qtyAvailable: 2,
 			qtyOnHand: 5,
-			qtyAllocated: 0
+			qtyAllocated: 0,
+			// The system counts 5 but the shelf is empty, so the picker finds an empty
+			// location and has to report it. Count discrepancies like this are routine.
+			qtyMissing: 5
 		},
 		{
 			sku: 'RTV-01',
@@ -207,7 +219,9 @@ export function createSeedInventory(): InventoryItem[] {
 			sku: 'PEX-01',
 			itemName: 'Photo of Your Ex',
 			location: 'C-03-02',
-			qtyAvailable: 3,
+			// Reserve is one unit under ORD-003's demand, so every run reaches the
+			// pack station with one order short and a hold-or-ship decision to make.
+			qtyAvailable: 2,
 			qtyOnHand: 2,
 			qtyAllocated: 0
 		}
@@ -316,7 +330,7 @@ export function reportEmpty(
 	if (pick.status !== 'Assigned') return { pickedQty: 0, canReplen: false };
 
 	const inv = inventory.find((i) => i.sku === pick.sku);
-	const onHandQty = inv ? inv.qtyOnHand : 0;
+	const onHandQty = inv ? physicalOnHand(inv) : 0;
 	let pickedQty = 0;
 
 	if (onHandQty > 0 && onHandQty < pick.qtyToPick) {
@@ -361,9 +375,10 @@ export function reportEmpty(
 		pick.source = 'report-empty';
 	}
 
-	// Zero out forward pick location
+	// Zero out forward pick location; the report doubles as a count.
 	if (inv) {
 		inv.qtyOnHand = 0;
+		inv.qtyMissing = 0;
 		inv.qtyAllocated = Math.max(0, inv.qtyAllocated);
 	}
 
@@ -574,6 +589,18 @@ export function packOrder(
 }
 
 /**
+ * Hold a short order instead of shipping it partial. Its staged stock stays in
+ * staging and the order waits for the next inbound to ship complete.
+ */
+export function holdOrder(orderId: string, orders: Order[], picks: Pick[]): void {
+	for (const pick of picks) {
+		if (pick.orderId === orderId && pick.status === 'Staged') pick.status = 'Held';
+	}
+	const order = orders.find((o) => o.orderId === orderId);
+	if (order) order.status = 'Held';
+}
+
+/**
  * Load ALL packed items across all orders. Staged-but-unpacked stock stays put —
  * nothing goes on the truck until it has been packed.
  */
@@ -622,6 +649,7 @@ export function refreshOrderStatuses(
 	for (const order of orders) {
 		if (order.status === 'Open') continue;
 		if (order.status === 'Shipped') continue;
+		if (order.status === 'Held') continue;
 
 		const orderPicks = picks.filter((p) => p.orderId === order.orderId);
 		const lines = orderLines.filter((l) => l.orderId === order.orderId);
@@ -689,10 +717,10 @@ export function refreshOrderStatuses(
 }
 
 /**
- * Check if all orders are shipped.
+ * The run is over once every order has either shipped or been held.
  */
-export function allOrdersShipped(orders: Order[]): boolean {
-	return orders.every((o) => o.status === 'Shipped');
+export function allOrdersResolved(orders: Order[]): boolean {
+	return orders.every((o) => o.status === 'Shipped' || o.status === 'Held');
 }
 
 /**
