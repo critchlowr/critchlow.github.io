@@ -11,102 +11,33 @@
 	let conveyorEl = $state<HTMLElement>();
 	let conveyorVisible = $state(false);
 
-	// Marquee state — JS-driven for touch support
-	let marqueeTrack = $state<HTMLElement>();
-	let marqueeOffset = $state(0);
-	let marqueeVisible = $state(false);
-	let autoSpeed = 1.2; // pixels per frame
-	let currentSpeed = $state(autoSpeed);
-	let touchStartX = 0;
-	let touchStartOffset = 0;
-	let isTouching = $state(false);
-	let lastTouchX = 0;
-	let lastTouchTime = 0;
-	let touchVelocity = 0;
-	let rafId: number;
+	// Photo slider — native scroll-snap handles swipe; arrows and keys scroll by one slide.
+	let slider = $state<HTMLElement>();
+	let slideIndex = $state(0);
 
-	function getHalfWidth(): number {
-		if (!marqueeTrack) return 1;
-		return marqueeTrack.scrollWidth / 2;
+	function goToSlide(i: number) {
+		if (!slider) return;
+		const n = bartendingPhotos.length;
+		const target = (i + n) % n;
+		const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		slider.scrollTo({ left: target * slider.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
 	}
 
-	function tickMarquee() {
-		if (!marqueeVisible) {
-			rafId = requestAnimationFrame(tickMarquee);
-			return;
-		}
-
-		if (!isTouching) {
-			// Decay touch velocity back to auto speed
-			if (Math.abs(currentSpeed - autoSpeed) > 0.05) {
-				currentSpeed += (autoSpeed - currentSpeed) * 0.03;
-			} else {
-				currentSpeed = autoSpeed;
-			}
-			marqueeOffset -= currentSpeed;
-		}
-
-		// Wrap seamlessly
-		const half = getHalfWidth();
-		if (half > 0) {
-			if (marqueeOffset <= -half) marqueeOffset += half;
-			if (marqueeOffset > 0) marqueeOffset -= half;
-		}
-
-		if (marqueeTrack) {
-			marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
-		}
-
-		rafId = requestAnimationFrame(tickMarquee);
+	function onSliderScroll() {
+		if (!slider) return;
+		slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
 	}
 
-	function onTouchStart(e: TouchEvent) {
-		isTouching = true;
-		touchStartX = e.touches[0].clientX;
-		touchStartOffset = marqueeOffset;
-		lastTouchX = touchStartX;
-		lastTouchTime = performance.now();
-		touchVelocity = 0;
+	// Arrow keys on the focused slide; focus follows so it never lands on a hidden slide.
+	function onSlideKey(e: KeyboardEvent) {
+		if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+		e.preventDefault();
+		const n = bartendingPhotos.length;
+		const next = (slideIndex + (e.key === 'ArrowRight' ? 1 : -1) + n) % n;
+		goToSlide(next);
+		slideIndex = next;
+		slider?.querySelectorAll<HTMLElement>('.slide')[next]?.focus({ preventScroll: true });
 	}
-
-	function onTouchMove(e: TouchEvent) {
-		if (!isTouching) return;
-		const x = e.touches[0].clientX;
-		const now = performance.now();
-		const dt = now - lastTouchTime;
-		if (dt > 0) {
-			touchVelocity = ((x - lastTouchX) / dt) * 16; // normalize to ~per-frame
-		}
-		lastTouchX = x;
-		lastTouchTime = now;
-		marqueeOffset = touchStartOffset + (x - touchStartX);
-	}
-
-	function onTouchEnd() {
-		isTouching = false;
-		// Apply swipe velocity — negative because offset moves left for right-scroll
-		currentSpeed = -touchVelocity || autoSpeed;
-	}
-
-	$effect(() => {
-		rafId = requestAnimationFrame(tickMarquee);
-		return () => cancelAnimationFrame(rafId);
-	});
-
-	// Observe marquee visibility
-	let marqueeContainer = $state<HTMLElement>();
-	$effect(() => {
-		const el = marqueeContainer;
-		if (!el) return;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				marqueeVisible = entry.isIntersecting;
-			},
-			{ threshold: 0.1 }
-		);
-		observer.observe(el);
-		return () => observer.disconnect();
-	});
 
 	const bartendingPhotos = [
 		{ src: '/images/Bartending/pouring.jpeg', alt: 'Ryan pouring a cocktail' },
@@ -248,42 +179,95 @@
 				{/if}
 				{#if job.showBartendingPhotos}
 					<div
-						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						bind:this={marqueeContainer}
+						class="bg-warm-100 dark:bg-warm-800 relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
 						role="region"
-						aria-label="Bartending photo carousel"
-						ontouchstart={onTouchStart}
-						ontouchmove={onTouchMove}
-						ontouchend={onTouchEnd}
+						aria-roledescription="carousel"
+						aria-label="Bartending photos"
 					>
-						<div class="marquee-track" bind:this={marqueeTrack}>
-							{#each bartendingPhotos as photo (photo.src)}
+						<div
+							class="photo-slider h-80 sm:h-[26rem]"
+							bind:this={slider}
+							onscroll={onSliderScroll}
+						>
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
 									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									class="slide focus-visible:ring-accent-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+									tabindex={i === slideIndex ? 0 : -1}
+									aria-hidden={i !== slideIndex}
+									aria-label="Enlarge: {photo.alt}"
+									onkeydown={onSlideKey}
 								>
+									<!-- Blurred copy fills the frame so portrait and landscape shots sit on the same stage. -->
+									<img src={photo.src} alt="" class="slide-backdrop" loading="lazy" />
 									<img
 										src={photo.src}
 										alt={photo.alt}
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
+										class="relative h-full w-full object-contain"
+										loading={i === 0 ? 'eager' : 'lazy'}
+										draggable="false"
 									/>
 								</button>
 							{/each}
-							{#each bartendingPhotos as photo (photo.src)}
+						</div>
+						<button
+							type="button"
+							onclick={() => goToSlide(slideIndex - 1)}
+							class="slider-arrow left-3"
+							aria-label="Previous photo"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<polyline points="15 18 9 12 15 6" />
+							</svg>
+						</button>
+						<button
+							type="button"
+							onclick={() => goToSlide(slideIndex + 1)}
+							class="slider-arrow right-3"
+							aria-label="Next photo"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<polyline points="9 18 15 12 9 6" />
+							</svg>
+						</button>
+						<p class="sr-only" aria-live="polite">
+							Photo {slideIndex + 1} of {bartendingPhotos.length}
+						</p>
+						<div
+							class="absolute inset-x-0 bottom-3 flex justify-center gap-1.5"
+							role="group"
+							aria-label="Choose photo"
+						>
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-									tabindex="-1"
-									aria-hidden="true"
-								>
-									<img
-										src={photo.src}
-										alt=""
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
+									onclick={() => goToSlide(i)}
+									class="slider-dot"
+									class:active={i === slideIndex}
+									aria-label="Show photo {i + 1}"
+									aria-current={i === slideIndex}
+								></button>
 							{/each}
 						</div>
 					</div>
@@ -335,14 +319,96 @@
 {/if}
 
 <style>
-	.marquee-track {
+	.photo-slider {
 		display: flex;
-		gap: 0.75rem;
-		width: max-content;
-		will-change: transform;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		overscroll-behavior-x: contain;
+		scrollbar-width: none;
 	}
 
-	.photo-marquee {
-		touch-action: pan-y;
+	.photo-slider::-webkit-scrollbar {
+		display: none;
+	}
+
+	.slide {
+		position: relative;
+		flex: 0 0 100%;
+		height: 100%;
+		overflow: hidden;
+		scroll-snap-align: center;
+		scroll-snap-stop: always;
+		cursor: zoom-in;
+	}
+
+	.slide-backdrop {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(24px) saturate(1.1);
+		transform: scale(1.15);
+		opacity: 0.55;
+	}
+
+	.slider-arrow {
+		position: absolute;
+		top: 50%;
+		translate: 0 -50%;
+		display: grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 9999px;
+		color: white;
+		background: rgb(0 0 0 / 0.45);
+		backdrop-filter: blur(4px);
+		transition:
+			background-color 150ms,
+			scale 150ms;
+	}
+
+	.slider-arrow:hover {
+		background: rgb(0 0 0 / 0.65);
+	}
+
+	.slider-arrow:active {
+		scale: 0.94;
+	}
+
+	.slider-arrow:focus-visible {
+		outline: 2px solid var(--color-accent-400);
+		outline-offset: 2px;
+	}
+
+	/* Padding + content-box clip keeps the dot small but the tap target near 20px. */
+	.slider-dot {
+		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0.375rem;
+		background-clip: content-box;
+		border-radius: 9999px;
+		background-color: rgb(255 255 255 / 0.55);
+		transition:
+			width 200ms,
+			background-color 200ms;
+	}
+
+	.slider-dot.active {
+		width: 2rem;
+		background-color: white;
+	}
+
+	.slider-dot:focus-visible {
+		outline: 2px solid var(--color-accent-400);
+		outline-offset: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.slider-arrow,
+		.slider-dot {
+			transition: none;
+		}
 	}
 </style>
