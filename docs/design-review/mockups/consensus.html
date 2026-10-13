@@ -30,17 +30,17 @@
 				/* Palette: light neutral ground, near-black ink, one saturated blue.
 				   Blue is the most-liked hue across studies; neutrals keep colourfulness low. */
 				--bg: #ffffff;
-				--band: #f5f7fa;
+				--band: #f4f6f9;
 				--card: #ffffff;
 				--ink: #111827;
 				--muted: #4b5563;
 				--primary: #1d4ed8;
-				--primary-hover: #1e40af;
+				--primary-hover: #1e3a8a;
 				--on-primary: #ffffff;
 				--link: #1d4ed8;
-				--focus: #1d4ed8;
+				--focus: #2563eb;
 				--border: #d1d9e3;
-				--control: #7b8696;
+				--control: #7a8494;
 				--success: #166534;
 				--chip: #eef2f7;
 				--shadow: 0 1px 2px rgb(15 23 42 / 0.06), 0 8px 24px -12px rgb(15 23 42 / 0.18);
@@ -52,7 +52,7 @@
 				--step-body: 1.125rem;
 				--step-small: 0.9375rem;
 
-				--radius: 12px;
+				--radius: 8px;
 				--dur: 150ms;
 				--ease: cubic-bezier(0.2, 0, 0, 1);
 				--wrap: 70rem;
@@ -61,39 +61,39 @@
 			}
 			@media (prefers-color-scheme: dark) {
 				:root:not([data-theme='light']) {
-					--bg: #0d1320;
-					--band: #121a2a;
-					--card: #151e30;
-					--ink: #e8edf4;
-					--muted: #aab4c3;
-					--primary: #8ab4ff;
-					--primary-hover: #a9c7ff;
-					--on-primary: #0d1320;
-					--link: #8ab4ff;
-					--focus: #8ab4ff;
-					--border: #2b3750;
-					--control: #6f7b8f;
+					--bg: #111418;
+					--band: #1b2029;
+					--card: #222833;
+					--ink: #e6e9ef;
+					--muted: #b0b9c6;
+					--primary: #8ab4f8;
+					--primary-hover: #b3cefb;
+					--on-primary: #111418;
+					--link: #8ab4f8;
+					--focus: #7fb0ff;
+					--border: #3a4250;
+					--control: #6c7787;
 					--success: #7fd49b;
-					--chip: #1c2638;
+					--chip: #232a35;
 					--shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 					color-scheme: dark;
 				}
 			}
 			:root[data-theme='dark'] {
-				--bg: #0d1320;
-				--band: #121a2a;
-				--card: #151e30;
-				--ink: #e8edf4;
-				--muted: #aab4c3;
-				--primary: #8ab4ff;
-				--primary-hover: #a9c7ff;
-				--on-primary: #0d1320;
-				--link: #8ab4ff;
-				--focus: #8ab4ff;
-				--border: #2b3750;
-				--control: #6f7b8f;
+				--bg: #111418;
+				--band: #1b2029;
+				--card: #222833;
+				--ink: #e6e9ef;
+				--muted: #b0b9c6;
+				--primary: #8ab4f8;
+				--primary-hover: #b3cefb;
+				--on-primary: #111418;
+				--link: #8ab4f8;
+				--focus: #7fb0ff;
+				--border: #3a4250;
+				--control: #6c7787;
 				--success: #7fd49b;
-				--chip: #1c2638;
+				--chip: #232a35;
 				--shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 				color-scheme: dark;
 			}
@@ -324,7 +324,7 @@
 				gap: 0.5rem;
 				min-height: 2.875rem;
 				padding: 0.65rem 1.25rem;
-				border-radius: 10px;
+				border-radius: 8px;
 				border: 1px solid transparent;
 				font: 600 1rem / 1.2 var(--font);
 				text-decoration: none;
@@ -372,13 +372,14 @@
 			.role {
 				color: var(--primary);
 				font-weight: 600;
-				font-size: 1.0625rem;
+				font-size: 1.125rem;
+				margin-bottom: 1.25rem;
 			}
 			.hero h1 {
 				font-size: var(--step-h1);
 				font-weight: 700;
 				letter-spacing: -0.03em;
-				margin-block: 0.5rem 1rem;
+				margin-block: 0 0.5rem;
 			}
 			.lede {
 				font-size: 1.25rem;
@@ -459,7 +460,6 @@
 			}
 			.section.band {
 				background: var(--band);
-				border-block: 1px solid var(--border);
 			}
 			.section-head {
 				display: grid;
@@ -865,8 +865,8 @@
 				<div class="wrap">
 					<div class="hero-grid">
 						<div>
-							<p class="role">Product and business analyst · HCI and accessibility research</p>
 							<h1 id="hero-title">Ryan Critchlow</h1>
+							<p class="role">Product and business analyst · HCI and accessibility research</p>
 							<p class="lede measure">
 								I turn what people need into scoped, buildable work. Three years running enterprise
 								warehouse-management accounts at Körber, an M.S. in Computer Science, and a research
@@ -879,7 +879,9 @@
 							</p>
 							<div class="cta-row">
 								<a class="btn btn-primary" href="#contact">Get in touch</a>
-								<a class="btn btn-secondary" href="#work">See my work</a>
+								<a class="btn btn-secondary" href="https://ryancritchlow.com/Ryans_Resume_2026.pdf"
+									>Résumé (PDF)</a
+								>
 							</div>
 						</div>
 						<img

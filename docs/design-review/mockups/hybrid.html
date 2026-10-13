@@ -1,0 +1,2186 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<title>Hybrid Mockup</title>
+		<meta
+			name="description"
+			content="Design mockup for ryancritchlow.com: the research-backed Consensus structure with the fun put back in, a day and night window, Georgia, and a conveyor belt that delivers the proof points."
+		/>
+		<meta name="color-scheme" content="light dark" />
+		<script>
+			try {
+				const t = localStorage.getItem('hybrid-theme');
+				if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+			} catch {}
+		</script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..700,0..100&family=Inter:opsz,wght@14..32,400..700&display=swap"
+		/>
+		<style>
+			/* Layout: Consensus underneath (familiar header, proof first, one case-study template,
+			   résumé-style history). The fun sits on top as small, contrasting figures and moments
+			   the visitor sets off: the window, Georgia, the conveyor, the sun across the header.
+			   Colour stays mostly neutral with one blue, so the illustrations carry the warmth. */
+			:root {
+				--bg: #fcfaf6;
+				--band: #f3efe6;
+				--card: #ffffff;
+				--ink: #1c2230;
+				--muted: #4f5665;
+				--primary: #1a56c4;
+				--primary-hover: #15459e;
+				--on-primary: #ffffff;
+				--link: #1a56c4;
+				--focus: #1a56c4;
+				--border: #e0d6c4;
+				--control: #7d8494;
+				--success: #166534;
+				--chip: #efe7d8;
+				--shadow: 0 1px 2px rgb(40 30 15 / 0.06), 0 10px 28px -14px rgb(40 30 15 / 0.22);
+				/* Illustration */
+				--wood: #b4652d;
+				--wood-dark: #5a2e14;
+				--sky: #bfe0f0;
+				--sun: #f2c23a;
+				--cloud: #ffffff;
+				--star: transparent;
+				--moon-bite: transparent;
+				--hill-far: #a9cf8a;
+				--hill-mid: #7fb257;
+				--hill-near: #5a9640;
+				--soil: #8a5a34;
+				--heart: #c9305b;
+				--box: #e2b67c;
+				--box-edge: #b07d43;
+				--tape: #ecc993;
+				--label: #ffffff;
+				--label-ink: #1c2230;
+				--rail: #5f6675;
+				--belt: #3a3f4b;
+				--belt-slat: #4d5361;
+
+				--font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+				--display: 'Fraunces', Georgia, serif;
+				--step-h1: clamp(2.6rem, 1.7rem + 3.6vw, 4.25rem);
+				--step-h2: clamp(1.8rem, 1.4rem + 1.5vw, 2.4rem);
+				--step-h3: 1.25rem;
+				--step-body: 1.125rem;
+				--step-small: 0.9375rem;
+
+				--radius: 8px;
+				--dur: 150ms;
+				--ease: cubic-bezier(0.2, 0, 0, 1);
+				--ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+				--spring-gentle: linear(
+					0,
+					0.006 1.5%,
+					0.024 3%,
+					0.056 4.8%,
+					0.104 6.8%,
+					0.198 10%,
+					0.534 20.5%,
+					0.632 24%,
+					0.711 27.3%,
+					0.78 30.5%,
+					0.837 33.8%,
+					0.883 37%,
+					0.923 40.5%,
+					0.957 44.5%,
+					0.982 48.8%,
+					1.01 58.8%,
+					1.015 70.8%,
+					1
+				);
+				--spring-playful: linear(
+					0,
+					0.009 1%,
+					0.035 2%,
+					0.087 3.2%,
+					0.157 4.5%,
+					0.313 6.8%,
+					0.755 12.5%,
+					0.888 14.5%,
+					0.986 16.2%,
+					1.066 18%,
+					1.127 19.8%,
+					1.17 21.5%,
+					1.195 23.2%,
+					1.205 25.8%,
+					1.19 28.5%,
+					1.156 31.2%,
+					1.014 40.8%,
+					0.979 44.5%,
+					0.961 48.2%,
+					0.961 53.8%,
+					0.997 66%,
+					1.007 72.8%,
+					1
+				);
+				--wrap: 70rem;
+				--gutter: clamp(1rem, 4vw, 2rem);
+				--header-h: 4rem;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root:not([data-theme='light']) {
+					--bg: #111726;
+					--band: #151d2f;
+					--card: #1a2337;
+					--ink: #e9edf4;
+					--muted: #aeb7c6;
+					--primary: #8fb8ff;
+					--primary-hover: #b0ccff;
+					--on-primary: #111726;
+					--link: #8fb8ff;
+					--focus: #8fb8ff;
+					--border: #2c3852;
+					--control: #717d92;
+					--success: #7fd49b;
+					--chip: #1f2a40;
+					--shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+					--wood: #9a5f2e;
+					--wood-dark: #e0a46a;
+					--sky: #1d2547;
+					--sun: #f3e8d3;
+					--cloud: transparent;
+					--star: #f8e7a0;
+					--moon-bite: #1d2547;
+					--hill-far: #2f4048;
+					--hill-mid: #263a34;
+					--hill-near: #1d2f29;
+					--soil: #3d2c2a;
+					--heart: #ff8fb0;
+					--box: #c99a5f;
+					--box-edge: #8f6534;
+					--tape: #d9b27c;
+					--label: #f4f1ea;
+					--label-ink: #1c2230;
+					--rail: #8790a2;
+					--belt: #0b0f19;
+					--belt-slat: #232a3a;
+					color-scheme: dark;
+				}
+			}
+			:root[data-theme='dark'] {
+				--bg: #111726;
+				--band: #151d2f;
+				--card: #1a2337;
+				--ink: #e9edf4;
+				--muted: #aeb7c6;
+				--primary: #8fb8ff;
+				--primary-hover: #b0ccff;
+				--on-primary: #111726;
+				--link: #8fb8ff;
+				--focus: #8fb8ff;
+				--border: #2c3852;
+				--control: #717d92;
+				--success: #7fd49b;
+				--chip: #1f2a40;
+				--shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+				--wood: #9a5f2e;
+				--wood-dark: #e0a46a;
+				--sky: #1d2547;
+				--sun: #f3e8d3;
+				--cloud: transparent;
+				--star: #f8e7a0;
+				--moon-bite: #1d2547;
+				--hill-far: #2f4048;
+				--hill-mid: #263a34;
+				--hill-near: #1d2f29;
+				--soil: #3d2c2a;
+				--heart: #ff8fb0;
+				--box: #c99a5f;
+				--box-edge: #8f6534;
+				--tape: #d9b27c;
+				--label: #f4f1ea;
+				--label-ink: #1c2230;
+				--rail: #8790a2;
+				--belt: #0b0f19;
+				--belt-slat: #232a3a;
+				color-scheme: dark;
+			}
+			:root[data-theme='light'] {
+				color-scheme: light;
+			}
+
+			/* ---------- Base ---------- */
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-padding-top: calc(var(--header-h) + 1rem);
+				-webkit-text-size-adjust: 100%;
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				html {
+					scroll-behavior: smooth;
+				}
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--ink);
+				font: 400 var(--step-body) / 1.65 var(--font);
+				font-optical-sizing: auto;
+			}
+			@media (prefers-contrast: more) {
+				:root {
+					--muted: var(--ink);
+					--border: var(--control);
+				}
+			}
+			img,
+			svg {
+				max-width: 100%;
+				display: block;
+			}
+			h1,
+			h2,
+			h3 {
+				line-height: 1.12;
+				text-wrap: balance;
+				margin: 0;
+			}
+			h1,
+			h2 {
+				font-family: var(--display);
+				font-variation-settings: 'SOFT' 60;
+				font-weight: 650;
+				letter-spacing: -0.015em;
+			}
+			h3 {
+				letter-spacing: -0.01em;
+			}
+			p,
+			ul,
+			ol {
+				margin: 0;
+			}
+			a {
+				color: var(--link);
+				text-decoration-thickness: 0.07em;
+				text-underline-offset: 0.2em;
+			}
+			a:hover {
+				text-decoration-thickness: 0.13em;
+			}
+			:focus-visible {
+				outline: 3px solid var(--focus);
+				outline-offset: 2px;
+				border-radius: 6px;
+			}
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip-path: inset(50%);
+				white-space: nowrap;
+				border: 0;
+			}
+			.wrap {
+				width: 100%;
+				max-width: var(--wrap);
+				margin-inline: auto;
+				padding-inline: var(--gutter);
+			}
+			.measure {
+				max-width: 65ch;
+			}
+			.icon {
+				width: 1.15rem;
+				height: 1.15rem;
+				fill: none;
+				stroke: currentColor;
+				stroke-width: 2;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+				flex: none;
+			}
+			.pix {
+				shape-rendering: crispEdges;
+				fill: currentColor;
+				flex: none;
+			}
+
+			/* ---------- Skip link, banner ---------- */
+			.skip {
+				position: absolute;
+				left: 1rem;
+				top: -4rem;
+				z-index: 100;
+				padding: 0.75rem 1rem;
+				background: var(--card);
+				color: var(--ink);
+				border: 2px solid var(--ink);
+				border-radius: 8px;
+				font-weight: 600;
+			}
+			.skip:focus {
+				top: 1rem;
+			}
+			.mock-banner {
+				background: var(--ink);
+				color: var(--bg);
+				font-size: var(--step-small);
+				padding-block: 0.5rem;
+			}
+			.mock-banner .wrap {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.25rem 1rem;
+				justify-content: space-between;
+			}
+			.mock-banner a {
+				color: inherit;
+			}
+			.mock-banner :focus-visible {
+				outline-color: currentColor;
+			}
+
+			/* ---------- Header ---------- */
+			.site-header {
+				position: sticky;
+				top: env(safe-area-inset-top, 0px);
+				z-index: 50;
+				background: var(--bg);
+				border-bottom: 1px solid var(--border);
+			}
+			.header-row {
+				display: flex;
+				align-items: center;
+				gap: 1.5rem;
+				min-height: var(--header-h);
+			}
+			.brand {
+				display: flex;
+				align-items: center;
+				gap: 0.55rem;
+				color: var(--ink);
+				text-decoration: none;
+				font-weight: 700;
+				font-size: 1.0625rem;
+				margin-right: auto;
+			}
+			.dog-mark {
+				width: 2.6rem;
+				height: 1.7rem;
+				background: currentColor;
+				mask: url('assets/georgia-line.webp') center / contain no-repeat;
+			}
+			.site-nav ul {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.25rem 1.5rem;
+				padding: 0;
+				list-style: none;
+			}
+			.site-nav a {
+				display: inline-block;
+				padding-block: 0.5rem;
+				color: var(--muted);
+				text-decoration: none;
+				font-weight: 500;
+				font-size: 1rem;
+				transition: color var(--dur) var(--ease);
+			}
+			.site-nav a:hover {
+				color: var(--ink);
+			}
+			.header-actions {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.icon-btn {
+				display: grid;
+				place-items: center;
+				width: 2.75rem;
+				height: 2.75rem;
+				border: 1px solid var(--control);
+				border-radius: 8px;
+				background: transparent;
+				color: var(--ink);
+				cursor: pointer;
+			}
+			.icon-btn .pix {
+				width: 1.3rem;
+			}
+			.theme-toggle .moon,
+			.theme-toggle[aria-pressed='true'] .sun {
+				display: none;
+			}
+			.theme-toggle[aria-pressed='true'] .moon {
+				display: block;
+			}
+			/* The almanac's clock: a pixel sun crosses the header as you read. */
+			.day-track {
+				display: none;
+			}
+			@supports (animation-timeline: scroll()) {
+				@media (prefers-reduced-motion: no-preference) and (width >= 52rem) {
+					.day-track {
+						display: block;
+						position: absolute;
+						inset: auto 0 -1px 0;
+						height: 1px;
+						pointer-events: none;
+					}
+					.day-sun {
+						position: absolute;
+						left: 0;
+						bottom: -7px;
+						width: 14px;
+						height: 14px;
+						background: var(--sun);
+						mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath d='M5 0h2v1h-2zM1 1h1v1h-1zM5 1h2v1h-2zM10 1h1v1h-1zM2 2h1v1h-1zM9 2h1v1h-1zM4 3h4v1h-4zM3 4h6v1h-6zM0 5h2v1h-2zM3 5h6v1h-6zM10 5h2v1h-2zM0 6h2v1h-2zM3 6h6v1h-6zM10 6h2v1h-2zM3 7h6v1h-6zM4 8h4v1h-4zM2 9h1v1h-1zM9 9h1v1h-1zM1 10h1v1h-1zM5 10h2v1h-2zM10 10h1v1h-1zM5 11h2v1h-2z'/%3E%3C/svg%3E")
+							center / contain no-repeat;
+						animation: cross-sky linear both;
+						animation-timeline: scroll(root);
+					}
+					@keyframes cross-sky {
+						to {
+							translate: calc(100vw - 2rem) 0;
+						}
+					}
+				}
+			}
+			@media (width < 52rem) {
+				html {
+					scroll-padding-top: 1rem;
+				}
+				.site-header {
+					position: relative;
+				}
+				.header-row {
+					flex-wrap: wrap;
+					padding-block: 0.5rem;
+					gap: 0.5rem 1rem;
+				}
+				.site-nav {
+					order: 3;
+					width: 100%;
+				}
+				.site-nav ul {
+					justify-content: space-between;
+					gap: 0.25rem 0.5rem;
+				}
+			}
+
+			/* ---------- Buttons ---------- */
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				min-height: 2.875rem;
+				padding: 0.65rem 1.25rem;
+				border-radius: 8px;
+				border: 1px solid transparent;
+				font: 600 1rem / 1.2 var(--font);
+				text-decoration: none;
+				cursor: pointer;
+				transition:
+					background-color var(--dur) var(--ease),
+					border-color var(--dur) var(--ease);
+			}
+			.btn-primary {
+				background: var(--primary);
+				color: var(--on-primary);
+			}
+			.btn-primary:hover {
+				background: var(--primary-hover);
+			}
+			.btn-secondary {
+				background: var(--card);
+				color: var(--ink);
+				border-color: var(--control);
+			}
+			.btn-secondary:hover {
+				border-color: var(--ink);
+			}
+			.btn-sm {
+				min-height: 2.75rem;
+				padding: 0.5rem 0.9rem;
+				font-size: 0.9375rem;
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				.btn {
+					transition:
+						background-color var(--dur) var(--ease),
+						border-color var(--dur) var(--ease),
+						scale 100ms var(--ease);
+				}
+				.btn:active {
+					scale: 0.97;
+				}
+			}
+
+			/* ---------- Hero ---------- */
+			.hero {
+				padding-block: clamp(2.25rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 2.5rem);
+				overflow-x: clip;
+			}
+			.hero-grid {
+				display: grid;
+				gap: clamp(2rem, 5vw, 4rem);
+				align-items: center;
+			}
+			@media (width >= 52rem) {
+				.hero-grid {
+					grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+				}
+			}
+			.hello {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin-bottom: 1.25rem;
+				color: var(--muted);
+				font-size: var(--step-small);
+				line-height: 1.4;
+			}
+			.avatar {
+				width: 3rem;
+				height: 3rem;
+				border-radius: 50%;
+				object-fit: cover;
+				flex: none;
+				box-shadow:
+					0 0 0 2px var(--card),
+					0 0 0 3px var(--border);
+			}
+			.hello .dot {
+				display: inline-block;
+				width: 0.55rem;
+				height: 0.55rem;
+				border-radius: 50%;
+				background: var(--success);
+				margin-right: 0.35rem;
+			}
+			.hero h1 {
+				font-size: var(--step-h1);
+				font-variation-settings: 'SOFT' 100;
+				letter-spacing: -0.025em;
+			}
+			.role {
+				color: var(--primary);
+				font-weight: 600;
+				font-size: 1.125rem;
+				margin-block: 0.5rem 1.25rem;
+			}
+			.lede {
+				font-size: 1.25rem;
+				line-height: 1.55;
+			}
+			.cta-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+				margin-top: 1.75rem;
+			}
+
+			/* The arched window: the one arch on the page, framing the valley. */
+			.window-wrap {
+				position: relative;
+				width: min(100%, 21rem);
+				justify-self: center;
+				/* Room under the sill for the hearts and a caption that may wrap on phones. */
+				padding-bottom: 3.75rem;
+			}
+			.window {
+				position: relative;
+				aspect-ratio: 4 / 5;
+				border: 11px solid var(--wood);
+				border-radius: 50% 50% 8px 8px / 40% 40% 8px 8px;
+				box-shadow:
+					0 0 0 3px var(--wood-dark),
+					inset 0 0 0 3px var(--wood-dark);
+				overflow: hidden;
+				background: var(--sky);
+			}
+			.window svg {
+				width: 100%;
+				height: 100%;
+			}
+			.window::before,
+			.window::after {
+				content: '';
+				position: absolute;
+				background: var(--wood);
+				box-shadow: 0 0 0 2px var(--wood-dark);
+			}
+			.window::before {
+				inset: 0 auto 0 50%;
+				width: 7px;
+				translate: -50% 0;
+			}
+			.window::after {
+				inset: 46% 0 auto 0;
+				height: 7px;
+			}
+			.sill {
+				position: absolute;
+				left: -1rem;
+				right: -1rem;
+				bottom: 2.85rem;
+				height: 1.15rem;
+				background: var(--wood);
+				border: 3px solid var(--wood-dark);
+				border-radius: 4px;
+			}
+			.scene .sun {
+				fill: var(--sun);
+			}
+			.scene .moon-bite {
+				fill: var(--moon-bite);
+			}
+			.scene .cloud {
+				fill: var(--cloud);
+			}
+			.scene .stars {
+				fill: var(--star);
+			}
+			.scene .hill-far {
+				fill: var(--hill-far);
+			}
+			.scene .hill-mid {
+				fill: var(--hill-mid);
+			}
+			.scene .hill-near {
+				fill: var(--hill-near);
+			}
+			.scene .crops {
+				fill: var(--soil);
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				.scene .sky-body {
+					animation: rise 700ms var(--ease-enter) 150ms both;
+				}
+				@keyframes rise {
+					from {
+						translate: 0 70px;
+					}
+				}
+			}
+			.georgia {
+				position: absolute;
+				left: -0.5rem;
+				bottom: 3.7rem;
+				width: 8.75rem;
+				aspect-ratio: 297 / 192;
+				padding: 0;
+				border: 0;
+				background: none;
+				cursor: pointer;
+				border-radius: 8px;
+			}
+			.georgia::before,
+			.georgia::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				mask: url('assets/georgia-fill.webp') center / contain no-repeat;
+				background: var(--card);
+			}
+			.georgia::after {
+				mask-image: url('assets/georgia-line.webp');
+				background: var(--ink);
+			}
+			.hearts {
+				position: absolute;
+				left: 0.25rem;
+				right: 0;
+				bottom: 0;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				line-height: 1.3;
+				gap: 0.25rem;
+				font-size: var(--step-small);
+				color: var(--muted);
+			}
+			.hearts .pix {
+				width: 1.05rem;
+				color: var(--muted);
+			}
+			.hearts .pix.full {
+				color: var(--heart);
+			}
+			.pop-heart {
+				position: absolute;
+				left: 4.4rem;
+				bottom: 8.35rem;
+				width: 1.6rem;
+				color: var(--heart);
+				opacity: 0;
+				pointer-events: none;
+			}
+			.is-petted .pop-heart {
+				animation: heart-fade 900ms ease-out both;
+			}
+			@keyframes heart-fade {
+				20%,
+				70% {
+					opacity: 1;
+				}
+				to {
+					opacity: 0;
+				}
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				.is-petted .pop-heart {
+					animation:
+						heart-fade 900ms ease-out both,
+						heart-rise 900ms var(--spring-playful) both;
+				}
+				.is-petted .georgia {
+					animation: hop 420ms var(--spring-playful);
+				}
+				@keyframes heart-rise {
+					from {
+						translate: 0 1rem;
+						scale: 0.6;
+					}
+					to {
+						translate: 0 -1.25rem;
+						scale: 1;
+					}
+				}
+				@keyframes hop {
+					40% {
+						translate: 0 -8px;
+					}
+				}
+			}
+			@media (width < 52rem) {
+				.window-wrap {
+					width: min(100%, 18rem);
+				}
+				.sill {
+					left: -0.6rem;
+					right: -0.6rem;
+				}
+			}
+
+			/* ---------- The conveyor: four proof points, shipped ---------- */
+			.shipping {
+				padding-block: 0.5rem clamp(3rem, 7vw, 5rem);
+			}
+			.shipping-head {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem 1.5rem;
+				margin-bottom: 1rem;
+			}
+			.shipping-head h2 {
+				font-family: var(--font);
+				font-size: 0.875rem;
+				font-weight: 700;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+			.conveyor {
+				position: relative;
+				padding-bottom: 2.6rem;
+				overflow-x: clip;
+			}
+			/* The chute the boxes come out of. */
+			.conveyor::before {
+				content: '';
+				position: absolute;
+				z-index: 2;
+				left: 0;
+				top: 0;
+				bottom: 1rem;
+				width: 0.6rem;
+				background: var(--rail);
+				border-radius: 4px 4px 0 0;
+			}
+			.boxes {
+				position: relative;
+				z-index: 1;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+				gap: 1rem;
+				align-items: end;
+				padding: 0 0.75rem;
+				list-style: none;
+			}
+			/* A cardboard box with tape over the top and a white shipping label on the front. */
+			.box {
+				position: relative;
+				padding: 1.1rem 0.9rem 0.9rem;
+				background: var(--box);
+				border: 2px solid var(--box-edge);
+				border-radius: 4px;
+			}
+			.box::before {
+				content: '';
+				position: absolute;
+				top: -2px;
+				bottom: 55%;
+				left: 50%;
+				width: 2.25rem;
+				translate: -50% 0;
+				background: var(--tape);
+				border-inline: 1px solid var(--box-edge);
+			}
+			.ship-label {
+				position: relative;
+				display: grid;
+				gap: 0.2rem;
+				padding: 0.75rem 0.85rem 0.65rem;
+				background: var(--label);
+				color: var(--label-ink);
+				border-radius: 3px;
+				box-shadow: 0 1px 0 rgb(0 0 0 / 0.12);
+			}
+			.ship-label .num {
+				font-family: var(--display);
+				font-variation-settings: 'SOFT' 60;
+				font-size: 2rem;
+				font-weight: 700;
+				line-height: 1.05;
+				font-variant-numeric: lining-nums tabular-nums;
+			}
+			.ship-label .what {
+				font-size: var(--step-small);
+				line-height: 1.45;
+			}
+			.ship-label a {
+				color: #1a56c4;
+			}
+			.ship-label .barcode {
+				height: 0.9rem;
+				margin-top: 0.35rem;
+				background: repeating-linear-gradient(
+					90deg,
+					var(--label-ink) 0 2px,
+					transparent 2px 4px,
+					var(--label-ink) 4px 5px,
+					transparent 5px 8px,
+					var(--label-ink) 8px 11px,
+					transparent 11px 12px
+				);
+				opacity: 0.85;
+			}
+			.belt {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 1rem;
+				height: 1.6rem;
+				overflow: hidden;
+				background: var(--belt);
+				border-block: 3px solid var(--rail);
+				border-radius: 999px;
+			}
+			.belt-surface {
+				position: absolute;
+				inset: 0 0 0 -24px;
+				background: repeating-linear-gradient(90deg, var(--belt-slat) 0 4px, transparent 4px 24px);
+			}
+			.legs {
+				position: absolute;
+				left: 1.5rem;
+				right: 1.5rem;
+				bottom: 0;
+				height: 1rem;
+				background:
+					linear-gradient(var(--rail) 0 0) left / 6px 100% no-repeat,
+					linear-gradient(var(--rail) 0 0) 33% / 6px 100% no-repeat,
+					linear-gradient(var(--rail) 0 0) 66% / 6px 100% no-repeat,
+					linear-gradient(var(--rail) 0 0) right / 6px 100% no-repeat;
+			}
+			.replay[hidden] {
+				display: none;
+			}
+			/* Delivery: the boxes ride in from the left, the belt runs, then everything stops.
+			   1.6 seconds in total, under the 5-second line in WCAG 2.2.2, and the visitor can
+			   run it again. Under reduced motion the boxes simply sit on the belt. */
+			@media (prefers-reduced-motion: no-preference) {
+				.conveyor.armed:not(.go) .box {
+					translate: -110vw 0;
+				}
+				.conveyor.go .box {
+					/* One train: every box moves the same distance at the same time, like a real belt. */
+					animation: deliver 1600ms var(--ease-enter) both;
+				}
+				@keyframes deliver {
+					from {
+						translate: -110vw 0;
+					}
+					to {
+						translate: 0 0;
+					}
+				}
+				.conveyor.running .belt-surface {
+					animation: belt-run 300ms linear infinite;
+				}
+				@keyframes belt-run {
+					to {
+						translate: 24px 0;
+					}
+				}
+			}
+
+			/* ---------- Sections ---------- */
+			.section {
+				padding-block: clamp(3.5rem, 8vw, 6rem);
+			}
+			.section.band {
+				background: var(--band);
+			}
+			.section-head {
+				display: grid;
+				gap: 0.5rem;
+				margin-bottom: 2.25rem;
+			}
+			.section-head h2 {
+				font-size: var(--step-h2);
+			}
+			.section-head p {
+				color: var(--muted);
+				max-width: 60ch;
+			}
+
+			/* Case studies: one template, with a pixel item icon for a little game feel. */
+			.cases {
+				display: grid;
+				gap: 1.25rem;
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+				padding: 0;
+				list-style: none;
+			}
+			.case {
+				position: relative;
+				display: grid;
+				align-content: start;
+				gap: 0.9rem;
+				padding: 1.5rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				transition:
+					border-color var(--dur) var(--ease),
+					box-shadow var(--dur) var(--ease);
+			}
+			.case-top {
+				display: flex;
+				align-items: center;
+				gap: 0.85rem;
+			}
+			.item {
+				display: grid;
+				place-items: center;
+				width: 2.75rem;
+				height: 2.75rem;
+				border-radius: 8px;
+				background: var(--chip);
+				color: var(--wood-dark);
+				flex: none;
+			}
+			.item .pix {
+				width: 1.75rem;
+			}
+			.case h3 {
+				font-size: var(--step-h3);
+				font-weight: 650;
+			}
+			.case .summary {
+				color: var(--muted);
+			}
+			.facts {
+				display: grid;
+				gap: 0.4rem;
+				margin: 0;
+				font-size: 1rem;
+			}
+			.facts div {
+				display: grid;
+				grid-template-columns: 4.5rem minmax(0, 1fr);
+				gap: 0.75rem;
+			}
+			.facts dt {
+				color: var(--muted);
+				font-weight: 600;
+				font-size: 0.875rem;
+				padding-top: 0.12rem;
+			}
+			.facts dd {
+				margin: 0;
+			}
+			.tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				padding: 0;
+				list-style: none;
+			}
+			.tags li {
+				font-size: 0.875rem;
+				padding: 0.2rem 0.6rem;
+				border-radius: 999px;
+				background: var(--chip);
+				color: var(--ink);
+			}
+			.case-link {
+				font-weight: 600;
+				width: fit-content;
+			}
+			.case-link::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: var(--radius);
+			}
+			.case:has(.case-link):hover {
+				border-color: var(--control);
+				box-shadow: var(--shadow);
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				.case:has(.case-link):hover .item .pix {
+					animation: bob 600ms var(--spring-playful);
+				}
+				@keyframes bob {
+					35% {
+						translate: 0 -4px;
+					}
+				}
+			}
+
+			/* Experience */
+			.timeline {
+				display: grid;
+				padding: 0;
+				list-style: none;
+			}
+			.job {
+				display: grid;
+				gap: 0.5rem 2rem;
+				padding-block: 1.75rem;
+				border-top: 1px solid var(--border);
+			}
+			.job:first-child {
+				border-top: 0;
+				padding-top: 0;
+			}
+			@media (width >= 52rem) {
+				.job {
+					grid-template-columns: 11rem minmax(0, 1fr);
+				}
+			}
+			.job .when {
+				color: var(--muted);
+				font-size: var(--step-small);
+				font-variant-numeric: tabular-nums;
+				padding-top: 0.2rem;
+			}
+			.job h3 {
+				font-size: var(--step-h3);
+				font-weight: 650;
+			}
+			.job .org {
+				color: var(--muted);
+				margin-top: 0.15rem;
+			}
+			.bullets {
+				display: grid;
+				gap: 0.5rem;
+				margin-top: 0.85rem;
+				padding-left: 1.15rem;
+			}
+			.bullets li::marker {
+				color: var(--wood);
+			}
+			details {
+				margin-top: 0.6rem;
+			}
+			summary {
+				cursor: pointer;
+				font-weight: 600;
+				color: var(--link);
+				width: fit-content;
+				padding-block: 0.35rem;
+			}
+			.also {
+				margin-top: 1.5rem;
+				color: var(--muted);
+			}
+
+			/* Research */
+			.pubs {
+				display: grid;
+				gap: 1.25rem;
+				padding: 0;
+				list-style: none;
+			}
+			.pub {
+				display: grid;
+				gap: 0.4rem;
+				padding: 1.5rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+			}
+			.pub h3 {
+				font-size: 1.1875rem;
+				font-weight: 650;
+				line-height: 1.3;
+			}
+			.status {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4rem;
+				width: fit-content;
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: var(--success);
+			}
+			.status::before {
+				content: '';
+				width: 0.55rem;
+				height: 0.55rem;
+				border-radius: 50%;
+				background: currentColor;
+			}
+			.status.draft {
+				color: var(--muted);
+			}
+			.status.draft::before {
+				background: transparent;
+				border: 2px solid currentColor;
+			}
+			.pub .authors,
+			.pub .venue {
+				color: var(--muted);
+				font-size: var(--step-small);
+			}
+			.pub .authors b {
+				color: var(--ink);
+				font-weight: 600;
+			}
+			.ids {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 1.5rem;
+				margin-top: 1.5rem;
+				font-size: var(--step-small);
+			}
+
+			/* About */
+			.about-grid {
+				display: grid;
+				gap: 2.5rem;
+			}
+			@media (width >= 52rem) {
+				.about-grid {
+					grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+					gap: 4rem;
+				}
+			}
+			.prose {
+				display: grid;
+				gap: 1.1rem;
+			}
+			.photo {
+				margin: 0.5rem 0 0;
+				display: grid;
+				gap: 0.5rem;
+				max-width: 16rem;
+			}
+			.photo img {
+				aspect-ratio: 4 / 5;
+				object-fit: cover;
+				border-radius: var(--radius);
+			}
+			.photo figcaption {
+				font-size: var(--step-small);
+				color: var(--muted);
+			}
+			.toolbox {
+				display: grid;
+				gap: 1.75rem;
+				align-content: start;
+			}
+			.toolbox h3 {
+				font-size: 1rem;
+				font-weight: 650;
+				margin-bottom: 0.6rem;
+			}
+			.toolbox .tags li {
+				background: var(--card);
+				border: 1px solid var(--border);
+			}
+			.edu + .edu {
+				margin-top: 0.9rem;
+			}
+			.edu .degree {
+				font-weight: 600;
+			}
+			.edu p:not(.degree) {
+				color: var(--muted);
+				font-size: var(--step-small);
+			}
+
+			/* Contact */
+			.contact {
+				display: grid;
+				justify-items: center;
+				gap: 1rem;
+				text-align: center;
+				padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				box-shadow: var(--shadow);
+			}
+			.contact h2 {
+				font-size: var(--step-h2);
+			}
+			.contact p {
+				color: var(--muted);
+			}
+			.email-row {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				gap: 0.75rem;
+				margin-top: 0.5rem;
+			}
+			.email {
+				font-size: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+				font-weight: 600;
+				overflow-wrap: anywhere;
+			}
+			.copy-status {
+				min-height: 1.5em;
+				font-size: var(--step-small);
+			}
+			.links {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 0.5rem 1.75rem;
+				padding: 0;
+				list-style: none;
+				font-weight: 600;
+			}
+			.links a {
+				display: inline-block;
+				padding-block: 0.4rem;
+			}
+			.site-footer {
+				padding-block: 2rem 2.5rem;
+				color: var(--muted);
+				font-size: var(--step-small);
+			}
+			.site-footer .wrap {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+			}
+			.site-footer .dog-mark {
+				width: 2.2rem;
+				height: 1.4rem;
+			}
+
+			/* Theme switch: a circle of day or night opening from the button. */
+			@media (prefers-reduced-motion: no-preference) {
+				::view-transition-old(root),
+				::view-transition-new(root) {
+					animation: none;
+					mix-blend-mode: normal;
+				}
+				::view-transition-new(root) {
+					animation: open-sky 300ms var(--ease-enter) both;
+				}
+				@keyframes open-sky {
+					from {
+						clip-path: circle(0 at var(--vt-x, 100%) var(--vt-y, 0));
+					}
+					to {
+						clip-path: circle(150vmax at var(--vt-x, 100%) var(--vt-y, 0));
+					}
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				::view-transition-group(root) {
+					animation-duration: 150ms;
+				}
+			}
+			@media (forced-colors: active) {
+				.dog-mark,
+				.georgia::after {
+					forced-color-adjust: none;
+					background: CanvasText;
+				}
+				.georgia::before {
+					forced-color-adjust: none;
+					background: Canvas;
+				}
+				.window,
+				.sill,
+				.belt,
+				.legs,
+				.day-track {
+					display: none;
+				}
+				.status::before,
+				.hello .dot {
+					forced-color-adjust: none;
+					background: CanvasText;
+				}
+				.box {
+					border: 1px solid CanvasText;
+				}
+			}
+			@media print {
+				.site-header,
+				.mock-banner,
+				.window-wrap,
+				.belt,
+				.legs,
+				.replay,
+				.copy {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+			<symbol id="i-controller" viewBox="0 0 16 9">
+				<path
+					d="M2 0h12v1h-12zM1 1h14v1h-14zM0 2h3v1h-3zM4 2h8v1h-8zM13 2h3v1h-3zM0 3h2v1h-2zM5 3h6v1h-6zM12 3h1v1h-1zM14 3h2v1h-2zM0 4h3v1h-3zM4 4h7v1h-7zM13 4h3v1h-3zM0 5h16v1h-16zM0 6h6v1h-6zM10 6h6v1h-6zM0 7h5v1h-5zM11 7h5v1h-5zM0 8h4v1h-4zM12 8h4v1h-4z"
+				/>
+			</symbol>
+			<symbol id="i-crate" viewBox="0 0 16 10">
+				<path
+					d="M0 0h16v1h-16zM0 1h1v1h-1zM15 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM11 2h3v1h-3zM15 2h1v1h-1zM0 3h1v1h-1zM4 3h3v1h-3zM9 3h3v1h-3zM15 3h1v1h-1zM0 4h1v1h-1zM6 4h4v1h-4zM15 4h1v1h-1zM0 5h1v1h-1zM6 5h4v1h-4zM15 5h1v1h-1zM0 6h1v1h-1zM4 6h3v1h-3zM9 6h3v1h-3zM15 6h1v1h-1zM0 7h1v1h-1zM2 7h3v1h-3zM11 7h3v1h-3zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h16v1h-16z"
+				/>
+			</symbol>
+			<symbol id="i-book" viewBox="0 0 16 10">
+				<path
+					d="M1 0h6v1h-6zM9 0h6v1h-6zM0 1h1v1h-1zM7 1h2v1h-2zM15 1h1v1h-1zM0 2h1v1h-1zM2 2h4v1h-4zM7 2h2v1h-2zM10 2h4v1h-4zM15 2h1v1h-1zM0 3h1v1h-1zM7 3h2v1h-2zM15 3h1v1h-1zM0 4h1v1h-1zM2 4h4v1h-4zM7 4h2v1h-2zM10 4h4v1h-4zM15 4h1v1h-1zM0 5h1v1h-1zM7 5h2v1h-2zM15 5h1v1h-1zM0 6h1v1h-1zM2 6h3v1h-3zM7 6h2v1h-2zM11 6h3v1h-3zM15 6h1v1h-1zM0 7h1v1h-1zM7 7h2v1h-2zM15 7h1v1h-1zM0 8h16v1h-16zM7 9h2v1h-2z"
+				/>
+			</symbol>
+			<symbol id="i-hammer" viewBox="0 0 16 10">
+				<path
+					d="M1 0h10v1h-10zM0 1h11v1h-11zM1 2h10v1h-10zM5 3h3v1h-3zM5 4h3v1h-3zM5 5h3v1h-3zM5 6h3v1h-3zM5 7h3v1h-3zM5 8h3v1h-3zM4 9h5v1h-5z"
+				/>
+			</symbol>
+			<symbol id="i-sun" viewBox="0 0 12 12">
+				<path
+					d="M5 0h2v1h-2zM1 1h1v1h-1zM5 1h2v1h-2zM10 1h1v1h-1zM2 2h1v1h-1zM9 2h1v1h-1zM4 3h4v1h-4zM3 4h6v1h-6zM0 5h2v1h-2zM3 5h6v1h-6zM10 5h2v1h-2zM0 6h2v1h-2zM3 6h6v1h-6zM10 6h2v1h-2zM3 7h6v1h-6zM4 8h4v1h-4zM2 9h1v1h-1zM9 9h1v1h-1zM1 10h1v1h-1zM5 10h2v1h-2zM10 10h1v1h-1zM5 11h2v1h-2z"
+				/>
+			</symbol>
+			<symbol id="i-moon" viewBox="0 0 12 11">
+				<path
+					d="M4 0h4v1h-4zM2 1h4v1h-4zM1 2h4v1h-4zM1 3h3v1h-3zM0 4h4v1h-4zM0 5h4v1h-4zM0 6h4v1h-4zM0 7h4v1h-4zM11 7h1v1h-1zM1 8h4v1h-4zM10 8h2v1h-2zM2 9h9v1h-9zM4 10h5v1h-5z"
+				/>
+			</symbol>
+			<symbol id="i-heart" viewBox="0 0 7 6">
+				<path
+					d="M1 0h2v1h-2zM4 0h2v1h-2zM0 1h7v1h-7zM0 2h7v1h-7zM1 3h5v1h-5zM2 4h3v1h-3zM3 5h1v1h-1z"
+				/>
+			</symbol>
+			<symbol id="i-heart-empty" viewBox="0 0 7 6">
+				<path
+					d="M1 0h2v1h-2zM4 0h2v1h-2zM0 1h1v1h-1zM3 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM6 2h1v1h-1zM1 3h1v1h-1zM5 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM3 5h1v1h-1z"
+				/>
+			</symbol>
+			<symbol id="i-star" viewBox="0 0 7 7">
+				<path
+					d="M3 0h1v1h-1zM3 1h1v1h-1zM2 2h3v1h-3zM0 3h7v1h-7zM2 4h3v1h-3zM3 5h1v1h-1zM3 6h1v1h-1z"
+				/>
+			</symbol>
+		</svg>
+
+		<a class="skip" href="#main">Skip to main content</a>
+
+		<aside class="mock-banner" aria-label="About this mockup">
+			<div class="wrap">
+				<p>
+					Design mockup: <strong>Hybrid</strong>, the research structure with the fun put back in.
+					Not the live site.
+				</p>
+				<p>
+					<a href="consensus.html">Consensus</a> · <a href="almanac.html">Almanac</a> ·
+					<a href="selvedge.html">Selvedge</a>
+				</p>
+			</div>
+		</aside>
+
+		<header class="site-header">
+			<div class="wrap header-row">
+				<a class="brand" href="#top"
+					><span class="dog-mark" aria-hidden="true"></span>Ryan Critchlow</a
+				>
+				<nav class="site-nav" aria-label="Sections">
+					<ul>
+						<li><a href="#work">Work</a></li>
+						<li><a href="#experience">Experience</a></li>
+						<li><a href="#research">Research</a></li>
+						<li><a href="#about">About</a></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+				<div class="header-actions">
+					<a class="btn btn-secondary btn-sm" href="https://ryancritchlow.com/Ryans_Resume_2026.pdf"
+						>Résumé</a
+					>
+					<button
+						class="icon-btn theme-toggle"
+						id="theme-toggle"
+						type="button"
+						aria-pressed="false"
+					>
+						<svg class="pix sun" viewBox="0 0 12 12" aria-hidden="true"><use href="#i-sun" /></svg>
+						<svg class="pix moon" viewBox="0 0 12 11" aria-hidden="true">
+							<use href="#i-moon" />
+						</svg>
+						<span class="sr-only">Night mode</span>
+					</button>
+				</div>
+			</div>
+			<div class="day-track" aria-hidden="true"><span class="day-sun"></span></div>
+		</header>
+
+		<main id="main" tabindex="-1">
+			<section class="hero" id="top" aria-labelledby="hero-title">
+				<div class="wrap hero-grid">
+					<div>
+						<p class="hello">
+							<img
+								class="avatar"
+								src="assets/ryan.webp"
+								width="325"
+								height="325"
+								alt="Ryan Critchlow"
+								fetchpriority="high"
+							/>
+							<span
+								><span class="dot" aria-hidden="true"></span>Open to product, solutions, analytics,
+								and accessibility roles. Pacific Northwest or remote.</span
+							>
+						</p>
+						<h1 id="hero-title">Ryan Critchlow</h1>
+						<p class="role">Product and business analyst · HCI and accessibility research</p>
+						<p class="lede measure">
+							I turn what people need into scoped, buildable work. Three years running enterprise
+							warehouse-management accounts at Körber, an M.S. in Computer Science, and a research
+							practice in accessible educational technology.
+						</p>
+						<div class="cta-row">
+							<a class="btn btn-primary" href="#contact">Get in touch</a>
+							<a class="btn btn-secondary" href="https://ryancritchlow.com/Ryans_Resume_2026.pdf"
+								>Résumé (PDF)</a
+							>
+						</div>
+					</div>
+
+					<div class="window-wrap" id="georgia-spot">
+						<div class="window" aria-hidden="true">
+							<svg class="scene" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+								<g class="sky-body">
+									<circle class="sun" cx="270" cy="150" r="46" />
+									<circle class="moon-bite" cx="290" cy="136" r="40" />
+								</g>
+								<g class="cloud">
+									<path
+										d="M40 110h60v12h-60zM52 98h36v12h-36zM300 230h72v12h-72zM316 218h36v12h-36z"
+									/>
+								</g>
+								<g class="stars" shape-rendering="crispEdges">
+									<use href="#i-star" x="60" y="70" width="14" height="14" />
+									<use href="#i-star" x="150" y="120" width="10" height="10" />
+									<use href="#i-star" x="330" y="60" width="12" height="12" />
+									<use href="#i-star" x="200" y="40" width="8" height="8" />
+									<use href="#i-star" x="90" y="200" width="10" height="10" />
+								</g>
+								<path class="hill-far" d="M0 320C70 270 150 268 230 305S350 290 400 278V500H0Z" />
+								<path class="hill-mid" d="M0 372C90 334 190 340 268 378S360 352 400 348V500H0Z" />
+								<path class="hill-near" d="M0 420C120 398 270 402 400 414V500H0Z" />
+								<g class="crops">
+									<path
+										d="M40 440h56v6h-56zM120 444h56v6h-56zM200 446h56v6h-56zM280 444h56v6h-56zM60 464h56v6h-56zM150 468h56v6h-56zM240 468h56v6h-56zM320 464h56v6h-56z"
+									/>
+								</g>
+							</svg>
+						</div>
+						<div class="sill" aria-hidden="true"></div>
+						<button class="georgia" id="pet" type="button">
+							<span class="sr-only">Pet Georgia, my chocolate lab</span>
+						</button>
+						<svg class="pix pop-heart" viewBox="0 0 7 6" aria-hidden="true">
+							<use href="#i-heart" />
+						</svg>
+						<p class="hearts">
+							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
+								<use href="#i-heart-empty" />
+							</svg>
+							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
+								<use href="#i-heart-empty" />
+							</svg>
+							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
+								<use href="#i-heart-empty" />
+							</svg>
+							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
+								<use href="#i-heart-empty" />
+							</svg>
+							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
+								<use href="#i-heart-empty" />
+							</svg>
+							<span>Georgia, my chocolate lab</span>
+						</p>
+						<p class="sr-only" id="pet-status" role="status"></p>
+					</div>
+				</div>
+			</section>
+
+			<section class="shipping" aria-labelledby="proof-title">
+				<div class="wrap">
+					<div class="shipping-head">
+						<h2 id="proof-title">Track record, shipped</h2>
+						<button class="btn btn-secondary btn-sm replay" id="replay" type="button" hidden>
+							Run the belt again
+						</button>
+					</div>
+					<div class="conveyor" id="conveyor">
+						<ul class="boxes">
+							<li class="box" style="--i: 0">
+								<div class="ship-label">
+									<span class="num">4</span>
+									<span class="what"
+										>enterprise accounts run at once at Körber, double the team average</span
+									>
+									<span class="barcode" aria-hidden="true"></span>
+								</div>
+							</li>
+							<li class="box" style="--i: 1">
+								<div class="ship-label">
+									<span class="num">46%</span>
+									<span class="what">more stable releases than the department average</span>
+									<span class="barcode" aria-hidden="true"></span>
+								</div>
+							</li>
+							<li class="box" style="--i: 2">
+								<div class="ship-label">
+									<span class="num">50%</span>
+									<span class="what">shorter new-hire ramp from a 30/60/90 framework I co-led</span>
+									<span class="barcode" aria-hidden="true"></span>
+								</div>
+							</li>
+							<li class="box" style="--i: 3">
+								<div class="ship-label">
+									<span class="num">ASSETS</span>
+									<span class="what"
+										>peer-reviewed paper at <a href="#research">ACM ASSETS 2026</a></span
+									>
+									<span class="barcode" aria-hidden="true"></span>
+								</div>
+							</li>
+						</ul>
+						<div class="belt" aria-hidden="true"><span class="belt-surface"></span></div>
+						<div class="legs" aria-hidden="true"></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section band" id="work" aria-labelledby="work-title">
+				<div class="wrap">
+					<div class="section-head">
+						<h2 id="work-title">Selected work</h2>
+						<p>Each project: the problem, what I did, and what came out of it.</p>
+					</div>
+					<ul class="cases">
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
+									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
+										<use href="#i-controller" /></svg
+								></span>
+								<h3>You and I</h3>
+							</div>
+							<p class="summary">
+								A serious game for practicing pronouns, built with autistic children and their
+								families.
+							</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>Autistic gestalt language learners need a way to practice pronouns.</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Owned it end to end: research plan, Unity build, art, and evaluation.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>
+										In-home participatory evaluation with four families; paper targeting IDC 2027.
+									</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Unity</li>
+								<li>C#</li>
+								<li>WebGL</li>
+								<li>2025–2026</li>
+							</ul>
+						</li>
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
+									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
+										<use href="#i-crate" /></svg
+								></span>
+								<h3>WMS Simulator</h3>
+							</div>
+							<p class="summary">
+								A playable warehouse fulfillment flow, from wave release to shipping.
+							</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>
+										Warehouse management is hard to explain to people who have never worked in it.
+									</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Designed and built it from three years administering these systems.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>
+										Wave, pick, stage, pack, load, and ship, including what happens at an empty
+										location.
+									</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Svelte</li>
+								<li>TypeScript</li>
+								<li>2026</li>
+							</ul>
+							<a class="case-link" href="https://ryancritchlow.com/#simulator"
+								>Play the simulator</a
+							>
+						</li>
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
+									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
+										<use href="#i-book" /></svg
+								></span>
+								<h3>KIND Lab website</h3>
+							</div>
+							<p class="summary">The public site for Western Washington University's KIND Lab.</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>The lab's research wasn't legible to people outside it.</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Built the site.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>A public site that explains the group's research to people outside it.</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Web development</li>
+								<li>2025</li>
+							</ul>
+							<a class="case-link" href="https://thekindlab.github.io/">thekindlab.github.io</a>
+						</li>
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
+									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
+										<use href="#i-hammer" /></svg
+								></span>
+								<h3>Atlas Northwest</h3>
+							</div>
+							<p class="summary">Content and structure for a worker-owned woodshop's website.</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>The shop's website needed someone to own its content and structure.</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Took over the site's content and structure.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>The shop's restoration and millwork portfolio, presented online.</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Squarespace</li>
+								<li>2026</li>
+							</ul>
+							<a class="case-link" href="https://atlasnorthwest.com">atlasnorthwest.com</a>
+						</li>
+					</ul>
+				</div>
+			</section>
+
+			<section class="section" id="experience" aria-labelledby="experience-title">
+				<div class="wrap">
+					<div class="section-head">
+						<h2 id="experience-title">Experience</h2>
+					</div>
+					<ol class="timeline">
+						<li class="job">
+							<p class="when">Jan 2026 – present</p>
+							<div>
+								<h3>Carpenter</h3>
+								<p class="org">Atlas Woodworks · Bellingham, WA</p>
+								<ul class="bullets">
+									<li>
+										Restoration, custom millwork, and casework installation for a worker-owned shop.
+										Full time since June 2026.
+									</li>
+									<li>
+										Moving into material takeoffs: reading drawings, quantifying materials, and
+										scoping jobs before they reach the floor.
+									</li>
+									<li>
+										Took over the shop's Squarespace site, handling content and structure updates.
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li class="job">
+							<p class="when">Winter 2025 – Jun 2026</p>
+							<div>
+								<h3>Graduate Researcher</h3>
+								<p class="org">Western Washington University, KIND Lab</p>
+								<ul class="bullets">
+									<li>
+										Designed the full study: literature review, survey instruments, assessment
+										method, and data-collection plan.
+									</li>
+									<li>
+										Ran an in-home participatory evaluation with four neurodivergent children and
+										their families.
+									</li>
+									<li>
+										Built the prototype in C#, Unity, and WebGL from speech-language pathologist and
+										co-design input.
+									</li>
+								</ul>
+								<details>
+									<summary>3 more from this role</summary>
+									<ul class="bullets">
+										<li>
+											Mentored an undergraduate researcher through an IRB amendment for an in-home
+											co-design pilot.
+										</li>
+										<li>
+											Managed a multi-phase timeline and re-sequenced phases to absorb a
+											quarter-long recruiting delay.
+										</li>
+										<li>
+											Applied Braun and Clarke's inductive thematic coding to caregiver interviews
+											over three rounds.
+										</li>
+									</ul>
+								</details>
+							</div>
+						</li>
+						<li class="job">
+							<p class="when">2024 – 2025</p>
+							<div>
+								<h3>Graduate Teaching Assistant</h3>
+								<p class="org">Western Washington University</p>
+								<ul class="bullets">
+									<li>
+										Supported 30+ students per quarter across data science, computer-mediated
+										communication, and object-oriented design.
+									</li>
+									<li>
+										Rewrote assignment requirements in plainer language and refined rubrics so
+										expectations were clear.
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li class="job">
+							<p class="when">2020 – 2023</p>
+							<div>
+								<h3>Support Analyst L4</h3>
+								<p class="org">Körber Supply Chain (now Infios) · Bellingham, WA</p>
+								<ul class="bullets">
+									<li>
+										Ran four enterprise accounts, double the team average, as the primary technical
+										contact for process changes and change control.
+									</li>
+									<li>
+										Turned stakeholder requests into custom SQL reporting and web deliverables, with
+										46% more stable releases than the department average.
+									</li>
+									<li>
+										Co-led a 30/60/90 onboarding framework that cut new-hire ramp time by 50%.
+									</li>
+								</ul>
+								<details>
+									<summary>7 more from this role</summary>
+									<ul class="bullets">
+										<li>
+											Re-aligned expectations when requests conflicted with feasibility, contracted
+											hours, or SLAs, and wrote specs for engineering handoff.
+										</li>
+										<li>
+											Tuned SQL workloads with CTEs, stored procedures, indexing, and SQL Server
+											Agent, resolving deadlocks on high-traffic systems.
+										</li>
+										<li>
+											Isolated faults across the WMS, order management, Dynamics 365, and customer
+											networks, and escalated with evidence.
+										</li>
+										<li>
+											Separated platform outages from application faults for cloud-hosted and
+											on-premise customers.
+										</li>
+										<li>
+											Ran upgrades across dev, test, and production through the HighJump to Körber
+											rebrand.
+										</li>
+										<li>On-site technical lead at two go-lives and one improvement trip.</li>
+										<li>
+											Wrote the knowledge base for every account and trained four customers through
+											a NetSuite-to-ServiceNow migration.
+										</li>
+									</ul>
+								</details>
+							</div>
+						</li>
+					</ol>
+					<p class="also">
+						Earlier: bartender at Redlight (2023–2025) and Aslan Brewing (2018–2020); carpenter at
+						Bespoke Construction (2015–2017).
+					</p>
+				</div>
+			</section>
+
+			<section class="section band" id="research" aria-labelledby="research-title">
+				<div class="wrap">
+					<div class="section-head">
+						<h2 id="research-title">Research</h2>
+						<p>
+							Accessibility and participatory design, with the KIND Lab at Western Washington
+							University.
+						</p>
+					</div>
+					<ol class="pubs measure">
+						<li class="pub">
+							<p class="status">Peer-reviewed</p>
+							<h3>
+								Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing
+								Education
+							</h3>
+							<p class="authors">
+								Yasmine N. Elglaly, <b>Ryan Critchlow</b>, Katherine Baker, and Kristen Shinohara
+							</p>
+							<p class="venue">ASSETS 2026, Porto, Portugal, October 2026</p>
+							<details>
+								<summary>My contribution</summary>
+								<p>
+									Applied an iteratively developed codebook to all 35 papers in the corpus and
+									helped identify six recurring patterns of ableism. A second researcher reviewed
+									the findings for consistency.
+								</p>
+							</details>
+						</li>
+						<li class="pub">
+							<p class="status draft">In preparation</p>
+							<h3>
+								You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns
+								for Autistic Children
+							</h3>
+							<p class="authors">
+								<b>Ryan Critchlow</b>, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl
+							</p>
+							<p class="venue">Targeting IDC 2027, Seattle, WA, June 2027</p>
+							<details>
+								<summary>My contribution</summary>
+								<p>
+									First author. I planned the build, ran recruitment, designed the instruments, ran
+									the in-home sessions, and coded the analysis.
+								</p>
+							</details>
+						</li>
+						<li class="pub">
+							<p class="status draft">In preparation</p>
+							<h3>
+								Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage
+								Authoring Behavior
+							</h3>
+							<p class="authors">
+								Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and <b>Ryan Critchlow</b>
+							</p>
+							<p class="venue">Target venue to be decided</p>
+							<details>
+								<summary>My contribution</summary>
+								<p>
+									Revised the discussion for resubmission, addressed reviewer feedback, and brought
+									the manuscript back to submission readiness.
+								</p>
+							</details>
+						</li>
+					</ol>
+					<p class="ids">
+						<a href="https://orcid.org/0009-0007-7323-9177">ORCID 0009-0007-7323-9177</a>
+						<span>ACM member since 2026</span>
+					</p>
+				</div>
+			</section>
+
+			<section class="section" id="about" aria-labelledby="about-title">
+				<div class="wrap about-grid">
+					<div class="prose measure">
+						<div class="section-head" style="margin-bottom: 0.25rem">
+							<h2 id="about-title">About</h2>
+						</div>
+						<p>
+							I'm interested in the work that happens before the code: figuring out what people
+							need, deciding what gets built, and keeping the thing that ships close to the problem
+							it started with. I've done versions of that as a support analyst, a graduate
+							researcher, and now in a wood shop.
+						</p>
+						<p>
+							Most of what I know about building for people I learned in the KIND Lab. I scrapped my
+							own approved study design because I had planned it for autistic kids without involving
+							any of them. The replacement put me in four families' living rooms watching them play.
+						</p>
+						<p>
+							Off the clock: trails with Georgia, half marathons, road biking, and making cocktails.
+						</p>
+						<figure class="photo">
+							<img
+								src="assets/cocktail.webp"
+								width="480"
+								height="720"
+								alt="A cocktail in a Nick and Nora glass on the bar"
+								loading="lazy"
+								decoding="async"
+							/>
+							<figcaption>From my bartending years at Redlight.</figcaption>
+						</figure>
+					</div>
+					<div class="toolbox">
+						<div>
+							<h3>Product and research</h3>
+							<ul class="tags">
+								<li>Requirements</li>
+								<li>Stakeholder management</li>
+								<li>Prioritization</li>
+								<li>Change control</li>
+								<li>User interviews</li>
+								<li>Survey design</li>
+								<li>Thematic analysis</li>
+								<li>Participatory design</li>
+								<li>WCAG 2.2</li>
+							</ul>
+						</div>
+						<div>
+							<h3>Data and code</h3>
+							<ul class="tags">
+								<li>T-SQL</li>
+								<li>MySQL</li>
+								<li>Python</li>
+								<li>Power BI</li>
+								<li>Tableau</li>
+								<li>C#</li>
+								<li>Unity</li>
+								<li>JavaScript</li>
+								<li>Svelte</li>
+								<li>Git</li>
+							</ul>
+						</div>
+						<div>
+							<h3>Education</h3>
+							<div class="edu">
+								<p class="degree">M.S. Computer Science, 2026</p>
+								<p>
+									Western Washington University. HCI, accessible educational technology,
+									participatory design.
+								</p>
+							</div>
+							<div class="edu">
+								<p class="degree">B.A. Management of Information Systems, 2020</p>
+								<p>Western Washington University. Minor in Data Analytics.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="contact" aria-labelledby="contact-title" style="padding-top: 0">
+				<div class="wrap">
+					<div class="contact">
+						<h2 id="contact-title">Let's talk</h2>
+						<p class="measure">
+							Open to product, solutions, analytics, and accessibility roles in the Pacific
+							Northwest or remote.
+						</p>
+						<div class="email-row">
+							<a class="email" id="email" href="mailto:critchlow.rc@gmail.com"
+								>critchlow.rc@gmail.com</a
+							>
+							<button
+								class="btn btn-secondary btn-sm copy"
+								type="button"
+								data-copy="critchlow.rc@gmail.com"
+							>
+								Copy
+							</button>
+						</div>
+						<p class="copy-status" id="copy-status" role="status"></p>
+						<ul class="links">
+							<li><a href="https://linkedin.com/in/ryan-critchlow">LinkedIn</a></li>
+							<li><a href="https://github.com/critchlowr">GitHub</a></li>
+							<li><a href="https://orcid.org/0009-0007-7323-9177">ORCID</a></li>
+							<li><a href="https://ryancritchlow.com/Ryans_Resume_2026.pdf">Résumé (PDF)</a></li>
+						</ul>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap">
+				<span class="dog-mark" aria-hidden="true"></span>© 2026 Ryan Critchlow · Bellingham,
+				Washington
+			</div>
+		</footer>
+
+		<script>
+			const root = document.documentElement;
+			const dark = matchMedia('(prefers-color-scheme: dark)');
+			const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+			// Theme: follows the OS until the visitor picks; the new theme opens from the button.
+			const toggle = document.getElementById('theme-toggle');
+			const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : dark.matches);
+			const sync = () => toggle.setAttribute('aria-pressed', String(isDark()));
+			sync();
+			dark.addEventListener('change', sync);
+			toggle.addEventListener('click', () => {
+				const next = isDark() ? 'light' : 'dark';
+				const apply = () => {
+					root.dataset.theme = next;
+					try {
+						localStorage.setItem('hybrid-theme', next);
+					} catch {}
+					sync();
+				};
+				if (!document.startViewTransition) return apply();
+				const r = toggle.getBoundingClientRect();
+				root.style.setProperty('--vt-x', `${r.left + r.width / 2}px`);
+				root.style.setProperty('--vt-y', `${r.top + r.height / 2}px`);
+				document.startViewTransition(apply);
+			});
+
+			// Conveyor: boxes are visible by default (no JS, reduced motion). With motion allowed,
+			// they're moved off the belt just before it scrolls into view, delivered once (about
+			// two seconds), and the visitor can run it again.
+			const conveyor = document.getElementById('conveyor');
+			const replay = document.getElementById('replay');
+			let stopBelt;
+			const deliver = () => {
+				conveyor.classList.remove('go');
+				void conveyor.offsetWidth;
+				conveyor.classList.add('armed', 'go', 'running');
+				clearTimeout(stopBelt);
+				stopBelt = setTimeout(() => conveyor.classList.remove('running'), 1600);
+			};
+			if (!reduce.matches && 'IntersectionObserver' in window) {
+				replay.hidden = false;
+				replay.addEventListener('click', deliver);
+			}
+			if (!reduce.matches && conveyor.getBoundingClientRect().top < innerHeight) {
+				// Already on screen at load: start before the first paint so nothing flickers.
+				deliver();
+			} else if (!reduce.matches && 'IntersectionObserver' in window) {
+				const near = new IntersectionObserver(
+					([e]) => {
+						if (!e.isIntersecting || conveyor.classList.contains('go')) return;
+						const r = e.boundingClientRect;
+						// Only hide boxes the visitor can't see yet.
+						if (r.top > innerHeight) conveyor.classList.add('armed');
+						near.disconnect();
+					},
+					{ rootMargin: '0px 0px 400px 0px' }
+				);
+				const seen = new IntersectionObserver(
+					([e]) => {
+						if (!e.isIntersecting) return;
+						deliver();
+						seen.disconnect();
+					},
+					{ threshold: 0.45 }
+				);
+				near.observe(conveyor);
+				seen.observe(conveyor);
+			}
+
+			// Pet Georgia: five friendship hearts to fill.
+			const spot = document.getElementById('georgia-spot');
+			const pet = document.getElementById('pet');
+			const hearts = spot.querySelectorAll('.hearts .pix');
+			const petStatus = document.getElementById('pet-status');
+			let friendship = 0;
+			pet.addEventListener('click', () => {
+				friendship = Math.min(friendship + 1, hearts.length);
+				hearts.forEach((h, i) => {
+					h.classList.toggle('full', i < friendship);
+					h.firstElementChild.setAttribute('href', i < friendship ? '#i-heart' : '#i-heart-empty');
+				});
+				spot.classList.remove('is-petted');
+				void spot.offsetWidth;
+				spot.classList.add('is-petted');
+				petStatus.textContent =
+					friendship === hearts.length
+						? 'Georgia is your best friend now.'
+						: `Georgia wags happily. Friendship ${friendship} of ${hearts.length}.`;
+			});
+
+			const copyStatus = document.getElementById('copy-status');
+			document.querySelectorAll('[data-copy]').forEach((b) =>
+				b.addEventListener('click', async () => {
+					try {
+						await navigator.clipboard.writeText(b.dataset.copy);
+						copyStatus.textContent = 'Email address copied.';
+					} catch {
+						const range = document.createRange();
+						range.selectNodeContents(document.getElementById('email'));
+						getSelection().removeAllRanges();
+						getSelection().addRange(range);
+						copyStatus.textContent = 'Address selected. Press Ctrl+C or Command+C to copy.';
+					}
+				})
+			);
+		</script>
+	</body>
+</html>

@@ -1,44 +1,72 @@
 # Design review: ryancritchlow.com, October 2026
 
-Goal: a site that is fun to use and stands out, while staying clean, fast and fully accessible. It should follow 2026 practice and the official docs, and draw on vintage Americana workwear, Stardew Valley, earth tones and arches.
+Goal: a site that is fun to use and stands out, while staying clean, fast and fully accessible. It should follow 2026 practice and the official docs.
 
-Four agents did the groundwork: two literature reviews, an audit of the current site, and a cross-reference of the two. I built two mockups, wrote the accessibility checker, and ran it on the current site and both mockups.
+Five agents did the groundwork: three literature reviews, an audit of the current site, and a cross-reference of the audit against the literature. I built four mockups, wrote the accessibility checker, and ran it on the current site and every mockup.
 
 ## What's in this folder
 
-| File                                                                     | What it is                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [01a-literature-motion-platform.md](01a-literature-motion-platform.md)   | Animation and interaction: Svelte 5 / SvelteKit docs, 2026 CSS platform status, motion accessibility, performance, what "delight" means without the gimmicks. Ends with motion tokens.                         |
-| [01b-literature-color-aesthetics.md](01b-literature-color-aesthetics.md) | Arches and curvature (what the evidence supports), first impressions, color practice (OKLCH, WCAG 2.2 vs APCA), Stardew / workwear / earth palettes, type, texture. Ends with three contrast-checked palettes. |
-| [02-current-site-audit.md](02-current-site-audit.md)                     | An inventory of everything the site uses today, with file:line references, ranked problems and removal candidates.                                                                                             |
-| [03-cross-reference.md](03-cross-reference.md)                           | The audit checked against the literature: a gap matrix, judgment calls, proposals, a phased roadmap, and a ready-to-paste token block for the real site.                                                       |
-| [04-accessibility-results.md](04-accessibility-results.md)               | Results from the accessibility checks on the current site and both mockups.                                                                                                                                    |
-| [mockups/](mockups/)                                                     | Two complete single-page mockups using real content. Open them in a browser and try the theme toggle and Georgia.                                                                                              |
-| [a11y/](a11y/)                                                           | The checker (`check.mjs`), the palette contrast tool, and `palettes.json`.                                                                                                                                     |
+| File                                                                           | What it is                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [01a-literature-motion-platform.md](01a-literature-motion-platform.md)         | Animation and interaction: Svelte 5 / SvelteKit docs, 2026 CSS platform status, motion accessibility, performance, what "delight" means without the gimmicks. Ends with motion tokens.                                          |
+| [01b-literature-color-aesthetics.md](01b-literature-color-aesthetics.md)       | Arches and curvature (what the evidence supports), first impressions, color practice (OKLCH, WCAG 2.2 vs APCA), Stardew / workwear / earth palettes, type, texture.                                                             |
+| [01c-literature-general-preferences.md](01c-literature-general-preferences.md) | What people _generally_ prefer and what performs, independent of your tastes: color preference studies, light vs dark, layout conventions, how hiring managers read portfolios, type. Ends with an evidence-based design brief. |
+| [02-current-site-audit.md](02-current-site-audit.md)                           | An inventory of everything the site uses today, with file:line references, ranked problems and removal candidates.                                                                                                              |
+| [03-cross-reference.md](03-cross-reference.md)                                 | The audit checked against the literature: a gap matrix, judgment calls, proposals, a phased roadmap, and a token block for the real site.                                                                                       |
+| [04-accessibility-results.md](04-accessibility-results.md)                     | Results from the accessibility checks on the current site and all four mockups.                                                                                                                                                 |
+| [mockups/](mockups/)                                                           | Four complete single-page mockups using real content.                                                                                                                                                                           |
+| [a11y/](a11y/)                                                                 | The checker (`check.mjs`), the palette contrast tool, and `palettes.json` (205 color pairs, all passing).                                                                                                                       |
 
-## The two mockups
+## The four mockups
 
-Both use the same simplified structure (5-link nav, proof up front, Work → Experience → Research → About → Contact). Both are tested in light and dark mode at phone and desktop widths. Neither hides content behind animation.
+All four share one structure: a 5-link nav, proof in the first screen, then Work → Experience → Research → About → Contact. Every mockup is tested in light and dark mode at phone and desktop widths, and every one passes every check.
 
-|              | **Almanac** (Stardew-leaning)                                                                                                               | **Selvedge** (Americana-leaning)                                                                                                                              |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Look         | Parchment, walnut wood frames, fern green, plum links                                                                                       | Raw canvas, indigo denim, selvedge red, brass rivets                                                                                                          |
-| Arch moments | An arched farmhouse window looking out on the valley; arched portrait in About                                                              | An arched shop window with gold-leaf sign lettering; arched photo in About                                                                                    |
-| Type         | Fraunces (soft axis) + Atkinson Hyperlegible Next                                                                                           | Zilla Slab + Public Sans (the U.S. Web Design System face)                                                                                                    |
-| The fun part | Day/night valley that follows the theme. Pet Georgia to fill Stardew-style friendship hearts. A pixel sun crosses the header as you scroll. | Woven labels, stitched seams, rubber-stamp research status. Pat the Georgia patch. A seam gets sewn across the header as you scroll. A postcard to say hello. |
-| Theme switch | A circle of day or night opens from the button                                                                                              | A roller shade pulls down                                                                                                                                     |
+|            | **Hybrid** (my pick)                                                                                                                 | **Consensus**                                  | **Almanac**                                     | **Selvedge**                                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------- |
+| Built from | Consensus structure plus the fun pieces from the other two                                                                           | Research on what people generally prefer (01c) | Your taste: Stardew Valley, earth tones         | Your taste: Americana workwear                        |
+| Look       | Warm off-white, near-black text, one blue; color lives in the illustrations                                                          | White, near-black text, one saturated blue     | Parchment, walnut wood frames, fern green, plum | Raw canvas, indigo, selvedge red, brass               |
+| Type       | Fraunces headings, Inter text                                                                                                        | Inter                                          | Fraunces + Atkinson Hyperlegible Next           | Zilla Slab + Public Sans                              |
+| Fun        | Day/night window, pet Georgia, a conveyor belt that delivers your four proof points, pixel item icons, a sun that crosses the header | Almost none, on purpose                        | Day/night window, pet Georgia, header sun       | Woven labels, stitched seams, Georgia patch, postcard |
 
-![Almanac, desktop, light](screenshots/almanac-desktop-light.webp)
-![Selvedge, desktop, light](screenshots/selvedge-desktop-light.webp)
+**Hybrid**, desktop and phone:
+
+![Hybrid, desktop, light, with the conveyor belt](screenshots/hybrid-desktop-light-tall.webp)
 
 <p>
-<img src="screenshots/almanac-mobile-dark.webp" alt="Almanac on a phone in dark mode" width="195" />
-<img src="screenshots/selvedge-mobile-dark.webp" alt="Selvedge on a phone in dark mode" width="195" />
+<img src="screenshots/hybrid-mobile-light.webp" alt="Hybrid on a phone in light mode" width="195" />
+<img src="screenshots/hybrid-mobile-dark.webp" alt="Hybrid on a phone in dark mode" width="195" />
+<img src="screenshots/consensus-mobile-light.webp" alt="Consensus on a phone in light mode" width="195" />
 </p>
 
-**My recommendation is Almanac**, with two Selvedge details borrowed: stitched rules and woven-label tags. It keeps the identity the current site already has, it's the most Stardew of the options, and the cross-reference's token block (03 §6) is built for it.
+![Consensus, desktop, light](screenshots/consensus-desktop-light.webp)
 
-## What the review found
+<p>
+<img src="screenshots/almanac-desktop-light.webp" alt="Almanac, desktop, light" width="470" />
+<img src="screenshots/selvedge-desktop-light.webp" alt="Selvedge, desktop, light" width="470" />
+</p>
+
+### Why Hybrid
+
+The research (01c) gives a clear default: white, near-black and one blue, one familiar sans, a conventional layout, quiet motion. That's Consensus, and it's correct. It's also forgettable, which the same research predicts: familiar layouts win the first glance, and distinctiveness has to come from craft and content.
+
+Hybrid keeps everything that makes the page easy to read, and adds back the parts that make it yours:
+
+- **Kept from the research:**
+  - the standard header, with the résumé one click away
+  - your role, face and proof in the first screen
+  - one Problem / Role / Result template for every project
+  - a résumé-style timeline
+  - 18 px text and a mostly neutral background with one blue.
+- **Added back:** small, colorful illustrations. The window, Georgia, the shipping boxes and the pixel icons carry the warmth. People like a small figure _more_ when its hue contrasts with the background around it (Schloss & Palmer 2011, in 01c §1). So the warm colors work best in small doses against a neutral page, rather than as the page itself.
+- **The conveyor belt,** done accessibly:
+  - It runs once, in 1.6 seconds, when it scrolls into view, then stops.
+  - The visitor can run it again with a button.
+  - With reduced motion on, the boxes simply sit on the belt.
+  - The four proof points are real text in a list, so screen readers and search engines read them like any other content.
+
+**What the research says about your tastes** (01c, last section): brown and olive are the _least_-liked colors in the main preference studies. The evidence for arches is real but modest, and it was measured on shapes, not page layouts. Neither is a reason to drop them. They are taste rather than evidence, so Hybrid keeps them to small decorative moments.
+
+## What the review found about the current site
 
 - **The foundation is good.** It's a prerendered static site with clean Svelte 5 code, a semantic token layer with contrast notes, and real accessibility basics. Keep all of that.
 - **Lighthouse gives accessibility 100, but the deeper checks found 6 real failures.** They are:
@@ -48,53 +76,56 @@ Both use the same simplified structure (5-link nav, proof up front, Work → Exp
   - two animations that keep moving with reduced motion on (the photo marquee and the conveyor belt; Level A)
   - a scroll box that keyboard users can't reach in Safari and Firefox.
 - **Visitors without JavaScript see a blank page.** Every card and every contact link starts invisible in CSS.
-- **90% of the page weight is ten bartending photos** (2.47 MB, all loaded up front). That one change explains the poor Lighthouse performance score: lazy-loading them alone takes LCP from 8.9 s to 2.7 s.
-- **The best proof sits about 4,300 px down.** That's the ASSETS paper and the Körber numbers. A hiring manager scanning the first screen sees a name and a paragraph.
+- **90% of the page weight is ten bartending photos** (2.47 MB, all loaded up front). Lazy-loading them alone takes Lighthouse LCP from 8.9 s to 2.7 s.
+- **The best proof sits about 4,300 px down.** A hiring manager scanning the first screen sees a name and a paragraph.
 - **The WMS simulator is your best product thinking, and also 55% of the code.** It ships to every visitor, has focus and contrast failures, and has a state bug.
 
 ## Proposals
 
-Each item is detailed in [03 §4](03-cross-reference.md#4-proposals-to-the-owner).
+Details are in [03 §4](03-cross-reference.md#4-proposals-to-the-owner) and [01c's design brief](01c-literature-general-preferences.md#evidence-based-default-design-brief).
 
 **Edit**
 
-1. Put role and proof in the first screen: a short positioning line plus four proof points (see the mockups).
+1. Put role, face and proof in the first screen.
 2. Restore the archived _You and I_ case study at `/work/you-and-i`. It's your strongest research piece and it's hidden.
-3. Adopt the Almanac palette, Fraunces soft and Atkinson Hyperlegible Next. All 76 token pairs pass WCAG 2.2 AA.
-4. Use arches only for framing moments, at most 3 per page. Cards stay rectangular.
+3. Adopt the Hybrid palette and type: a warm off-white background, one blue, Fraunces headings and Inter text. Inter is already self-hosted, so this adds one font.
+4. Keep arches, wood and warm colors to illustrations and small moments.
 5. Rewrite Experience in reverse-chronological order, three bullets each, with the rest behind "more from this role".
 6. Fix the content errors: the Power BI and Tableau logos are Azure and Firebase, "WCAG 2.1" should be 2.2, and "Atlas Woodworks" vs "Atlas Northwest" don't match.
 
 **Simplify**
 
-1. Cut the nav from 8 links to 5: Work, Experience, Research, About, Contact. Skills and Education fold into one "Toolbox" block.
+1. Cut the nav from 8 links to 5: Work, Experience, Research, About, Contact. Add a Résumé button.
 2. Move the simulator to its own `/simulator` page, linked once, with no modal.
-3. Animate card groups only: 250 ms, 8–12 px, played once. Never animate the hero or body text.
+3. Drop scroll-triggered text animation. Motion happens only when the visitor does something, or once, like the conveyor.
 4. Use one container width, so every section shares one left edge.
 
-**Remove**
+**Rework or remove**
 
-1. The bartending photo marquee and lightbox. Keep one photo in About at most.
-2. The conveyor belt and the drifting background layer.
-3. The CDN tool logos, the unused typography plugin and JetBrains Mono (40 KB for a few labels).
-4. Your phone number from the public page. The mockups leave it out; email plus LinkedIn is enough, and it cuts spam.
-5. Dead files: the old headshot, the root résumé, the duplicate `CNAME` and the unused case-study image.
+1. **Conveyor belt: rework it** the way Hybrid does (it runs once, has a replay button, and stays still under reduced motion), and make it carry the proof points.
+2. **Remove** the bartending photo marquee and lightbox. Keep one photo in About.
+3. **Remove** the drifting background layer, the CDN tool logos, the unused typography plugin and JetBrains Mono.
+4. **Remove** your phone number from the public page. Email plus LinkedIn is enough, and it cuts spam.
+5. **Remove** the dead files: the old headshot, the root résumé, the duplicate `CNAME` and the unused case-study image.
 
 ## Decisions I need from you
 
-1. **Direction:** Almanac, Selvedge, or Almanac with Selvedge details (my pick)?
-2. **Positioning line:** keep "Product · Research · Enterprise Systems", or try 03's "Product & business analyst · HCI and accessibility research"?
+1. **Direction:** Hybrid (my pick), Consensus, Almanac, or Selvedge? You can also mix and match pieces.
+2. **Positioning line:** "Product and business analyst · HCI and accessibility research" (used in Consensus and Hybrid), or keep "Product · Research · Enterprise Systems"?
 3. **Simulator:** move it to its own page (recommended), or cut it?
-4. **Photos:** can you send a higher-resolution headshot (800 px or larger)? The current one is 325 px and looks soft on phones.
+4. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
 
 ## Phase 0: try it yourself first
 
-These are small, self-contained fixes and good practice in Svelte and CSS. Each one has a hint here; the full answer is in [03 §5](03-cross-reference.md#5-phased-roadmap) and [03 §6](03-cross-reference.md#6-proposed-design-tokens-almanac-01b-palette-b-tuned).
+These are small, self-contained fixes and good practice in Svelte and CSS. Each one has a hint here; the full answer is in [03 §5](03-cross-reference.md#5-phased-roadmap) and [03 §6](03-cross-reference.md#6-proposed-design-tokens-almanac-01b-palette-b-tuned). For the conveyor belt, the answer is in `mockups/hybrid.html`.
 
 1. **Skip link contrast** (`SkipLink.svelte`). White on `accent-500` is 3.12:1. _Hint:_ which stop on the accent ramp gets white text past 4.5:1? Check it with `node docs/design-review/a11y/palette-contrast.mjs`.
 2. **Focus rings in High Contrast** (`Simulator.svelte:73`, `Experience.svelte:219,264,277`). _Hint:_ what does Windows High Contrast do to `box-shadow`? What happens if you delete `focus:outline-none` and let the global `:focus-visible` rule apply?
 3. **Blank page without JS** (`app.css:318-329`). _Hint:_ make the hidden state depend on a class that only JavaScript adds.
-4. **Reduced motion** (`ConveyorBelt.svelte`, the marquee in `Experience.svelte`). _Hint:_ WCAG 2.2.2 says a loop longer than 5 seconds needs a pause control, and slowing it down doesn't count. Removing it is the simplest fix.
+4. **Conveyor belt** (`ConveyorBelt.svelte`). _Hints:_
+   - Replace `infinite` with a play count, or make it play once when it scrolls into view.
+   - In the `prefers-reduced-motion: reduce` block, set `animation: none` instead of slowing it down.
+   - A "Run it again" `<button>` can remove and re-add the class that starts the animation.
 5. **Photo weight** (`Experience.svelte`). _Hint:_ two attributes on `<img>`, plus `width` and `height`.
 6. **Theme flash** (`app.html`). _Hint:_ what does the inline script do when the saved value is `"system"`?
 

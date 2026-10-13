@@ -143,44 +143,51 @@ async function pixelContrast(page, incomplete) {
 				'[data-a11y-probe], [data-a11y-probe] * { color: transparent !important; text-shadow: none !important; text-decoration-color: transparent !important; caret-color: transparent !important; } [data-a11y-probe] svg, [data-a11y-probe] img { visibility: hidden !important; }'
 		});
 		// Scroll, settle, measure, then capture exactly that rectangle of the viewport.
-		const box = await el.evaluate(async (e) => {
+		// Scroll, settle, then capture each line box separately: text that wraps has a
+		// bounding box that also covers its neighbours' words.
+		const boxes = await el.evaluate(async (e) => {
 			e.scrollIntoView({ block: 'center', behavior: 'instant' });
 			await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 			await new Promise((r) => setTimeout(r, 450));
-			const r = e.getBoundingClientRect();
-			return { x: r.x, y: r.y, width: r.width, height: r.height };
+			return [...e.getClientRects()]
+				.filter((r) => r.width >= 1 && r.height >= 1)
+				.map((r) => ({ x: r.x, y: r.y, width: r.width, height: r.height }));
 		});
-		const png =
-			box.width >= 1 && box.height >= 1
-				? await page.screenshot({ clip: box, animations: 'disabled' }).catch(() => null)
-				: null;
+		const pngs = [];
+		for (const clip of boxes) {
+			const shot = await page.screenshot({ clip, animations: 'disabled' }).catch(() => null);
+			if (shot) pngs.push(shot);
+		}
 		await style.evaluate((n) => n.remove());
 		await el.evaluate((e) => e.removeAttribute('data-a11y-probe'));
-		if (!png) continue;
+		if (!pngs.length) continue;
+		const png = pngs[0];
 		const [lightest, darkest] = await page.evaluate(
-			async ([b64, inset]) => {
-				const img = await createImageBitmap(
-					await (await fetch('data:image/png;base64,' + b64)).blob()
-				);
-				const c = new OffscreenCanvas(img.width, img.height);
-				const ctx = c.getContext('2d');
-				ctx.drawImage(img, 0, 0);
-				const d = ctx.getImageData(0, 0, img.width, img.height).data;
-				let lo = [255, 255, 255, 2],
-					hi = [0, 0, 0, -1];
+			async ([list, inset]) => {
 				const L = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
-				for (let i = 0; i < d.length; i += 16) {
-					const px = (i / 4) % img.width;
-					const py = Math.floor(i / 4 / img.width);
-					if (px < inset || py < inset || px >= img.width - inset || py >= img.height - inset)
-						continue;
-					const l = L(d[i], d[i + 1], d[i + 2]);
-					if (l > L(...hi.slice(0, 3)) || hi[3] < 0) hi = [d[i], d[i + 1], d[i + 2], 0];
-					if (l < L(...lo.slice(0, 3)) || lo[3] > 1) lo = [d[i], d[i + 1], d[i + 2], 0];
+				let lo = null,
+					hi = null;
+				for (const b64 of list) {
+					const img = await createImageBitmap(
+						await (await fetch('data:image/png;base64,' + b64)).blob()
+					);
+					const c = new OffscreenCanvas(img.width, img.height);
+					const ctx = c.getContext('2d');
+					ctx.drawImage(img, 0, 0);
+					const d = ctx.getImageData(0, 0, img.width, img.height).data;
+					const pad = img.width > 2 * inset && img.height > 2 * inset ? inset : 0;
+					for (let i = 0; i < d.length; i += 16) {
+						const px = (i / 4) % img.width;
+						const py = Math.floor(i / 4 / img.width);
+						if (px < pad || py < pad || px >= img.width - pad || py >= img.height - pad) continue;
+						const rgb = [d[i], d[i + 1], d[i + 2]];
+						if (!hi || L(...rgb) > L(...hi)) hi = rgb;
+						if (!lo || L(...rgb) < L(...lo)) lo = rgb;
+					}
 				}
-				return [hi.slice(0, 3), lo.slice(0, 3)];
+				return [hi ?? [255, 255, 255], lo ?? [255, 255, 255]];
 			},
-			[png.toString('base64'), info.inset]
+			[pngs.map((b) => b.toString('base64')), info.inset]
 		);
 		const worst = Math.min(ratio(info.color, lightest), ratio(info.color, darkest));
 		const need = info.large ? 3 : 4.5;
