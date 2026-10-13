@@ -11,134 +11,89 @@
 	let conveyorEl = $state<HTMLElement>();
 	let conveyorVisible = $state(false);
 
-	// Marquee state — JS-driven for touch support
-	let marqueeTrack = $state<HTMLElement>();
-	let marqueeOffset = $state(0);
-	let marqueeVisible = $state(false);
-	let autoSpeed = 1.2; // pixels per frame
-	let currentSpeed = $state(autoSpeed);
-	let touchStartX = 0;
-	let touchStartOffset = 0;
-	let isTouching = $state(false);
-	let lastTouchX = 0;
-	let lastTouchTime = 0;
-	let touchVelocity = 0;
-	let rafId: number;
+	// Photo slider — native scroll-snap handles swipe; arrows and keys scroll by one slide.
+	let slider = $state<HTMLElement>();
+	let slideIndex = $state(0);
 
-	function getHalfWidth(): number {
-		if (!marqueeTrack) return 1;
-		return marqueeTrack.scrollWidth / 2;
+	function goToSlide(i: number) {
+		if (!slider) return;
+		const n = bartendingPhotos.length;
+		const target = (i + n) % n;
+		const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		slider.scrollTo({ left: target * slider.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
 	}
 
-	function tickMarquee() {
-		if (!marqueeVisible) {
-			rafId = requestAnimationFrame(tickMarquee);
-			return;
-		}
-
-		if (!isTouching) {
-			// Decay touch velocity back to auto speed
-			if (Math.abs(currentSpeed - autoSpeed) > 0.05) {
-				currentSpeed += (autoSpeed - currentSpeed) * 0.03;
-			} else {
-				currentSpeed = autoSpeed;
-			}
-			marqueeOffset -= currentSpeed;
-		}
-
-		// Wrap seamlessly
-		const half = getHalfWidth();
-		if (half > 0) {
-			if (marqueeOffset <= -half) marqueeOffset += half;
-			if (marqueeOffset > 0) marqueeOffset -= half;
-		}
-
-		if (marqueeTrack) {
-			marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
-		}
-
-		rafId = requestAnimationFrame(tickMarquee);
+	function onSliderScroll() {
+		if (!slider) return;
+		slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
 	}
 
-	function onTouchStart(e: TouchEvent) {
-		isTouching = true;
-		touchStartX = e.touches[0].clientX;
-		touchStartOffset = marqueeOffset;
-		lastTouchX = touchStartX;
-		lastTouchTime = performance.now();
-		touchVelocity = 0;
+	function focusSlide(i: number) {
+		const slides = slider?.querySelectorAll<HTMLElement>('.slide');
+		slides?.[i]?.focus({ preventScroll: true });
 	}
 
-	function onTouchMove(e: TouchEvent) {
-		if (!isTouching) return;
-		const x = e.touches[0].clientX;
-		const now = performance.now();
-		const dt = now - lastTouchTime;
-		if (dt > 0) {
-			touchVelocity = ((x - lastTouchX) / dt) * 16; // normalize to ~per-frame
-		}
-		lastTouchX = x;
-		lastTouchTime = now;
-		marqueeOffset = touchStartOffset + (x - touchStartX);
+	// Arrow keys on the focused slide; focus follows so it never lands on a hidden slide.
+	function onSlideKey(e: KeyboardEvent) {
+		if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+		e.preventDefault();
+		const n = bartendingPhotos.length;
+		const next = (slideIndex + (e.key === 'ArrowRight' ? 1 : -1) + n) % n;
+		goToSlide(next);
+		slideIndex = next;
+		focusSlide(next);
 	}
-
-	function onTouchEnd() {
-		isTouching = false;
-		// Apply swipe velocity — negative because offset moves left for right-scroll
-		currentSpeed = -touchVelocity || autoSpeed;
-	}
-
-	$effect(() => {
-		rafId = requestAnimationFrame(tickMarquee);
-		return () => cancelAnimationFrame(rafId);
-	});
-
-	// Observe marquee visibility
-	let marqueeContainer = $state<HTMLElement>();
-	$effect(() => {
-		const el = marqueeContainer;
-		if (!el) return;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				marqueeVisible = entry.isIntersecting;
-			},
-			{ threshold: 0.1 }
-		);
-		observer.observe(el);
-		return () => observer.disconnect();
-	});
 
 	const bartendingPhotos = [
-		{ src: '/images/Bartending/pouring.jpeg', alt: 'Ryan pouring a cocktail' },
+		{ src: '/images/Bartending/pouring.webp', alt: 'Ryan pouring a cocktail' },
 		{
-			src: '/images/Bartending/nickandnora_cocktail.jpeg',
+			src: '/images/Bartending/nickandnora_cocktail.webp',
 			alt: 'Cocktail in a nick and nora glass'
 		},
-		{ src: '/images/Bartending/ryan_holdingdrink.jpeg', alt: 'Ryan holding a finished cocktail' },
+		{ src: '/images/Bartending/ryan_holdingdrink.webp', alt: 'Ryan holding a finished cocktail' },
 		{
-			src: '/images/Bartending/mercyandryan1.jpeg',
+			src: '/images/Bartending/mercyandryan1.webp',
 			alt: 'Ryan and coworker Mercy with a cocktail'
 		},
-		{ src: '/images/Bartending/mercyandryan2.jpeg', alt: 'Ryan and Mercy behind the bar' },
-		{ src: '/images/Bartending/justinandryan1.jpeg', alt: 'Ryan and coworker Justin' },
-		{ src: '/images/Bartending/justinandryan2.jpeg', alt: 'Ryan and Justin behind the bar' },
-		{ src: '/images/Bartending/hollyandryan.jpeg', alt: 'Ryan and coworker Holly' },
-		{ src: '/images/Bartending/audreyandhannahandryan.jpeg', alt: 'Ryan with Audrey and Hannah' },
-		{ src: '/images/Bartending/maxandryan.jpeg', alt: 'Ryan and Max' }
+		{ src: '/images/Bartending/mercyandryan2.webp', alt: 'Ryan and Mercy behind the bar' },
+		{ src: '/images/Bartending/justinandryan1.webp', alt: 'Ryan and coworker Justin' },
+		{ src: '/images/Bartending/justinandryan2.webp', alt: 'Ryan and Justin behind the bar' },
+		{ src: '/images/Bartending/hollyandryan.webp', alt: 'Ryan and coworker Holly' },
+		{ src: '/images/Bartending/audreyandhannahandryan.webp', alt: 'Ryan with Audrey and Hannah' },
+		{ src: '/images/Bartending/maxandryan.webp', alt: 'Ryan and Max' }
 	];
 
-	let lightboxSrc = $state('');
-	let lightboxAlt = $state('');
-	let lightboxOpen = $state(false);
+	// Native <dialog>: showModal() makes the page behind it inert, Escape closes it,
+	// and the browser hands focus back to the photo that opened it.
+	let lightbox = $state<HTMLDialogElement>();
+	let lightboxIndex = $state(0);
+	const lightboxPhoto = $derived(bartendingPhotos[lightboxIndex]);
 
-	function openLightbox(src: string, alt: string) {
-		lightboxSrc = src;
-		lightboxAlt = alt;
-		lightboxOpen = true;
+	function openLightbox(i: number) {
+		lightboxIndex = i;
+		lightbox?.showModal();
+		document.documentElement.style.overflow = 'hidden';
 	}
 
-	function closeLightbox() {
-		lightboxOpen = false;
+	function stepLightbox(delta: number) {
+		const n = bartendingPhotos.length;
+		lightboxIndex = (lightboxIndex + delta + n) % n;
+	}
+
+	function onLightboxClose() {
+		document.documentElement.style.overflow = '';
+		// Leave the slider on whatever photo they finished browsing, and move focus there
+		// too — the browser restores it to the opener, which may now be off-screen.
+		if (lightboxIndex !== slideIndex) {
+			goToSlide(lightboxIndex);
+			slideIndex = lightboxIndex;
+			focusSlide(lightboxIndex);
+		}
+	}
+
+	function onLightboxKey(e: KeyboardEvent) {
+		if (e.key === 'ArrowRight') stepLightbox(1);
+		else if (e.key === 'ArrowLeft') stepLightbox(-1);
 	}
 
 	$effect(() => {
@@ -248,42 +203,95 @@
 				{/if}
 				{#if job.showBartendingPhotos}
 					<div
-						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						bind:this={marqueeContainer}
+						class="bg-warm-100 dark:bg-warm-800 relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
 						role="region"
-						aria-label="Bartending photo carousel"
-						ontouchstart={onTouchStart}
-						ontouchmove={onTouchMove}
-						ontouchend={onTouchEnd}
+						aria-roledescription="carousel"
+						aria-label="Bartending photos"
 					>
-						<div class="marquee-track" bind:this={marqueeTrack}>
-							{#each bartendingPhotos as photo (photo.src)}
+						<div
+							class="photo-slider h-80 sm:h-[26rem]"
+							bind:this={slider}
+							onscroll={onSliderScroll}
+						>
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
+									onclick={() => openLightbox(i)}
+									class="slide focus-visible:ring-accent-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+									tabindex={i === slideIndex ? 0 : -1}
+									aria-hidden={i !== slideIndex}
+									aria-label="Enlarge: {photo.alt}"
+									onkeydown={onSlideKey}
 								>
+									<!-- Blurred copy fills the frame so portrait and landscape shots sit on the same stage. -->
+									<img src={photo.src} alt="" class="slide-backdrop" loading="lazy" />
 									<img
 										src={photo.src}
 										alt={photo.alt}
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
+										class="relative h-full w-full object-contain"
+										loading={i === 0 ? 'eager' : 'lazy'}
+										draggable="false"
 									/>
 								</button>
 							{/each}
-							{#each bartendingPhotos as photo (photo.src)}
+						</div>
+						<button
+							type="button"
+							onclick={() => goToSlide(slideIndex - 1)}
+							class="slider-arrow left-3"
+							aria-label="Previous photo"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<polyline points="15 18 9 12 15 6" />
+							</svg>
+						</button>
+						<button
+							type="button"
+							onclick={() => goToSlide(slideIndex + 1)}
+							class="slider-arrow right-3"
+							aria-label="Next photo"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<polyline points="9 18 15 12 9 6" />
+							</svg>
+						</button>
+						<p class="sr-only" aria-live="polite">
+							Photo {slideIndex + 1} of {bartendingPhotos.length}
+						</p>
+						<div
+							class="absolute inset-x-0 bottom-3 flex justify-center gap-1.5"
+							role="group"
+							aria-label="Choose photo"
+						>
+							{#each bartendingPhotos as photo, i (photo.src)}
 								<button
 									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-									tabindex="-1"
-									aria-hidden="true"
-								>
-									<img
-										src={photo.src}
-										alt=""
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
+									onclick={() => goToSlide(i)}
+									class="slider-dot"
+									class:active={i === slideIndex}
+									aria-label="Show photo {i + 1}"
+									aria-current={i === slideIndex}
+								></button>
 							{/each}
 						</div>
 					</div>
@@ -293,56 +301,198 @@
 	</ul>
 </SectionWrapper>
 
-{#if lightboxOpen}
-	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-		onclick={closeLightbox}
-		onkeydown={(e) => {
-			if (e.key === 'Escape') closeLightbox();
-		}}
-		role="dialog"
-		aria-label="Photo preview"
-		tabindex="-1"
-	>
-		<button
-			type="button"
-			onclick={closeLightbox}
-			class="bg-warm-800/60 hover:bg-warm-700 absolute top-4 right-4 rounded-full p-2 text-white transition-colors"
-			aria-label="Close photo"
-		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				aria-hidden="true"
-			>
-				<line x1="18" y1="6" x2="6" y2="18" />
-				<line x1="6" y1="6" x2="18" y2="18" />
-			</svg>
-		</button>
-		<!-- eslint-disable-next-line -- stop click from closing lightbox -->
-		<div onclick={(e) => e.stopPropagation()} role="presentation">
-			<img
-				src={lightboxSrc}
-				alt={lightboxAlt}
-				class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-			/>
-		</div>
+<!-- Clicks on the empty area around the photo land on the <dialog> itself and close it. -->
+<dialog
+	bind:this={lightbox}
+	class="lightbox"
+	aria-label="Photo {lightboxIndex + 1} of {bartendingPhotos.length}"
+	onclose={onLightboxClose}
+	onkeydown={onLightboxKey}
+	onclick={(e) => {
+		if (e.target === e.currentTarget) lightbox?.close();
+	}}
+>
+	<div class="pointer-events-none flex h-full w-full items-center justify-center p-4 sm:p-16">
+		<img
+			src={lightboxPhoto.src}
+			alt={lightboxPhoto.alt}
+			class="pointer-events-auto max-h-full max-w-full rounded-xl object-contain shadow-2xl"
+		/>
 	</div>
-{/if}
+	<button
+		type="button"
+		onclick={() => lightbox?.close()}
+		class="bg-warm-800/60 hover:bg-warm-700 absolute top-4 right-4 rounded-full p-2 text-white transition-colors"
+		aria-label="Close photo"
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="h-6 w-6"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			aria-hidden="true"
+		>
+			<line x1="18" y1="6" x2="6" y2="18" />
+			<line x1="6" y1="6" x2="18" y2="18" />
+		</svg>
+	</button>
+	<button
+		type="button"
+		onclick={() => stepLightbox(-1)}
+		class="slider-arrow left-3 sm:left-5"
+		aria-label="Previous photo"
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="h-5 w-5"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.5"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<polyline points="15 18 9 12 15 6" />
+		</svg>
+	</button>
+	<button
+		type="button"
+		onclick={() => stepLightbox(1)}
+		class="slider-arrow right-3 sm:right-5"
+		aria-label="Next photo"
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="h-5 w-5"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.5"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<polyline points="9 18 15 12 9 6" />
+		</svg>
+	</button>
+	<p class="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-sm text-white/80">
+		{lightboxIndex + 1} / {bartendingPhotos.length}
+	</p>
+</dialog>
 
 <style>
-	.marquee-track {
-		display: flex;
-		gap: 0.75rem;
-		width: max-content;
-		will-change: transform;
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: white;
 	}
 
-	.photo-marquee {
-		touch-action: pan-y;
+	.lightbox::backdrop {
+		background: rgb(0 0 0 / 0.85);
+		backdrop-filter: blur(4px);
+	}
+
+	.photo-slider {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		overscroll-behavior-x: contain;
+		scrollbar-width: none;
+	}
+
+	.photo-slider::-webkit-scrollbar {
+		display: none;
+	}
+
+	.slide {
+		position: relative;
+		flex: 0 0 100%;
+		height: 100%;
+		overflow: hidden;
+		scroll-snap-align: center;
+		scroll-snap-stop: always;
+		cursor: zoom-in;
+	}
+
+	.slide-backdrop {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(24px) saturate(1.1);
+		transform: scale(1.15);
+		opacity: 0.55;
+	}
+
+	.slider-arrow {
+		position: absolute;
+		top: 50%;
+		translate: 0 -50%;
+		display: grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 9999px;
+		color: white;
+		background: rgb(0 0 0 / 0.45);
+		backdrop-filter: blur(4px);
+		transition:
+			background-color 150ms,
+			scale 150ms;
+	}
+
+	.slider-arrow:hover {
+		background: rgb(0 0 0 / 0.65);
+	}
+
+	.slider-arrow:active {
+		scale: 0.94;
+	}
+
+	.slider-arrow:focus-visible {
+		outline: 2px solid var(--color-accent-400);
+		outline-offset: 2px;
+	}
+
+	/* Padding + content-box clip keeps the dot small but the tap target near 20px. */
+	.slider-dot {
+		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0.375rem;
+		background-clip: content-box;
+		border-radius: 9999px;
+		background-color: rgb(255 255 255 / 0.55);
+		transition:
+			width 200ms,
+			background-color 200ms;
+	}
+
+	.slider-dot.active {
+		width: 2rem;
+		background-color: white;
+	}
+
+	.slider-dot:focus-visible {
+		outline: 2px solid var(--color-accent-400);
+		outline-offset: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.slider-arrow,
+		.slider-dot {
+			transition: none;
+		}
 	}
 </style>

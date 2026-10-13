@@ -10,7 +10,7 @@ export interface Experience {
 	hrefLabel?: string;
 	/** Shows the "Try the WMS Simulator" button and the conveyor belt on this card. */
 	showSimulator?: boolean;
-	/** Shows the bartending photo marquee on this card. */
+	/** Shows the bartending photo slider on this card. */
 	showBartendingPhotos?: boolean;
 }
 
@@ -57,4 +57,17 @@ export interface ContactLink {
 export interface SkillCategory {
 	label: string;
 	items: string[];
+}
+
+export interface Tool {
+	name: string;
+	/** File name in static/icons, without extension. Unset renders a generic chart glyph. */
+	icon?: string;
+	/** Single-colour dark mark that needs inverting to stay visible in dark mode. */
+	mono?: boolean;
+}
+
+export interface Stat {
+	value: string;
+	label: string;
 }
