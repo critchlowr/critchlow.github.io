@@ -38,7 +38,8 @@ export const experience: Experience[] = [
 			"Took over the shop's Squarespace site, handling content and structure updates",
 			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs before they reach the floor'
 		],
-		tags: ['Estimating', 'Scoping', 'Client Work']
+		tags: ['Estimating', 'Scoping', 'Client Work'],
+		scene: 'bench'
 	},
 	{
 		title: 'Graduate Researcher',
@@ -91,7 +92,7 @@ export const experience: Experience[] = [
 		location: 'Bellingham, WA',
 		period: '2023 – 2025',
 		bullets: ['Made cocktails in a fast-paced downtown bar to finance graduate school'],
-		showBartendingPhotos: true
+		scene: 'bar'
 	},
 	{
 		title: 'Bartender',
@@ -105,7 +106,8 @@ export const experience: Experience[] = [
 		company: 'Bespoke Construction',
 		location: 'Bellingham, WA',
 		period: '2015 – 2017',
-		bullets: ['Custom residential construction and finish carpentry']
+		bullets: ['Custom residential construction and finish carpentry'],
+		scene: 'saw'
 	}
 ];
 

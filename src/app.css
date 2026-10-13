@@ -203,6 +203,13 @@
 		near-neutral tint.
 	*/
 	--t-band: #eee0b8;
+	/*
+		Focus ring. accent-500 measured 2.97:1 on the page and 2.38:1 on the band, under
+		the 3:1 that WCAG 1.4.11 asks of a focus indicator. accent-700 clears 4.0:1 on
+		every light ground (page, card, band, footer).
+	*/
+	--t-focus: var(--color-accent-700);
+	color-scheme: light;
 }
 
 :root.dark {
@@ -234,10 +241,15 @@
 		the card edge vanished. Card separation here is 2.05:1 via the border.
 	*/
 	--t-band: var(--color-warm-900);
+	/* accent-300 clears 5.0:1 on every dark ground, including the warm-800 cards. */
+	--t-focus: var(--color-accent-300);
+	color-scheme: dark;
 }
 
 html {
 	scroll-behavior: smooth;
+	/* The header is fixed, so anchor jumps and focused elements land below it. */
+	scroll-padding-top: 5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -255,8 +267,13 @@ html {
 		-moz-osx-font-smoothing: grayscale;
 	}
 
+	/*
+		One focus style for every control. It is an outline, not a box-shadow ring,
+		because Windows High Contrast removes box-shadows and keeps outlines.
+	*/
 	:focus-visible {
-		@apply outline-accent-500 rounded-sm outline-3 outline-offset-2;
+		@apply rounded-sm outline-3 outline-offset-2;
+		outline-color: var(--t-focus);
 	}
 
 	::selection {
@@ -314,8 +331,12 @@ html {
 		transform: none;
 	}
 
-	/* Container staggers its own children; each child carries its index inline. */
-	.stagger > * {
+	/*
+		Container staggers its own children; each child carries its index inline. The
+		hidden state needs the `js` class from app.html, so without JavaScript the
+		content is simply there.
+	*/
+	.js .stagger > * {
 		opacity: 0;
 		transform: translateY(1rem);
 		transition:
@@ -345,7 +366,7 @@ html {
 	}
 
 	/* The hairline beside a section heading draws itself in. */
-	.rule-draw {
+	.js .rule-draw {
 		transform-origin: left center;
 		transform: scaleX(0);
 		transition: transform 0.7s var(--ease-soft) 0.15s;
@@ -357,7 +378,7 @@ html {
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.rule-draw {
+		.js .rule-draw {
 			transform: none;
 			transition: none;
 		}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { hero } from '$lib/data/content';
-	import { inview } from '$lib/actions/inview';
 </script>
 
 <section
@@ -11,28 +10,29 @@
 	<div class="wash" aria-hidden="true"></div>
 
 	<div class="relative mx-auto w-full max-w-4xl">
-		<h1
-			class="text-ink-strong font-display text-display font-semibold"
-			use:inview={{ dir: 'up', i: 0 }}
-		>
+		<!--
+			No reveal animation up here: the first screen should be readable at first
+			paint, and a fade-in delays the largest paint for no benefit.
+		-->
+		<h1 class="text-ink-strong font-display text-display font-semibold">
 			{hero.name}
 		</h1>
 
-		<p class="text-brand mt-5 text-xl font-medium" use:inview={{ dir: 'up', i: 1 }}>
+		<p class="text-brand mt-5 text-xl font-medium">
 			{hero.tagline}
 		</p>
 
-		<div class="bg-edge rule-draw mt-8 h-px w-full" use:inview aria-hidden="true"></div>
+		<div class="bg-edge mt-8 h-px w-full" aria-hidden="true"></div>
 
-		<p class="text-ink text-body mt-8 max-w-2xl" use:inview={{ dir: 'up', i: 2 }}>
+		<p class="text-ink text-body mt-8 max-w-2xl">
 			{hero.summary}
 		</p>
 
-		<p class="text-ink-muted mt-5 max-w-xl text-base" use:inview={{ dir: 'up', i: 3 }}>
+		<p class="text-ink-muted mt-5 max-w-xl text-base">
 			{hero.availability}
 		</p>
 
-		<div class="mt-10 flex flex-wrap items-center gap-3" use:inview={{ dir: 'up', i: 4 }}>
+		<div class="mt-10 flex flex-wrap items-center gap-3">
 			<a
 				href="#contact"
 				class="bg-accent-700 hover:bg-accent-800 ease-spring inline-block rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"

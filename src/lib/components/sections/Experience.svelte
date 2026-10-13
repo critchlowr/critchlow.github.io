@@ -4,160 +4,10 @@
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
+	import JobScene from '$lib/components/ui/JobScene.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
-
-	let conveyorEl = $state<HTMLElement>();
-	let conveyorVisible = $state(false);
-
-	// Marquee state — JS-driven for touch support
-	let marqueeTrack = $state<HTMLElement>();
-	let marqueeOffset = $state(0);
-	let marqueeVisible = $state(false);
-	let autoSpeed = 1.2; // pixels per frame
-	let currentSpeed = $state(autoSpeed);
-	let touchStartX = 0;
-	let touchStartOffset = 0;
-	let isTouching = $state(false);
-	let lastTouchX = 0;
-	let lastTouchTime = 0;
-	let touchVelocity = 0;
-	let rafId: number;
-
-	function getHalfWidth(): number {
-		if (!marqueeTrack) return 1;
-		return marqueeTrack.scrollWidth / 2;
-	}
-
-	function tickMarquee() {
-		if (!marqueeVisible) {
-			rafId = requestAnimationFrame(tickMarquee);
-			return;
-		}
-
-		if (!isTouching) {
-			// Decay touch velocity back to auto speed
-			if (Math.abs(currentSpeed - autoSpeed) > 0.05) {
-				currentSpeed += (autoSpeed - currentSpeed) * 0.03;
-			} else {
-				currentSpeed = autoSpeed;
-			}
-			marqueeOffset -= currentSpeed;
-		}
-
-		// Wrap seamlessly
-		const half = getHalfWidth();
-		if (half > 0) {
-			if (marqueeOffset <= -half) marqueeOffset += half;
-			if (marqueeOffset > 0) marqueeOffset -= half;
-		}
-
-		if (marqueeTrack) {
-			marqueeTrack.style.transform = `translateX(${marqueeOffset}px)`;
-		}
-
-		rafId = requestAnimationFrame(tickMarquee);
-	}
-
-	function onTouchStart(e: TouchEvent) {
-		isTouching = true;
-		touchStartX = e.touches[0].clientX;
-		touchStartOffset = marqueeOffset;
-		lastTouchX = touchStartX;
-		lastTouchTime = performance.now();
-		touchVelocity = 0;
-	}
-
-	function onTouchMove(e: TouchEvent) {
-		if (!isTouching) return;
-		const x = e.touches[0].clientX;
-		const now = performance.now();
-		const dt = now - lastTouchTime;
-		if (dt > 0) {
-			touchVelocity = ((x - lastTouchX) / dt) * 16; // normalize to ~per-frame
-		}
-		lastTouchX = x;
-		lastTouchTime = now;
-		marqueeOffset = touchStartOffset + (x - touchStartX);
-	}
-
-	function onTouchEnd() {
-		isTouching = false;
-		// Apply swipe velocity — negative because offset moves left for right-scroll
-		currentSpeed = -touchVelocity || autoSpeed;
-	}
-
-	$effect(() => {
-		rafId = requestAnimationFrame(tickMarquee);
-		return () => cancelAnimationFrame(rafId);
-	});
-
-	// Observe marquee visibility
-	let marqueeContainer = $state<HTMLElement>();
-	$effect(() => {
-		const el = marqueeContainer;
-		if (!el) return;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				marqueeVisible = entry.isIntersecting;
-			},
-			{ threshold: 0.1 }
-		);
-		observer.observe(el);
-		return () => observer.disconnect();
-	});
-
-	const bartendingPhotos = [
-		{ src: '/images/Bartending/pouring.jpeg', alt: 'Ryan pouring a cocktail' },
-		{
-			src: '/images/Bartending/nickandnora_cocktail.jpeg',
-			alt: 'Cocktail in a nick and nora glass'
-		},
-		{ src: '/images/Bartending/ryan_holdingdrink.jpeg', alt: 'Ryan holding a finished cocktail' },
-		{
-			src: '/images/Bartending/mercyandryan1.jpeg',
-			alt: 'Ryan and coworker Mercy with a cocktail'
-		},
-		{ src: '/images/Bartending/mercyandryan2.jpeg', alt: 'Ryan and Mercy behind the bar' },
-		{ src: '/images/Bartending/justinandryan1.jpeg', alt: 'Ryan and coworker Justin' },
-		{ src: '/images/Bartending/justinandryan2.jpeg', alt: 'Ryan and Justin behind the bar' },
-		{ src: '/images/Bartending/hollyandryan.jpeg', alt: 'Ryan and coworker Holly' },
-		{ src: '/images/Bartending/audreyandhannahandryan.jpeg', alt: 'Ryan with Audrey and Hannah' },
-		{ src: '/images/Bartending/maxandryan.jpeg', alt: 'Ryan and Max' }
-	];
-
-	let lightboxSrc = $state('');
-	let lightboxAlt = $state('');
-	let lightboxOpen = $state(false);
-
-	function openLightbox(src: string, alt: string) {
-		lightboxSrc = src;
-		lightboxAlt = alt;
-		lightboxOpen = true;
-	}
-
-	function closeLightbox() {
-		lightboxOpen = false;
-	}
-
-	$effect(() => {
-		const el = conveyorEl;
-		if (!el) return;
-
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
-					conveyorVisible = true;
-					observer.disconnect();
-				}
-			},
-			{ threshold: 0.3 }
-		);
-		observer.observe(el);
-
-		return () => observer.disconnect();
-	});
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
@@ -216,7 +66,7 @@
 					<div class="mt-6 flex justify-center">
 						<button
 							type="button"
-							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 focus:ring-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 dark:focus:ring-offset-warm-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 							onclick={() => simulator.launch()}
 						>
 							<svg
@@ -239,53 +89,13 @@
 						Bled to the card edges rather than boxed again inside it — a border
 						within a border reads as clutter.
 					-->
-					<div
-						class="mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						bind:this={conveyorEl}
-					>
-						<ConveyorBelt visible={conveyorVisible} />
+					<div class="bleed">
+						<ConveyorBelt />
 					</div>
 				{/if}
-				{#if job.showBartendingPhotos}
-					<div
-						class="photo-marquee mt-6 mr-[-1.5rem] -mb-6 -ml-6 min-h-[12rem] overflow-hidden rounded-b-xl sm:min-h-[14rem] md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						bind:this={marqueeContainer}
-						role="region"
-						aria-label="Bartending photo carousel"
-						ontouchstart={onTouchStart}
-						ontouchmove={onTouchMove}
-						ontouchend={onTouchEnd}
-					>
-						<div class="marquee-track" bind:this={marqueeTrack}>
-							{#each bartendingPhotos as photo (photo.src)}
-								<button
-									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-								>
-									<img
-										src={photo.src}
-										alt={photo.alt}
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
-							{/each}
-							{#each bartendingPhotos as photo (photo.src)}
-								<button
-									type="button"
-									onclick={() => openLightbox(photo.src, photo.alt)}
-									class="focus:ring-accent-400 h-48 flex-shrink-0 cursor-pointer rounded-lg focus:ring-2 focus:outline-none sm:h-56"
-									tabindex="-1"
-									aria-hidden="true"
-								>
-									<img
-										src={photo.src}
-										alt=""
-										class="h-full w-auto rounded-lg object-cover transition-transform hover:scale-105"
-									/>
-								</button>
-							{/each}
-						</div>
+				{#if job.scene}
+					<div class="bleed">
+						<JobScene scene={job.scene} />
 					</div>
 				{/if}
 			</Card>
@@ -293,56 +103,17 @@
 	</ul>
 </SectionWrapper>
 
-{#if lightboxOpen}
-	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-		onclick={closeLightbox}
-		onkeydown={(e) => {
-			if (e.key === 'Escape') closeLightbox();
-		}}
-		role="dialog"
-		aria-label="Photo preview"
-		tabindex="-1"
-	>
-		<button
-			type="button"
-			onclick={closeLightbox}
-			class="bg-warm-800/60 hover:bg-warm-700 absolute top-4 right-4 rounded-full p-2 text-white transition-colors"
-			aria-label="Close photo"
-		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				aria-hidden="true"
-			>
-				<line x1="18" y1="6" x2="6" y2="18" />
-				<line x1="6" y1="6" x2="18" y2="18" />
-			</svg>
-		</button>
-		<!-- eslint-disable-next-line -- stop click from closing lightbox -->
-		<div onclick={(e) => e.stopPropagation()} role="presentation">
-			<img
-				src={lightboxSrc}
-				alt={lightboxAlt}
-				class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-			/>
-		</div>
-	</div>
-{/if}
-
 <style>
-	.marquee-track {
-		display: flex;
-		gap: 0.75rem;
-		width: max-content;
-		will-change: transform;
+	/* Bleeds a bottom strip to the card edges, matching the card's padding. */
+	.bleed {
+		margin: 1.5rem -1.5rem -1.5rem;
+		overflow: hidden;
+		border-radius: 0 0 0.75rem 0.75rem;
 	}
 
-	.photo-marquee {
-		touch-action: pan-y;
+	@media (width >= 48rem) {
+		.bleed {
+			margin: 1.5rem -1.75rem -1.75rem;
+		}
 	}
 </style>

@@ -10,10 +10,19 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<script>
 			(function () {
-				const saved = localStorage.getItem('theme');
+				const root = document.documentElement;
+				// Reveal animations hide content only when this class is present, so the
+				// page stays readable if JavaScript never runs.
+				root.classList.add('js');
+				let saved = null;
+				try {
+					saved = localStorage.getItem('theme');
+				} catch {
+					// Storage can be blocked; fall back to the system setting.
+				}
 				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-				if (saved === 'dark' || (!saved && prefersDark)) {
-					document.documentElement.classList.add('dark');
+				if (saved === 'dark' || (saved !== 'light' && prefersDark)) {
+					root.classList.add('dark');
 				}
 			})();
 		</script>
