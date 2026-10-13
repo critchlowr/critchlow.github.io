@@ -48,19 +48,19 @@ Final run on 2026-10-13, served locally from `docs/design-review/`. All four moc
 | ------------------------------------------------ | ------------------------------------ | ----------------------- | ----------------------- | --------------------------------------------------------------------- |
 | axe WCAG violations, 4 modes                     | 0                                    | 0                       | 0                       | 0                                                                     |
 | axe best-practice findings                       | 0                                    | 0                       | 0                       | 0                                                                     |
-| Text on illustrations or overlaps, pixel-sampled | 7–9 nodes, lowest 5.87:1             | none to sample          | 5 nodes, lowest 13.19:1 | 73–82 nodes, lowest 4.94:1 (4 decorative `aria-hidden` nodes skipped) |
+| Text on illustrations or overlaps, pixel-sampled | 8–9 nodes, lowest 5.87:1             | none to sample          | 5 nodes, lowest 13.19:1 | 73–82 nodes, lowest 4.94:1 (4 decorative `aria-hidden` nodes skipped) |
 | Skip link while focused                          | Passes                               | Passes                  | Passes                  | Passes                                                                |
-| Keyboard walk                                    | 32 stops, all visible, none obscured | 29 stops, all visible   | 28 stops, all visible   | 28 stops, all visible                                                 |
+| Keyboard walk                                    | 33 stops, all visible, none obscured | 29 stops, all visible   | 28 stops, all visible   | 28 stops, all visible                                                 |
 | Forced colors                                    | Every stop keeps a ring              | Every stop keeps a ring | Every stop keeps a ring | Every stop keeps a ring                                               |
 | Reflow at 320 px, text spacing                   | Pass                                 | Pass                    | Pass                    | Pass                                                                  |
 | Motion under reduced motion                      | None                                 | None                    | None                    | None                                                                  |
 | Token pairs (`palettes.json`)                    | 52 pass                              | 37 pass                 | 53 pass                 | 63 pass                                                               |
-| Lighthouse a11y · perf · best practices · SEO    | 100 · 82 · 96 · 100                  | 100 · 92 · 96 · 100     | 100 · 83 · 96 · 100     | 100 · 87 · 96 · 100                                                   |
-| LCP, CLS                                         | 3.5 s, 0                             | 2.7 s, 0                | 3.3 s, 0                | 2.9 s, 0                                                              |
+| Lighthouse a11y · perf · best practices · SEO    | 100 · 79 · 96 · 100                  | 100 · 92 · 96 · 100     | 100 · 83 · 96 · 100     | 100 · 87 · 96 · 100                                                   |
+| LCP, CLS                                         | 3.8 s, 0                             | 2.7 s, 0                | 3.3 s, 0                | 2.9 s, 0                                                              |
 
 Notes:
 
-- **The mockups load Google Fonts from another origin.** That blocks rendering and accounts for most of the LCP under Lighthouse's slow-4G simulation, and it's why best practices is 96 rather than 100. Hybrid loads two families, so it's slowest. The real site self-hosts its fonts through Fontsource, which avoids this.
+- **The mockups load Google Fonts from another origin.** That blocks rendering and accounts for most of the LCP under Lighthouse's slow-4G simulation, and it's why best practices is 96 rather than 100. Hybrid loads two families, so it's slowest (scores vary a few points between runs). The real site self-hosts its fonts through Fontsource, which avoids this.
 - **The Hybrid conveyor belt was tested on its own.** I recorded box positions frame by frame:
   - The boxes start off the belt on the very first frame, so they never flash.
   - They arrive together as one train and stop after 1.6 s.

@@ -581,6 +581,18 @@
 				font-size: 1.25rem;
 				line-height: 1.55;
 			}
+			.paths {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem 1.5rem;
+				margin-top: 1.25rem;
+				font-size: var(--step-small);
+				font-weight: 600;
+			}
+			.paths a {
+				display: inline-block;
+				padding-block: 0.3rem;
+			}
 			.cta-row {
 				display: flex;
 				flex-wrap: wrap;
@@ -1172,6 +1184,13 @@
 				color: var(--ink);
 				font-weight: 600;
 			}
+			.methods {
+				margin-bottom: 1.75rem;
+			}
+			.methods li {
+				background: var(--card);
+				border: 1px solid var(--border);
+			}
 			.ids {
 				display: flex;
 				flex-wrap: wrap;
@@ -1383,6 +1402,11 @@
 					d="M1 0h10v1h-10zM0 1h11v1h-11zM1 2h10v1h-10zM5 3h3v1h-3zM5 4h3v1h-3zM5 5h3v1h-3zM5 6h3v1h-3zM5 7h3v1h-3zM5 8h3v1h-3zM4 9h5v1h-5z"
 				/>
 			</symbol>
+			<symbol id="i-magnifier" viewBox="0 0 12 12">
+				<path
+					d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM3 2h2v1h-2zM7 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h6v1h-6zM7 8h3v1h-3zM8 9h3v1h-3zM9 10h3v1h-3zM10 11h2v1h-2z"
+				/>
+			</symbol>
 			<symbol id="i-sun" viewBox="0 0 12 12">
 				<path
 					d="M5 0h2v1h-2zM1 1h1v1h-1zM5 1h2v1h-2zM10 1h1v1h-1zM2 2h1v1h-1zM9 2h1v1h-1zM4 3h4v1h-4zM3 4h6v1h-6zM0 5h2v1h-2zM3 5h6v1h-6zM10 5h2v1h-2zM0 6h2v1h-2zM3 6h6v1h-6zM10 6h2v1h-2zM3 7h6v1h-6zM4 8h4v1h-4zM2 9h1v1h-1zM9 9h1v1h-1zM1 10h1v1h-1zM5 10h2v1h-2zM10 10h1v1h-1zM5 11h2v1h-2z"
@@ -1415,7 +1439,7 @@
 		<aside class="mock-banner" aria-label="About this mockup">
 			<div class="wrap">
 				<p>
-					Design mockup: <strong>Hybrid</strong>, the research structure with the fun put back in.
+					Design mockup: <strong>Hybrid</strong>, tuned for support roles now and UX research next.
 					Not the live site.
 				</p>
 				<p>
@@ -1474,16 +1498,16 @@
 								fetchpriority="high"
 							/>
 							<span
-								><span class="dot" aria-hidden="true"></span>Open to product, solutions, analytics,
-								and accessibility roles. Pacific Northwest or remote.</span
+								><span class="dot" aria-hidden="true"></span>Open to technical support, solutions,
+								and UX research roles. Pacific Northwest or remote.</span
 							>
 						</p>
 						<h1 id="hero-title">Ryan Critchlow</h1>
-						<p class="role">Product and business analyst · HCI and accessibility research</p>
+						<p class="role">Enterprise technical support · UX and accessibility research</p>
 						<p class="lede measure">
-							I turn what people need into scoped, buildable work. Three years running enterprise
-							warehouse-management accounts at Körber, an M.S. in Computer Science, and a research
-							practice in accessible educational technology.
+							I troubleshoot enterprise systems and study how people use them. Three years as an L4
+							support analyst on enterprise warehouse-management accounts at Körber, an M.S. in
+							Computer Science, and peer-reviewed research in accessible technology.
 						</p>
 						<div class="cta-row">
 							<a class="btn btn-primary" href="#contact">Get in touch</a>
@@ -1491,6 +1515,10 @@
 								>Résumé (PDF)</a
 							>
 						</div>
+						<p class="paths">
+							<a href="#support">Hiring for support? See how I troubleshoot</a>
+							<a href="#research">Research? See my studies and papers</a>
+						</p>
 					</div>
 
 					<div class="window-wrap" id="georgia-spot">
@@ -1580,8 +1608,8 @@
 							</li>
 							<li class="box" style="--i: 2">
 								<div class="ship-label">
-									<span class="num">50%</span>
-									<span class="what">shorter new-hire ramp from a 30/60/90 framework I co-led</span>
+									<span class="num">2</span>
+									<span class="what">go-lives where I was the on-site technical lead</span>
 									<span class="barcode" aria-hidden="true"></span>
 								</div>
 							</li>
@@ -1608,39 +1636,46 @@
 						<p>Each project: the problem, what I did, and what came out of it.</p>
 					</div>
 					<ul class="cases">
-						<li class="case">
+						<li class="case" id="support">
 							<div class="case-top">
 								<span class="item"
-									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
-										<use href="#i-controller" /></svg
+									><svg class="pix" viewBox="0 0 12 12" aria-hidden="true">
+										<use href="#i-magnifier" /></svg
 								></span>
-								<h3>You and I</h3>
+								<h3>Enterprise WMS support at Körber</h3>
 							</div>
 							<p class="summary">
-								A serious game for practicing pronouns, built with autistic children and their
-								families.
+								L4 support for four enterprise warehouse-management accounts, from cloud outages to
+								SQL deadlocks.
 							</p>
 							<dl class="facts">
 								<div>
 									<dt>Problem</dt>
-									<dd>Autistic gestalt language learners need a way to practice pronouns.</dd>
+									<dd>
+										A fault could start in the WMS, the customer's order system, Dynamics 365, or
+										their network.
+									</dd>
 								</div>
 								<div>
 									<dt>Role</dt>
-									<dd>Owned it end to end: research plan, Unity build, art, and evaluation.</dd>
+									<dd>
+										Primary technical contact. Isolated faults with WMS data and escalated to the
+										right team with the evidence.
+									</dd>
 								</div>
 								<div>
 									<dt>Result</dt>
 									<dd>
-										In-home participatory evaluation with four families; paper targeting IDC 2027.
+										Deadlocks resolved on high-traffic systems, and 46% more stable releases than
+										the department average.
 									</dd>
 								</div>
 							</dl>
 							<ul class="tags" aria-label="Tools">
-								<li>Unity</li>
-								<li>C#</li>
-								<li>WebGL</li>
-								<li>2025–2026</li>
+								<li>T-SQL</li>
+								<li>SQL Server Agent</li>
+								<li>Dynamics 365</li>
+								<li>2020–2023</li>
 							</ul>
 						</li>
 						<li class="case">
@@ -1685,6 +1720,41 @@
 						<li class="case">
 							<div class="case-top">
 								<span class="item"
+									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
+										<use href="#i-controller" /></svg
+								></span>
+								<h3>You and I</h3>
+							</div>
+							<p class="summary">
+								A serious game for practicing pronouns, built with autistic children and their
+								families.
+							</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>Autistic gestalt language learners need a way to practice pronouns.</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Owned it end to end: research plan, Unity build, art, and evaluation.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>
+										In-home participatory evaluation with four families; paper targeting IDC 2027.
+									</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Unity</li>
+								<li>C#</li>
+								<li>WebGL</li>
+								<li>2025–2026</li>
+							</ul>
+						</li>
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
 									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
 										<use href="#i-book" /></svg
 								></span>
@@ -1710,35 +1780,6 @@
 								<li>2025</li>
 							</ul>
 							<a class="case-link" href="https://thekindlab.github.io/">thekindlab.github.io</a>
-						</li>
-						<li class="case">
-							<div class="case-top">
-								<span class="item"
-									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
-										<use href="#i-hammer" /></svg
-								></span>
-								<h3>Atlas Northwest</h3>
-							</div>
-							<p class="summary">Content and structure for a worker-owned woodshop's website.</p>
-							<dl class="facts">
-								<div>
-									<dt>Problem</dt>
-									<dd>The shop's website needed someone to own its content and structure.</dd>
-								</div>
-								<div>
-									<dt>Role</dt>
-									<dd>Took over the site's content and structure.</dd>
-								</div>
-								<div>
-									<dt>Result</dt>
-									<dd>The shop's restoration and millwork portfolio, presented online.</dd>
-								</div>
-							</dl>
-							<ul class="tags" aria-label="Tools">
-								<li>Squarespace</li>
-								<li>2026</li>
-							</ul>
-							<a class="case-link" href="https://atlasnorthwest.com">atlasnorthwest.com</a>
 						</li>
 					</ul>
 				</div>
@@ -1888,10 +1929,19 @@
 					<div class="section-head">
 						<h2 id="research-title">Research</h2>
 						<p>
-							Accessibility and participatory design, with the KIND Lab at Western Washington
-							University.
+							I study how to design technology with the people who will use it: accessible
+							educational technology, participatory design with neurodivergent children, and
+							disability in computing education. KIND Lab, Western Washington University.
 						</p>
 					</div>
+					<ul class="tags methods" aria-label="Research methods I've used">
+						<li>In-home participatory evaluation</li>
+						<li>Semi-structured interviews</li>
+						<li>Survey and instrument design</li>
+						<li>Inductive thematic analysis</li>
+						<li>Video coding</li>
+						<li>Systematic literature coding</li>
+					</ul>
 					<ol class="pubs measure">
 						<li class="pub">
 							<p class="status">Peer-reviewed</p>
@@ -1990,16 +2040,17 @@
 					</div>
 					<div class="toolbox">
 						<div>
-							<h3>Product and research</h3>
+							<h3>Support and research</h3>
 							<ul class="tags">
-								<li>Requirements</li>
+								<li>Fault isolation</li>
+								<li>Escalation management</li>
+								<li>SQL performance tuning</li>
+								<li>Knowledge base writing</li>
+								<li>Go-live support</li>
 								<li>Stakeholder management</li>
-								<li>Prioritization</li>
-								<li>Change control</li>
+								<li>Requirements</li>
 								<li>User interviews</li>
-								<li>Survey design</li>
 								<li>Thematic analysis</li>
-								<li>Participatory design</li>
 								<li>WCAG 2.2</li>
 							</ul>
 						</div>
@@ -2012,8 +2063,9 @@
 								<li>Power BI</li>
 								<li>Tableau</li>
 								<li>C#</li>
-								<li>Unity</li>
+								<li>Java</li>
 								<li>JavaScript</li>
+								<li>Unity</li>
 								<li>Svelte</li>
 								<li>Git</li>
 							</ul>
@@ -2041,8 +2093,8 @@
 					<div class="contact">
 						<h2 id="contact-title">Let's talk</h2>
 						<p class="measure">
-							Open to product, solutions, analytics, and accessibility roles in the Pacific
-							Northwest or remote.
+							Open to technical support, solutions, and UX research roles in the Pacific Northwest
+							or remote.
 						</p>
 						<div class="email-row">
 							<a class="email" id="email" href="mailto:critchlow.rc@gmail.com"
@@ -2070,8 +2122,11 @@
 
 		<footer class="site-footer">
 			<div class="wrap">
-				<span class="dog-mark" aria-hidden="true"></span>© 2026 Ryan Critchlow · Bellingham,
-				Washington
+				<span class="dog-mark" aria-hidden="true"></span>
+				<p>
+					© 2026 Ryan Critchlow · Bellingham, Washington. This site meets WCAG 2.2 AA, tested with
+					axe-core, keyboard and Windows High Contrast walks, and reduced-motion checks.
+				</p>
 			</div>
 		</footer>
 

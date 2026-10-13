@@ -66,6 +66,25 @@ Hybrid keeps everything that makes the page easy to read, and adds back the part
 
 **What the research says about your tastes** (01c, last section): brown and olive are the _least_-liked colors in the main preference studies. The evidence for arches is real but modest, and it was measured on shapes, not page layouts. Neither is a reason to drop them. They are taste rather than evidence, so Hybrid keeps them to small decorative moments.
 
+### Who Hybrid is tuned for
+
+You're aiming for a technical support engineer role at Salesforce now, then a move into UX research, with a PhD as the fallback. One page has to serve all three, so Hybrid leads with the job you're applying for and gives researchers a second path:
+
+- **Hero:** "Enterprise technical support · UX and accessibility research", with two links under the buttons: _Hiring for support? See how I troubleshoot_ and _Research? See my studies and papers_.
+- **Proof boxes:** 4 enterprise accounts, 46% more stable releases, 2 go-lives as on-site technical lead, the ASSETS paper.
+- **First case study: Enterprise WMS support at Körber.** It covers fault isolation across the WMS, order system, Dynamics 365 and network, escalation with evidence, and deadlocks resolved. Salesforce TSE postings ask for exactly this: 2+ years of technical support, SQL, debugging and log reading, and explaining technical issues to non-technical people.
+- **Research section:** a research-interests sentence and the methods you've used (participatory evaluation, interviews, instrument design, thematic analysis, video coding, literature coding). This is UX research language that also reads well to PhD advisors.
+- **Footer:** a one-line accessibility statement. For an accessibility researcher, a demonstrably accessible site is evidence in itself.
+
+Steps that live outside the website:
+
+1. **Get the Salesforce Certified Administrator credential** (Trailhead is free). TSE postings list it as preferred, along with familiarity with Sales Cloud or Service Cloud.
+2. **Look at Salesforce's Accessibility Support Team and Office of Accessibility.** That's where support meets accessibility, a natural bridge from a TSE role toward research. Salesforce also runs accessibility user research with Fable.
+3. **Restore the _You and I_ case study** before you contact any research team or PhD advisor. It's your strongest research evidence.
+4. **Keep an academic CV and a Google Scholar profile** ready for the PhD path; link them from the Research section when they exist.
+
+Sources for the Salesforce points: TSE listings reposted on [purpose.jobs](https://www.purpose.jobs/discover/companies/salesforce-2/jobs/90254713-technical-support-engineer) and [jobs.accel.com](https://jobs.accel.com/companies/airkit-2/jobs/84486793-technical-support-engineer-sales-cloud) (check the official posting before applying); [Salesforce Accessibility Support Team](https://catherwood.library.cornell.edu/wit/salesforce-introduces-new-product-accessibility-support-team/); [Fable on Salesforce's accessibility research](https://makeitfable.com/article/how-salesforce-shapes-ai-ux-design/).
+
 ## What the review found about the current site
 
 - **The foundation is good.** It's a prerendered static site with clean Svelte 5 code, a semantic token layer with contrast notes, and real accessibility basics. Keep all of that.
@@ -111,7 +130,7 @@ Details are in [03 §4](03-cross-reference.md#4-proposals-to-the-owner) and [01c
 ## Decisions I need from you
 
 1. **Direction:** Hybrid (my pick), Consensus, Almanac, or Selvedge? You can also mix and match pieces.
-2. **Positioning line:** "Product and business analyst · HCI and accessibility research" (used in Consensus and Hybrid), or keep "Product · Research · Enterprise Systems"?
+2. **Positioning line:** Hybrid now uses "Enterprise technical support · UX and accessibility research" for the Salesforce path. Does that read right to you?
 3. **Simulator:** move it to its own page (recommended), or cut it?
 4. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
 
