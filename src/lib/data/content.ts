@@ -247,7 +247,7 @@ export const publications: Publication[] = [
 		title:
 			'You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns for Autistic Children',
 		venue:
-			'Targeting the ACM Interaction Design and Children Conference (IDC 2027), in preparation',
+			'Targeting the 26th Annual ACM Interaction Design and Children Conference (IDC 2027), Seattle, WA, June 2027. In preparation',
 		status: 'in-preparation',
 		contribution:
 			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
