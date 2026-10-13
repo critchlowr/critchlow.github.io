@@ -193,4 +193,16 @@
 		mask: url('/images/logo-dog.png') center / contain no-repeat;
 		-webkit-mask: url('/images/logo-dog.png') center / contain no-repeat;
 	}
+
+	/*
+		Forced-colours mode (Windows High Contrast) replaces background colours with
+		the system Canvas colour, which would paint the masked logo invisible. Opt
+		this element out and draw it in the system link colour instead.
+	*/
+	@media (forced-colors: active) {
+		.logo-mark {
+			forced-color-adjust: none;
+			background-color: LinkText;
+		}
+	}
 </style>
