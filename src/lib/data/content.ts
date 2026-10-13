@@ -246,7 +246,8 @@ export const publications: Publication[] = [
 		authors: 'Ryan Critchlow, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl',
 		title:
 			'You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns for Autistic Children',
-		venue: 'Target venue TBD, in preparation',
+		venue:
+			'Targeting the ACM Interaction Design and Children Conference (IDC 2027), in preparation',
 		status: 'in-preparation',
 		contribution:
 			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
