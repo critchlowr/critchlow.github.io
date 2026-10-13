@@ -71,15 +71,15 @@
 	>
 		<a
 			href="/#hero"
-			class="text-ink-strong font-display flex items-center gap-2 text-xl font-semibold"
+			class="text-ink-strong flex items-center"
 			aria-label="Ryan Critchlow - back to top"
 		>
 			<!--
 				Drawn as a mask over currentColor rather than an <img>, so the line art
-				takes the wordmark's colour and stays visible in dark mode.
+				takes the ink colour and stays visible in dark mode. The negative margin
+				lets it run larger without making the header taller.
 			-->
-			<span class="logo-mark h-8 w-[3.1rem] bg-current" aria-hidden="true"></span>
-			RC
+			<span class="logo-mark -my-1.5 h-10 w-[3.9rem] bg-current" aria-hidden="true"></span>
 		</a>
 
 		<!-- Desktop nav -->
