@@ -233,7 +233,7 @@ export const publications: Publication[] = [
 	{
 		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Katherine Baker, and Kristen Shinohara',
 		title:
-			'Ableism Sneaking In: A Literature Review of Disability Misconceptions in Computing Education',
+			'Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing Education',
 		venue:
 			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Porto, Portugal, October 2026',
 		status: 'published',
