@@ -3,8 +3,6 @@
 	import { skills, tools } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
-
-	const devIconBase = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons';
 </script>
 
 <SectionWrapper id="skills" headingId="skills-heading" number="06" title="Skills" alt width="wide">
@@ -32,13 +30,35 @@
 						class="group border-edge bg-surface-raised hover:border-edge-hover ease-spring flex items-center gap-3 rounded-lg border px-4 py-3 transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
 						style="--i: {i}"
 					>
-						<img
-							src="{devIconBase}/{tool.icon}.svg"
-							alt=""
-							class="ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-							loading="lazy"
-							aria-hidden="true"
-						/>
+						{#if tool.icon}
+							<img
+								src="/icons/{tool.icon}.svg"
+								alt=""
+								class={[
+									'ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+									tool.mono && 'dark:invert'
+								]}
+								loading="lazy"
+								aria-hidden="true"
+							/>
+						{:else}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="text-plum-600 dark:text-plum-300 ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+								aria-hidden="true"
+							>
+								<path d="M3 3v18h18" />
+								<rect x="7" y="12" width="3" height="5" rx="0.5" />
+								<rect x="12" y="8" width="3" height="9" rx="0.5" />
+								<rect x="17" y="5" width="3" height="12" rx="0.5" />
+							</svg>
+						{/if}
 						<span class="text-ink text-sm font-medium">{tool.name}</span>
 					</div>
 				{/each}
