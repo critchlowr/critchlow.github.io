@@ -240,7 +240,7 @@ _Compiled 2026-10-13 against `main` @ `bf1f6c7`. Inputs: 01a (motion/platform), 
 
 **Why B.**
 
-- It continues the current parchment-gold-plum identity that 02 rates as a strength, and the mockup (`mockups/almanac.html`) is already built on it.
+- It continues the current parchment-gold-plum identity that 02 rates as a strength, and the Almanac mockup was built on it (since retired; it is in the branch history).
 - It is the most Stardew of the three.
 - Its warm–cool balance holds: plum is the only cool _text_ colour, and the sky focus ring is transient.
 

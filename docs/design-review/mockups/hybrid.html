@@ -6,13 +6,19 @@
 		<title>Hybrid Mockup</title>
 		<meta
 			name="description"
-			content="Design mockup for ryancritchlow.com: the research-backed Consensus structure with the fun put back in, a day and night window, Georgia, and a conveyor belt that delivers the proof points."
+			content="Design mockup for ryancritchlow.com: a research-backed structure with the fun put back in, a day and night window, Georgia, hand-drawn job scenes, and four palettes to compare."
 		/>
 		<meta name="color-scheme" content="light dark" />
 		<script>
 			try {
 				const t = localStorage.getItem('hybrid-theme');
 				if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+				// ?palette=navy in the URL wins over the remembered choice, so a link can open one.
+				const p =
+					new URLSearchParams(location.search).get('palette') ??
+					localStorage.getItem('hybrid-palette');
+				if (['harbor', 'navy', 'periwinkle'].includes(p))
+					document.documentElement.dataset.palette = p;
 			} catch {}
 		</script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,10 +28,11 @@
 			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..700,0..100&family=Inter:opsz,wght@14..32,400..700&display=swap"
 		/>
 		<style>
-			/* Layout: Consensus underneath (familiar header, proof first, one case-study template,
-			   résumé-style history). The fun sits on top as small, contrasting figures and moments
-			   the visitor sets off: the window, Georgia, the conveyor, the sun across the header.
-			   Colour stays mostly neutral with one blue, so the illustrations carry the warmth. */
+			/* Layout: a familiar structure underneath (header, proof first, one case-study
+			   template, résumé-style history). The fun sits on top as small, contrasting figures and
+			   moments the visitor sets off: the window, Georgia, the conveyor on the Körber card,
+			   the hand-drawn job scenes. Colour stays mostly neutral with one hue family, so the
+			   illustrations carry the warmth. data-palette swaps that hue family (see the banner). */
 			:root {
 				--bg: #fcfaf6;
 				--band: #f3efe6;
@@ -58,8 +65,6 @@
 				--box: #e2b67c;
 				--box-edge: #b07d43;
 				--tape: #ecc993;
-				--label: #ffffff;
-				--label-ink: #1c2230;
 				--rail: #5f6675;
 				--belt: #3a3f4b;
 				--belt-slat: #4d5361;
@@ -125,6 +130,54 @@
 				--gutter: clamp(1rem, 4vw, 2rem);
 				--header-h: 4rem;
 			}
+			/* Palette options, compared from the banner. Each keeps the same structure and
+			   illustrations and swaps the hue family. Every pair is checked in a11y/palettes.json.
+			   Light rules sit before the dark ones so dark mode still wins over them. */
+			:root[data-palette='harbor'] {
+				--bg: #f5f9f8;
+				--band: #e6f0ee;
+				--card: #ffffff;
+				--ink: #122a2e;
+				--muted: #43595d;
+				--primary: #0c6668;
+				--primary-hover: #084c4e;
+				--on-primary: #ffffff;
+				--link: #0c6668;
+				--focus: #0c6668;
+				--border: #cddedb;
+				--control: #698784;
+				--chip: #fbe4dc;
+			}
+			:root[data-palette='navy'] {
+				--bg: #fbf8f1;
+				--band: #f1ebdd;
+				--card: #ffffff;
+				--ink: #16213a;
+				--muted: #4a5468;
+				--primary: #1f3d7a;
+				--primary-hover: #162d5c;
+				--on-primary: #ffffff;
+				--link: #1f3d7a;
+				--focus: #1f3d7a;
+				--border: #ddd3bf;
+				--control: #7a8295;
+				--chip: #f7e6b5;
+			}
+			:root[data-palette='periwinkle'] {
+				--bg: #f8f7fd;
+				--band: #eeebfa;
+				--card: #ffffff;
+				--ink: #1d1a35;
+				--muted: #4c4866;
+				--primary: #4a3dc2;
+				--primary-hover: #382d9b;
+				--on-primary: #ffffff;
+				--link: #4a3dc2;
+				--focus: #4a3dc2;
+				--border: #dcd7f1;
+				--control: #77729a;
+				--chip: #f9ebc4;
+			}
 			@media (prefers-color-scheme: dark) {
 				:root:not([data-theme='light']) {
 					--bg: #111726;
@@ -157,8 +210,6 @@
 					--box: #c99a5f;
 					--box-edge: #8f6534;
 					--tape: #d9b27c;
-					--label: #f4f1ea;
-					--label-ink: #1c2230;
 					--rail: #8790a2;
 					--belt: #0b0f19;
 					--belt-slat: #232a3a;
@@ -196,8 +247,6 @@
 				--box: #c99a5f;
 				--box-edge: #8f6534;
 				--tape: #d9b27c;
-				--label: #f4f1ea;
-				--label-ink: #1c2230;
 				--rail: #8790a2;
 				--belt: #0b0f19;
 				--belt-slat: #232a3a;
@@ -205,6 +254,98 @@
 			}
 			:root[data-theme='light'] {
 				color-scheme: light;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root[data-palette='harbor']:not([data-theme='light']) {
+					--bg: #0d1b1e;
+					--band: #112428;
+					--card: #162b30;
+					--ink: #e5f1ef;
+					--muted: #a8c1be;
+					--primary: #62cfc3;
+					--primary-hover: #8fe0d6;
+					--on-primary: #0d1b1e;
+					--link: #62cfc3;
+					--focus: #62cfc3;
+					--border: #284245;
+					--control: #6d8f8b;
+					--chip: #3a2721;
+				}
+				:root[data-palette='navy']:not([data-theme='light']) {
+					--bg: #0f1628;
+					--band: #141d33;
+					--card: #19233d;
+					--ink: #eaeef6;
+					--muted: #b0b9cb;
+					--primary: #f2c55c;
+					--primary-hover: #f7d88d;
+					--on-primary: #0f1628;
+					--link: #9fbcf5;
+					--focus: #f2c55c;
+					--border: #2c3856;
+					--control: #76819a;
+					--chip: #3a3220;
+				}
+				:root[data-palette='periwinkle']:not([data-theme='light']) {
+					--bg: #13122a;
+					--band: #191837;
+					--card: #1f1d3f;
+					--ink: #eceafa;
+					--muted: #b5b1d6;
+					--primary: #aaa2ff;
+					--primary-hover: #c7c1ff;
+					--on-primary: #13122a;
+					--link: #aaa2ff;
+					--focus: #aaa2ff;
+					--border: #34315e;
+					--control: #7c78a8;
+					--chip: #3b3320;
+				}
+			}
+			:root[data-palette='harbor'][data-theme='dark'] {
+				--bg: #0d1b1e;
+				--band: #112428;
+				--card: #162b30;
+				--ink: #e5f1ef;
+				--muted: #a8c1be;
+				--primary: #62cfc3;
+				--primary-hover: #8fe0d6;
+				--on-primary: #0d1b1e;
+				--link: #62cfc3;
+				--focus: #62cfc3;
+				--border: #284245;
+				--control: #6d8f8b;
+				--chip: #3a2721;
+			}
+			:root[data-palette='navy'][data-theme='dark'] {
+				--bg: #0f1628;
+				--band: #141d33;
+				--card: #19233d;
+				--ink: #eaeef6;
+				--muted: #b0b9cb;
+				--primary: #f2c55c;
+				--primary-hover: #f7d88d;
+				--on-primary: #0f1628;
+				--link: #9fbcf5;
+				--focus: #f2c55c;
+				--border: #2c3856;
+				--control: #76819a;
+				--chip: #3a3220;
+			}
+			:root[data-palette='periwinkle'][data-theme='dark'] {
+				--bg: #13122a;
+				--band: #191837;
+				--card: #1f1d3f;
+				--ink: #eceafa;
+				--muted: #b5b1d6;
+				--primary: #aaa2ff;
+				--primary-hover: #c7c1ff;
+				--on-primary: #13122a;
+				--link: #aaa2ff;
+				--focus: #aaa2ff;
+				--border: #34315e;
+				--control: #7c78a8;
+				--chip: #3b3320;
 			}
 
 			/* ---------- Base ---------- */
@@ -344,6 +485,19 @@
 			}
 			.mock-banner :focus-visible {
 				outline-color: currentColor;
+			}
+			.palette-pick {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.palette-pick select {
+				font: inherit;
+				padding: 0.15rem 0.4rem;
+				color: var(--ink);
+				background: var(--bg);
+				border: 1px solid var(--bg);
+				border-radius: 6px;
 			}
 
 			/* ---------- Header ---------- */
@@ -783,19 +937,12 @@
 				}
 			}
 
-			/* ---------- The conveyor: four proof points, shipped ---------- */
-			.shipping {
+			/* ---------- Highlights ---------- */
+			.highlights {
 				padding-block: 0.5rem clamp(3rem, 7vw, 5rem);
 			}
-			.shipping-head {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				justify-content: space-between;
-				gap: 0.75rem 1.5rem;
+			.highlights h2 {
 				margin-bottom: 1rem;
-			}
-			.shipping-head h2 {
 				font-family: var(--font);
 				font-size: 0.875rem;
 				font-weight: 700;
@@ -803,63 +950,24 @@
 				text-transform: uppercase;
 				color: var(--muted);
 			}
-			.conveyor {
-				position: relative;
-				padding-bottom: 2.6rem;
-				overflow-x: clip;
-			}
-			/* The chute the boxes come out of. */
-			.conveyor::before {
-				content: '';
-				position: absolute;
-				z-index: 2;
-				left: 0;
-				top: 0;
-				bottom: 1rem;
-				width: 0.6rem;
-				background: var(--rail);
-				border-radius: 4px 4px 0 0;
-			}
-			.boxes {
-				position: relative;
-				z-index: 1;
+			.proofs {
 				display: grid;
 				grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 				gap: 1rem;
-				align-items: end;
-				padding: 0 0.75rem;
+				padding: 0;
 				list-style: none;
 			}
-			/* A cardboard box with tape over the top and a white shipping label on the front. */
-			.box {
-				position: relative;
-				padding: 1.1rem 0.9rem 0.9rem;
-				background: var(--box);
-				border: 2px solid var(--box-edge);
-				border-radius: 4px;
-			}
-			.box::before {
-				content: '';
-				position: absolute;
-				top: -2px;
-				bottom: 55%;
-				left: 50%;
-				width: 2.25rem;
-				translate: -50% 0;
-				background: var(--tape);
-				border-inline: 1px solid var(--box-edge);
-			}
-			.ship-label {
-				position: relative;
+			.proof {
 				display: grid;
-				gap: 0.2rem;
-				padding: 0.75rem 0.85rem 0.65rem;
-				background: var(--label);
-				color: var(--label-ink);
-				border-radius: 3px;
-				box-shadow: 0 1px 0 rgb(0 0 0 / 0.12);
+				align-content: start;
+				gap: 0.25rem;
+				padding: 1rem 1.1rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-top: 3px solid var(--primary);
+				border-radius: var(--radius);
 			}
-			.ship-label .num {
+			.proof .num {
 				font-family: var(--display);
 				font-variation-settings: 'SOFT' 60;
 				font-size: 2rem;
@@ -867,36 +975,55 @@
 				line-height: 1.05;
 				font-variant-numeric: lining-nums tabular-nums;
 			}
-			.ship-label .what {
+			.proof .what {
+				color: var(--muted);
 				font-size: var(--step-small);
 				line-height: 1.45;
 			}
-			.ship-label a {
-				color: #1a56c4;
+
+			/* ---------- The conveyor, on the Körber card only ---------- */
+			.mini-belt {
+				position: relative;
+				margin: 0.35rem -1.5rem -1.5rem;
+				padding: 2.4rem 1rem 0.9rem;
+				overflow: hidden;
+				background: var(--band);
+				border-top: 1px solid var(--border);
+				border-radius: 0 0 var(--radius) var(--radius);
 			}
-			.ship-label .barcode {
-				height: 0.9rem;
-				margin-top: 0.35rem;
-				background: repeating-linear-gradient(
-					90deg,
-					var(--label-ink) 0 2px,
-					transparent 2px 4px,
-					var(--label-ink) 4px 5px,
-					transparent 5px 8px,
-					var(--label-ink) 8px 11px,
-					transparent 11px 12px
-				);
-				opacity: 0.85;
+			.mini-boxes {
+				display: flex;
+				align-items: flex-end;
+				justify-content: space-around;
+				gap: 1.4rem;
+				padding: 0 0.5rem;
+				list-style: none;
 			}
-			.belt {
+			.mini-boxes li {
+				position: relative;
+				flex: none;
+				width: var(--s);
+				height: var(--s);
+				background: var(--box);
+				border: 2px solid var(--box-edge);
+				border-radius: 3px;
+			}
+			.mini-boxes li::before {
+				content: '';
 				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 1rem;
-				height: 1.6rem;
+				inset: -2px auto 45% 50%;
+				width: 32%;
+				translate: -50% 0;
+				background: var(--tape);
+			}
+			.mini-band {
+				position: relative;
+				display: block;
+				height: 0.9rem;
+				margin-top: 0.15rem;
 				overflow: hidden;
 				background: var(--belt);
-				border-block: 3px solid var(--rail);
+				border-block: 2px solid var(--rail);
 				border-radius: 999px;
 			}
 			.belt-surface {
@@ -904,41 +1031,42 @@
 				inset: 0 0 0 -24px;
 				background: repeating-linear-gradient(90deg, var(--belt-slat) 0 4px, transparent 4px 24px);
 			}
-			.legs {
+			.mini-replay {
 				position: absolute;
-				left: 1.5rem;
-				right: 1.5rem;
-				bottom: 0;
-				height: 1rem;
-				background:
-					linear-gradient(var(--rail) 0 0) left / 6px 100% no-repeat,
-					linear-gradient(var(--rail) 0 0) 33% / 6px 100% no-repeat,
-					linear-gradient(var(--rail) 0 0) 66% / 6px 100% no-repeat,
-					linear-gradient(var(--rail) 0 0) right / 6px 100% no-repeat;
+				top: 0.45rem;
+				right: 0.9rem;
+				padding: 0.1rem 0.25rem;
+				font: inherit;
+				font-size: var(--step-small);
+				font-weight: 600;
+				color: var(--link);
+				background: none;
+				border: 0;
+				text-decoration: underline;
+				text-underline-offset: 0.2em;
+				cursor: pointer;
 			}
-			.replay[hidden] {
+			.mini-replay[hidden] {
 				display: none;
 			}
-			/* Delivery: the boxes ride in from the left, the belt runs, then everything stops.
-			   1.6 seconds in total, under the 5-second line in WCAG 2.2.2, and the visitor can
-			   run it again. Under reduced motion the boxes simply sit on the belt. */
+			/* The boxes ride in once (1.4 s, under the 5-second line in WCAG 2.2.2) and stop.
+			   With reduced motion they simply sit on the belt. */
 			@media (prefers-reduced-motion: no-preference) {
-				.conveyor.armed:not(.go) .box {
-					translate: -110vw 0;
+				.mini-belt.armed:not(.go) .mini-boxes {
+					translate: -120% 0;
 				}
-				.conveyor.go .box {
-					/* One train: every box moves the same distance at the same time, like a real belt. */
-					animation: deliver 1600ms var(--ease-enter) both;
+				.mini-belt.go .mini-boxes {
+					animation: deliver 1400ms var(--ease-enter) both;
 				}
 				@keyframes deliver {
 					from {
-						translate: -110vw 0;
+						translate: -120% 0;
 					}
 					to {
 						translate: 0 0;
 					}
 				}
-				.conveyor.running .belt-surface {
+				.mini-belt.running .belt-surface {
 					animation: belt-run 300ms linear infinite;
 				}
 				@keyframes belt-run {
@@ -946,6 +1074,55 @@
 						translate: 24px 0;
 					}
 				}
+			}
+
+			/* ---------- Hand-drawn job scenes ---------- */
+			.job-scene {
+				position: relative;
+				height: 7.5rem;
+				margin-top: 1.1rem;
+				overflow: hidden;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-bottom: 0;
+				border-radius: var(--radius) var(--radius) 0 0;
+				box-shadow: inset 0 -0.6rem 0 var(--chip);
+			}
+			.job-scene::after {
+				content: '';
+				position: absolute;
+				inset: auto 0 0.6rem;
+				border-top: 2px solid #3b2a1e;
+			}
+			.job-scene img {
+				position: absolute;
+				z-index: 1;
+				inset: auto 0 calc(0.6rem - 3px);
+				width: 100%;
+				height: calc(100% - 1.2rem);
+				padding-inline: 1rem;
+				object-fit: contain;
+				object-position: center bottom;
+			}
+			.earlier-title {
+				margin-top: 2rem;
+				font-size: var(--step-h3);
+				font-weight: 650;
+			}
+			.earlier {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+				gap: 1.25rem;
+				margin-top: 0.25rem;
+				padding: 0;
+				list-style: none;
+			}
+			.earlier li > p {
+				margin-top: 0.6rem;
+			}
+			.earlier .org {
+				color: var(--muted);
+				font-size: var(--step-small);
 			}
 
 			/* ---------- Sections ---------- */
@@ -1227,21 +1404,6 @@
 				display: grid;
 				gap: 1.1rem;
 			}
-			.photo {
-				margin: 0.5rem 0 0;
-				display: grid;
-				gap: 0.5rem;
-				max-width: 16rem;
-			}
-			.photo img {
-				aspect-ratio: 4 / 5;
-				object-fit: cover;
-				border-radius: var(--radius);
-			}
-			.photo figcaption {
-				font-size: var(--step-small);
-				color: var(--muted);
-			}
 			.toolbox {
 				display: grid;
 				gap: 1.75rem;
@@ -1366,8 +1528,7 @@
 				}
 				.window,
 				.sill,
-				.belt,
-				.legs,
+				.mini-band,
 				.day-track {
 					display: none;
 				}
@@ -1376,7 +1537,7 @@
 					forced-color-adjust: none;
 					background: CanvasText;
 				}
-				.box {
+				.mini-boxes li {
 					border: 1px solid CanvasText;
 				}
 			}
@@ -1384,9 +1545,7 @@
 				.site-header,
 				.mock-banner,
 				.window-wrap,
-				.belt,
-				.legs,
-				.replay,
+				.mini-belt,
 				.copy {
 					display: none;
 				}
@@ -1455,9 +1614,14 @@
 					Design mockup: <strong>Hybrid</strong>, tuned for ASSETS 2026: research first, support
 					second. Not the live site.
 				</p>
-				<p>
-					<a href="consensus.html">Consensus</a> · <a href="almanac.html">Almanac</a> ·
-					<a href="selvedge.html">Selvedge</a>
+				<p class="palette-pick">
+					<label for="palette">Palette</label>
+					<select id="palette">
+						<option value="">Current blue</option>
+						<option value="harbor">Harbor teal</option>
+						<option value="navy">Navy and marigold</option>
+						<option value="periwinkle">Periwinkle</option>
+					</select>
 				</p>
 			</div>
 		</aside>
@@ -1594,52 +1758,29 @@
 				</div>
 			</section>
 
-			<section class="shipping" aria-labelledby="proof-title">
+			<section class="highlights" aria-labelledby="proof-title">
 				<div class="wrap">
-					<div class="shipping-head">
-						<h2 id="proof-title">Track record, shipped</h2>
-						<button class="btn btn-secondary btn-sm replay" id="replay" type="button" hidden>
-							Run the belt again
-						</button>
-					</div>
-					<div class="conveyor" id="conveyor">
-						<ul class="boxes">
-							<li class="box" style="--i: 3">
-								<div class="ship-label">
-									<span class="num">ASSETS</span>
-									<span class="what"
-										>peer-reviewed paper at <a href="#assets">ACM ASSETS 2026</a></span
-									>
-									<span class="barcode" aria-hidden="true"></span>
-								</div>
-							</li>
-							<li class="box" style="--i: 0">
-								<div class="ship-label">
-									<span class="num">4</span>
-									<span class="what"
-										>enterprise accounts run at once at Körber, double the team average</span
-									>
-									<span class="barcode" aria-hidden="true"></span>
-								</div>
-							</li>
-							<li class="box" style="--i: 1">
-								<div class="ship-label">
-									<span class="num">46%</span>
-									<span class="what">more stable releases than the department average</span>
-									<span class="barcode" aria-hidden="true"></span>
-								</div>
-							</li>
-							<li class="box" style="--i: 2">
-								<div class="ship-label">
-									<span class="num">2</span>
-									<span class="what">go-lives where I was the on-site technical lead</span>
-									<span class="barcode" aria-hidden="true"></span>
-								</div>
-							</li>
-						</ul>
-						<div class="belt" aria-hidden="true"><span class="belt-surface"></span></div>
-						<div class="legs" aria-hidden="true"></div>
-					</div>
+					<h2 id="proof-title">Highlights</h2>
+					<ul class="proofs">
+						<li class="proof">
+							<span class="num">ASSETS</span>
+							<span class="what">peer-reviewed paper at <a href="#assets">ACM ASSETS 2026</a></span>
+						</li>
+						<li class="proof">
+							<span class="num">4</span>
+							<span class="what"
+								>enterprise accounts run at once at Körber, double the team average</span
+							>
+						</li>
+						<li class="proof">
+							<span class="num">46%</span>
+							<span class="what">more stable releases than the department average</span>
+						</li>
+						<li class="proof">
+							<span class="num">2</span>
+							<span class="what">go-lives where I was the on-site technical lead</span>
+						</li>
+					</ul>
 				</div>
 			</section>
 
@@ -1818,6 +1959,20 @@
 								<li>Dynamics 365</li>
 								<li>2020–2023</li>
 							</ul>
+							<div class="mini-belt" id="mini-belt">
+								<div aria-hidden="true">
+									<ul class="mini-boxes">
+										<li style="--s: 1.6rem"></li>
+										<li style="--s: 1.2rem"></li>
+										<li style="--s: 2rem"></li>
+										<li style="--s: 1.4rem"></li>
+									</ul>
+									<span class="mini-band"><span class="belt-surface"></span></span>
+								</div>
+								<button class="mini-replay" id="replay" type="button" hidden>
+									Run the belt again
+								</button>
+							</div>
 						</li>
 						<li class="case">
 							<div class="case-top">
@@ -1915,6 +2070,16 @@
 										Took over the shop's Squarespace site, handling content and structure updates.
 									</li>
 								</ul>
+								<div class="job-scene">
+									<img
+										src="assets/bench.svg"
+										alt=""
+										width="440"
+										height="150"
+										loading="lazy"
+										decoding="async"
+									/>
+								</div>
 							</div>
 						</li>
 						<li class="job">
@@ -2023,10 +2188,36 @@
 							</div>
 						</li>
 					</ol>
-					<p class="also">
-						Earlier: bartender at Redlight (2023–2025) and Aslan Brewing (2018–2020); carpenter at
-						Bespoke Construction (2015–2017).
-					</p>
+					<h3 class="earlier-title">Earlier</h3>
+					<ul class="earlier">
+						<li>
+							<div class="job-scene">
+								<img
+									src="assets/bar.svg"
+									alt=""
+									width="440"
+									height="150"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+							<p><strong>Bartender</strong> · Redlight, 2023–2025</p>
+							<p class="org">Before that, Aslan Brewing, 2018–2020</p>
+						</li>
+						<li>
+							<div class="job-scene">
+								<img
+									src="assets/saw.svg"
+									alt=""
+									width="440"
+									height="150"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+							<p><strong>Carpenter</strong> · Bespoke Construction, 2015–2017</p>
+						</li>
+					</ul>
 				</div>
 			</section>
 
@@ -2050,17 +2241,6 @@
 						<p>
 							Off the clock: trails with Georgia, half marathons, road biking, and making cocktails.
 						</p>
-						<figure class="photo">
-							<img
-								src="assets/cocktail.webp"
-								width="480"
-								height="720"
-								alt="A cocktail in a Nick and Nora glass on the bar"
-								loading="lazy"
-								decoding="async"
-							/>
-							<figcaption>From my bartending years at Redlight.</figcaption>
-						</figure>
 					</div>
 					<div class="toolbox">
 						<div>
@@ -2181,48 +2361,45 @@
 				document.startViewTransition(apply);
 			});
 
-			// Conveyor: boxes are visible by default (no JS, reduced motion). With motion allowed,
-			// they're moved off the belt just before it scrolls into view, delivered once (about
-			// two seconds), and the visitor can run it again.
-			const conveyor = document.getElementById('conveyor');
+			// Conveyor on the Körber card: boxes sit on the belt by default (no JS, reduced
+			// motion). With motion allowed they're parked off the belt before it scrolls into
+			// view, delivered once, and the visitor can run it again.
+			const belt = document.getElementById('mini-belt');
 			const replay = document.getElementById('replay');
 			let stopBelt;
 			const deliver = () => {
-				conveyor.classList.remove('go');
-				void conveyor.offsetWidth;
-				conveyor.classList.add('armed', 'go', 'running');
+				belt.classList.remove('go');
+				void belt.offsetWidth;
+				belt.classList.add('armed', 'go', 'running');
 				clearTimeout(stopBelt);
-				stopBelt = setTimeout(() => conveyor.classList.remove('running'), 1600);
+				stopBelt = setTimeout(() => belt.classList.remove('running'), 1400);
 			};
 			if (!reduce.matches && 'IntersectionObserver' in window) {
 				replay.hidden = false;
 				replay.addEventListener('click', deliver);
-			}
-			if (!reduce.matches && conveyor.getBoundingClientRect().top < innerHeight) {
-				// Already on screen at load: start before the first paint so nothing flickers.
-				deliver();
-			} else if (!reduce.matches && 'IntersectionObserver' in window) {
-				const near = new IntersectionObserver(
-					([e]) => {
-						if (!e.isIntersecting || conveyor.classList.contains('go')) return;
-						const r = e.boundingClientRect;
-						// Only hide boxes the visitor can't see yet.
-						if (r.top > innerHeight) conveyor.classList.add('armed');
-						near.disconnect();
-					},
-					{ rootMargin: '0px 0px 400px 0px' }
-				);
+				// Park the boxes only while the belt is below the screen, so nothing visible jumps.
+				if (belt.getBoundingClientRect().top > innerHeight) belt.classList.add('armed');
 				const seen = new IntersectionObserver(
 					([e]) => {
 						if (!e.isIntersecting) return;
 						deliver();
 						seen.disconnect();
 					},
-					{ threshold: 0.45 }
+					{ threshold: 0.6 }
 				);
-				near.observe(conveyor);
-				seen.observe(conveyor);
+				seen.observe(belt);
 			}
+
+			// Palette options from the banner, remembered for the next visit.
+			const palette = document.getElementById('palette');
+			palette.value = root.dataset.palette ?? '';
+			palette.addEventListener('change', () => {
+				if (palette.value) root.dataset.palette = palette.value;
+				else delete root.dataset.palette;
+				try {
+					localStorage.setItem('hybrid-palette', palette.value);
+				} catch {}
+			});
 
 			// Pet Georgia: five friendship hearts to fill.
 			const spot = document.getElementById('georgia-spot');

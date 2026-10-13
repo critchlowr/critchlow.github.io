@@ -29,4 +29,4 @@ Set `A11Y_DEBUG=1` to save the screenshot behind every failed pixel-contrast sam
 
 ## `palette-contrast.mjs`
 
-This prints the WCAG 2.2 ratio and the APCA Lc for each foreground/background pair in a palette file. Only WCAG decides pass or fail; APCA is shown for reference and isn't a standard yet. Pairs are tagged `text` (4.5:1), `large` (3:1) or `ui` (3:1). `palettes.json` holds all four mockup palettes, 205 pairs in total. The module also exports `wcag()` and `apca()` for use in other scripts.
+This prints the WCAG 2.2 ratio and the APCA Lc for each foreground/background pair in a palette file. Only WCAG decides pass or fail; APCA is shown for reference and isn't a standard yet. Pairs are tagged `text` (4.5:1), `large` (3:1) or `ui` (3:1). `palettes.json` holds the four Hybrid palette options in light and dark, 208 pairs in total. The module also exports `wcag()` and `apca()` for use in other scripts.
