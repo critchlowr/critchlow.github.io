@@ -71,9 +71,14 @@
 	>
 		<a
 			href="/#hero"
-			class="text-ink-strong font-display text-xl font-semibold"
+			class="text-ink-strong font-display flex items-center gap-2 text-xl font-semibold"
 			aria-label="Ryan Critchlow - back to top"
 		>
+			<!--
+				Drawn as a mask over currentColor rather than an <img>, so the line art
+				takes the wordmark's colour and stays visible in dark mode.
+			-->
+			<span class="logo-mark h-8 w-[3.1rem] bg-current" aria-hidden="true"></span>
 			RC
 		</a>
 
@@ -182,5 +187,10 @@
 		.nav-link::after {
 			transition: none;
 		}
+	}
+
+	.logo-mark {
+		mask: url('/images/logo-dog.png') center / contain no-repeat;
+		-webkit-mask: url('/images/logo-dog.png') center / contain no-repeat;
 	}
 </style>
