@@ -1191,6 +1191,19 @@
 				background: var(--card);
 				border: 1px solid var(--border);
 			}
+			.pub.featured {
+				border: 2px solid var(--primary);
+			}
+			.placeholder {
+				padding: 0 0.3rem;
+				border-radius: 4px;
+				background: var(--chip);
+				color: var(--ink);
+				font-style: italic;
+			}
+			.pub-links {
+				font-size: var(--step-small);
+			}
 			.ids {
 				display: flex;
 				flex-wrap: wrap;
@@ -1439,8 +1452,8 @@
 		<aside class="mock-banner" aria-label="About this mockup">
 			<div class="wrap">
 				<p>
-					Design mockup: <strong>Hybrid</strong>, tuned for support roles now and UX research next.
-					Not the live site.
+					Design mockup: <strong>Hybrid</strong>, tuned for ASSETS 2026: research first, support
+					second. Not the live site.
 				</p>
 				<p>
 					<a href="consensus.html">Consensus</a> · <a href="almanac.html">Almanac</a> ·
@@ -1456,9 +1469,9 @@
 				>
 				<nav class="site-nav" aria-label="Sections">
 					<ul>
+						<li><a href="#research">Research</a></li>
 						<li><a href="#work">Work</a></li>
 						<li><a href="#experience">Experience</a></li>
-						<li><a href="#research">Research</a></li>
 						<li><a href="#about">About</a></li>
 						<li><a href="#contact">Contact</a></li>
 					</ul>
@@ -1498,16 +1511,17 @@
 								fetchpriority="high"
 							/>
 							<span
-								><span class="dot" aria-hidden="true"></span>Open to technical support, solutions,
-								and UX research roles. Pacific Northwest or remote.</span
+								><span class="dot" aria-hidden="true"></span>At ASSETS 2026 in Porto, October 25–28.
+								Open to UX research, accessibility, and technical support roles.</span
 							>
 						</p>
 						<h1 id="hero-title">Ryan Critchlow</h1>
-						<p class="role">Enterprise technical support · UX and accessibility research</p>
+						<p class="role">Accessibility and UX research · Enterprise technical support</p>
 						<p class="lede measure">
-							I troubleshoot enterprise systems and study how people use them. Three years as an L4
-							support analyst on enterprise warehouse-management accounts at Körber, an M.S. in
-							Computer Science, and peer-reviewed research in accessible technology.
+							I study how people use technology, and I troubleshoot the enterprise systems they
+							depend on. Peer-reviewed accessibility research at ASSETS 2026, an M.S. in Computer
+							Science, and three years as an L4 support analyst on enterprise warehouse-management
+							accounts at Körber.
 						</p>
 						<div class="cta-row">
 							<a class="btn btn-primary" href="#contact">Get in touch</a>
@@ -1516,8 +1530,8 @@
 							>
 						</div>
 						<p class="paths">
+							<a href="#assets">At ASSETS? Start with the paper</a>
 							<a href="#support">Hiring for support? See how I troubleshoot</a>
-							<a href="#research">Research? See my studies and papers</a>
 						</p>
 					</div>
 
@@ -1590,6 +1604,15 @@
 					</div>
 					<div class="conveyor" id="conveyor">
 						<ul class="boxes">
+							<li class="box" style="--i: 3">
+								<div class="ship-label">
+									<span class="num">ASSETS</span>
+									<span class="what"
+										>peer-reviewed paper at <a href="#assets">ACM ASSETS 2026</a></span
+									>
+									<span class="barcode" aria-hidden="true"></span>
+								</div>
+							</li>
 							<li class="box" style="--i: 0">
 								<div class="ship-label">
 									<span class="num">4</span>
@@ -1613,15 +1636,6 @@
 									<span class="barcode" aria-hidden="true"></span>
 								</div>
 							</li>
-							<li class="box" style="--i: 3">
-								<div class="ship-label">
-									<span class="num">ASSETS</span>
-									<span class="what"
-										>peer-reviewed paper at <a href="#research">ACM ASSETS 2026</a></span
-									>
-									<span class="barcode" aria-hidden="true"></span>
-								</div>
-							</li>
 						</ul>
 						<div class="belt" aria-hidden="true"><span class="belt-surface"></span></div>
 						<div class="legs" aria-hidden="true"></div>
@@ -1629,13 +1643,140 @@
 				</div>
 			</section>
 
-			<section class="section band" id="work" aria-labelledby="work-title">
+			<section class="section band" id="research" aria-labelledby="research-title">
+				<div class="wrap">
+					<div class="section-head">
+						<h2 id="research-title">Research</h2>
+						<p>
+							I study how to design technology with the people who will use it: accessible
+							educational technology, participatory design with neurodivergent children, and
+							disability in computing education. KIND Lab, Western Washington University.
+						</p>
+					</div>
+					<ul class="tags methods" aria-label="Research methods I've used">
+						<li>In-home participatory evaluation</li>
+						<li>Semi-structured interviews</li>
+						<li>Survey and instrument design</li>
+						<li>Inductive thematic analysis</li>
+						<li>Video coding</li>
+						<li>Systematic literature coding</li>
+					</ul>
+					<ol class="pubs measure">
+						<li class="pub featured" id="assets">
+							<p class="status">Peer-reviewed · presenting at ASSETS 2026</p>
+							<h3>
+								Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing
+								Education
+							</h3>
+							<p class="authors">
+								Yasmine N. Elglaly, <b>Ryan Critchlow</b>, Katherine Baker, and Kristen Shinohara
+							</p>
+							<p class="venue">
+								ASSETS 2026, Porto, Portugal. Talk:
+								<span class="placeholder">[session, day and time]</span>
+							</p>
+							<p>
+								Accessibility coursework can produce measurable knowledge gains while students'
+								reflections still contain ableist framings: deficit-based language, unsupported
+								claims about assistive technology, and erasure of disabled people's agency.
+							</p>
+							<p>
+								<strong>My contribution:</strong> I applied an iteratively developed codebook to all
+								35 papers in the review corpus and helped identify six recurring patterns of
+								ableism. A second researcher reviewed the findings for consistency. This is my first
+								conference presentation.
+							</p>
+							<p class="pub-links">
+								Paper: <span class="placeholder">[ACM Digital Library link]</span> · Slides:
+								<span class="placeholder">[accessible slides link]</span>
+							</p>
+						</li>
+						<li class="pub">
+							<p class="status draft">In preparation</p>
+							<h3>
+								You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns
+								for Autistic Children
+							</h3>
+							<p class="authors">
+								<b>Ryan Critchlow</b>, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl
+							</p>
+							<p class="venue">Targeting IDC 2027, Seattle, WA, June 2027</p>
+							<details>
+								<summary>My contribution</summary>
+								<p>
+									First author. I planned the build, ran recruitment, designed the instruments, ran
+									the in-home sessions, and coded the analysis.
+								</p>
+							</details>
+						</li>
+						<li class="pub">
+							<p class="status draft">In preparation</p>
+							<h3>
+								Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage
+								Authoring Behavior
+							</h3>
+							<p class="authors">
+								Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and <b>Ryan Critchlow</b>
+							</p>
+							<p class="venue">Target venue to be decided</p>
+							<details>
+								<summary>My contribution</summary>
+								<p>
+									Revised the discussion for resubmission, addressed reviewer feedback, and brought
+									the manuscript back to submission readiness.
+								</p>
+							</details>
+						</li>
+					</ol>
+					<p class="ids">
+						<a href="https://orcid.org/0009-0007-7323-9177">ORCID 0009-0007-7323-9177</a>
+						<span>ACM member since 2026</span>
+					</p>
+				</div>
+			</section>
+
+			<section class="section" id="work" aria-labelledby="work-title">
 				<div class="wrap">
 					<div class="section-head">
 						<h2 id="work-title">Selected work</h2>
 						<p>Each project: the problem, what I did, and what came out of it.</p>
 					</div>
 					<ul class="cases">
+						<li class="case">
+							<div class="case-top">
+								<span class="item"
+									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
+										<use href="#i-controller" /></svg
+								></span>
+								<h3>You and I</h3>
+							</div>
+							<p class="summary">
+								A serious game for practicing pronouns, built with autistic children and their
+								families.
+							</p>
+							<dl class="facts">
+								<div>
+									<dt>Problem</dt>
+									<dd>Autistic gestalt language learners need a way to practice pronouns.</dd>
+								</div>
+								<div>
+									<dt>Role</dt>
+									<dd>Owned it end to end: research plan, Unity build, art, and evaluation.</dd>
+								</div>
+								<div>
+									<dt>Result</dt>
+									<dd>
+										In-home participatory evaluation with four families; paper targeting IDC 2027.
+									</dd>
+								</div>
+							</dl>
+							<ul class="tags" aria-label="Tools">
+								<li>Unity</li>
+								<li>C#</li>
+								<li>WebGL</li>
+								<li>2025–2026</li>
+							</ul>
+						</li>
 						<li class="case" id="support">
 							<div class="case-top">
 								<span class="item"
@@ -1720,41 +1861,6 @@
 						<li class="case">
 							<div class="case-top">
 								<span class="item"
-									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
-										<use href="#i-controller" /></svg
-								></span>
-								<h3>You and I</h3>
-							</div>
-							<p class="summary">
-								A serious game for practicing pronouns, built with autistic children and their
-								families.
-							</p>
-							<dl class="facts">
-								<div>
-									<dt>Problem</dt>
-									<dd>Autistic gestalt language learners need a way to practice pronouns.</dd>
-								</div>
-								<div>
-									<dt>Role</dt>
-									<dd>Owned it end to end: research plan, Unity build, art, and evaluation.</dd>
-								</div>
-								<div>
-									<dt>Result</dt>
-									<dd>
-										In-home participatory evaluation with four families; paper targeting IDC 2027.
-									</dd>
-								</div>
-							</dl>
-							<ul class="tags" aria-label="Tools">
-								<li>Unity</li>
-								<li>C#</li>
-								<li>WebGL</li>
-								<li>2025–2026</li>
-							</ul>
-						</li>
-						<li class="case">
-							<div class="case-top">
-								<span class="item"
 									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
 										<use href="#i-book" /></svg
 								></span>
@@ -1785,7 +1891,7 @@
 				</div>
 			</section>
 
-			<section class="section" id="experience" aria-labelledby="experience-title">
+			<section class="section band" id="experience" aria-labelledby="experience-title">
 				<div class="wrap">
 					<div class="section-head">
 						<h2 id="experience-title">Experience</h2>
@@ -1924,88 +2030,6 @@
 				</div>
 			</section>
 
-			<section class="section band" id="research" aria-labelledby="research-title">
-				<div class="wrap">
-					<div class="section-head">
-						<h2 id="research-title">Research</h2>
-						<p>
-							I study how to design technology with the people who will use it: accessible
-							educational technology, participatory design with neurodivergent children, and
-							disability in computing education. KIND Lab, Western Washington University.
-						</p>
-					</div>
-					<ul class="tags methods" aria-label="Research methods I've used">
-						<li>In-home participatory evaluation</li>
-						<li>Semi-structured interviews</li>
-						<li>Survey and instrument design</li>
-						<li>Inductive thematic analysis</li>
-						<li>Video coding</li>
-						<li>Systematic literature coding</li>
-					</ul>
-					<ol class="pubs measure">
-						<li class="pub">
-							<p class="status">Peer-reviewed</p>
-							<h3>
-								Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing
-								Education
-							</h3>
-							<p class="authors">
-								Yasmine N. Elglaly, <b>Ryan Critchlow</b>, Katherine Baker, and Kristen Shinohara
-							</p>
-							<p class="venue">ASSETS 2026, Porto, Portugal, October 2026</p>
-							<details>
-								<summary>My contribution</summary>
-								<p>
-									Applied an iteratively developed codebook to all 35 papers in the corpus and
-									helped identify six recurring patterns of ableism. A second researcher reviewed
-									the findings for consistency.
-								</p>
-							</details>
-						</li>
-						<li class="pub">
-							<p class="status draft">In preparation</p>
-							<h3>
-								You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns
-								for Autistic Children
-							</h3>
-							<p class="authors">
-								<b>Ryan Critchlow</b>, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl
-							</p>
-							<p class="venue">Targeting IDC 2027, Seattle, WA, June 2027</p>
-							<details>
-								<summary>My contribution</summary>
-								<p>
-									First author. I planned the build, ran recruitment, designed the instruments, ran
-									the in-home sessions, and coded the analysis.
-								</p>
-							</details>
-						</li>
-						<li class="pub">
-							<p class="status draft">In preparation</p>
-							<h3>
-								Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage
-								Authoring Behavior
-							</h3>
-							<p class="authors">
-								Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and <b>Ryan Critchlow</b>
-							</p>
-							<p class="venue">Target venue to be decided</p>
-							<details>
-								<summary>My contribution</summary>
-								<p>
-									Revised the discussion for resubmission, addressed reviewer feedback, and brought
-									the manuscript back to submission readiness.
-								</p>
-							</details>
-						</li>
-					</ol>
-					<p class="ids">
-						<a href="https://orcid.org/0009-0007-7323-9177">ORCID 0009-0007-7323-9177</a>
-						<span>ACM member since 2026</span>
-					</p>
-				</div>
-			</section>
-
 			<section class="section" id="about" aria-labelledby="about-title">
 				<div class="wrap about-grid">
 					<div class="prose measure">
@@ -2093,8 +2117,8 @@
 					<div class="contact">
 						<h2 id="contact-title">Let's talk</h2>
 						<p class="measure">
-							Open to technical support, solutions, and UX research roles in the Pacific Northwest
-							or remote.
+							Open to UX research, accessibility, and technical support roles in the Pacific
+							Northwest or remote. At ASSETS 2026? Come say hello.
 						</p>
 						<div class="email-row">
 							<a class="email" id="email" href="mailto:critchlow.rc@gmail.com"

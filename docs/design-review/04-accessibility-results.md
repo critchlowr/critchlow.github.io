@@ -50,13 +50,13 @@ Final run on 2026-10-13, served locally from `docs/design-review/`. All four moc
 | axe best-practice findings                       | 0                                    | 0                       | 0                       | 0                                                                     |
 | Text on illustrations or overlaps, pixel-sampled | 8–9 nodes, lowest 5.87:1             | none to sample          | 5 nodes, lowest 13.19:1 | 73–82 nodes, lowest 4.94:1 (4 decorative `aria-hidden` nodes skipped) |
 | Skip link while focused                          | Passes                               | Passes                  | Passes                  | Passes                                                                |
-| Keyboard walk                                    | 33 stops, all visible, none obscured | 29 stops, all visible   | 28 stops, all visible   | 28 stops, all visible                                                 |
+| Keyboard walk                                    | 32 stops, all visible, none obscured | 29 stops, all visible   | 28 stops, all visible   | 28 stops, all visible                                                 |
 | Forced colors                                    | Every stop keeps a ring              | Every stop keeps a ring | Every stop keeps a ring | Every stop keeps a ring                                               |
 | Reflow at 320 px, text spacing                   | Pass                                 | Pass                    | Pass                    | Pass                                                                  |
 | Motion under reduced motion                      | None                                 | None                    | None                    | None                                                                  |
 | Token pairs (`palettes.json`)                    | 52 pass                              | 37 pass                 | 53 pass                 | 63 pass                                                               |
-| Lighthouse a11y · perf · best practices · SEO    | 100 · 79 · 96 · 100                  | 100 · 92 · 96 · 100     | 100 · 83 · 96 · 100     | 100 · 87 · 96 · 100                                                   |
-| LCP, CLS                                         | 3.8 s, 0                             | 2.7 s, 0                | 3.3 s, 0                | 2.9 s, 0                                                              |
+| Lighthouse a11y · perf · best practices · SEO    | 100 · 81 · 96 · 100                  | 100 · 92 · 96 · 100     | 100 · 83 · 96 · 100     | 100 · 87 · 96 · 100                                                   |
+| LCP, CLS                                         | 3.5 s, 0                             | 2.7 s, 0                | 3.3 s, 0                | 2.9 s, 0                                                              |
 
 Notes:
 

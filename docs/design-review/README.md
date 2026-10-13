@@ -4,6 +4,16 @@ Goal: a site that is fun to use and stands out, while staying clean, fast and fu
 
 Five agents did the groundwork: three literature reviews, an audit of the current site, and a cross-reference of the audit against the literature. I built four mockups, wrote the accessibility checker, and ran it on the current site and every mockup.
 
+## Before ASSETS (October 25–28)
+
+People at an accessibility conference will open the live site, and some will tab through it or turn on reduced motion. Today it fails six checks they're likely to notice. In order:
+
+1. **Fix Phase 0 on the live site** ([below](#phase-0-try-it-yourself-first)). The skip link, focus rings, High Contrast, reduced motion and the blank page without JavaScript are each a few lines.
+2. **Lazy-load the bartending photos, or cut the marquee.** They're 2.47 MB, which is slow on conference Wi-Fi and phone data.
+3. **Add an `/assets` page** with the paper, the ACM Digital Library link, accessible slides and a way to reach you. Put its QR code and short URL on your final slide.
+4. **Fill the paper's placeholders:** session time, ACM Digital Library link, slides link.
+5. **The redesign is optional before the conference.** Phase 0 matters more.
+
 ## What's in this folder
 
 | File                                                                           | What it is                                                                                                                                                                                                                      |
@@ -19,7 +29,7 @@ Five agents did the groundwork: three literature reviews, an audit of the curren
 
 ## The four mockups
 
-All four share one structure: a 5-link nav, proof in the first screen, then Work → Experience → Research → About → Contact. Every mockup is tested in light and dark mode at phone and desktop widths, and every one passes every check.
+All four share one structure: a 5-link nav, proof in the first screen, then the same five sections. Consensus, Almanac and Selvedge run Work → Experience → Research → About → Contact. Hybrid moves Research to the front for ASSETS. Every mockup is tested in light and dark mode at phone and desktop widths, and every one passes every check.
 
 |            | **Hybrid** (my pick)                                                                                                                 | **Consensus**                                  | **Almanac**                                     | **Selvedge**                                          |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------- |
@@ -68,13 +78,13 @@ Hybrid keeps everything that makes the page easy to read, and adds back the part
 
 ### Who Hybrid is tuned for
 
-You're aiming for a technical support engineer role at Salesforce now, then a move into UX research, with a PhD as the fallback. One page has to serve all three, so Hybrid leads with the job you're applying for and gives researchers a second path:
+The first people to see this site will be faculty, PhD students and industry researchers at ASSETS 2026 (Porto, October 25–28). After that, it's Salesforce and other support hiring teams. So Hybrid now leads with research and keeps a clear second path for support:
 
-- **Hero:** "Enterprise technical support · UX and accessibility research", with two links under the buttons: _Hiring for support? See how I troubleshoot_ and _Research? See my studies and papers_.
-- **Proof boxes:** 4 enterprise accounts, 46% more stable releases, 2 go-lives as on-site technical lead, the ASSETS paper.
-- **First case study: Enterprise WMS support at Körber.** It covers fault isolation across the WMS, order system, Dynamics 365 and network, escalation with evidence, and deadlocks resolved. Salesforce TSE postings ask for exactly this: 2+ years of technical support, SQL, debugging and log reading, and explaining technical issues to non-technical people.
-- **Research section:** a research-interests sentence and the methods you've used (participatory evaluation, interviews, instrument design, thematic analysis, video coding, literature coding). This is UX research language that also reads well to PhD advisors.
-- **Footer:** a one-line accessibility statement. For an accessibility researcher, a demonstrably accessible site is evidence in itself.
+- **Hero:** "At ASSETS 2026 in Porto, October 25–28" in the status line, then "Accessibility and UX research · Enterprise technical support". Two links sit under the buttons: _At ASSETS? Start with the paper_ and _Hiring for support? See how I troubleshoot_.
+- **Proof boxes:** the ASSETS paper arrives first, then 4 enterprise accounts, 46% more stable releases, and 2 go-lives as on-site technical lead.
+- **Research comes first.** It has a research-interests sentence, the methods you've used, and the ASSETS paper as a featured card: a plain-language summary, your contribution, and slots for the session time, the ACM Digital Library link and accessible slides. Fill those three placeholders before October 25.
+- **Work keeps the support case study.** _Enterprise WMS support at Körber_ covers fault isolation across the WMS, order system, Dynamics 365 and network, escalation with evidence, and deadlocks resolved. Salesforce TSE postings ask for exactly this: 2+ years of technical support, SQL, debugging and log reading, and explaining technical issues to non-technical people.
+- **Footer:** a one-line accessibility statement. At an accessibility conference, people will check. A site that passes is evidence in itself, and one that fails costs you more there than anywhere else.
 
 Steps that live outside the website:
 
@@ -130,9 +140,10 @@ Details are in [03 §4](03-cross-reference.md#4-proposals-to-the-owner) and [01c
 ## Decisions I need from you
 
 1. **Direction:** Hybrid (my pick), Consensus, Almanac, or Selvedge? You can also mix and match pieces.
-2. **Positioning line:** Hybrid now uses "Enterprise technical support · UX and accessibility research" for the Salesforce path. Does that read right to you?
-3. **Simulator:** move it to its own page (recommended), or cut it?
-4. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
+2. **Positioning line:** Hybrid now uses "Accessibility and UX research · Enterprise technical support" for ASSETS. After the conference you could flip the order for support applications. Does that read right to you?
+3. **Before ASSETS:** ship Phase 0 to the live site (strongly recommended), and decide whether the redesign also goes live before October 25.
+4. **Simulator:** move it to its own page (recommended), or cut it?
+5. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
 
 ## Phase 0: try it yourself first
 
