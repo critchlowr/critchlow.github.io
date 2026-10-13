@@ -118,7 +118,7 @@
 			</p>
 			<button
 				type="button"
-				class="bg-accent-500 hover:bg-accent-600 focus:ring-accent-400 dark:bg-accent-600 dark:hover:bg-accent-500 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				class="bg-accent-500 hover:bg-accent-600 dark:bg-accent-600 dark:hover:bg-accent-500 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors"
 				onclick={onwave}
 				aria-label="Wave orders — allocate inventory and create pick tasks"
 			>
@@ -269,8 +269,8 @@
 					<div class="flex gap-2">
 						<button
 							type="button"
-							class="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none {locationHasEnough
-								? 'bg-moss-500 hover:bg-moss-600 focus:ring-moss-400'
+							class="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors {locationHasEnough
+								? 'bg-moss-500 hover:bg-moss-600'
 								: 'bg-warm-300 dark:bg-warm-600 cursor-not-allowed'}"
 							onclick={() => onpick(currentPick.pickId)}
 							disabled={!locationHasEnough}
@@ -280,7 +280,7 @@
 						</button>
 						<button
 							type="button"
-							class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
+							class="bg-ember-500 hover:bg-ember-600 flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors"
 							onclick={() => onreportempty(currentPick.pickId)}
 							aria-label="Report location {currentPick.fromLocation} empty"
 						>
@@ -366,7 +366,7 @@
 						</p>
 						<button
 							type="button"
-							class="bg-moss-500 hover:bg-moss-600 focus:ring-moss-400 w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
+							class="bg-moss-500 hover:bg-moss-600 w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-colors"
 							onclick={() => onpackorder(entry.orderId)}
 							aria-label="Pack {entry.orderId} complete"
 						>
@@ -393,7 +393,7 @@
 							<div class="flex gap-2">
 								<button
 									type="button"
-									class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
+									class="bg-ember-500 hover:bg-ember-600 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors"
 									onclick={() => {
 										onpackorder(entry.orderId, true);
 										confirmingShortPack = null;
@@ -422,7 +422,7 @@
 								</button>
 								<button
 									type="button"
-									class="bg-ember-500 hover:bg-ember-600 focus:ring-ember-400 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors focus:ring-2 focus:outline-none"
+									class="bg-ember-500 hover:bg-ember-600 flex-1 rounded-lg py-2 text-sm font-semibold text-white transition-colors"
 									onclick={() => {
 										confirmingShortPack = entry.orderId;
 									}}
@@ -452,7 +452,7 @@
 			</p>
 			<button
 				type="button"
-				class="bg-plum-500 hover:bg-plum-600 focus:ring-plum-400 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				class="bg-plum-500 hover:bg-plum-600 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors"
 				onclick={onloadall}
 				aria-label="Load truck — move packed items into outbound truck"
 			>
@@ -472,7 +472,7 @@
 			</p>
 			<button
 				type="button"
-				class="bg-moss-500 hover:bg-moss-600 focus:ring-moss-400 dark:focus:ring-offset-warm-800 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				class="bg-moss-500 hover:bg-moss-600 mt-4 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors"
 				onclick={onshipall}
 				aria-label="Ship all loaded orders"
 			>

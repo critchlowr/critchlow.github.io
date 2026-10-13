@@ -10,8 +10,8 @@ export interface Experience {
 	hrefLabel?: string;
 	/** Shows the "Try the WMS Simulator" button and the conveyor belt on this card. */
 	showSimulator?: boolean;
-	/** Shows the bartending photo slider on this card. */
-	showBartendingPhotos?: boolean;
+	/** A small hand-drawn scene along the bottom of the card. */
+	scene?: 'bar' | 'saw' | 'bench';
 }
 
 export interface Education {

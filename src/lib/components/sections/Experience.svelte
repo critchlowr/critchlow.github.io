@@ -4,115 +4,10 @@
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
+	import JobScene from '$lib/components/ui/JobScene.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
-
-	let conveyorEl = $state<HTMLElement>();
-	let conveyorVisible = $state(false);
-
-	// Photo slider — native scroll-snap handles swipe; arrows and keys scroll by one slide.
-	let slider = $state<HTMLElement>();
-	let slideIndex = $state(0);
-
-	function goToSlide(i: number) {
-		if (!slider) return;
-		const n = bartendingPhotos.length;
-		const target = (i + n) % n;
-		const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		slider.scrollTo({ left: target * slider.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
-	}
-
-	function onSliderScroll() {
-		if (!slider) return;
-		slideIndex = Math.round(slider.scrollLeft / slider.clientWidth);
-	}
-
-	function focusSlide(i: number) {
-		const slides = slider?.querySelectorAll<HTMLElement>('.slide');
-		slides?.[i]?.focus({ preventScroll: true });
-	}
-
-	// Arrow keys on the focused slide; focus follows so it never lands on a hidden slide.
-	function onSlideKey(e: KeyboardEvent) {
-		if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-		e.preventDefault();
-		const n = bartendingPhotos.length;
-		const next = (slideIndex + (e.key === 'ArrowRight' ? 1 : -1) + n) % n;
-		goToSlide(next);
-		slideIndex = next;
-		focusSlide(next);
-	}
-
-	const bartendingPhotos = [
-		{ src: '/images/Bartending/pouring.webp', alt: 'Ryan pouring a cocktail' },
-		{
-			src: '/images/Bartending/nickandnora_cocktail.webp',
-			alt: 'Cocktail in a nick and nora glass'
-		},
-		{ src: '/images/Bartending/ryan_holdingdrink.webp', alt: 'Ryan holding a finished cocktail' },
-		{
-			src: '/images/Bartending/mercyandryan1.webp',
-			alt: 'Ryan and coworker Mercy with a cocktail'
-		},
-		{ src: '/images/Bartending/mercyandryan2.webp', alt: 'Ryan and Mercy behind the bar' },
-		{ src: '/images/Bartending/justinandryan1.webp', alt: 'Ryan and coworker Justin' },
-		{ src: '/images/Bartending/justinandryan2.webp', alt: 'Ryan and Justin behind the bar' },
-		{ src: '/images/Bartending/hollyandryan.webp', alt: 'Ryan and coworker Holly' },
-		{ src: '/images/Bartending/audreyandhannahandryan.webp', alt: 'Ryan with Audrey and Hannah' },
-		{ src: '/images/Bartending/maxandryan.webp', alt: 'Ryan and Max' }
-	];
-
-	// Native <dialog>: showModal() makes the page behind it inert, Escape closes it,
-	// and the browser hands focus back to the photo that opened it.
-	let lightbox = $state<HTMLDialogElement>();
-	let lightboxIndex = $state(0);
-	const lightboxPhoto = $derived(bartendingPhotos[lightboxIndex]);
-
-	function openLightbox(i: number) {
-		lightboxIndex = i;
-		lightbox?.showModal();
-		document.documentElement.style.overflow = 'hidden';
-	}
-
-	function stepLightbox(delta: number) {
-		const n = bartendingPhotos.length;
-		lightboxIndex = (lightboxIndex + delta + n) % n;
-	}
-
-	function onLightboxClose() {
-		document.documentElement.style.overflow = '';
-		// Leave the slider on whatever photo they finished browsing, and move focus there
-		// too — the browser restores it to the opener, which may now be off-screen.
-		if (lightboxIndex !== slideIndex) {
-			goToSlide(lightboxIndex);
-			slideIndex = lightboxIndex;
-			focusSlide(lightboxIndex);
-		}
-	}
-
-	function onLightboxKey(e: KeyboardEvent) {
-		if (e.key === 'ArrowRight') stepLightbox(1);
-		else if (e.key === 'ArrowLeft') stepLightbox(-1);
-	}
-
-	$effect(() => {
-		const el = conveyorEl;
-		if (!el) return;
-
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
-					conveyorVisible = true;
-					observer.disconnect();
-				}
-			},
-			{ threshold: 0.3 }
-		);
-		observer.observe(el);
-
-		return () => observer.disconnect();
-	});
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" number="02" title="Experience" alt>
@@ -171,7 +66,7 @@
 					<div class="mt-6 flex justify-center">
 						<button
 							type="button"
-							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 focus:ring-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 dark:focus:ring-offset-warm-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+							class="border-accent-400 bg-accent-50 text-accent-800 hover:bg-accent-100 hover:border-accent-500 dark:border-accent-700 dark:bg-accent-950 dark:text-accent-200 dark:hover:bg-accent-900 ease-spring inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-[background-color,border-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
 							onclick={() => simulator.launch()}
 						>
 							<svg
@@ -194,106 +89,13 @@
 						Bled to the card edges rather than boxed again inside it — a border
 						within a border reads as clutter.
 					-->
-					<div
-						class="mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						bind:this={conveyorEl}
-					>
-						<ConveyorBelt visible={conveyorVisible} />
+					<div class="bleed">
+						<ConveyorBelt />
 					</div>
 				{/if}
-				{#if job.showBartendingPhotos}
-					<div
-						class="bg-warm-100 dark:bg-warm-800 relative mt-6 mr-[-1.5rem] -mb-6 -ml-6 overflow-hidden rounded-b-xl md:mr-[-1.75rem] md:-mb-7 md:-ml-7"
-						role="region"
-						aria-roledescription="carousel"
-						aria-label="Bartending photos"
-					>
-						<div
-							class="photo-slider h-80 sm:h-[26rem]"
-							bind:this={slider}
-							onscroll={onSliderScroll}
-						>
-							{#each bartendingPhotos as photo, i (photo.src)}
-								<button
-									type="button"
-									onclick={() => openLightbox(i)}
-									class="slide focus-visible:ring-accent-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
-									tabindex={i === slideIndex ? 0 : -1}
-									aria-hidden={i !== slideIndex}
-									aria-label="Enlarge: {photo.alt}"
-									onkeydown={onSlideKey}
-								>
-									<!-- Blurred copy fills the frame so portrait and landscape shots sit on the same stage. -->
-									<img src={photo.src} alt="" class="slide-backdrop" loading="lazy" />
-									<img
-										src={photo.src}
-										alt={photo.alt}
-										class="relative h-full w-full object-contain"
-										loading={i === 0 ? 'eager' : 'lazy'}
-										draggable="false"
-									/>
-								</button>
-							{/each}
-						</div>
-						<button
-							type="button"
-							onclick={() => goToSlide(slideIndex - 1)}
-							class="slider-arrow left-3"
-							aria-label="Previous photo"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								aria-hidden="true"
-							>
-								<polyline points="15 18 9 12 15 6" />
-							</svg>
-						</button>
-						<button
-							type="button"
-							onclick={() => goToSlide(slideIndex + 1)}
-							class="slider-arrow right-3"
-							aria-label="Next photo"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								aria-hidden="true"
-							>
-								<polyline points="9 18 15 12 9 6" />
-							</svg>
-						</button>
-						<p class="sr-only" aria-live="polite">
-							Photo {slideIndex + 1} of {bartendingPhotos.length}
-						</p>
-						<div
-							class="absolute inset-x-0 bottom-3 flex justify-center gap-1.5"
-							role="group"
-							aria-label="Choose photo"
-						>
-							{#each bartendingPhotos as photo, i (photo.src)}
-								<button
-									type="button"
-									onclick={() => goToSlide(i)}
-									class="slider-dot"
-									class:active={i === slideIndex}
-									aria-label="Show photo {i + 1}"
-									aria-current={i === slideIndex}
-								></button>
-							{/each}
-						</div>
+				{#if job.scene}
+					<div class="bleed">
+						<JobScene scene={job.scene} />
 					</div>
 				{/if}
 			</Card>
@@ -301,198 +103,17 @@
 	</ul>
 </SectionWrapper>
 
-<!-- Clicks on the empty area around the photo land on the <dialog> itself and close it. -->
-<dialog
-	bind:this={lightbox}
-	class="lightbox"
-	aria-label="Photo {lightboxIndex + 1} of {bartendingPhotos.length}"
-	onclose={onLightboxClose}
-	onkeydown={onLightboxKey}
-	onclick={(e) => {
-		if (e.target === e.currentTarget) lightbox?.close();
-	}}
->
-	<div class="pointer-events-none flex h-full w-full items-center justify-center p-4 sm:p-16">
-		<img
-			src={lightboxPhoto.src}
-			alt={lightboxPhoto.alt}
-			class="pointer-events-auto max-h-full max-w-full rounded-xl object-contain shadow-2xl"
-		/>
-	</div>
-	<button
-		type="button"
-		onclick={() => lightbox?.close()}
-		class="bg-warm-800/60 hover:bg-warm-700 absolute top-4 right-4 rounded-full p-2 text-white transition-colors"
-		aria-label="Close photo"
-	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			aria-hidden="true"
-		>
-			<line x1="18" y1="6" x2="6" y2="18" />
-			<line x1="6" y1="6" x2="18" y2="18" />
-		</svg>
-	</button>
-	<button
-		type="button"
-		onclick={() => stepLightbox(-1)}
-		class="slider-arrow left-3 sm:left-5"
-		aria-label="Previous photo"
-	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-5 w-5"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2.5"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<polyline points="15 18 9 12 15 6" />
-		</svg>
-	</button>
-	<button
-		type="button"
-		onclick={() => stepLightbox(1)}
-		class="slider-arrow right-3 sm:right-5"
-		aria-label="Next photo"
-	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-5 w-5"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2.5"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<polyline points="9 18 15 12 9 6" />
-		</svg>
-	</button>
-	<p class="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-sm text-white/80">
-		{lightboxIndex + 1} / {bartendingPhotos.length}
-	</p>
-</dialog>
-
 <style>
-	.lightbox {
-		position: fixed;
-		inset: 0;
-		width: 100vw;
-		height: 100dvh;
-		max-width: none;
-		max-height: none;
-		margin: 0;
-		padding: 0;
-		border: 0;
-		background: transparent;
-		color: white;
-	}
-
-	.lightbox::backdrop {
-		background: rgb(0 0 0 / 0.85);
-		backdrop-filter: blur(4px);
-	}
-
-	.photo-slider {
-		display: flex;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
-		overscroll-behavior-x: contain;
-		scrollbar-width: none;
-	}
-
-	.photo-slider::-webkit-scrollbar {
-		display: none;
-	}
-
-	.slide {
-		position: relative;
-		flex: 0 0 100%;
-		height: 100%;
+	/* Bleeds a bottom strip to the card edges, matching the card's padding. */
+	.bleed {
+		margin: 1.5rem -1.5rem -1.5rem;
 		overflow: hidden;
-		scroll-snap-align: center;
-		scroll-snap-stop: always;
-		cursor: zoom-in;
+		border-radius: 0 0 0.75rem 0.75rem;
 	}
 
-	.slide-backdrop {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		filter: blur(24px) saturate(1.1);
-		transform: scale(1.15);
-		opacity: 0.55;
-	}
-
-	.slider-arrow {
-		position: absolute;
-		top: 50%;
-		translate: 0 -50%;
-		display: grid;
-		place-items: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		border-radius: 9999px;
-		color: white;
-		background: rgb(0 0 0 / 0.45);
-		backdrop-filter: blur(4px);
-		transition:
-			background-color 150ms,
-			scale 150ms;
-	}
-
-	.slider-arrow:hover {
-		background: rgb(0 0 0 / 0.65);
-	}
-
-	.slider-arrow:active {
-		scale: 0.94;
-	}
-
-	.slider-arrow:focus-visible {
-		outline: 2px solid var(--color-accent-400);
-		outline-offset: 2px;
-	}
-
-	/* Padding + content-box clip keeps the dot small but the tap target near 20px. */
-	.slider-dot {
-		width: 1.25rem;
-		height: 1.25rem;
-		padding: 0.375rem;
-		background-clip: content-box;
-		border-radius: 9999px;
-		background-color: rgb(255 255 255 / 0.55);
-		transition:
-			width 200ms,
-			background-color 200ms;
-	}
-
-	.slider-dot.active {
-		width: 2rem;
-		background-color: white;
-	}
-
-	.slider-dot:focus-visible {
-		outline: 2px solid var(--color-accent-400);
-		outline-offset: 2px;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.slider-arrow,
-		.slider-dot {
-			transition: none;
+	@media (width >= 48rem) {
+		.bleed {
+			margin: 1.5rem -1.75rem -1.75rem;
 		}
 	}
 </style>

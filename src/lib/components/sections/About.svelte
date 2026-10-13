@@ -10,6 +10,10 @@
 			<img
 				src="/images/ryancritchlow.jpeg"
 				alt="Ryan Critchlow"
+				width="325"
+				height="325"
+				loading="lazy"
+				decoding="async"
 				class="border-edge h-56 w-56 rounded-2xl border object-cover shadow-lg md:h-72 md:w-72"
 			/>
 		</div>

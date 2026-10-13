@@ -1,43 +1,92 @@
 <script lang="ts">
-	let { visible = false }: { visible: boolean } = $props();
+	/**
+	 * A conveyor that delivers its boxes once, when it scrolls into view, then stops.
+	 *
+	 * - Without JavaScript, or with reduced motion on, the boxes simply sit on the belt.
+	 *   Both the parked start and the run are inside a `no-preference` media query, so
+	 *   reduced motion never sees either (WCAG 2.2.2, 2.3.3).
+	 * - "Run the belt again" replays it by re-creating the belt, which restarts the CSS
+	 *   animation. The button only exists when motion is allowed.
+	 */
+	let root = $state<HTMLElement>();
+	let armed = $state(false);
+	let playing = $state(false);
+	let delivered = $state(false);
+	let run = $state(0);
+	let motionOK = $state(false);
+
+	$effect(() => {
+		const query = window.matchMedia('(prefers-reduced-motion: no-preference)');
+		const sync = () => (motionOK = query.matches);
+		sync();
+		query.addEventListener('change', sync);
+		return () => query.removeEventListener('change', sync);
+	});
+
+	$effect(() => {
+		const el = root;
+		if (!el) return;
+		armed = true;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				playing = true;
+				observer.disconnect();
+			},
+			{ threshold: 0.6 }
+		);
+		observer.observe(el);
+		return () => observer.disconnect();
+	});
+
+	function replay() {
+		run += 1;
+		playing = true;
+	}
 </script>
 
 <div
-	class="bg-warm-100 dark:bg-warm-800 overflow-hidden rounded-b-xl py-3 select-none"
-	role="img"
-	aria-label="Decorative animated conveyor belt with shipping boxes"
+	class="bg-warm-100 dark:bg-warm-800 relative rounded-b-xl pt-9 pb-3 select-none"
+	class:armed
+	class:playing
+	bind:this={root}
 >
-	<div class="relative h-10" aria-hidden="true">
-		<!-- Animated layer: belt track + boxes scroll together -->
-		<div class="belt-content" class:belt-animate={visible}>
-			<!-- Continuous track across full width -->
-			<div class="belt-track"></div>
-			<!-- First segment boxes -->
-			<div class="belt-segment">
-				<div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
-				<div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
-				<div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
-				<div class="box box-bounce-d bottom-3 left-[72%] h-4 w-4"></div>
+	<div class="relative h-10 overflow-hidden" aria-hidden="true">
+		{#key run}
+			<!-- The track and boxes travel together, so the belt reads as carrying them. -->
+			<div
+				class="belt-content"
+				onanimationend={(e) => {
+					if (e.target === e.currentTarget) delivered = true;
+				}}
+			>
+				<div class="belt-track"></div>
+				<div class="belt-segment">
+					<div class="box bottom-3 left-[5%] h-5 w-5"></div>
+					<div class="box bottom-3 left-[14%] h-3.5 w-3.5"></div>
+					<div class="box bottom-3 left-[40%] h-6 w-6"></div>
+					<div class="box bottom-3 left-[72%] h-4 w-4"></div>
+				</div>
+				<div class="belt-segment"></div>
 			</div>
-			<!-- Second segment boxes (seamless loop) -->
-			<div class="belt-segment">
-				<div class="box box-bounce-a bottom-3 left-[5%] h-5 w-5"></div>
-				<div class="box box-bounce-b bottom-3 left-[14%] h-3.5 w-3.5"></div>
-				<div class="box box-bounce-c bottom-3 left-[40%] h-6 w-6"></div>
-				<div class="box box-bounce-d bottom-3 left-[72%] h-4 w-4"></div>
-			</div>
-		</div>
-		<!-- Static layer: rollers stay fixed in place -->
+		{/key}
+		<!-- Rollers stay fixed in place. -->
 		<div class="belt-rollers">
 			{#each { length: 30 } as _, i (i)}
 				<span class="roller"></span>
 			{/each}
 		</div>
 	</div>
+	{#if motionOK && delivered}
+		<button type="button" class="replay text-ink-muted hover:text-ink-strong" onclick={replay}>
+			Run the belt again
+		</button>
+	{/if}
 </div>
 
 <style>
 	.belt-content {
+		position: relative;
 		display: flex;
 		width: 200%;
 		height: 100%;
@@ -111,27 +160,36 @@
 		border-color: var(--color-warm-400);
 	}
 
-	.belt-animate {
-		animation: belt-scroll 6s linear infinite;
+	.replay {
+		position: absolute;
+		top: 0.5rem;
+		right: 1rem;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
 	}
 
-	.belt-animate .box-bounce-a {
-		animation: box-bounce 0.55s ease-in-out infinite;
+	@media (prefers-reduced-motion: no-preference) {
+		/* Parked: the empty half of the belt is showing, the boxes wait off to the left. */
+		.armed .belt-content {
+			transform: translateX(-50%);
+		}
+
+		.playing .belt-content {
+			animation: deliver 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+		}
+
+		.playing .box {
+			animation: box-bounce 0.3s ease-in-out 5;
+		}
+
+		.playing .box:nth-child(2n) {
+			animation-delay: 0.12s;
+		}
 	}
 
-	.belt-animate .box-bounce-b {
-		animation: box-bounce 0.7s ease-in-out infinite 0.2s;
-	}
-
-	.belt-animate .box-bounce-c {
-		animation: box-bounce 0.5s ease-in-out infinite 0.1s;
-	}
-
-	.belt-animate .box-bounce-d {
-		animation: box-bounce 0.65s ease-in-out infinite 0.35s;
-	}
-
-	@keyframes belt-scroll {
+	@keyframes deliver {
 		from {
 			transform: translateX(-50%);
 		}
@@ -147,28 +205,6 @@
 		}
 		50% {
 			transform: translateY(-2px);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.belt-animate {
-			animation: belt-scroll 10s linear infinite;
-		}
-
-		.belt-animate .box-bounce-a {
-			animation: box-bounce 1.1s ease-in-out infinite;
-		}
-
-		.belt-animate .box-bounce-b {
-			animation: box-bounce 1.4s ease-in-out infinite 0.2s;
-		}
-
-		.belt-animate .box-bounce-c {
-			animation: box-bounce 1s ease-in-out infinite 0.1s;
-		}
-
-		.belt-animate .box-bounce-d {
-			animation: box-bounce 1.3s ease-in-out infinite 0.35s;
 		}
 	}
 </style>

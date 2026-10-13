@@ -11,7 +11,12 @@ function createThemeStore() {
 	}
 
 	function init() {
-		const saved = localStorage.getItem('theme') as ThemeMode | null;
+		let saved: ThemeMode | null = null;
+		try {
+			saved = localStorage.getItem('theme') as ThemeMode | null;
+		} catch {
+			// Storage can be blocked; follow the system setting.
+		}
 		if (saved && ['light', 'dark', 'system'].includes(saved)) {
 			mode = saved;
 		}
@@ -25,7 +30,11 @@ function createThemeStore() {
 	function toggle() {
 		const next: ThemeMode = mode === 'light' ? 'dark' : mode === 'dark' ? 'system' : 'light';
 		mode = next;
-		localStorage.setItem('theme', next);
+		try {
+			localStorage.setItem('theme', next);
+		} catch {
+			// The choice still applies for this visit.
+		}
 		apply(next);
 	}
 
