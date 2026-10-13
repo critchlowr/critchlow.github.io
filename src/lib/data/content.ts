@@ -9,27 +9,27 @@ import type {
 
 export const hero = {
 	name: 'Ryan Critchlow',
-	tagline: 'Product · Research · Enterprise Systems',
+	tagline: 'HCI · UX Research · Accessibility',
 	summary:
-		'I spent three years administering warehouse management systems at Körber, running four enterprise accounts and turning what warehouse managers needed into specs, SQL reporting, and scoped work. Then I went back for an M.S. in Computer Science and spent a year and a half owning a research project end to end: planning the build, recruiting families, running the study, and coding the analysis. I like the part of the job where you decide what gets built and why.',
+		"I'm an HCI researcher working on accessibility and participatory design. For my M.S. in Computer Science, I built You and I, a game for autistic gestalt language learners, and ran its in-home participatory evaluation with four families, from recruitment through thematic analysis. I'm a co-author of Ableism Unchecked, a review of disability misconceptions in computing education at ASSETS 2026. Before grad school I spent three years at Körber turning what warehouse teams needed into specs and reporting.",
 	availability:
-		'Open to product, solutions, analytics, and accessibility roles. Pacific Northwest or remote.',
+		'Open to research opportunities in human-centered design, including PhD programs, and to technical roles where I work directly with the people who use the product. Based in Bellingham, WA.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
 export const about = {
 	heading: 'About Me',
 	paragraphs: [
-		"I'm interested in the work that happens before the code. Figuring out what people need, deciding what gets built, and keeping the thing that ships close to the problem it started with. I've done versions of that as a support analyst, as a graduate researcher, and now in a wood shop.",
-		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. When HR blocked my move into software development because I didn't have a CS degree, I went back to Western for an M.S. instead. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
-		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns, then scrapped my own approved study design because I had planned the whole thing for those kids without involving any of them. The replacement put me in four families' living rooms watching them play. That's still the best decision I've made on a project.",
+		'My research interests are accessibility and participatory design, especially involving the people a technology is for before it gets built. I did a similar kind of work as a support analyst, gathering requirements from warehouse teams.',
+		"I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. When HR blocked my move into software development because I didn't have a CS degree, I went back to Western for an M.S. instead. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
+		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns, then scrapped my own approved study design because I had planned the whole thing for those kids without involving any of them. The replacement put me in four families' living rooms watching them play.",
 		"When I'm not working you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking, reading, and the occasional long video game session. I like being outside as much as I can."
 	]
 };
 
 export const experience: Experience[] = [
 	{
-		title: 'Carpenter',
+		title: 'Journeyman Carpenter',
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
@@ -52,9 +52,7 @@ export const experience: Experience[] = [
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
 			'Translated practitioner insights from speech-language pathologists and co-design sessions into a working prototype in C#, Unity, and WebGL, leading technical implementation and art direction'
 		],
-		tags: ['Research', 'Delivery', 'Requirements'],
-		href: '/work/you-and-i',
-		hrefLabel: 'Read the case study'
+		tags: ['Participatory Design', 'Qualitative Research', 'Study Design']
 	},
 	{
 		title: 'Support Analyst L4',
@@ -146,7 +144,20 @@ export const credentials = {
 
 export const skills: SkillCategory[] = [
 	{
-		label: 'Product & Process',
+		label: 'Research & Synthesis',
+		items: [
+			'Qualitative Research',
+			'User Interviews',
+			'Participatory Design',
+			'Thematic Analysis',
+			'Survey Design',
+			'Iterative Prototyping',
+			'IRB Protocols',
+			'WCAG 2.2 Accessibility Standards'
+		]
+	},
+	{
+		label: 'Collaboration & Process',
 		items: [
 			'Requirements Gathering',
 			'Stakeholder Management',
@@ -157,19 +168,6 @@ export const skills: SkillCategory[] = [
 			'Escalation Management',
 			'Onboarding & Training'
 		]
-	},
-	{
-		label: 'Research & Synthesis',
-		items: [
-			'Qualitative Research',
-			'User Interviews',
-			'Participatory Design',
-			'Thematic Analysis',
-			'Survey Design',
-			'Iterative Prototyping',
-			'IRB Protocols',
-			'WCAG 2.1 Accessibility Standards'
-		]
 	}
 ];
 
@@ -179,8 +177,9 @@ export const tools = [
 	{ name: 'C#', icon: 'csharp/csharp-original' },
 	{ name: 'Java', icon: 'java/java-original' },
 	{ name: 'JavaScript', icon: 'javascript/javascript-original' },
-	{ name: 'Power BI', icon: 'azure/azure-original' },
-	{ name: 'Tableau', icon: 'firebase/firebase-original' },
+	// Devicon has no Power BI or Tableau mark; a wrong logo is worse than none.
+	{ name: 'Power BI' },
+	{ name: 'Tableau' },
 	{ name: 'MySQL', icon: 'mysql/mysql-original' },
 	{ name: 'Git', icon: 'git/git-original' },
 	{ name: 'Unity', icon: 'unity/unity-original' },
@@ -195,9 +194,7 @@ export const selectedWork: Project[] = [
 			'A Unity game that helps autistic gestalt language learners practice pronouns, built for an in-home participatory evaluation with four families. I owned it end to end, including the art.',
 		tools: 'Unity, C#, WebGL',
 		period: '2025 – 2026',
-		bullets: [],
-		href: '/work/you-and-i',
-		hrefLabel: 'Read the case study'
+		bullets: []
 	},
 	{
 		title: 'WMS Simulator',
@@ -211,8 +208,7 @@ export const selectedWork: Project[] = [
 	},
 	{
 		title: 'KIND Lab Website',
-		description:
-			"The website for Western's KIND Lab, built so the group's research is legible to people outside it.",
+		description: "The website for Western's KIND Lab.",
 		tools: 'Web Development',
 		period: '2025',
 		bullets: [],
@@ -235,29 +231,37 @@ export const selectedWork: Project[] = [
 
 export const publications: Publication[] = [
 	{
-		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Katherine Baker, and Kristen Shinohara',
+		id: 'pub-ableism-unchecked',
+		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Kristen Shinohara, and Catherine M. Baker',
 		title:
-			'Ableism Sneaking In: A Literature Review of Disability Misconceptions in Computing Education',
+			'Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing Education',
 		venue:
-			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Porto, Portugal, October 2026',
+			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
 		status: 'published',
+		honor: 'Nominated for the Social Impact Award',
+		funding:
+			'Supported by the National Science Foundation under Award Nos. 2121549, 2121606, 2121428, 2439816, 2439817, and 2439818.',
 		summary:
-			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
+			"Two studies of how accessibility education shapes students' assumptions about disability. In a Computer Systems course, many of 53 students' reflections showed real knowledge gains, yet a considerable portion also contained deficit-based language and unsubstantiated claims about assistive technology. A review of 35 accessibility education papers then found six categories of ableism, such as excluding disabled participants and normalizing inaccessibility, built into intervention designs, evaluation instruments, and study framing.",
 		contribution:
-			'Applied an iteratively developed codebook via inductive coding to all 35 papers in the review corpus and helped identify six recurring patterns of ableism. Findings were reviewed by a second researcher for consistency. This is my first conference presentation.'
+			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
 	{
+		id: 'pub-you-and-i',
 		authors: 'Ryan Critchlow, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl',
 		title:
 			'You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns for Autistic Children',
-		venue: 'Target venue TBD, in preparation',
+		venue:
+			'In preparation for ACM Interaction Design and Children (IDC 2027), submitting January 2027',
 		status: 'in-preparation',
 		contribution:
 			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.',
-		href: '/work/you-and-i',
-		hrefLabel: 'How the project was run'
+		href: 'https://idc.acm.org/2027/calls/',
+		hrefLabel: 'IDC 2027 call for papers',
+		external: true
 	},
 	{
+		id: 'pub-motivation-alt-text',
 		authors: 'Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and Ryan Critchlow',
 		title:
 			'Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage Authoring Behavior',
@@ -303,10 +307,10 @@ export const contact: ContactLink[] = [
 
 export const navLinks = [
 	{ label: 'About', href: '/#about' },
-	{ label: 'Experience', href: '/#experience' },
-	{ label: 'Work', href: '/#work' },
-	{ label: 'Simulator', href: '/#simulator' },
 	{ label: 'Research', href: '/#research' },
+	{ label: 'Work', href: '/#work' },
+	{ label: 'Experience', href: '/#experience' },
+	{ label: 'Simulator', href: '/#simulator' },
 	{ label: 'Skills', href: '/#skills' },
 	{ label: 'Education', href: '/#education' },
 	{ label: 'Contact', href: '/#contact' }

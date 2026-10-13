@@ -1,12 +1,27 @@
 <script lang="ts">
 	import { navLinks } from '$lib/data/content';
 	import ThemeToggle from './ThemeToggle.svelte';
+	import { scrollProgress } from '$lib/scroll/progress.svelte';
 
 	let activeSection = $state('');
 	let mobileOpen = $state(false);
+	let menuButton = $state<HTMLButtonElement>();
 
 	function closeMobile() {
 		mobileOpen = false;
+	}
+
+	function onWindowKeydown(e: KeyboardEvent) {
+		if (e.key !== 'Escape' || !mobileOpen) return;
+		closeMobile();
+		menuButton?.focus();
+	}
+
+	// Close once focus leaves the header, so an open menu never sits over the
+	// content a keyboard user has tabbed into.
+	function onHeaderFocusout(e: FocusEvent) {
+		const header = e.currentTarget as HTMLElement;
+		if (!header.contains(e.relatedTarget as Node | null)) closeMobile();
 	}
 
 	// Nav hrefs are root-relative ("/#about") so they also work from sub-pages.
@@ -64,7 +79,12 @@
 	});
 </script>
 
-<header class="border-edge bg-surface/85 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md">
+<svelte:window onkeydown={onWindowKeydown} />
+
+<header
+	class="border-edge bg-surface/85 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md"
+	onfocusout={onHeaderFocusout}
+>
 	<nav
 		aria-label="Main navigation"
 		class="mx-auto flex max-w-5xl items-center justify-between px-5 py-3"
@@ -72,7 +92,7 @@
 		<a
 			href="/#hero"
 			class="text-ink-strong font-display text-xl font-semibold"
-			aria-label="Ryan Critchlow - back to top"
+			aria-label="RC — Ryan Critchlow, back to top"
 		>
 			RC
 		</a>
@@ -98,6 +118,7 @@
 		<div class="flex items-center gap-2 md:hidden">
 			<ThemeToggle />
 			<button
+				bind:this={menuButton}
 				onclick={() => (mobileOpen = !mobileOpen)}
 				aria-expanded={mobileOpen}
 				aria-controls="mobile-menu"
@@ -136,9 +157,16 @@
 		</div>
 	</nav>
 
-	<!-- Mobile menu -->
+	<!--
+		Capped to the space under the header and scrollable, because the header is
+		fixed: at 400% zoom the full list is taller than the viewport, and without
+		this the last links could never be scrolled into view (SC 1.4.10).
+	-->
 	{#if mobileOpen}
-		<div id="mobile-menu" class="border-edge bg-surface border-t px-5 py-2 md:hidden">
+		<div
+			id="mobile-menu"
+			class="border-edge bg-surface max-h-[calc(100dvh-var(--nav-h))] overflow-y-auto border-t px-5 py-2 md:hidden"
+		>
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
@@ -154,6 +182,17 @@
 			{/each}
 		</div>
 	{/if}
+
+	<!--
+		Reading progress, shown only below the width where the section rails appear —
+		the same 80rem threshold SectionRail uses, so exactly one of the two is ever
+		on screen.
+
+		aria-hidden, and deliberately NOT role="progressbar": that role needs an
+		accessible name and an aria-valuenow kept in sync, and axe flags a nameless
+		one. This duplicates the scrollbar; it is decoration.
+	-->
+	<div class="read-bar" style="--read: {scrollProgress.value}" aria-hidden="true"></div>
 </header>
 
 <style>
@@ -181,6 +220,28 @@
 	@media (prefers-reduced-motion: reduce) {
 		.nav-link::after {
 			transition: none;
+		}
+	}
+
+	/*
+		Scale rather than width, so this is a compositor-only property and costs
+		nothing per frame. transform-origin puts the growth on the left.
+	*/
+	.read-bar {
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		transform-origin: left center;
+		transform: scaleX(var(--read, 0));
+		background: var(--t-brand);
+	}
+
+	/* Hand over to the section rails at exactly the width they appear. */
+	@media (min-width: 80rem) {
+		.read-bar {
+			display: none;
 		}
 	}
 </style>

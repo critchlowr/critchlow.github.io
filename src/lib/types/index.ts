@@ -37,14 +37,22 @@ export interface Project {
 }
 
 export interface Publication {
+	/** Anchor for the Research card, so other sections can link straight to it. */
+	id: string;
 	authors: string;
 	title: string;
 	venue: string;
 	status: 'published' | 'in-preparation';
+	/** An award or nomination, shown on the Research card. */
+	honor?: string;
+	/** Funding acknowledgment, as stated in the paper. */
+	funding?: string;
 	summary?: string;
 	contribution: string;
 	href?: string;
 	hrefLabel?: string;
+	/** Opens in a new tab and gets an external-link affordance. */
+	external?: boolean;
 }
 
 export interface ContactLink {

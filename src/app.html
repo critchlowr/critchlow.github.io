@@ -5,14 +5,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta
 			name="description"
-			content="Ryan Critchlow - product, requirements, and research work, backed by three years running enterprise warehouse management accounts and an M.S. in Computer Science."
+			content="Ryan Critchlow is an HCI and UX researcher working on accessibility and participatory design, with an M.S. in Computer Science from Western Washington University."
 		/>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<script>
 			(function () {
 				const saved = localStorage.getItem('theme');
 				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-				if (saved === 'dark' || (!saved && prefersDark)) {
+				// ?theme=dark|light forces a theme for headless accessibility runs, which
+				// have no localStorage and cannot drive the toggle. No real visitor ever
+				// carries this param, so the stored/system path below is unchanged.
+				const forced = new URLSearchParams(location.search).get('theme');
+				const dark = forced ? forced === 'dark' : saved === 'dark' || (!saved && prefersDark);
+				if (dark) {
 					document.documentElement.classList.add('dark');
 				}
 			})();

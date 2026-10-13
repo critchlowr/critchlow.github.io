@@ -14,7 +14,7 @@
 	];
 </script>
 
-<SectionWrapper id="research" headingId="research-heading" number="05" title="Research">
+<SectionWrapper id="research" headingId="research-heading" number="02" title="Research" alt>
 	<div class="space-y-12">
 		{#each groups as group (group.label)}
 			{#if group.items.length > 0}
@@ -27,7 +27,7 @@
 					<div class="stagger space-y-5" use:inview>
 						{#each group.items as pub, i (pub.title)}
 							<div style="--i: {i}">
-								<Card as="article" interactive class="p-6 md:p-7">
+								<Card as="article" id={pub.id} interactive class="p-6 md:p-7">
 									<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
 										{pub.title}
 									</h4>
@@ -35,6 +35,9 @@
 									<p class="text-brand mt-1 text-base italic">
 										{pub.venue}
 									</p>
+									{#if pub.honor}
+										<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
+									{/if}
 									{#if pub.summary}
 										<p class="text-ink text-body mt-3">
 											{pub.summary}
@@ -44,9 +47,16 @@
 										<span class="text-ink-strong font-semibold">My contribution:</span>
 										{pub.contribution}
 									</p>
+									{#if pub.funding}
+										<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
+									{/if}
 									{#if pub.href}
 										<p class="mt-4">
-											<ArrowLink href={pub.href} label={pub.hrefLabel ?? 'Read more'} />
+											<ArrowLink
+												href={pub.href}
+												external={pub.external}
+												label={pub.hrefLabel ?? 'Read more'}
+											/>
 										</p>
 									{/if}
 								</Card>
@@ -70,6 +80,8 @@
 						<span class="sr-only">ORCID iD:</span>
 						{credentials.orcid}
 					</span>
+					<!-- Same wording as ArrowLink, so both external links announce identically. -->
+					<span class="sr-only">(opens in a new tab)</span>
 				</a>
 			</li>
 			<li class="border-edge inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5">

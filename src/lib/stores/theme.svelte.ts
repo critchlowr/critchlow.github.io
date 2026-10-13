@@ -11,6 +11,20 @@ function createThemeStore() {
 	}
 
 	function init() {
+		/*
+			?theme=dark|light pins the theme, matching the pre-paint script in app.html.
+			It has to be honoured here too: without it this function reads an empty
+			localStorage, falls back to 'system', and immediately strips the class the
+			inline script just set — which silently turned every headless "dark mode"
+			audit into a second light-mode run.
+		*/
+		const forced = new URLSearchParams(location.search).get('theme');
+		if (forced === 'dark' || forced === 'light') {
+			mode = forced;
+			apply(mode);
+			return;
+		}
+
 		const saved = localStorage.getItem('theme') as ThemeMode | null;
 		if (saved && ['light', 'dark', 'system'].includes(saved)) {
 			mode = saved;
