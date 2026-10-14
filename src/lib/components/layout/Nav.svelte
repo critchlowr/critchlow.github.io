@@ -30,9 +30,8 @@
 		return i === -1 ? '' : href.slice(i);
 	}
 
-	// Scrollspy. Recomputed from scratch on every frame rather than accumulated,
-	// so no state can get stuck: the active link is always a pure function of the
-	// current scroll position.
+	// Scrollspy. The active link is recomputed from the scroll position on each
+	// frame, so it cannot drift out of step with the page.
 	$effect(() => {
 		const hashes = navLinks.map((l) => hashOf(l.href)).filter(Boolean);
 
@@ -48,9 +47,8 @@
 				}
 			}
 
-			// The last section can be too short to ever reach the line, so at the
-			// bottom of the page it wins. Re-evaluated every frame, so scrolling back
-			// up releases it.
+			// The last section can be too short to reach the line, so it wins at the
+			// bottom of the page.
 			const atBottom =
 				window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
 			if (atBottom && hashes.length > 0) {
@@ -185,9 +183,8 @@
 
 <style>
 	/*
-		The active-section marker grows from the centre rather than appearing. The
-		scrollspy updates continuously while scrolling, so a hard swap between links
-		reads as a flicker; a 220ms grow reads as the page tracking where you are.
+		The active marker grows from the centre. The scrollspy updates continuously,
+		so an instant swap between links would flicker.
 	*/
 	.nav-link::after {
 		content: '';

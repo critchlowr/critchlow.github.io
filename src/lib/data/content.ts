@@ -18,8 +18,8 @@ export const hero = {
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
-// The headline numbers, pulled up from the Experience and Research sections so a
-// skimming reader meets them first. Each one is stated in full further down the page.
+// Headline numbers for the intro, so a skimming reader meets them first. Each is
+// stated in full in Experience or Publications.
 export const stats: Stat[] = [
 	{ value: 'ASSETS', label: 'peer-reviewed paper, ACM accessibility conference 2026' },
 	{ value: '4', label: 'enterprise accounts run at once, double the team average' },

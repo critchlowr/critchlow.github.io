@@ -1,4 +1,11 @@
-// ── Types ──────────────────────────────────────────────────
+/**
+ * The warehouse model behind the simulator: types, seed data, and the functions
+ * that move orders through wave, pick, stage, pack, load and ship. Functions
+ * mutate the arrays they are given; WarehouseGame passes in $state, so the UI
+ * follows.
+ */
+
+// ── Types ──
 
 export type OrderStatus =
 	| 'Open'
@@ -40,9 +47,12 @@ export interface InventoryItem {
 	sku: string;
 	itemName: string;
 	location: string;
-	qtyAvailable: number; // inbound/reserve stock (back of warehouse)
-	qtyOnHand: number; // forward pick location (what the picker goes to)
-	qtyAllocated: number; // allocated from on-hand for active picks
+	/** Reserve stock at the back of the warehouse, used to replenish. */
+	qtyAvailable: number;
+	/** Stock the system counts in the forward pick location. */
+	qtyOnHand: number;
+	/** On-hand units promised to open picks. */
+	qtyAllocated: number;
 	/** Units the system counts in the pick location that are not physically there. */
 	qtyMissing?: number;
 }
@@ -71,7 +81,7 @@ export interface Replen {
 	status: ReplenStatus;
 }
 
-// ── Seed Data ──────────────────────────────────────────────
+// ── Seed data ──
 
 export const WAREHOUSE_NAME = 'Really Cool Big Warehouse';
 
@@ -228,7 +238,7 @@ export function createSeedInventory(): InventoryItem[] {
 	];
 }
 
-// ── Helper Functions ───────────────────────────────────────
+// ── Model ──
 
 let pickCounter = 0;
 let replenCounter = 0;
@@ -249,9 +259,8 @@ function nextReplenId(): string {
 }
 
 /**
- * Wave release: allocate inventory across all open orders and create picks.
- * Only creates Assigned picks for what can be allocated. Lines with zero
- * available inventory get no pick — unallocated demand is just unfulfilled.
+ * Releases a wave: allocates stock to every open order and creates picks for
+ * what could be allocated. Demand with no stock gets no pick.
  */
 export function waveRelease(
 	orders: Order[],
@@ -295,7 +304,7 @@ export function waveRelease(
 }
 
 /**
- * Execute a pick: update inventory and order line quantities.
+ * Confirms a pick: takes it from the shelf and credits the order line.
  */
 export function executePick(pick: Pick, inventory: InventoryItem[], orderLines: OrderLine[]): void {
 	const inv = inventory.find((i) => i.sku === pick.sku);
@@ -313,13 +322,13 @@ export function executePick(pick: Pick, inventory: InventoryItem[], orderLines: 
 }
 
 /**
- * Report a pick location as empty. The picker found less than qtyToPick at the location.
+ * Reports a pick location empty: the picker found less than the pick asked for.
  *
- * - If some qty is on hand: partial pick (shrink pick to onHandQty, mark Picked, update inventory/line).
- * - If nothing on hand: convert entire pick to Short.
- * - Zeros out qtyOnHand (location is empty after this).
- * - Releases allocations and shorts all other Assigned picks for the same SKU.
- * - Returns pickedQty (what the picker grabbed) and whether replen is possible.
+ * - Some stock there: the pick shrinks to what was taken, and the rest becomes a Short pick.
+ * - Nothing there: the whole pick becomes Short.
+ * - The location is zeroed, and every other open pick of the SKU shorts too.
+ *
+ * Returns how many units were taken, and whether reserve can replenish.
  */
 export function reportEmpty(
 	pick: Pick,
@@ -334,27 +343,24 @@ export function reportEmpty(
 	let pickedQty = 0;
 
 	if (onHandQty > 0 && onHandQty < pick.qtyToPick) {
-		// Partial pick — picker grabs what's there
+		// Partial pick: the picker takes what is there.
 		pickedQty = onHandQty;
 		const remainder = pick.qtyToPick - onHandQty;
 
-		// Shrink original pick to what was grabbed, mark as Picked
 		pick.qtyToPick = pickedQty;
 		pick.status = 'Picked';
 
-		// Update inventory
 		if (inv) {
 			inv.qtyOnHand -= pickedQty;
 			inv.qtyAllocated -= pickedQty;
 		}
 
-		// Update order line
 		const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
 		if (line) {
 			line.qtyPicked += pickedQty;
 		}
 
-		// Create a Short pick for the remainder
+		// The remainder becomes a Short pick.
 		picks.push({
 			pickId: nextPickId(),
 			orderId: pick.orderId,
@@ -366,8 +372,7 @@ export function reportEmpty(
 			source: 'report-empty'
 		});
 	} else {
-		// Nothing on hand (or pick qty matches on hand but location is being reported empty)
-		// Convert entire pick to Short
+		// Nothing usable on hand: the whole pick shorts.
 		if (inv) {
 			inv.qtyAllocated -= pick.qtyToPick;
 		}
@@ -382,7 +387,7 @@ export function reportEmpty(
 		inv.qtyAllocated = Math.max(0, inv.qtyAllocated);
 	}
 
-	// Short all OTHER assigned picks for the same SKU (location is empty for everyone)
+	// The location is empty for everyone, so every other open pick of this SKU shorts too.
 	const otherAssigned = picks.filter(
 		(p) => p.sku === pick.sku && p.status === 'Assigned' && p.pickId !== pick.pickId
 	);
@@ -398,7 +403,7 @@ export function reportEmpty(
 }
 
 /**
- * Create a replenishment task for a short SKU.
+ * Creates a replenishment task for a short SKU.
  */
 export function createReplen(sku: string, qty: number, toLocation: string): Replen {
 	return {
@@ -411,13 +416,12 @@ export function createReplen(sku: string, qty: number, toLocation: string): Repl
 }
 
 /**
- * Complete a replenishment: move qty from available (inbound) to on-hand (forward pick),
- * then convert short picks to assigned.
+ * Completes a replenishment: moves stock from reserve to the pick location, then
+ * re-opens the short picks it covers.
  */
 export function completeReplen(replen: Replen, inventory: InventoryItem[], picks: Pick[]): void {
 	const inv = inventory.find((i) => i.sku === replen.sku);
 	if (inv) {
-		// Move from available (inbound) to on-hand (forward pick)
 		const moveQty = Math.min(replen.qty, inv.qtyAvailable);
 		inv.qtyAvailable -= moveQty;
 		inv.qtyOnHand += moveQty;
@@ -438,8 +442,8 @@ export function completeReplen(replen: Replen, inventory: InventoryItem[], picks
 }
 
 /**
- * Check if an order line has unmet demand that could be fulfilled via replen.
- * Returns the replenishable qty (min of unmet demand and available inbound inventory).
+ * Unmet demand on an order line that reserve stock can cover, or null if none.
+ * `replenQty` is the smaller of the unmet demand and the reserve on hand.
  */
 export function getReplenishableDemand(
 	orderId: string,
@@ -451,7 +455,7 @@ export function getReplenishableDemand(
 	const line = orderLines.find((l) => l.orderId === orderId && l.lineNum === lineNum);
 	if (!line) return null;
 
-	// Total already covered by existing picks (any status except Short)
+	// Units already covered by picks that have not shorted, or already shipped.
 	const activePicks = picks.filter(
 		(p) => p.orderId === orderId && p.lineNum === lineNum && p.status !== 'Short'
 	);
@@ -468,14 +472,14 @@ export function getReplenishableDemand(
 }
 
 /**
- * Check if an order has any short picks remaining.
+ * Whether an order still has short picks.
  */
 export function hasShortPicks(orderId: string, picks: Pick[]): boolean {
 	return picks.some((p) => p.orderId === orderId && p.status === 'Short');
 }
 
 /**
- * Get the total short quantity for a SKU across all short picks.
+ * Total short quantity for a SKU across all short picks.
  */
 export function getShortQtyForSku(sku: string, picks: Pick[]): number {
 	return picks
@@ -484,14 +488,14 @@ export function getShortQtyForSku(sku: string, picks: Pick[]): number {
 }
 
 /**
- * Check if any picks across all orders have a given status.
+ * Whether any pick has the given status.
  */
 export function anyPicksWithStatus(picks: Pick[], status: PickStatus): boolean {
 	return picks.some((p) => p.status === status);
 }
 
 /**
- * Stage ALL picked items across all orders.
+ * Stages every picked item, across all orders.
  */
 export function stageAll(picks: Pick[]): void {
 	for (const pick of picks) {
@@ -601,7 +605,7 @@ export function holdOrder(orderId: string, orders: Order[], picks: Pick[]): void
 }
 
 /**
- * Load ALL packed items across all orders. Staged-but-unpacked stock stays put —
+ * Loads every packed item, across all orders. Staged-but-unpacked stock stays put —
  * nothing goes on the truck until it has been packed.
  */
 export function loadAll(picks: Pick[]): void {
@@ -613,8 +617,8 @@ export function loadAll(picks: Pick[]): void {
 }
 
 /**
- * Ship ALL loaded items across ALL orders.
- * Returns list of order IDs that were affected.
+ * Ships every loaded item and updates order statuses.
+ * Returns the IDs of the orders that shipped something.
  */
 export function shipAllLoaded(picks: Pick[], orderLines: OrderLine[], orders: Order[]): string[] {
 	const affectedOrderIds = new Set<string>();
@@ -631,15 +635,13 @@ export function shipAllLoaded(picks: Pick[], orderLines: OrderLine[], orders: Or
 		}
 	}
 
-	// Update order statuses via refreshOrderStatuses
 	refreshOrderStatuses(orders, orderLines, picks);
 
 	return [...affectedOrderIds];
 }
 
 /**
- * Refresh all order statuses based on their pick states.
- * Call this after any pick status change.
+ * Recomputes every order's status from its picks. Call after any pick changes.
  */
 export function refreshOrderStatuses(
 	orders: Order[],
@@ -660,10 +662,9 @@ export function refreshOrderStatuses(
 			continue;
 		}
 
-		// Check if any lines have been shipped
 		const anyShipped = lines.some((l) => l.qtyShipped > 0);
 		if (anyShipped) {
-			// If all picks are terminal (Shipped or Short), order is done — allow partial ship as "Shipped"
+			// Every pick shipped or shorted: the order is done, even if partial.
 			const allPicksTerminal =
 				orderPicks.length > 0 &&
 				orderPicks.every((p) => p.status === 'Shipped' || p.status === 'Short');
@@ -676,19 +677,18 @@ export function refreshOrderStatuses(
 		}
 
 		if (orderPicks.length === 0) {
-			// Released but no picks yet
 			order.status = 'Released';
 			continue;
 		}
 
-		// If all picks are Short (everything shorted, nothing left to fulfill), order is done
+		// Everything shorted and nothing left to fulfil: the order is done.
 		const allShort = orderPicks.every((p) => p.status === 'Short');
 		if (allShort) {
 			order.status = 'Shipped';
 			continue;
 		}
 
-		// Determine highest status among picks
+		// Otherwise the order takes the furthest status among its picks.
 		const hasLoaded = orderPicks.some((p) => p.status === 'Loaded');
 		const hasPacked = orderPicks.some((p) => p.status === 'Packed');
 		const hasStaged = orderPicks.some((p) => p.status === 'Staged');
@@ -724,9 +724,9 @@ export function allOrdersResolved(orders: Order[]): boolean {
 }
 
 /**
- * Get per-order progress based on order lines (not picks).
- * Total = number of order lines. Each line's status is determined by its best pick.
- * Lines with no picks or only Short picks count as shorted.
+ * Per-order progress counted in lines, not picks. Each line counts at the
+ * furthest step its picks have reached; a line with a Short pick also counts
+ * as shorted.
  */
 export function orderLineStatus(
 	orderId: string,
@@ -753,13 +753,12 @@ export function orderLineStatus(
 	for (const line of lines) {
 		const linePicks = picks.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum);
 
-		// A line is shorted if any of its picks are Short
 		const hasShort = linePicks.some((p) => p.status === 'Short');
 		if (hasShort) shorted++;
 
 		if (linePicks.length === 0) continue;
 
-		// Use the "best" (most advanced) pick status for this line
+		// Each line counts at the furthest step any of its picks has reached.
 		const hasShipped = linePicks.some((p) => p.status === 'Shipped');
 		const hasLoaded = linePicks.some((p) => p.status === 'Loaded');
 		const hasPacked = linePicks.some((p) => p.status === 'Packed');
@@ -768,7 +767,7 @@ export function orderLineStatus(
 		const allShort = linePicks.every((p) => p.status === 'Short');
 
 		if (allShort) {
-			/* only short picks — don't count as progressed */
+			// Only short picks: the line has not progressed.
 		} else if (hasShipped) {
 			shipped++;
 			loaded++;

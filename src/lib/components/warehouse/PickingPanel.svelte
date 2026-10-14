@@ -72,9 +72,11 @@
 	let settled = false;
 
 	$effect(() => {
-		const key = view; // read, so the effect re-runs whenever the panel's content swaps
+		// Read so the effect re-runs whenever the panel's content swaps.
+		const key = view;
+		// Never steal focus on first mount.
 		if (!settled) {
-			settled = true; // never steal focus on first mount
+			settled = true;
 			return;
 		}
 		// RunSummary replaces this panel and focuses its own heading.
@@ -97,7 +99,7 @@
 
 	const openCount = $derived(orders.filter((o) => o.status === 'Open').length);
 
-	// The current pick: first Assigned pick in queue
+	// The first Assigned pick in the queue is the current one.
 	const currentPick = $derived(picks.find((p) => p.status === 'Assigned') ?? null);
 	const currentLine = $derived(
 		currentPick

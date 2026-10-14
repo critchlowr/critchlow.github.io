@@ -1,14 +1,17 @@
 <script lang="ts" module>
+	/** One step for the scene to animate. Sent by WarehouseGame after each action. */
 	export type SceneAction =
 		| { type: 'idle' }
-		/** `cartBefore` is the cart's contents before this pick. The model adds the
-		    item to the cart on click, so without it the carton would appear in the cart
-		    before the picker has walked back with it. SKUs rather than a count, so each
-		    carton can keep its colour. */
+		/**
+		 * `cartBefore` is the cart's SKUs before this pick. The game adds the item on
+		 * click, so the scene needs the old contents to show until the picker walks
+		 * back with it.
+		 */
 		| { type: 'pick'; fromLocation: string; sku: string; cartBefore: string[] }
-		/** `boxes` is the cart's contents at the moment staging started. The model has
-		    already emptied the cart by then, so the scene needs it passed in to show
-		    the cart being wheeled over with something in it. */
+		/**
+		 * `boxes` is the cart's SKUs when staging started. The game has already
+		 * emptied the cart, so the scene needs them to wheel a full cart over.
+		 */
 		| { type: 'stage'; boxes: string[] }
 		| { type: 'pack' }
 		| { type: 'ship' }
@@ -36,11 +39,10 @@
 	let { action, cartSkus, stagedSkus, heldSkus, packedCount, loadedCount, inventory }: Props =
 		$props();
 
-	/* Loose goods are colour-coded by SKU so you can follow an item from the rack into
-	   the cart and on to staging. Packing erases the distinction: everything becomes
-	   the same taped carton, which is the point of the pack step. Defined here rather
-	   than as CSS classes because Svelte prunes selectors it cannot statically match,
-	   and these are applied dynamically. */
+	// Loose goods are colour-coded by SKU so an item can be followed from the rack
+	// to the cart to staging. Packing turns everything into the same taped carton.
+	// Kept in script rather than CSS classes, because Svelte removes scoped
+	// selectors it cannot see used in the markup.
 	const SKU_TONES = [
 		{ fill: '#a3c99d', edge: '#3d7a31' }, // green
 		{ fill: '#c98ec8', edge: '#6f2a6d' }, // plum
@@ -50,8 +52,7 @@
 		{ fill: '#bfb3d9', edge: '#5b4a8a' } // periwinkle
 	];
 
-	/** Which rack column holds this SKU. Drives both the colour and where the workers
-	    walk to, so the picker and the replen runner go to the right slot. */
+	/** Which rack column holds this SKU, and so where the workers walk to. */
 	function columnOf(sku: string) {
 		const i = inventory.findIndex((it) => it.sku === sku);
 		return i < 0 ? 0 : i;
@@ -63,7 +64,7 @@
 		return `--fill: ${t.fill}; --edge: ${t.edge};`;
 	}
 
-	/* Cartons shown per rack column, as a coarse gauge of stock on hand. */
+	/** Cartons shown per rack column, as a coarse gauge of stock on hand. */
 	function stockBars(qty: number) {
 		if (qty <= 0) return 0;
 		if (qty <= 3) return 1;
@@ -106,10 +107,9 @@
 	let holdCart = $state(false);
 
 	/*
-		The scene stays mounted for the whole run, so a new trip has to cancel the
-		previous one for the same worker. Otherwise a stale "walk back" timer from the
-		last pick lands in the middle of this one. Each worker has its own group, so
-		the picker and the replen runner can be on the floor at the same time.
+		The scene stays mounted for the whole run, so a new trip cancels the same
+		worker's previous one; otherwise an old "walk back" timer would land mid-trip.
+		Each worker has its own timer group, so both can be on the floor at once.
 	*/
 	type Group = 'picker' | 'runner' | 'truck';
 	const timers: Record<Group, ReturnType<typeof setTimeout>[]> = {
@@ -148,10 +148,9 @@
 		packFlash = false;
 	}
 
-	// Only `action` may retrigger an animation. The dispatch is untracked because the
-	// animations call columnOf(), which reads `inventory` — that made inventory a
-	// dependency of this effect, so completing a replenishment (which reassigns
-	// inventory) re-ran it and played the whole trip a second time.
+	// Only `action` starts an animation. The dispatch is untracked because the
+	// animations read `inventory` through columnOf(); tracking it would replay the
+	// trip whenever a replenishment updates inventory.
 	$effect(() => {
 		const a = action;
 		untrack(() => {
@@ -247,8 +246,8 @@
 		});
 	}
 
-	// The trailer takes 1s to clear the frame. Hold the dock empty for a beat before
-	// the next one backs in, otherwise it reads as the same truck bouncing.
+	// The trailer takes 1s to clear the frame. The dock stays empty for a beat before
+	// the next one backs in, so it reads as a new truck.
 	function animateShip() {
 		cancel('truck');
 		truckState = 'leaving';
@@ -260,10 +259,9 @@
 		});
 	}
 
-	// The mirror image of the picker: collect a carton at receiving, carry it to the
-	// SKU's rack column, drop it there, walk back empty-handed. The drop at 1500ms is
-	// when the game completes the replenishment, so the column refills under the
-	// worker's hands rather than after they have gone home.
+	// The picker in reverse: collect a carton at receiving, carry it to the SKU's
+	// column, set it down, walk back. The drop at 1500ms is when the game completes
+	// the replenishment, so the column refills as the carton lands.
 	function animateReplen(sku: string) {
 		cancel('runner');
 		replenColumn = columnOf(sku);
@@ -303,7 +301,7 @@
 		<!-- Floor -->
 		<div class="floor"></div>
 
-		<!-- ═══ INBOUND (left side) ═══ -->
+		<!-- ── Inbound (left) ── -->
 
 		<!-- Inbound truck (parked, static) -->
 		<div class="inbound-truck">
@@ -353,7 +351,7 @@
 			{/if}
 		</div>
 
-		<!-- ═══ WAREHOUSE CENTER ═══ -->
+		<!-- ── Centre ── -->
 
 		<!-- Shelf/rack — each slot shows inventory -->
 		<div class="shelf" class:shelf-flash={shelfFlash}>
@@ -387,8 +385,7 @@
 			{/if}
 		</div>
 
-		<!-- Picker's cart. Sits where the picker idles, fills as items are picked, and
-		     gets wheeled to staging when the cart is staged. -->
+		<!-- The picker's cart: fills as items are picked, then is wheeled to staging. -->
 		<div
 			class="cart"
 			class:cart-at-pick={cartPos === 'at-pick'}
@@ -404,7 +401,7 @@
 			<div class="cart-wheel cw-2"></div>
 		</div>
 
-		<!-- ═══ OUTBOUND (right side) ═══ -->
+		<!-- ── Outbound (right) ── -->
 
 		<!-- Staging area — loose boxes waiting, sealed boxes packed and ready to load -->
 		<div class="staging-label">STAGING</div>
@@ -452,10 +449,8 @@
 
 <style>
 	.scene {
-		/* One carton size for every outbound container — cart, staging and truck.
-		   Previously the cart used 5px while staging and the truck used 10px, so the
-		   same goods changed size as they moved. Driving all of them from here means
-		   they cannot drift apart again. */
+		/* One carton size for the cart, staging and the truck, so goods keep their
+		   size as they move. */
 		--carton: 8px;
 		/* Where the rack starts. Worker shelf positions are derived from it so they
 		   land on the right column at any breakpoint. */
@@ -464,8 +459,7 @@
 		position: relative;
 		width: 100%;
 		height: 195px;
-		/* The scene is a flex child of the modal. Without this it shrinks whenever the
-		   panel below it grows, which made the warehouse change size between phases. */
+		/* A flex child of the modal; without this it shrinks when the panel below grows. */
 		flex-shrink: 0;
 		overflow: hidden;
 		border-bottom: 1px solid var(--color-warm-200);
@@ -529,7 +523,7 @@
 		color: var(--color-warm-300);
 	}
 
-	/* ═══ INBOUND LEFT SIDE ═══ */
+	/* ── Inbound (left) ── */
 
 	/* Inbound truck — facing left (cab on left) */
 	.inbound-truck {
@@ -754,17 +748,15 @@
 		background: #1a6b37 !important;
 	}
 
-	/* ═══ CENTER ═══ */
+	/* ── Centre ── */
 
 	/* Shelf */
 	.shelf {
 		position: absolute;
 		bottom: 22%;
 		left: var(--rack-left);
-		/* max-content rather than a calculated width. With an explicit width that came
-		   up short, the columns shrank - and a flex item cannot shrink past its
-		   content, so columns holding cartons held their size while empty ones
-		   collapsed to their borders and looked deleted. */
+		/* max-content, not a calculated width. A width that came up short would squeeze
+		   empty columns to their borders while full ones kept their size. */
 		width: max-content;
 		height: calc(var(--carton) * 3 + 22px);
 		display: flex;
@@ -826,11 +818,8 @@
 	}
 
 	/*
-		No dark-mode override here on purpose. There used to be one that repainted every
-		shelf box a single flat red, which threw away the per-SKU --fill/--edge and made
-		the rack unreadable in dark mode — the cart, staging, and carried boxes never had
-		it, so only the shelves lost their colour. The tones are light pastels and read
-		fine on the dark rack.
+		No dark-mode override: the per-SKU pastels read fine on the dark rack, and a
+		single override colour would hide which item is which.
 	*/
 
 	/* Picker worker */
@@ -909,7 +898,7 @@
 		border-radius: 0 0 3px 3px;
 	}
 
-	/* ── Picker's cart ────────────────────────────────────────── */
+	/* ── Picker's cart ── */
 
 	.cart {
 		position: absolute;
@@ -1009,7 +998,7 @@
 		padding: 1px 3px;
 	}
 
-	/* ═══ OUTBOUND RIGHT SIDE ═══ */
+	/* ── Outbound (right) ── */
 
 	/* Staging area */
 	.staging-area {
@@ -1080,8 +1069,7 @@
 		border: 1px solid var(--color-ember-500);
 		border-radius: 1px;
 		flex-shrink: 0;
-		/* A fixed 2px band, not a percentage. At 10% of an 8px carton the tape came out
-		   sub-pixel and vanished. */
+		/* A fixed 2px band; a percentage of an 8px carton rounds to nothing. */
 		background-image: linear-gradient(
 			to bottom,
 			transparent calc(50% - 1px),
@@ -1091,8 +1079,7 @@
 		);
 	}
 
-	/* On the base rule so the flash eases out as well as in. Declared only on the
-	   .pack-flash rule it snapped off the instant the class was removed. */
+	/* On the base rule so the flash fades out as well as in. */
 	.staging-area {
 		transition:
 			box-shadow 0.25s ease,
@@ -1266,12 +1253,9 @@
 	}
 
 	/*
-		Short landscape — a phone turned sideways. The scene is a decorative,
-		aria-hidden diorama, so dropping it costs no information and frees the height
-		the game actually needs. This replaces a blocking "turn your phone upright"
-		overlay, which restricted operation to one orientation and so failed SC 1.3.4;
-		"it renders badly in landscape" is a layout limitation, not the essential-use
-		exception. The panel below already scrolls, so the game just works.
+		Short landscape, such as a phone turned sideways. The scene is decoration, so
+		hiding it loses no information and frees height for the game. Blocking
+		landscape instead would fail SC 1.3.4.
 	*/
 	@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
 		.scene {
@@ -1315,12 +1299,9 @@
 			font-size: 10px;
 		}
 		/*
-			These two stay at 6px on purpose. The whole .scene is aria-hidden
-			decoration inside a 150px-tall diorama, and every fact they label is
-			also delivered as >=14px text in PickingPanel and OrderStatusBar.
-			Growing them here only buys overlap with the half-dozen other elements
-			this media query repositions. WAVE flags them as small text; that alert
-			is accepted, not an oversight.
+			These two stay at 6px on purpose. The scene is aria-hidden decoration,
+			and everything they label is also shown as 14px+ text in PickingPanel
+			and OrderStatusBar. WAVE flags them as small text; that is accepted.
 		*/
 		.staging-label,
 		.receiving-label {

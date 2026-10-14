@@ -3,7 +3,7 @@
  * focus moves in on open, Tab is trapped, Escape closes from anywhere inside,
  * everything outside is inert, and focus returns to the opener on close.
  *
- * Used by the simulator and the photo lightbox.
+ * Used by the simulator dialog.
  */
 
 import type { Action } from 'svelte/action';

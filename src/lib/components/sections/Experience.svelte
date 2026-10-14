@@ -38,10 +38,7 @@
 							See how the work flowed: try the WMS simulator
 						</a>
 					</p>
-					<!--
-						Bled to the card edges rather than boxed again inside it — a border
-						within a border reads as clutter.
-					-->
+					<!-- Runs to the card edges instead of nesting a second border inside the card. -->
 					<div class="bleed">
 						<ConveyorBelt />
 					</div>

@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 
-/* Self-hosted so the declared stack is the stack that actually loads. Previously
-   --font-sans named Inter but nothing ever fetched it, so every visitor without
-   Inter installed locally was reading system-ui. */
+/* Self-hosted, so the font stack declared below is the one that loads. */
 @import '@fontsource-variable/fraunces';
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/jetbrains-mono';
@@ -11,22 +9,10 @@
 
 @theme {
 	/*
-		Palette "Valley". The six seed hues are unchanged from the original extraction
-		— Korma #95560e, Mandalay #b18816, Dark Fern #15560b, Totem Pole #a22a06,
-		Loulou #490846, plus a parchment neutral — but every ramp is regenerated in
-		OKLCH against Tailwind's own lightness curve. Two consequences worth knowing:
-
-		1. A stop number now means the same weight on every ramp, and the same weight
-		   it means on stock Tailwind colours. The old ramps ran far darker (plum-400
-		   sat at 41% lightness where Tailwind's 400 is 77%), which is how an invisible
-		   1.04:1 hover border got shipped.
-		2. `red` is now `ember`. The old name collided with Tailwind's built-in red:
-		   @theme extends rather than replaces, so `bg-red-950` silently resolved to
-		   stock Tailwind red instead of Totem Pole.
-
-		The cool counterpoint is `plum` — warm earth needs something cold to push against,
-		but a Miami-Blue sky ramp read as baby blue in dark mode, so Loulou does that job
-		instead at reduced chroma. One cool voice, not two.
+		Colour ramps from the earlier "Valley" palette. The page itself uses the
+		semantic tokens further down; these remain for the simulator, its status
+		badges and the conveyor belt. Each ramp is generated in OKLCH on Tailwind's
+		lightness curve, so a stop number means the same lightness on every ramp.
 	*/
 
 	/* accent — Mandalay, harvest gold */
@@ -68,7 +54,7 @@
 	--color-warm-900: #4e4538;
 	--color-warm-950: #292219;
 
-	/* ember — Totem Pole, was `red` */
+	/* ember — Totem Pole, the reds. Not named `red`: @theme extends Tailwind's own red. */
 	--color-ember-50: #fff6f1;
 	--color-ember-100: #ffebe2;
 	--color-ember-200: #ffd4c2;
@@ -81,12 +67,7 @@
 	--color-ember-900: #732e1d;
 	--color-ember-950: #411106;
 
-	/*
-		plum — Loulou, the cool counterpoint for links and tags. Chroma is pulled to
-		~0.82 of the other ramps and the hue nudged 8° off magenta: at full chroma this
-		hue goes hot pink as it lightens, which is wrong next to Korma and Mandalay.
-		Muted, it stays aubergine at the dark end and lilac at the light end.
-	*/
+	/* plum — Loulou, muted so it runs aubergine to lilac instead of turning hot pink */
 	--color-plum-50: #fdf8fe;
 	--color-plum-100: #fbf0fc;
 	--color-plum-200: #f4dff6;
@@ -105,16 +86,12 @@
 	--font-mono: 'JetBrains Mono Variable', 'Fira Code', Consolas, monospace;
 
 	/*
-		Named steps rather than redefined numerics. Overriding --text-base et al would
-		silently resize every existing utility in the warehouse simulator; adding steps
-		makes each use site state its intent instead.
+		Named type steps. Adding steps, rather than redefining --text-base and the
+		rest, leaves the simulator's text-sm and text-base sizes untouched.
 	*/
 	--text-display: 4.25rem;
 	--text-display--line-height: 1.02;
 	--text-display--letter-spacing: -0.03em;
-	--text-numeral: 3.5rem;
-	--text-numeral--line-height: 0.9;
-	--text-numeral--letter-spacing: -0.02em;
 	--text-title: 2.25rem;
 	--text-title--line-height: 1.15;
 	--text-title--letter-spacing: -0.02em;
@@ -123,23 +100,17 @@
 	--text-body: 1.0625rem;
 	--text-body--line-height: 1.68;
 
-	/* Motion. Timing lives here so components stop restating it. */
-	--ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+	/* Easing for small hover movements. */
 	--ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 /*
-	Semantic tokens. Components ask for a role — a surface, a border, muted ink — and
-	the role resolves per theme here, once. This is what stops the class of bug where
-	someone picks `plum-400` for a dark-mode hover and ships 1.04:1 without noticing:
-	contrast gets verified at this layer instead of at every call site.
+	Semantic tokens. Components ask for a role (surface, edge, ink) and the role
+	resolves per theme below, so contrast is checked once, at this layer.
 
-	`@theme inline` emits `var(--t-surface)` into the utility rather than baking the
-	value, so `bg-surface` follows the .dark toggle.
-
-	The `--t-` prefix is not decoration: WarehouseScene sets bare `--edge` and `--fill`
-	inline on every carton to carry its SKU tone, so an unprefixed `:root { --edge }`
-	would inherit into those elements and override the fallback.
+	`@theme inline` writes var(--t-*) into each utility instead of a fixed value,
+	so the utilities follow the .dark class. The --t- prefix keeps these apart from
+	the bare --edge and --fill that WarehouseScene sets inline on each carton.
 */
 @theme inline {
 	--color-surface: var(--t-surface);
@@ -173,10 +144,9 @@
 }
 
 /*
-	Palette "Navy and marigold" (docs/design-review, Hybrid). One hue family for the
-	page: navy carries text, links and buttons in light mode; marigold is a small accent
-	(chips) and becomes the button colour in dark mode. Every pair below is checked in
-	docs/design-review/a11y/palettes.json (all pass WCAG 2.2 AA).
+	Palette "Navy and marigold". Navy carries text, links and buttons in light mode;
+	marigold is a small accent (chips) and becomes the button colour in dark mode.
+	Every text pair passes WCAG 2.2 AA; CI checks the rendered pages with axe and pa11y.
 */
 :root {
 	--t-surface: #fbf8f1;
