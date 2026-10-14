@@ -8,14 +8,10 @@
 	let { link }: Props = $props();
 </script>
 
-<!--
-	Hover fill is warm-300 / plum-900 rather than warm-200 / warm-800: these only ever
-	render on the footer's own ground, which the old values matched exactly.
--->
 <a
 	href={link.href}
 	aria-label="{link.label}: {link.display}"
-	class="text-ink hover:bg-warm-300 dark:hover:bg-plum-900 hover:text-ember-800 dark:hover:text-ember-300 ease-spring flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+	class="text-ink border-edge hover:border-edge-hover bg-surface-raised flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors motion-reduce:transition-none"
 >
 	{#if link.icon === 'email'}
 		<svg
@@ -91,5 +87,5 @@
 			/>
 		</svg>
 	{/if}
-	<span class="hidden sm:inline">{link.display}</span>
+	<span>{link.display}</span>
 </a>

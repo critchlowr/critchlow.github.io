@@ -1,89 +1,86 @@
 import type {
 	Experience,
 	Education,
-	Project,
 	Publication,
 	ContactLink,
 	SkillCategory,
-	Stat,
-	Tool
+	Stat
 } from '$lib/types';
 
 export const hero = {
 	name: 'Ryan Critchlow',
-	tagline: 'Product · Research · Enterprise Systems',
+	tagline: 'Accessibility and UX research · Enterprise technical support',
 	summary:
-		'I spent three years administering warehouse management systems at Körber, running four enterprise accounts and turning what warehouse managers needed into specs, SQL reporting, and scoped work. Then I went back for an M.S. in Computer Science and spent a year and a half owning a research project end to end: planning the build, recruiting families, running the study, and coding the analysis. I like the part of the job where you decide what gets built and why.',
+		'I study how people use technology, and I troubleshoot the enterprise systems they depend on. Peer-reviewed accessibility research at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
+	status: 'At ASSETS 2026 in Porto, October 25–28.',
 	availability:
-		'Open to product, solutions, analytics, and accessibility roles. Pacific Northwest or remote.',
+		'Open to UX research, accessibility, and technical support roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
 // The headline numbers, pulled up from the Experience and Research sections so a
 // skimming reader meets them first. Each one is stated in full further down the page.
 export const stats: Stat[] = [
+	{ value: 'ASSETS', label: 'peer-reviewed paper, ACM accessibility conference 2026' },
 	{ value: '4', label: 'enterprise accounts run at once, double the team average' },
 	{ value: '46%', label: 'more stable releases than the department average' },
-	{ value: '50%', label: 'faster new-hire ramp from a 30/60/90 framework I co-led' },
-	{ value: 'ASSETS', label: 'peer-reviewed paper, ACM accessibility conference 2026' }
+	{ value: '50%', label: 'faster new-hire ramp from a 30/60/90 framework I co-led' }
 ];
 
 export const about = {
 	heading: 'About Me',
 	paragraphs: [
-		"I'm interested in the work that happens before the code. Figuring out what people need, deciding what gets built, and keeping the thing that ships close to the problem it started with. I've done versions of that as a support analyst, as a graduate researcher, and now in a wood shop.",
-		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. When HR blocked my move into software development because I didn't have a CS degree, I went back to Western for an M.S. instead. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
+		"I've been building things for people my whole life. Growing up with a carpenter for a dad, I learned to solve complex problems in unusual ways, with skills you don't pick up in a classroom. In graduate school I started building software for people, and designing it with them.",
+		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. I wanted to build the systems, not just support them, so I went back to Western for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
 		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns, then scrapped my own approved study design because I had planned the whole thing for those kids without involving any of them. The replacement put me in four families' living rooms watching them play. That's still the best decision I've made on a project.",
 		"When I'm not working you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking, reading, and the occasional long video game session. I like being outside as much as I can."
 	]
 };
 
+// Each role is one summary line plus at most three bullets. The full detail lives in
+// the résumé PDF, which is one click away from every section.
 export const experience: Experience[] = [
 	{
 		title: 'Carpenter',
+		id: 'atlas',
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
+		summary:
+			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026.',
 		bullets: [
-			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026',
-			"Took over the shop's Squarespace site, handling content and structure updates",
-			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs before they reach the floor'
+			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs before they reach the floor',
+			"Took over the shop's Squarespace site, handling content and structure updates"
 		],
-		tags: ['Estimating', 'Scoping', 'Client Work'],
 		stickers: 'bench'
 	},
 	{
 		title: 'Graduate Researcher',
+		id: 'kind-lab',
 		company: 'Western Washington University — KIND Lab',
 		location: 'Bellingham, WA',
 		period: 'Winter 2025 – June 2026',
+		summary:
+			'Designed and ran a participatory user study with neurodivergent children and their families: literature review, survey instruments, assessment methodology, and data collection plans.',
 		bullets: [
-			'Designed a complete user study and research proposal, including literature review, survey instruments, assessment methodology, and data collection plans; mentored an undergraduate researcher in amending the IRB protocol to add an in-home co-design pilot',
-			'Planned and managed a multi-phase delivery timeline of build, recruit, evaluate, analyze, and write, launching a recruitment campaign across Western Washington via snowball sampling and re-sequencing phases to absorb a quarter-long recruiting delay',
-			'Conducted an in-home participatory evaluation with four neurodivergent children and their families following the Co-Design Beyond Words methodology, developing semi-structured pre- and post-gameplay caregiver interview protocols, child-facing visual survey instruments, and dual video/audio recording setups across sessions averaging 85 minutes',
+			'Conducted an in-home participatory evaluation with four neurodivergent children and their families, following the Co-Design Beyond Words methodology, with semi-structured caregiver interviews, child-facing visual surveys, and sessions averaging 85 minutes',
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
-			'Translated practitioner insights from speech-language pathologists and co-design sessions into a working prototype in C#, Unity, and WebGL, leading technical implementation and art direction'
-		],
-		tags: ['Research', 'Delivery', 'Requirements']
+			'Mentored an undergraduate researcher in amending the IRB protocol to add an in-home co-design pilot, and re-sequenced the study to absorb a quarter-long recruiting delay'
+		]
 	},
 	{
 		title: 'Support Analyst L4',
+		id: 'korber',
 		company: 'Körber Supply Chain (now Infios)',
 		location: 'Bellingham, WA',
 		period: '2020 – 2023',
+		summary:
+			'Primary technical point of contact for four enterprise warehouse-management accounts, double the team average of two.',
 		bullets: [
-			'Managed four enterprise customer accounts, double the team average of two, coordinating stakeholders on process development and change controls and serving as primary technical point of contact across the portfolio',
-			'Gathered requirements from enterprise stakeholders and translated them into custom SQL reporting and web-based deliverables, weighing technical complexity against business urgency and achieving 46% more stable releases than the department average',
-			'Re-aligned stakeholder expectations when requests conflicted with technical feasibility, contracted hours, or SLA commitments, and wrote requirement specs for engineering handoff on scope-exceeding work',
-			'Performance-tuned and optimized SQL workloads using CTEs, stored procedures, indexing, and automation via SQL Server Agent, resolving deadlocks on high-traffic production systems',
 			"Isolated faults across system boundaries, using WMS data to establish whether an issue originated in the warehouse system, the customer's order management system, Dynamics 365, or their network, and escalated to the responsible team with the evidence behind it",
-			'Worked from a cloud operations dashboard to identify platform outages and separate them from application faults, supporting both cloud-hosted and on-premise customers',
-			'Ran system upgrades across dev, test, and production environments for customers through the HighJump to Körber rebrand',
-			'Served as on-site technical lead at two system Go-Lives and one improvement trip, resolving bugs and refining process flows with users in real time',
-			'Wrote and maintained knowledgebase documentation for every account I managed, and trained the secondary analysts on each account from it',
-			'Co-led a four-person initiative to develop a 30/60/90 onboarding framework, cutting new-hire ramp time by 50%, and trained four enterprise customers through a NetSuite-to-ServiceNow migration'
+			'Translated stakeholder requests into custom SQL reporting and web-based deliverables, achieving 46% more stable releases than the department average, and resolved deadlocks on high-traffic production systems',
+			'Served as on-site technical lead at two system go-lives, and co-led a 30/60/90 onboarding framework that cut new-hire ramp time by 50%'
 		],
-		tags: ['Stakeholder Mgmt', 'Requirements', 'T-SQL', 'Reporting'],
 		showSimulator: true
 	},
 	{
@@ -91,18 +88,17 @@ export const experience: Experience[] = [
 		company: 'Western Washington University',
 		location: 'Bellingham, WA',
 		period: '2024 – 2025',
-		bullets: [
-			'Supported 30+ students per quarter across DATA 311 (Fundamentals of Data Science), CSCI 102 (Computer Mediated Communications), and CSCI 345 (Object-Oriented Design)',
-			'Taught Python, pandas, NumPy, and data visualization in DATA 311; UML modeling and design patterns in CSCI 345',
-			'Translated technical assignment requirements into clearer language for students and refined rubrics to clarify expectations across course material'
-		]
+		summary:
+			'Supported 30+ students per quarter across DATA 311 (Fundamentals of Data Science), CSCI 102 (Computer Mediated Communications), and CSCI 345 (Object-Oriented Design).',
+		bullets: []
 	},
 	{
 		title: 'Bartender',
 		company: 'Redlight',
 		location: 'Bellingham, WA',
 		period: '2023 – 2025',
-		bullets: ['Made cocktails in a fast-paced downtown bar to finance graduate school'],
+		summary: 'Made cocktails in a fast-paced downtown bar to finance graduate school.',
+		bullets: [],
 		stickers: 'bar'
 	},
 	{
@@ -110,14 +106,16 @@ export const experience: Experience[] = [
 		company: 'Aslan Brewing Company',
 		location: 'Bellingham, WA',
 		period: 'March 2018 – March 2020',
-		bullets: ['Bartended through my undergraduate degree']
+		summary: 'Bartended through my undergraduate degree.',
+		bullets: []
 	},
 	{
 		title: 'Carpenter',
 		company: 'Bespoke Construction',
 		location: 'Bellingham, WA',
 		period: '2015 – 2017',
-		bullets: ['Custom residential construction and finish carpentry'],
+		summary: 'Custom residential construction and finish carpentry.',
+		bullets: [],
 		stickers: 'saw'
 	}
 ];
@@ -155,93 +153,72 @@ export const credentials = {
 	membershipDetail: 'Association for Computing Machinery, 2026–present'
 };
 
+// Each group says where it was used, so the list reads as evidence, not keywords.
 export const skills: SkillCategory[] = [
 	{
-		label: 'Product & Process',
+		label: 'Troubleshooting & support',
 		items: [
-			'Requirements Gathering',
-			'Stakeholder Management',
-			'Prioritization & Tradeoff Analysis',
-			'Scope & Change Control',
-			'Cross-Functional Collaboration',
-			'Agile Ceremonies',
-			'Escalation Management',
-			'Onboarding & Training'
+			'Fault isolation across systems',
+			'Escalation with evidence',
+			'SQL performance tuning',
+			'Deadlock resolution',
+			'Go-live support',
+			'Knowledge base writing',
+			'Onboarding & training'
+		],
+		from: [{ label: 'Körber', href: '#korber' }]
+	},
+	{
+		label: 'Research methods',
+		items: [
+			'Participatory evaluation',
+			'Semi-structured interviews',
+			'Thematic analysis (Braun & Clarke)',
+			'Survey & instrument design',
+			'Video coding',
+			'Systematic literature coding',
+			'IRB protocols',
+			'WCAG 2.2'
+		],
+		from: [
+			{ label: 'KIND Lab', href: '#kind-lab' },
+			{ label: 'ASSETS 2026', href: '#publications' }
 		]
 	},
 	{
-		label: 'Research & Synthesis',
+		label: 'Process & stakeholders',
 		items: [
-			'Qualitative Research',
-			'User Interviews',
-			'Participatory Design',
-			'Thematic Analysis',
-			'Survey Design',
-			'Iterative Prototyping',
-			'IRB Protocols',
-			'WCAG 2.1 Accessibility Standards'
+			'Requirements gathering',
+			'Stakeholder management',
+			'Scope & change control',
+			'Prioritization & tradeoffs',
+			'Material takeoffs & scoping'
+		],
+		from: [
+			{ label: 'Körber', href: '#korber' },
+			{ label: 'Atlas Woodworks', href: '#atlas' }
 		]
-	}
-];
-
-// Icons are devicon SVGs (MIT) served from static/icons. Neither devicon nor Simple
-// Icons ships Power BI or Tableau marks — both are trademark-restricted — so those
-// two leave `icon` unset and render a neutral chart glyph instead of a wrong logo.
-export const tools: Tool[] = [
-	{ name: 'T-SQL', icon: 'microsoftsqlserver' },
-	{ name: 'Python', icon: 'python' },
-	{ name: 'C#', icon: 'csharp' },
-	{ name: 'Java', icon: 'java' },
-	{ name: 'JavaScript', icon: 'javascript' },
-	{ name: 'Power BI' },
-	{ name: 'Tableau' },
-	{ name: 'MySQL', icon: 'mysql' },
-	{ name: 'Git', icon: 'git' },
-	{ name: 'Unity', icon: 'unity', mono: true },
-	{ name: 'Svelte', icon: 'svelte' },
-	{ name: 'Tailwind', icon: 'tailwindcss' }
-];
-
-export const selectedWork: Project[] = [
-	{
-		title: 'You and I',
-		description:
-			'A Unity game that helps autistic gestalt language learners practice pronouns, built for an in-home participatory evaluation with four families. I owned it end to end, including the art.',
-		tools: 'Unity, C#, WebGL',
-		period: '2025 – 2026',
-		bullets: []
 	},
 	{
-		title: 'WMS Simulator',
-		description:
-			'A playable simulation of the wave, pick, stage, pack, load, and ship flow I administered for three years, including what happens when a picker reaches an empty location. Built to explain the domain to people who have never worked in it.',
-		tools: 'Svelte, TypeScript',
-		period: '2026',
-		bullets: [],
-		action: 'simulator',
-		hrefLabel: 'Play it'
-	},
-	{
-		title: 'KIND Lab Website',
-		description:
-			"The website for Western's KIND Lab, built so the group's research is legible to people outside it.",
-		tools: 'Web Development',
-		period: '2025',
-		bullets: [],
-		href: 'https://thekindlab.github.io/',
-		hrefLabel: 'thekindlab.github.io',
-		external: true
-	},
-	{
-		title: 'Atlas Northwest',
-		description:
-			'Content and structure work on the site for the woodshop I work at, covering their restoration and millwork portfolio.',
-		tools: 'Squarespace',
-		period: '2026',
-		bullets: [],
-		href: 'https://atlasnorthwest.com',
-		hrefLabel: 'atlasnorthwest.com',
-		external: true
+		label: 'Data & tools',
+		items: [
+			'T-SQL',
+			'MySQL',
+			'Python',
+			'Power BI',
+			'Tableau',
+			'C#',
+			'Java',
+			'JavaScript',
+			'Unity',
+			'Svelte',
+			'Git'
+		],
+		from: [
+			{ label: 'Körber', href: '#korber' },
+			{ label: 'KIND Lab', href: '#kind-lab' },
+			{ label: 'M.S.', href: '#education' }
+		]
 	}
 ];
 
@@ -287,12 +264,6 @@ export const contact: ContactLink[] = [
 		display: 'critchlow.rc@gmail.com'
 	},
 	{
-		label: 'Phone',
-		href: 'tel:+13609416785',
-		icon: 'phone',
-		display: '(360) 941-6785'
-	},
-	{
 		label: 'LinkedIn',
 		href: 'https://linkedin.com/in/ryan-critchlow',
 		icon: 'linkedin',
@@ -315,10 +286,7 @@ export const contact: ContactLink[] = [
 export const navLinks = [
 	{ label: 'About', href: '/#about' },
 	{ label: 'Experience', href: '/#experience' },
-	{ label: 'Work', href: '/#work' },
-	{ label: 'Simulator', href: '/#simulator' },
-	{ label: 'Research', href: '/#research' },
+	{ label: 'Publications', href: '/#publications' },
 	{ label: 'Skills', href: '/#skills' },
-	{ label: 'Education', href: '/#education' },
-	{ label: 'Contact', href: '/#contact' }
+	{ label: 'Education', href: '/#education' }
 ];

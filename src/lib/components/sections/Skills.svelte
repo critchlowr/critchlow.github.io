@@ -1,68 +1,33 @@
 <script lang="ts">
-	import { inview } from '$lib/actions/inview';
-	import { skills, tools } from '$lib/data/content';
+	import { skills } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import Badge from '$lib/components/ui/Badge.svelte';
 </script>
 
-<SectionWrapper id="skills" headingId="skills-heading" number="06" title="Skills" alt width="wide">
-	<div class="space-y-12">
-		{#each skills as category (category.label)}
-			<div use:inview={{ dir: 'up' }}>
-				<h3 class="text-ink-muted mb-4 font-mono text-xs font-semibold tracking-[0.14em] uppercase">
-					{category.label}
-				</h3>
-				<div class="stagger flex flex-wrap gap-2" use:inview>
-					{#each category.items as item, i (item)}
-						<span style="--i: {i}"><Badge size="lg">{item}</Badge></span>
+<!--
+	Each group names where the skills were used and links there, so the list reads as
+	evidence rather than keywords. No ratings or logo walls: they don't tell a reader
+	how well someone knows a thing.
+-->
+<SectionWrapper id="skills" headingId="skills-heading" title="Skills" alt>
+	<ul class="grid gap-5 md:grid-cols-2">
+		{#each skills as group (group.label)}
+			<li class="border-edge bg-surface-raised rounded-xl border p-5 md:p-6">
+				<h3 class="text-ink-strong font-semibold">{group.label}</h3>
+				<ul class="mt-3 flex flex-wrap gap-2" aria-label="{group.label} skills">
+					{#each group.items as item (item)}
+						<li class="bg-chip text-ink rounded-full px-3 py-1 text-sm">{item}</li>
 					{/each}
-				</div>
-			</div>
+				</ul>
+				<p class="text-ink-muted mt-4 text-sm">
+					From
+					{#each group.from as place, i (place.href + place.label)}
+						{i > 0 ? (i === group.from.length - 1 ? ' and ' : ', ') : ''}<a
+							href={place.href}
+							class="text-link font-medium underline underline-offset-4">{place.label}</a
+						>
+					{/each}
+				</p>
+			</li>
 		{/each}
-
-		<div>
-			<h3 class="text-ink-muted mb-4 font-mono text-xs font-semibold tracking-[0.14em] uppercase">
-				Data &amp; Tools
-			</h3>
-			<div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4" use:inview>
-				{#each tools as tool, i (tool.name)}
-					<div
-						class="group border-edge bg-surface-raised hover:border-edge-hover ease-spring flex items-center gap-3 rounded-lg border px-4 py-3 transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-						style="--i: {i}"
-					>
-						{#if tool.icon}
-							<img
-								src="/icons/{tool.icon}.svg"
-								alt=""
-								class={[
-									'ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-									tool.mono && 'dark:invert'
-								]}
-								loading="lazy"
-								aria-hidden="true"
-							/>
-						{:else}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="text-plum-600 dark:text-plum-300 ease-spring h-7 w-7 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-								aria-hidden="true"
-							>
-								<path d="M3 3v18h18" />
-								<rect x="7" y="12" width="3" height="5" rx="0.5" />
-								<rect x="12" y="8" width="3" height="9" rx="0.5" />
-								<rect x="17" y="5" width="3" height="12" rx="0.5" />
-							</svg>
-						{/if}
-						<span class="text-ink text-sm font-medium">{tool.name}</span>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</div>
+	</ul>
 </SectionWrapper>

@@ -31,7 +31,7 @@
 		</p>
 		<a
 			href="/"
-			class="bg-accent-700 hover:bg-accent-800 ease-spring mt-10 inline-block rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+			class="bg-brand hover:bg-brand-strong text-on-brand mt-10 inline-block rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
 		>
 			Back to the main page
 		</a>

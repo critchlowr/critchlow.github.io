@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { inview } from '$lib/actions/inview';
-	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import WarehouseModal from '$lib/components/warehouse/WarehouseModal.svelte';
@@ -12,8 +10,16 @@
 	const branch = ['Short', 'Replenish'];
 </script>
 
-<SectionWrapper id="simulator" headingId="simulator-heading" number="04" title="WMS Simulator" alt>
-	<div use:inview={{ dir: 'up' }}>
+<section class="pt-28 pb-20 md:pt-32" aria-labelledby="simulator-heading">
+	<div class="mx-auto max-w-4xl px-5">
+		<p class="mb-4">
+			<a href="/#experience" class="text-link text-sm font-semibold underline underline-offset-4"
+				>Back to Experience</a
+			>
+		</p>
+		<h1 id="simulator-heading" class="text-ink-strong font-display text-title mb-8 font-semibold">
+			WMS Simulator
+		</h1>
 		<Card class="p-6 md:p-8">
 			<div class="max-w-2xl space-y-5">
 				<p class="text-ink text-body">
@@ -53,13 +59,13 @@
 							<li class="flex items-center gap-1">
 								<Badge tone="accent" size="md">{step}</Badge>
 								{#if i < steps.length - 1}
-									<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+									<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 								{/if}
 							</li>
 						{/each}
 
 						<li class="flex items-center gap-1" style="grid-column: 2 / -1;">
-							<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&#8627;</span>
+							<span class="text-ink-muted" aria-hidden="true">&#8627;</span>
 							<span class="text-ink-muted mr-1 text-sm">location empty</span>
 							{#each branch as step (step)}
 								<span
@@ -67,7 +73,7 @@
 								>
 									{step}
 								</span>
-								<span class="text-warm-600 dark:text-warm-400" aria-hidden="true">&rarr;</span>
+								<span class="text-ink-muted" aria-hidden="true">&rarr;</span>
 							{/each}
 							<span class="text-ink-muted text-sm">back to Pick</span>
 						</li>
@@ -77,7 +83,7 @@
 				<div class="pt-2">
 					<button
 						type="button"
-						class="bg-accent-700 hover:bg-accent-800 ease-spring inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+						class="bg-brand hover:bg-brand-strong text-on-brand inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
 						onclick={() => simulator.launch()}
 					>
 						<svg
@@ -99,7 +105,7 @@
 			</div>
 		</Card>
 	</div>
-</SectionWrapper>
+</section>
 
 <WarehouseModal open={simulator.open} onclose={() => simulator.close()}>
 	<WarehouseGame onclose={() => simulator.close()} />

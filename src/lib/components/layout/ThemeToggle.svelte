@@ -11,7 +11,7 @@
 <button
 	onclick={theme.toggle}
 	aria-label={labels[theme.mode]}
-	class="text-warm-600 hover:bg-warm-200 hover:text-warm-800 dark:text-warm-300 dark:hover:bg-warm-700 dark:hover:text-warm-100 rounded-lg p-2 transition-colors"
+	class="text-ink-muted hover:bg-band hover:text-ink-strong rounded-lg p-2 transition-colors"
 >
 	{#if theme.mode === 'light'}
 		<svg
