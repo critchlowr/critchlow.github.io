@@ -12,7 +12,7 @@ export const hero = {
 	tagline: 'Accessibility and UX research · Enterprise technical support',
 	summary:
 		'I study how people use technology, and I troubleshoot the enterprise systems they depend on. Peer-reviewed accessibility research at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
-	status: 'At ASSETS 2026 in Porto, October 25–28.',
+	status: 'At ASSETS 2026 in Vila Nova de Gaia, Portugal, October 25–28.',
 	availability:
 		'Open to UX research, accessibility, and technical support roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
@@ -32,7 +32,7 @@ export const about = {
 	paragraphs: [
 		"I've been building things for people my whole life. Growing up with a carpenter for a dad, I learned to solve complex problems in unusual ways, with skills you don't pick up in a classroom. In graduate school I started building software for people, and designing it with them.",
 		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. I wanted to build the systems, not just support them, so I went back to Western for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
-		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns, then scrapped my own approved study design because I had planned the whole thing for those kids without involving any of them. The replacement put me in four families' living rooms watching them play. That's still the best decision I've made on a project.",
+		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns and designed an IRB-approved study to evaluate it as a language intervention. Before launching that study, I shifted to a pilot study with four families to refine the game's design with the children who would use it. The language assessment is left to a future team.",
 		"When I'm not working you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking, reading, and the occasional long video game session. I like being outside as much as I can."
 	]
 };
@@ -224,16 +224,16 @@ export const skills: SkillCategory[] = [
 
 export const publications: Publication[] = [
 	{
-		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Katherine Baker, and Kristen Shinohara',
+		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Kristen Shinohara, and Catherine M. Baker',
 		title:
 			'Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing Education',
 		venue:
-			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Porto, Portugal, October 2026',
+			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
 		status: 'published',
 		summary:
 			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
 		contribution:
-			'Applied an iteratively developed codebook via inductive coding to all 35 papers in the review corpus and helped identify six recurring patterns of ableism. Findings were reviewed by a second researcher for consistency. This is my first conference presentation.'
+			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
 	{
 		authors: 'Ryan Critchlow, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl',
