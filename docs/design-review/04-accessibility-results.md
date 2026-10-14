@@ -40,9 +40,9 @@ Two performance notes:
 - **LCP 8.9 s (Lighthouse, simulated mid-tier mobile) is a lab artifact.** Real loads paint the hero paragraph at first paint: 0.1–0.3 s on broadband and about 1 s on throttled slow 4G (03 §1a). Lighthouse's simulation treats every request that starts before LCP as blocking, and 2.45 MB of eager bartending JPEGs start first. Adding `loading="lazy"` to those images alone moves Lighthouse LCP to 2.6–2.7 s and the performance score from about 72 to 93–94. Lighthouse also labels the hero paragraph `.reveal`, but that's only because it reads the DOM after hydration. Hero reveals should come out anyway (01a §5).
 - **Total byte weight is 2.7 MB.** The ten bartending JPEGs account for 2.47 MB of it.
 
-## After Phase 0 (this branch)
+## After Phase 0 (live on `main` since October 14)
 
-Run on 2026-10-13 against a production build (`npm run build`, served locally). **Every check passes.** These fixes reach ryancritchlow.com when the branch is merged into `main`.
+Run on 2026-10-13 against a production build (`npm run build`, served locally). **Every check passes.** The fixes were then ported onto `main` after PR #3 (hero stats, self-hosted icons, a 404 page) and re-checked there, on the home page and the 404 page: every check still passes (Lighthouse 100 · 92 · 100 · 100 on the home page, LCP 2.8 s). They deployed to ryancritchlow.com on October 14.
 
 | Check                                         | Before                             | After                                                              |
 | --------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------ |
@@ -74,7 +74,7 @@ Run on 2026-10-13, served locally from `docs/design-review/`. Consensus, Almanac
 | Reflow at 320 px, text spacing                | Pass                                 |
 | Motion under reduced motion                   | None                                 |
 | Token pairs (`palettes.json`)                 | 208 pass (26 per palette and mode)   |
-| Lighthouse a11y · perf · best practices · SEO | 100 · 83 · 96 · 100 (current blue)   |
+| Lighthouse a11y · perf · best practices · SEO | 100 · 83 · 96 · 100 (original blue)  |
 | LCP, CLS                                      | 3.3 s, 0                             |
 
 Notes:

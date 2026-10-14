@@ -13,10 +13,12 @@
 			try {
 				const t = localStorage.getItem('hybrid-theme');
 				if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
-				// ?palette=navy in the URL wins over the remembered choice, so a link can open one.
+				// ?palette=blue in the URL wins over the remembered choice, so a link can open one.
+				// Navy and marigold is the default (Ryan's pick, October 2026).
 				const p =
 					new URLSearchParams(location.search).get('palette') ??
-					localStorage.getItem('hybrid-palette');
+					localStorage.getItem('hybrid-palette') ??
+					'navy';
 				if (['harbor', 'navy', 'periwinkle'].includes(p))
 					document.documentElement.dataset.palette = p;
 			} catch {}
@@ -1617,9 +1619,9 @@
 				<p class="palette-pick">
 					<label for="palette">Palette</label>
 					<select id="palette">
-						<option value="">Current blue</option>
-						<option value="harbor">Harbor teal</option>
 						<option value="navy">Navy and marigold</option>
+						<option value="blue">Original blue</option>
+						<option value="harbor">Harbor teal</option>
 						<option value="periwinkle">Periwinkle</option>
 					</select>
 				</p>
@@ -2392,10 +2394,10 @@
 
 			// Palette options from the banner, remembered for the next visit.
 			const palette = document.getElementById('palette');
-			palette.value = root.dataset.palette ?? '';
+			palette.value = root.dataset.palette ?? 'blue';
 			palette.addEventListener('change', () => {
-				if (palette.value) root.dataset.palette = palette.value;
-				else delete root.dataset.palette;
+				if (palette.value === 'blue') delete root.dataset.palette;
+				else root.dataset.palette = palette.value;
 				try {
 					localStorage.setItem('hybrid-palette', palette.value);
 				} catch {}

@@ -6,7 +6,7 @@ Five agents did the groundwork: three literature reviews, an audit of the curren
 
 ## Status
 
-**Phase 0 is done on this branch.** The real site now passes every check in [04](04-accessibility-results.md), and the bartending photos are replaced by hand-drawn scenes. It goes live when this branch is merged into `main` (the deploy workflow builds `main` only). See [Phase 0: what changed](#phase-0-what-changed).
+**Phase 0 is live on `main`** (commit `4ca3ebc`, October 14). The real site passes every check in [04](04-accessibility-results.md), and the bartending photos are replaced by hand-drawn scenes. It was ported on top of PR #3 from another session: that PR's hero stats row, self-hosted icons, 404 page and link preview stay; its bartending photo slider and lightbox were replaced by the drawing. See [Phase 0: what changed](#phase-0-what-changed).
 
 **Hybrid is the one mockup.** Consensus, Almanac and Selvedge are retired; they're in this branch's git history if you ever want a piece back.
 
@@ -14,7 +14,7 @@ Five agents did the groundwork: three literature reviews, an audit of the curren
 
 People at an accessibility conference will open the live site, and some will tab through it or turn on reduced motion. In order:
 
-1. **Merge this branch so Phase 0 goes live.** Until then, the live site still fails the six checks.
+1. **Phase 0 is live.** Done October 14.
 2. **Add an `/assets` page** with the paper, the ACM Digital Library link, accessible slides and a way to reach you. Put its QR code and short URL on your final slide.
 3. **Fill the paper's placeholders** in Hybrid: session time, ACM Digital Library link, slides link.
 4. **The redesign is optional before the conference.** Phase 0 matters more.
@@ -29,7 +29,7 @@ People at an accessibility conference will open the live site, and some will tab
 | [02-current-site-audit.md](02-current-site-audit.md)                           | An inventory of everything the site used before Phase 0, with file:line references, ranked problems and removal candidates.                                                                                                     |
 | [03-cross-reference.md](03-cross-reference.md)                                 | The audit checked against the literature: a gap matrix, judgment calls, proposals, a phased roadmap, and a token block for the real site.                                                                                       |
 | [04-accessibility-results.md](04-accessibility-results.md)                     | Accessibility results for the site before and after Phase 0, and for Hybrid in all four palettes.                                                                                                                               |
-| [mockups/hybrid.html](mockups/hybrid.html)                                     | The Hybrid mockup, using real content. The banner has a palette picker; `hybrid.html?palette=navy` opens one directly.                                                                                                          |
+| [mockups/hybrid.html](mockups/hybrid.html)                                     | The Hybrid mockup, using real content. It opens in Navy and marigold; the banner's picker switches palettes, and `hybrid.html?palette=blue` (or `harbor`, `periwinkle`) opens one directly.                                     |
 | [illustrations/](illustrations/)                                               | The script that draws the job-card scenes (bar, circular saw, workbench).                                                                                                                                                       |
 | [a11y/](a11y/)                                                                 | The checker (`check.mjs`), the palette contrast tool, and `palettes.json` (every color pair, all passing).                                                                                                                      |
 
@@ -65,16 +65,16 @@ Each option keeps the same layout and illustrations and swaps the hue family. Al
 
 | Palette               | Light                                      | Dark                                  | Why it's backed by research                                                                                                                                                                                                                                                            |
 | --------------------- | ------------------------------------------ | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current blue**      | Warm off-white, near-black, `#1a56c4`      | Deep navy, light blue `#8fb8ff`       | Saturated blue is the peak of the preference curve (Palmer & Schloss 2010) and the favorite in every country polled (01c §1).                                                                                                                                                          |
+| **Original blue**     | Warm off-white, near-black, `#1a56c4`      | Deep navy, light blue `#8fb8ff`       | Saturated blue is the peak of the preference curve (Palmer & Schloss 2010) and the favorite in every country polled (01c §1).                                                                                                                                                          |
 | **Harbor teal**       | Mint-white, deep teal ink, teal `#0c6668`  | Deep sea, aqua `#62cfc3`              | Blue-green is among the most pleasant hues (Valdez & Mehrabian 1994), and preference tracks the objects a color brings to mind, like water and evergreens (Palmer & Schloss 2010). It's also Bellingham. Pale coral tags are the small contrasting figure.                             |
 | **Navy and marigold** | Warm paper, navy `#1f3d7a`, pale gold tags | Navy page, marigold buttons `#f2c55c` | The same liked hue at a deeper, more formal value. Blue is associated with competence in brand research (Labrecque & Milne 2012; an association, not a hiring effect, 01b). Marigold nods to your Americana taste and stays a small accent, so the page never turns brown.             |
 | **Periwinkle**        | Lavender-white, indigo-violet `#4a3dc2`    | Night violet, periwinkle `#aaa2ff`    | Purple-blue is also among the most pleasant hues (Valdez & Mehrabian 1994), and both sexes prefer bluish hues, with women shifting toward purple (Hurlbert & Ling 2007). Few portfolios use it, so it's the most distinctive of the four. Pale gold tags are the complementary figure. |
 
-![The four palettes in light mode: current blue (top left), Harbor teal (top right), Navy and marigold (bottom left), Periwinkle (bottom right)](screenshots/hybrid-palettes-light.webp)
+![The four palettes in light mode: original blue (top left), Harbor teal (top right), Navy and marigold (bottom left), Periwinkle (bottom right)](screenshots/hybrid-palettes-light.webp)
 
 ![The same four palettes in dark mode](screenshots/hybrid-palettes-dark.webp)
 
-My read: **Navy and marigold** if you want the page to feel established for PhD advisors and hiring managers, **Harbor teal** if you want it to feel like you and the Pacific Northwest. Look at both in dark mode before deciding; that's where they differ most.
+**Your pick (October 14): Navy and marigold.** Hybrid now opens in it. It's the right fit for the audience: the most-liked hue at a formal value, with marigold as the personal accent.
 
 Valdez, P., & Mehrabian, A. (1994). Effects of color on emotions. _Journal of Experimental Psychology: General, 123_(4), 394–409. https://doi.org/10.1037/0096-3445.123.4.394. The other studies are cited in 01b and 01c.
 
@@ -134,12 +134,10 @@ Details are in [03 §4](03-cross-reference.md#4-proposals-to-the-owner) and [01c
 
 ## Decisions I need from you
 
-1. **Merge for ASSETS:** shall I open a pull request from this branch into `main` so Phase 0 goes live?
-2. **Palette:** current blue, Harbor teal, Navy and marigold, or Periwinkle?
-3. **Highlights:** keep the four numbers, or change what the first screen says?
-4. **Positioning line:** "Accessibility and UX research · Enterprise technical support" for ASSETS. After the conference you could flip the order for support applications.
-5. **Simulator:** move it to its own page (recommended), or cut it?
-6. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
+1. **Highlights:** keep the four numbers, or change what the first screen says? The live site now has the same kind of stats row (from PR #3), so the decision covers both.
+2. **Positioning line:** "Accessibility and UX research · Enterprise technical support" for ASSETS. After the conference you could flip the order for support applications.
+3. **Simulator:** move it to its own page (recommended), or cut it?
+4. **Photos:** can you send a headshot that's 800 px or larger? The current one is 325 px and looks soft on phones.
 
 ## Phase 0: what changed
 
@@ -149,7 +147,7 @@ Each fix is small and worth reading as a Svelte and CSS pattern.
 2. **One focus style** (`app.css`). A `--t-focus` token per theme (`accent-700` light, `accent-300` dark) clears 4:1 on every background. The `focus:outline-none focus:ring-*` classes are gone from `Simulator.svelte`, `Experience.svelte` and `PickingPanel.svelte`. Those rings were box-shadows, which Windows High Contrast removes; outlines survive.
 3. **No blank page without JavaScript** (`app.html`, `app.css`). The inline script adds a `js` class, and reveal animations only hide content under `.js`.
 4. **Conveyor belt** (`ConveyorBelt.svelte`). It parks its boxes off the belt, delivers them once when it scrolls into view, and offers "Run the belt again". Both the parked state and the run sit inside `prefers-reduced-motion: no-preference`, so with reduced motion the boxes just sit there.
-5. **Photos replaced by drawings** (`JobScene.svelte`, `static/illustrations/`). The marquee and lightbox are gone. The headshot loads lazily with its dimensions set.
+5. **Photos replaced by drawings** (`JobScene.svelte`, `static/illustrations/`). The photo slider, lightbox and all bartending photos are gone. The headshot loads lazily with its dimensions set.
 6. **Theme flash** (`app.html`, `theme.svelte.ts`). The inline script now treats a saved `"system"` like no preference, and storage access is wrapped so blocked storage can't break the page.
 7. **Scroll box** (`Simulator.svelte`). The workflow diagram's scroll container is focusable, with a region label, so keyboard users can scroll it in Safari and Firefox.
 8. **Hero** (`Hero.svelte`). No reveal animation on the first screen, so it's readable at first paint.
