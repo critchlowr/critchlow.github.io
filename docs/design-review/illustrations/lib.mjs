@@ -181,6 +181,30 @@ function smooth(pts, closed) {
 export function makeScene({ width, height, ink = '#3b2a1e', sw = 2.4, amp = 0.55, step = 5 }) {
 	const parts = [];
 	let seed = 7;
+	// Parts drawn inside api.group(name, fn) can also be exported on their own as icons.
+	let group = null;
+	const bounds = (pts, pad) => {
+		const xs = pts.map((p) => p[0]),
+			ys = pts.map((p) => p[1]);
+		return [
+			Math.min(...xs) - pad,
+			Math.min(...ys) - pad,
+			Math.max(...xs) + pad,
+			Math.max(...ys) + pad
+		];
+	};
+	const render = (list) => {
+		// Merge neighbouring paths that share a style into one element.
+		const merged = [];
+		for (const p of list) {
+			const last = merged[merged.length - 1];
+			if (p.d && last?.d && last.attrs === p.attrs) last.d += p.d;
+			else merged.push({ ...p });
+		}
+		return merged.map((p) => p.raw ?? `<path d="${p.d}" ${p.attrs}/>`).join('');
+	};
+	const wrap = (viewBox, w, h, body) =>
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${w}" height="${h}"><g stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>\n`;
 	const api = {
 		/** Filled shape with an inked outline. */
 		shape(
@@ -193,13 +217,15 @@ export function makeScene({ width, height, ink = '#3b2a1e', sw = 2.4, amp = 0.55
 					x + offset[0],
 					y + offset[1]
 				]);
-				parts.push({ d: smooth(fp, closed), attrs: `fill="${fill}"` });
+				parts.push({ d: smooth(fp, closed), attrs: `fill="${fill}"`, bb: bounds(fp, 0.5), group });
 			}
 			if (stroke !== 'none') {
 				const sp = wobble(rs, closed, a, seed++);
 				parts.push({
 					d: smooth(sp, closed),
-					attrs: `fill="none" stroke="${stroke}" stroke-width="${w}"`
+					attrs: `fill="none" stroke="${stroke}" stroke-width="${w}"`,
+					bb: bounds(sp, w / 2 + 0.5),
+					group
 				});
 			}
 		},
@@ -212,21 +238,34 @@ export function makeScene({ width, height, ink = '#3b2a1e', sw = 2.4, amp = 0.55
 			api.shape(pts, { fill: 'none', stroke: color, w, closed: false, a });
 		},
 		dot(cx, cy, r, color = ink) {
-			parts.push({ raw: `<circle cx="${num(cx)}" cy="${num(cy)}" r="${r}" fill="${color}"/>` });
+			parts.push({
+				raw: `<circle cx="${num(cx)}" cy="${num(cy)}" r="${r}" fill="${color}"/>`,
+				bb: [cx - r, cy - r, cx + r, cy + r],
+				group
+			});
 		},
 		raw(s) {
-			if (s) parts.push({ raw: s });
+			if (s) parts.push({ raw: s, group });
+		},
+		/** Draw fn's parts under a name, so icon(name) can export them alone. */
+		group(name, fn) {
+			group = name;
+			fn();
+			group = null;
 		},
 		svg() {
-			// Merge neighbouring paths that share a style into one element.
-			const merged = [];
-			for (const p of parts) {
-				const last = merged[merged.length - 1];
-				if (p.d && last?.d && last.attrs === p.attrs) last.d += p.d;
-				else merged.push({ ...p });
-			}
-			const body = merged.map((p) => p.raw ?? `<path d="${p.d}" ${p.attrs}/>`).join('');
-			return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}"><g stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>\n`;
+			return wrap(`0 0 ${width} ${height}`, width, height, render(parts));
+		},
+		/** One group, cropped to its own bounds. */
+		icon(name, pad = 1.5) {
+			const list = parts.filter((p) => p.group === name);
+			if (!list.length) throw new Error(`no group ${name}`);
+			const bbs = list.filter((p) => p.bb).map((p) => p.bb);
+			const x0 = Math.floor(Math.min(...bbs.map((b) => b[0])) - pad),
+				y0 = Math.floor(Math.min(...bbs.map((b) => b[1])) - pad),
+				x1 = Math.ceil(Math.max(...bbs.map((b) => b[2])) + pad),
+				y1 = Math.ceil(Math.max(...bbs.map((b) => b[3])) + pad);
+			return wrap(`${x0} ${y0} ${x1 - x0} ${y1 - y0}`, x1 - x0, y1 - y0, render(list));
 		}
 	};
 	return api;

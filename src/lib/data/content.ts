@@ -50,7 +50,7 @@ export const experience: Experience[] = [
 			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs before they reach the floor'
 		],
 		tags: ['Estimating', 'Scoping', 'Client Work'],
-		scene: 'bench'
+		stickers: 'bench'
 	},
 	{
 		title: 'Graduate Researcher',
@@ -103,7 +103,7 @@ export const experience: Experience[] = [
 		location: 'Bellingham, WA',
 		period: '2023 – 2025',
 		bullets: ['Made cocktails in a fast-paced downtown bar to finance graduate school'],
-		scene: 'bar'
+		stickers: 'bar'
 	},
 	{
 		title: 'Bartender',
@@ -118,7 +118,7 @@ export const experience: Experience[] = [
 		location: 'Bellingham, WA',
 		period: '2015 – 2017',
 		bullets: ['Custom residential construction and finish carpentry'],
-		scene: 'saw'
+		stickers: 'saw'
 	}
 ];
 
