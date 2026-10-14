@@ -20,15 +20,19 @@
 				} catch {
 					// Storage can be blocked; fall back to the system setting.
 				}
+				// ?theme=dark|light forces a theme for the headless accessibility runs,
+				// which cannot drive the toggle or set a stored preference.
+				const forced = new URLSearchParams(location.search).get('theme');
 				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-				if (saved === 'dark' || (saved !== 'light' && prefersDark)) {
-					root.classList.add('dark');
-				}
+				const dark = forced
+					? forced === 'dark'
+					: saved === 'dark' || (saved !== 'light' && prefersDark);
+				if (dark) root.classList.add('dark');
 			})();
 		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-prerender="true">
+	<body>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

@@ -38,6 +38,9 @@
 			'https://orcid.org/0009-0007-7323-9177'
 		]
 	};
+
+	// Escaping `<` stops a closing script tag inside the data from ending the block.
+	const personJsonLd = JSON.stringify(personSchema).replace(/</g, '\\u003c');
 </script>
 
 <svelte:head>
@@ -65,12 +68,11 @@
 	/>
 	<meta name="twitter:image" content="https://ryancritchlow.com/images/og-card.png" />
 	<!--
-		personSchema is a static object defined above, not user input, so there is no
-		injection surface here. The `<\/script>` escape is required: without it the HTML
-		parser closes the surrounding script block early.
+		{@html} is the only way to emit a JSON-LD block. The data is static and escaped
+		above. ESLint's Svelte parser fails on a bare closing script tag here, hence `<\/`.
 	-->
 	<!-- eslint-disable-next-line svelte/no-at-html-tags, no-useless-escape -->
-	{@html `<script type="application/ld+json">${JSON.stringify(personSchema)}<\/script>`}
+	{@html `<script type="application/ld+json">${personJsonLd}<\/script>`}
 </svelte:head>
 
 <Hero />

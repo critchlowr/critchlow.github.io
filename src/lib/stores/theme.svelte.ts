@@ -11,6 +11,14 @@ function createThemeStore() {
 	}
 
 	function init() {
+		// ?theme= must win here too, or this would undo what app.html just applied.
+		const forced = new URLSearchParams(location.search).get('theme');
+		if (forced === 'dark' || forced === 'light') {
+			mode = forced;
+			apply(mode);
+			return;
+		}
+
 		let saved: ThemeMode | null = null;
 		try {
 			saved = localStorage.getItem('theme') as ThemeMode | null;
