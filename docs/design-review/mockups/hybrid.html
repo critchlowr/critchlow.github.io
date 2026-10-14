@@ -6,7 +6,7 @@
 		<title>Hybrid Mockup</title>
 		<meta
 			name="description"
-			content="Design mockup for ryancritchlow.com: a research-backed structure with the fun put back in, a day and night window, Georgia, hand-drawn job scenes, and four palettes to compare."
+			content="Design mockup for ryancritchlow.com: a calm, research-backed layout with the dog logo, hand-drawn job stickers, the WMS simulator, and four palettes to compare."
 		/>
 		<meta name="color-scheme" content="light dark" />
 		<script>
@@ -32,8 +32,8 @@
 		<style>
 			/* Layout: a familiar structure underneath (header, proof first, one case-study
 			   template, résumé-style history). The fun sits on top as small, contrasting figures and
-			   moments the visitor sets off: the window, Georgia, the conveyor on the Körber card,
-			   the hand-drawn job scenes. Colour stays mostly neutral with one hue family, so the
+			   moments the visitor sets off: the dog logo, the conveyor on the Körber card, and
+			   hand-drawn stickers on a few jobs. Colour stays mostly neutral with one hue family, so the
 			   illustrations carry the warmth. data-palette swaps that hue family (see the banner). */
 			:root {
 				--bg: #fcfaf6;
@@ -577,38 +577,6 @@
 			.theme-toggle[aria-pressed='true'] .moon {
 				display: block;
 			}
-			/* The almanac's clock: a pixel sun crosses the header as you read. */
-			.day-track {
-				display: none;
-			}
-			@supports (animation-timeline: scroll()) {
-				@media (prefers-reduced-motion: no-preference) and (width >= 52rem) {
-					.day-track {
-						display: block;
-						position: absolute;
-						inset: auto 0 -1px 0;
-						height: 1px;
-						pointer-events: none;
-					}
-					.day-sun {
-						position: absolute;
-						left: 0;
-						bottom: -7px;
-						width: 14px;
-						height: 14px;
-						background: var(--sun);
-						mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath d='M5 0h2v1h-2zM1 1h1v1h-1zM5 1h2v1h-2zM10 1h1v1h-1zM2 2h1v1h-1zM9 2h1v1h-1zM4 3h4v1h-4zM3 4h6v1h-6zM0 5h2v1h-2zM3 5h6v1h-6zM10 5h2v1h-2zM0 6h2v1h-2zM3 6h6v1h-6zM10 6h2v1h-2zM3 7h6v1h-6zM4 8h4v1h-4zM2 9h1v1h-1zM9 9h1v1h-1zM1 10h1v1h-1zM5 10h2v1h-2zM10 10h1v1h-1zM5 11h2v1h-2z'/%3E%3C/svg%3E")
-							center / contain no-repeat;
-						animation: cross-sky linear both;
-						animation-timeline: scroll(root);
-					}
-					@keyframes cross-sky {
-						to {
-							translate: calc(100vw - 2rem) 0;
-						}
-					}
-				}
-			}
 			@media (width < 52rem) {
 				html {
 					scroll-padding-top: 1rem;
@@ -690,11 +658,6 @@
 				gap: clamp(2rem, 5vw, 4rem);
 				align-items: center;
 			}
-			@media (width >= 52rem) {
-				.hero-grid {
-					grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-				}
-			}
 			.hello {
 				display: flex;
 				align-items: center;
@@ -754,189 +717,6 @@
 				flex-wrap: wrap;
 				gap: 0.75rem;
 				margin-top: 1.75rem;
-			}
-
-			/* The arched window: the one arch on the page, framing the valley. */
-			.window-wrap {
-				position: relative;
-				width: min(100%, 21rem);
-				justify-self: center;
-				/* Room under the sill for the hearts and a caption that may wrap on phones. */
-				padding-bottom: 3.75rem;
-			}
-			.window {
-				position: relative;
-				aspect-ratio: 4 / 5;
-				border: 11px solid var(--wood);
-				border-radius: 50% 50% 8px 8px / 40% 40% 8px 8px;
-				box-shadow:
-					0 0 0 3px var(--wood-dark),
-					inset 0 0 0 3px var(--wood-dark);
-				overflow: hidden;
-				background: var(--sky);
-			}
-			.window svg {
-				width: 100%;
-				height: 100%;
-			}
-			.window::before,
-			.window::after {
-				content: '';
-				position: absolute;
-				background: var(--wood);
-				box-shadow: 0 0 0 2px var(--wood-dark);
-			}
-			.window::before {
-				inset: 0 auto 0 50%;
-				width: 7px;
-				translate: -50% 0;
-			}
-			.window::after {
-				inset: 46% 0 auto 0;
-				height: 7px;
-			}
-			.sill {
-				position: absolute;
-				left: -1rem;
-				right: -1rem;
-				bottom: 2.85rem;
-				height: 1.15rem;
-				background: var(--wood);
-				border: 3px solid var(--wood-dark);
-				border-radius: 4px;
-			}
-			.scene .sun {
-				fill: var(--sun);
-			}
-			.scene .moon-bite {
-				fill: var(--moon-bite);
-			}
-			.scene .cloud {
-				fill: var(--cloud);
-			}
-			.scene .stars {
-				fill: var(--star);
-			}
-			.scene .hill-far {
-				fill: var(--hill-far);
-			}
-			.scene .hill-mid {
-				fill: var(--hill-mid);
-			}
-			.scene .hill-near {
-				fill: var(--hill-near);
-			}
-			.scene .crops {
-				fill: var(--soil);
-			}
-			@media (prefers-reduced-motion: no-preference) {
-				.scene .sky-body {
-					animation: rise 700ms var(--ease-enter) 150ms both;
-				}
-				@keyframes rise {
-					from {
-						translate: 0 70px;
-					}
-				}
-			}
-			.georgia {
-				position: absolute;
-				left: -0.5rem;
-				bottom: 3.7rem;
-				width: 8.75rem;
-				aspect-ratio: 297 / 192;
-				padding: 0;
-				border: 0;
-				background: none;
-				cursor: pointer;
-				border-radius: 8px;
-			}
-			.georgia::before,
-			.georgia::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				mask: url('assets/georgia-fill.webp') center / contain no-repeat;
-				background: var(--card);
-			}
-			.georgia::after {
-				mask-image: url('assets/georgia-line.webp');
-				background: var(--ink);
-			}
-			.hearts {
-				position: absolute;
-				left: 0.25rem;
-				right: 0;
-				bottom: 0;
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				line-height: 1.3;
-				gap: 0.25rem;
-				font-size: var(--step-small);
-				color: var(--muted);
-			}
-			.hearts .pix {
-				width: 1.05rem;
-				color: var(--muted);
-			}
-			.hearts .pix.full {
-				color: var(--heart);
-			}
-			.pop-heart {
-				position: absolute;
-				left: 4.4rem;
-				bottom: 8.35rem;
-				width: 1.6rem;
-				color: var(--heart);
-				opacity: 0;
-				pointer-events: none;
-			}
-			.is-petted .pop-heart {
-				animation: heart-fade 900ms ease-out both;
-			}
-			@keyframes heart-fade {
-				20%,
-				70% {
-					opacity: 1;
-				}
-				to {
-					opacity: 0;
-				}
-			}
-			@media (prefers-reduced-motion: no-preference) {
-				.is-petted .pop-heart {
-					animation:
-						heart-fade 900ms ease-out both,
-						heart-rise 900ms var(--spring-playful) both;
-				}
-				.is-petted .georgia {
-					animation: hop 420ms var(--spring-playful);
-				}
-				@keyframes heart-rise {
-					from {
-						translate: 0 1rem;
-						scale: 0.6;
-					}
-					to {
-						translate: 0 -1.25rem;
-						scale: 1;
-					}
-				}
-				@keyframes hop {
-					40% {
-						translate: 0 -8px;
-					}
-				}
-			}
-			@media (width < 52rem) {
-				.window-wrap {
-					width: min(100%, 18rem);
-				}
-				.sill {
-					left: -0.6rem;
-					right: -0.6rem;
-				}
 			}
 
 			/* ---------- Highlights ---------- */
@@ -1078,33 +858,41 @@
 				}
 			}
 
-			/* ---------- Hand-drawn job scenes ---------- */
-			.job-scene {
-				position: relative;
-				height: 7.5rem;
-				margin-top: 1.1rem;
-				overflow: hidden;
-				background: var(--card);
-				border: 1px solid var(--border);
-				border-bottom: 0;
-				border-radius: var(--radius) var(--radius) 0 0;
-				box-shadow: inset 0 -0.6rem 0 var(--chip);
+			/* ---------- Hand-drawn stickers, a few per job ---------- */
+			.stickers {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-end;
+				gap: 0.6rem 0.9rem;
+				margin-top: 0.75rem;
 			}
-			.job-scene::after {
-				content: '';
-				position: absolute;
-				inset: auto 0 0.6rem;
-				border-top: 2px solid #3b2a1e;
+			.stickers img {
+				height: auto;
+				rotate: var(--r);
 			}
-			.job-scene img {
-				position: absolute;
-				z-index: 1;
-				inset: auto 0 calc(0.6rem - 3px);
-				width: 100%;
-				height: calc(100% - 1.2rem);
-				padding-inline: 1rem;
-				object-fit: contain;
-				object-position: center bottom;
+			.stickers img:nth-child(even) {
+				translate: 0 -0.3rem;
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				.stickers img {
+					transition: rotate 0.35s var(--spring-playful);
+				}
+				.job:hover .stickers img,
+				.earlier li:hover .stickers img {
+					rotate: calc(var(--r) * -1);
+				}
+			}
+			:root[data-theme='dark'] .stickers img {
+				filter: drop-shadow(1px 0 0 rgb(255 248 235 / 0.8))
+					drop-shadow(-1px 0 0 rgb(255 248 235 / 0.8)) drop-shadow(0 1px 0 rgb(255 248 235 / 0.8))
+					drop-shadow(0 -1px 0 rgb(255 248 235 / 0.8));
+			}
+			@media (prefers-color-scheme: dark) {
+				:root:not([data-theme='light']) .stickers img {
+					filter: drop-shadow(1px 0 0 rgb(255 248 235 / 0.8))
+						drop-shadow(-1px 0 0 rgb(255 248 235 / 0.8)) drop-shadow(0 1px 0 rgb(255 248 235 / 0.8))
+						drop-shadow(0 -1px 0 rgb(255 248 235 / 0.8));
+				}
 			}
 			.earlier-title {
 				margin-top: 2rem;
@@ -1147,7 +935,7 @@
 				max-width: 60ch;
 			}
 
-			/* Case studies: one template, with a pixel item icon for a little game feel. */
+			/* Case studies: one template. */
 			.cases {
 				display: grid;
 				gap: 1.25rem;
@@ -1172,19 +960,6 @@
 				display: flex;
 				align-items: center;
 				gap: 0.85rem;
-			}
-			.item {
-				display: grid;
-				place-items: center;
-				width: 2.75rem;
-				height: 2.75rem;
-				border-radius: 8px;
-				background: var(--chip);
-				color: var(--wood-dark);
-				flex: none;
-			}
-			.item .pix {
-				width: 1.75rem;
 			}
 			.case h3 {
 				font-size: var(--step-h3);
@@ -1242,9 +1017,6 @@
 				box-shadow: var(--shadow);
 			}
 			@media (prefers-reduced-motion: no-preference) {
-				.case:has(.case-link):hover .item .pix {
-					animation: bob 600ms var(--spring-playful);
-				}
 				@keyframes bob {
 					35% {
 						translate: 0 -4px;
@@ -1519,19 +1291,11 @@
 				}
 			}
 			@media (forced-colors: active) {
-				.dog-mark,
-				.georgia::after {
+				.dog-mark {
 					forced-color-adjust: none;
 					background: CanvasText;
 				}
-				.georgia::before {
-					forced-color-adjust: none;
-					background: Canvas;
-				}
-				.window,
-				.sill,
-				.mini-band,
-				.day-track {
+				.mini-band {
 					display: none;
 				}
 				.status::before,
@@ -1546,8 +1310,8 @@
 			@media print {
 				.site-header,
 				.mock-banner,
-				.window-wrap,
 				.mini-belt,
+				.stickers,
 				.copy {
 					display: none;
 				}
@@ -1660,7 +1424,6 @@
 					</button>
 				</div>
 			</div>
-			<div class="day-track" aria-hidden="true"><span class="day-sun"></span></div>
 		</header>
 
 		<main id="main" tabindex="-1">
@@ -1699,63 +1462,6 @@
 							<a href="#assets">At ASSETS? Start with the paper</a>
 							<a href="#support">Hiring for support? See how I troubleshoot</a>
 						</p>
-					</div>
-
-					<div class="window-wrap" id="georgia-spot">
-						<div class="window" aria-hidden="true">
-							<svg class="scene" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
-								<g class="sky-body">
-									<circle class="sun" cx="270" cy="150" r="46" />
-									<circle class="moon-bite" cx="290" cy="136" r="40" />
-								</g>
-								<g class="cloud">
-									<path
-										d="M40 110h60v12h-60zM52 98h36v12h-36zM300 230h72v12h-72zM316 218h36v12h-36z"
-									/>
-								</g>
-								<g class="stars" shape-rendering="crispEdges">
-									<use href="#i-star" x="60" y="70" width="14" height="14" />
-									<use href="#i-star" x="150" y="120" width="10" height="10" />
-									<use href="#i-star" x="330" y="60" width="12" height="12" />
-									<use href="#i-star" x="200" y="40" width="8" height="8" />
-									<use href="#i-star" x="90" y="200" width="10" height="10" />
-								</g>
-								<path class="hill-far" d="M0 320C70 270 150 268 230 305S350 290 400 278V500H0Z" />
-								<path class="hill-mid" d="M0 372C90 334 190 340 268 378S360 352 400 348V500H0Z" />
-								<path class="hill-near" d="M0 420C120 398 270 402 400 414V500H0Z" />
-								<g class="crops">
-									<path
-										d="M40 440h56v6h-56zM120 444h56v6h-56zM200 446h56v6h-56zM280 444h56v6h-56zM60 464h56v6h-56zM150 468h56v6h-56zM240 468h56v6h-56zM320 464h56v6h-56z"
-									/>
-								</g>
-							</svg>
-						</div>
-						<div class="sill" aria-hidden="true"></div>
-						<button class="georgia" id="pet" type="button">
-							<span class="sr-only">Pet Georgia, my chocolate lab</span>
-						</button>
-						<svg class="pix pop-heart" viewBox="0 0 7 6" aria-hidden="true">
-							<use href="#i-heart" />
-						</svg>
-						<p class="hearts">
-							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
-								<use href="#i-heart-empty" />
-							</svg>
-							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
-								<use href="#i-heart-empty" />
-							</svg>
-							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
-								<use href="#i-heart-empty" />
-							</svg>
-							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
-								<use href="#i-heart-empty" />
-							</svg>
-							<svg class="pix" viewBox="0 0 7 6" aria-hidden="true">
-								<use href="#i-heart-empty" />
-							</svg>
-							<span>Georgia, my chocolate lab</span>
-						</p>
-						<p class="sr-only" id="pet-status" role="status"></p>
 					</div>
 				</div>
 			</section>
@@ -1887,10 +1593,6 @@
 					<ul class="cases">
 						<li class="case">
 							<div class="case-top">
-								<span class="item"
-									><svg class="pix" viewBox="0 0 16 9" aria-hidden="true">
-										<use href="#i-controller" /></svg
-								></span>
 								<h3>You and I</h3>
 							</div>
 							<p class="summary">
@@ -1922,10 +1624,6 @@
 						</li>
 						<li class="case" id="support">
 							<div class="case-top">
-								<span class="item"
-									><svg class="pix" viewBox="0 0 12 12" aria-hidden="true">
-										<use href="#i-magnifier" /></svg
-								></span>
 								<h3>Enterprise WMS support at Körber</h3>
 							</div>
 							<p class="summary">
@@ -1978,10 +1676,6 @@
 						</li>
 						<li class="case">
 							<div class="case-top">
-								<span class="item"
-									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
-										<use href="#i-crate" /></svg
-								></span>
 								<h3>WMS Simulator</h3>
 							</div>
 							<p class="summary">
@@ -2017,10 +1711,6 @@
 						</li>
 						<li class="case">
 							<div class="case-top">
-								<span class="item"
-									><svg class="pix" viewBox="0 0 16 10" aria-hidden="true">
-										<use href="#i-book" /></svg
-								></span>
 								<h3>KIND Lab website</h3>
 							</div>
 							<p class="summary">The public site for Western Washington University's KIND Lab.</p>
@@ -2055,7 +1745,38 @@
 					</div>
 					<ol class="timeline">
 						<li class="job">
-							<p class="when">Jan 2026 – present</p>
+							<div class="when-col">
+								<p class="when">Jan 2026 – present</p>
+								<div class="stickers" aria-hidden="true">
+									<img
+										src="assets/stickers/square.svg"
+										alt=""
+										width="22"
+										height="45"
+										style="--r: 7deg"
+										loading="lazy"
+										decoding="async"
+									/>
+									<img
+										src="assets/stickers/chiselboard.svg"
+										alt=""
+										width="78"
+										height="23"
+										style="--r: -3deg"
+										loading="lazy"
+										decoding="async"
+									/>
+									<img
+										src="assets/stickers/tape.svg"
+										alt=""
+										width="52"
+										height="28"
+										style="--r: 5deg"
+										loading="lazy"
+										decoding="async"
+									/>
+								</div>
+							</div>
 							<div>
 								<h3>Carpenter</h3>
 								<p class="org">Atlas Woodworks · Bellingham, WA</p>
@@ -2072,16 +1793,6 @@
 										Took over the shop's Squarespace site, handling content and structure updates.
 									</li>
 								</ul>
-								<div class="job-scene">
-									<img
-										src="assets/bench.svg"
-										alt=""
-										width="440"
-										height="150"
-										loading="lazy"
-										decoding="async"
-									/>
-								</div>
 							</div>
 						</li>
 						<li class="job">
@@ -2193,12 +1904,40 @@
 					<h3 class="earlier-title">Earlier</h3>
 					<ul class="earlier">
 						<li>
-							<div class="job-scene">
+							<div class="stickers" aria-hidden="true">
 								<img
-									src="assets/bar.svg"
+									src="assets/stickers/coupe.svg"
 									alt=""
-									width="440"
-									height="150"
+									width="38"
+									height="37"
+									style="--r: -6deg"
+									loading="lazy"
+									decoding="async"
+								/>
+								<img
+									src="assets/stickers/rocks.svg"
+									alt=""
+									width="30"
+									height="33"
+									style="--r: 5deg"
+									loading="lazy"
+									decoding="async"
+								/>
+								<img
+									src="assets/stickers/beaker.svg"
+									alt=""
+									width="28"
+									height="42"
+									style="--r: -4deg"
+									loading="lazy"
+									decoding="async"
+								/>
+								<img
+									src="assets/stickers/egg.svg"
+									alt=""
+									width="34"
+									height="20"
+									style="--r: 10deg"
 									loading="lazy"
 									decoding="async"
 								/>
@@ -2207,12 +1946,22 @@
 							<p class="org">Before that, Aslan Brewing, 2018–2020</p>
 						</li>
 						<li>
-							<div class="job-scene">
+							<div class="stickers" aria-hidden="true">
 								<img
-									src="assets/saw.svg"
+									src="assets/stickers/saw.svg"
 									alt=""
-									width="440"
-									height="150"
+									width="80"
+									height="44"
+									style="--r: -3deg"
+									loading="lazy"
+									decoding="async"
+								/>
+								<img
+									src="assets/stickers/lumber.svg"
+									alt=""
+									width="58"
+									height="26"
+									style="--r: 3deg"
 									loading="lazy"
 									decoding="async"
 								/>
@@ -2401,27 +2150,6 @@
 				try {
 					localStorage.setItem('hybrid-palette', palette.value);
 				} catch {}
-			});
-
-			// Pet Georgia: five friendship hearts to fill.
-			const spot = document.getElementById('georgia-spot');
-			const pet = document.getElementById('pet');
-			const hearts = spot.querySelectorAll('.hearts .pix');
-			const petStatus = document.getElementById('pet-status');
-			let friendship = 0;
-			pet.addEventListener('click', () => {
-				friendship = Math.min(friendship + 1, hearts.length);
-				hearts.forEach((h, i) => {
-					h.classList.toggle('full', i < friendship);
-					h.firstElementChild.setAttribute('href', i < friendship ? '#i-heart' : '#i-heart-empty');
-				});
-				spot.classList.remove('is-petted');
-				void spot.offsetWidth;
-				spot.classList.add('is-petted');
-				petStatus.textContent =
-					friendship === hearts.length
-						? 'Georgia is your best friend now.'
-						: `Georgia wags happily. Friendship ${friendship} of ${hearts.length}.`;
 			});
 
 			const copyStatus = document.getElementById('copy-status');
