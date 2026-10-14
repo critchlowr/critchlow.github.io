@@ -6,7 +6,7 @@ Five agents did the groundwork: three literature reviews, an audit of the curren
 
 ## Status
 
-**Phase 0 is live on `main`** (commit `4ca3ebc`, October 14). The real site passes every check in [04](04-accessibility-results.md), and the bartending photos are replaced by hand-drawn scenes. It was ported on top of PR #3 from another session: that PR's hero stats row, self-hosted icons, 404 page and link preview stay; its bartending photo slider and lightbox were replaced by the drawing. See [Phase 0: what changed](#phase-0-what-changed).
+**Phase 0 is live on `main`** (commit `4ca3ebc`, October 14). The real site passes every check in [04](04-accessibility-results.md), and the bartending photos are replaced by hand-drawn stickers scattered around the job cards (since commit `19e5f25`). It was ported on top of PR #3 from another session: that PR's hero stats row, self-hosted icons, 404 page and link preview stay; its bartending photo slider and lightbox were replaced by the drawing. See [Phase 0: what changed](#phase-0-what-changed).
 
 **Hybrid is the one mockup.** Consensus, Almanac and Selvedge are retired; they're in this branch's git history if you ever want a piece back.
 
@@ -102,7 +102,7 @@ Sources for the Salesforce points: TSE listings reposted on [purpose.jobs](https
 - **The foundation is good.** It's a prerendered static site with clean Svelte 5 code, a semantic token layer with contrast notes, and real accessibility basics. Keep all of that.
 - **Lighthouse gave accessibility 100, but the deeper checks found 6 real failures.** All six are fixed on this branch (see below).
 - **Visitors without JavaScript saw a blank page.** Fixed.
-- **90% of the page weight was ten bartending photos** (2.47 MB). Removed; the drawings that replace them are about 12 KB each and load lazily.
+- **90% of the page weight was ten bartending photos** (2.47 MB). Removed; the hand-drawn stickers that replace them are 1–6 KB each and load lazily.
 - **The best proof sits about 4,300 px down.** A hiring manager scanning the first screen sees a name and a paragraph. Hybrid shows the fix.
 - **The WMS simulator is your best product thinking, and also 55% of the code.** It ships to every visitor and has a state bug.
 
@@ -147,7 +147,7 @@ Each fix is small and worth reading as a Svelte and CSS pattern.
 2. **One focus style** (`app.css`). A `--t-focus` token per theme (`accent-700` light, `accent-300` dark) clears 4:1 on every background. The `focus:outline-none focus:ring-*` classes are gone from `Simulator.svelte`, `Experience.svelte` and `PickingPanel.svelte`. Those rings were box-shadows, which Windows High Contrast removes; outlines survive.
 3. **No blank page without JavaScript** (`app.html`, `app.css`). The inline script adds a `js` class, and reveal animations only hide content under `.js`.
 4. **Conveyor belt** (`ConveyorBelt.svelte`). It parks its boxes off the belt, delivers them once when it scrolls into view, and offers "Run the belt again". Both the parked state and the run sit inside `prefers-reduced-motion: no-preference`, so with reduced motion the boxes just sit there.
-5. **Photos replaced by drawings** (`JobScene.svelte`, `static/illustrations/`). The photo slider, lightbox and all bartending photos are gone. The headshot loads lazily with its dimensions set.
+5. **Photos replaced by drawings** (`JobStickers.svelte`, `static/illustrations/`). The photo slider, lightbox and all bartending photos are gone. The objects sit on the card edges like stickers and overlap a card by at most 14 px, inside its 24 px padding, so they never cover text (tested from 320 to 1920 px wide). The headshot loads lazily with its dimensions set.
 6. **Theme flash** (`app.html`, `theme.svelte.ts`). The inline script now treats a saved `"system"` like no preference, and storage access is wrapped so blocked storage can't break the page.
 7. **Scroll box** (`Simulator.svelte`). The workflow diagram's scroll container is focusable, with a region label, so keyboard users can scroll it in Safari and Firefox.
 8. **Hero** (`Hero.svelte`). No reveal animation on the first screen, so it's readable at first paint.
