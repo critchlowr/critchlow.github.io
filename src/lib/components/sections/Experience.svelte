@@ -10,7 +10,7 @@
 	<!-- A wider gap than usual leaves room for the stickers on the card edges. -->
 	<ul class="space-y-10">
 		{#each experience as job (job.company + job.title)}
-			<Card as="li" class="group relative p-6 md:p-7">
+			<Card as="li" id={job.id} class="group relative p-6 md:p-7">
 				<div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
 					<div>
 						<h3 class="text-ink-strong font-display text-2xl font-semibold">{job.title}</h3>

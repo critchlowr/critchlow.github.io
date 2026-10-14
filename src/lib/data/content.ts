@@ -4,8 +4,7 @@ import type {
 	Publication,
 	ContactLink,
 	SkillCategory,
-	Stat,
-	Tool
+	Stat
 } from '$lib/types';
 
 export const hero = {
@@ -43,6 +42,7 @@ export const about = {
 export const experience: Experience[] = [
 	{
 		title: 'Carpenter',
+		id: 'atlas',
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
@@ -56,6 +56,7 @@ export const experience: Experience[] = [
 	},
 	{
 		title: 'Graduate Researcher',
+		id: 'kind-lab',
 		company: 'Western Washington University — KIND Lab',
 		location: 'Bellingham, WA',
 		period: 'Winter 2025 – June 2026',
@@ -69,6 +70,7 @@ export const experience: Experience[] = [
 	},
 	{
 		title: 'Support Analyst L4',
+		id: 'korber',
 		company: 'Körber Supply Chain (now Infios)',
 		location: 'Bellingham, WA',
 		period: '2020 – 2023',
@@ -151,51 +153,73 @@ export const credentials = {
 	membershipDetail: 'Association for Computing Machinery, 2026–present'
 };
 
+// Each group says where it was used, so the list reads as evidence, not keywords.
 export const skills: SkillCategory[] = [
 	{
-		label: 'Support & Process',
+		label: 'Troubleshooting & support',
 		items: [
-			'Requirements Gathering',
-			'Stakeholder Management',
-			'Prioritization & Tradeoff Analysis',
-			'Scope & Change Control',
-			'Cross-Functional Collaboration',
-			'Agile Ceremonies',
-			'Escalation Management',
-			'Onboarding & Training'
+			'Fault isolation across systems',
+			'Escalation with evidence',
+			'SQL performance tuning',
+			'Deadlock resolution',
+			'Go-live support',
+			'Knowledge base writing',
+			'Onboarding & training'
+		],
+		from: [{ label: 'Körber', href: '#korber' }]
+	},
+	{
+		label: 'Research methods',
+		items: [
+			'Participatory evaluation',
+			'Semi-structured interviews',
+			'Thematic analysis (Braun & Clarke)',
+			'Survey & instrument design',
+			'Video coding',
+			'Systematic literature coding',
+			'IRB protocols',
+			'WCAG 2.2'
+		],
+		from: [
+			{ label: 'KIND Lab', href: '#kind-lab' },
+			{ label: 'ASSETS 2026', href: '#publications' }
 		]
 	},
 	{
-		label: 'Research & Synthesis',
+		label: 'Process & stakeholders',
 		items: [
-			'Qualitative Research',
-			'User Interviews',
-			'Participatory Design',
-			'Thematic Analysis',
-			'Survey Design',
-			'Iterative Prototyping',
-			'IRB Protocols',
-			'WCAG 2.2 Accessibility Standards'
+			'Requirements gathering',
+			'Stakeholder management',
+			'Scope & change control',
+			'Prioritization & tradeoffs',
+			'Material takeoffs & scoping'
+		],
+		from: [
+			{ label: 'Körber', href: '#korber' },
+			{ label: 'Atlas Woodworks', href: '#atlas' }
+		]
+	},
+	{
+		label: 'Data & tools',
+		items: [
+			'T-SQL',
+			'MySQL',
+			'Python',
+			'Power BI',
+			'Tableau',
+			'C#',
+			'Java',
+			'JavaScript',
+			'Unity',
+			'Svelte',
+			'Git'
+		],
+		from: [
+			{ label: 'Körber', href: '#korber' },
+			{ label: 'KIND Lab', href: '#kind-lab' },
+			{ label: 'M.S.', href: '#education' }
 		]
 	}
-];
-
-// Icons are devicon SVGs (MIT) served from static/icons. Neither devicon nor Simple
-// Icons ships Power BI or Tableau marks — both are trademark-restricted — so those
-// two leave `icon` unset and render a neutral chart glyph instead of a wrong logo.
-export const tools: Tool[] = [
-	{ name: 'T-SQL', icon: 'microsoftsqlserver' },
-	{ name: 'Python', icon: 'python' },
-	{ name: 'C#', icon: 'csharp' },
-	{ name: 'Java', icon: 'java' },
-	{ name: 'JavaScript', icon: 'javascript' },
-	{ name: 'Power BI' },
-	{ name: 'Tableau' },
-	{ name: 'MySQL', icon: 'mysql' },
-	{ name: 'Git', icon: 'git' },
-	{ name: 'Unity', icon: 'unity', mono: true },
-	{ name: 'Svelte', icon: 'svelte' },
-	{ name: 'Tailwind', icon: 'tailwindcss' }
 ];
 
 export const publications: Publication[] = [

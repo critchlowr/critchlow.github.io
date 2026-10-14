@@ -10,6 +10,8 @@ export interface Experience {
 	hrefLabel?: string;
 	/** Shows the "Try the WMS Simulator" button and the conveyor belt on this card. */
 	showSimulator?: boolean;
+	/** Anchor id for the card, so the Skills section can link to it. */
+	id?: string;
 	/** Hand-drawn stickers around the card's edges. */
 	stickers?: 'bar' | 'saw' | 'bench';
 }
@@ -43,14 +45,8 @@ export interface ContactLink {
 export interface SkillCategory {
 	label: string;
 	items: string[];
-}
-
-export interface Tool {
-	name: string;
-	/** File name in static/icons, without extension. Unset renders a generic chart glyph. */
-	icon?: string;
-	/** Single-colour dark mark that needs inverting to stay visible in dark mode. */
-	mono?: boolean;
+	/** Where these skills were used: links to the role or section that shows them. */
+	from: { label: string; href: string }[];
 }
 
 export interface Stat {
