@@ -26,6 +26,10 @@ export interface Publication {
 	title: string;
 	venue: string;
 	status: 'published' | 'in-preparation';
+	/** An award or nomination, shown under the venue. */
+	honor?: string;
+	/** Funding acknowledgment, worded as in the paper. */
+	funding?: string;
 	summary?: string;
 	contribution: string;
 	href?: string;

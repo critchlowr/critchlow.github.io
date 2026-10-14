@@ -30,7 +30,7 @@ export const stats: Stat[] = [
 export const about = {
 	paragraphs: [
 		"I've been building things for people my whole life. Growing up with a carpenter for a dad, I learned to solve complex problems in unusual ways, with skills you don't pick up in a classroom. In graduate school I started building software for people, and designing it with them.",
-		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. I wanted to build the systems, not just support them, so I went back to Western for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
+		"I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. I wanted to build the systems, not just support them, so I went back to Western for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
 		"Most of what I know about building for people I learned in the KIND Lab. I built a game to help autistic children practice pronouns and designed an IRB-approved study to evaluate it as a language intervention. Before launching that study, I shifted to a pilot study with four families to refine the game's design with the children who would use it. The language assessment is left to a future team.",
 		"When I'm not working you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking, reading, and the occasional long video game session. I like being outside as much as I can."
 	]
@@ -40,7 +40,7 @@ export const about = {
 // the résumé PDF, which is one click away from every section.
 export const experience: Experience[] = [
 	{
-		title: 'Carpenter',
+		title: 'Journeyman Carpenter',
 		id: 'atlas',
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
@@ -227,8 +227,11 @@ export const publications: Publication[] = [
 		venue:
 			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
 		status: 'published',
+		honor: 'Nominated for the Social Impact Award',
+		funding:
+			'Supported by the National Science Foundation under Award Nos. 2121549, 2121606, 2121428, 2439816, 2439817, and 2439818.',
 		summary:
-			"The paper examines how accessibility coursework can produce measurable knowledge gains in students while their reflections still contain ableist framings, including deficit-based language, unsubstantiated claims about assistive technology, and erasure of disabled people's agency.",
+			"Two studies of how accessibility education shapes students' assumptions about disability. In a Computer Systems course, many of 53 students' reflections showed real knowledge gains, yet a considerable portion also contained deficit-based language and unsubstantiated claims about assistive technology. A review of 35 accessibility education papers then found six categories of ableism, such as excluding disabled participants and normalizing inaccessibility, built into intervention designs, evaluation instruments, and study framing.",
 		contribution:
 			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
@@ -240,7 +243,10 @@ export const publications: Publication[] = [
 			'Targeting the 26th Annual ACM Interaction Design and Children Conference (IDC 2027), Seattle, WA, June 2027. In preparation',
 		status: 'in-preparation',
 		contribution:
-			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
+			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.',
+		href: 'https://idc.acm.org/2027/calls/',
+		hrefLabel: 'IDC 2027 call for papers',
+		external: true
 	},
 	{
 		authors: 'Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and Ryan Critchlow',

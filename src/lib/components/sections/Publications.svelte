@@ -32,6 +32,9 @@
 									<p class="text-ink-muted mt-1 text-base italic">
 										{pub.venue}
 									</p>
+									{#if pub.honor}
+										<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
+									{/if}
 									{#if pub.summary}
 										<p class="text-ink text-body mt-3">
 											{pub.summary}
@@ -41,6 +44,9 @@
 										<span class="text-ink-strong font-semibold">My contribution:</span>
 										{pub.contribution}
 									</p>
+									{#if pub.funding}
+										<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
+									{/if}
 									{#if pub.href}
 										<p class="mt-4">
 											<ArrowLink
