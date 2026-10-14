@@ -32,7 +32,8 @@
 		spoons: [55, 133],
 		lumber: [180, 82],
 		saw: [200, 109],
-		chisel: [101, 23],
+		chiselboard: [148, 43],
+		rocks: [68, 75],
 		square: [54, 111],
 		tape: [132, 71]
 	} as const;
@@ -42,22 +43,17 @@
 			{ icon: 'coupe', w: 40, narrow: ['top', 78, -6], wide: ['top', 64, -5] },
 			{ icon: 'beaker', w: 30, narrow: ['top', 20, 7], wide: ['top', 50, 6] },
 			{ icon: 'egg', w: 38, narrow: ['bottom', 84, 14], wide: ['bottom', 90, 12] },
+			{ icon: 'rocks', w: 32, narrow: ['bottom', 56, -4], wide: ['bottom', 74, -6] },
 			{ icon: 'spoons', w: 19, narrow: null, wide: ['top', 80, 9], page: ['right', 45, 10] }
 		],
 		saw: [
-			{ icon: 'saw', w: 70, narrow: ['top', 72, -3], wide: ['top', 70, -3] },
-			{ icon: 'lumber', w: 62, narrow: ['bottom', 24, 2], wide: ['bottom', 16, 2] }
+			{ icon: 'saw', w: 92, narrow: ['bottom', 70, -3], wide: ['bottom', 76, -3] },
+			{ icon: 'lumber', w: 62, narrow: ['top', 24, 2], wide: ['top', 18, 2] }
 		],
 		bench: [
 			{ icon: 'square', w: 22, narrow: ['top', 80, 8], wide: ['top', 60, 7] },
 			{ icon: 'tape', w: 56, narrow: ['bottom', 76, -5], wide: ['bottom', 86, -5] },
-			{
-				icon: 'chisel',
-				w: 64,
-				narrow: ['bottom', 26, 4],
-				wide: ['bottom', 32, 3],
-				page: ['right', 58, 74]
-			}
+			{ icon: 'chiselboard', w: 78, narrow: ['bottom', 28, 3], wide: ['bottom', 30, 2] }
 		]
 	};
 

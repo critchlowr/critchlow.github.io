@@ -312,6 +312,57 @@ function bar() {
 		s.shape(ellipse(402, 106, 14, 3.2), { fill: 'none' });
 	});
 
+	// Sticker only: an old fashioned, drawn off to the side of the scene.
+	s.group('rocks', () => {
+		s.fill(rect(600, 92, 60, 54, 6), C.glass, { a: 0.3 });
+		s.fill(rect(603, 108, 54, 35, 5), C.amber, { a: 0.3 });
+		const r = (9 * Math.PI) / 180;
+		s.shape(
+			poly(
+				[
+					[-1, -1],
+					[1, -1],
+					[1, 1],
+					[-1, 1]
+				].map(([a, b]) => [
+					626 + (a * Math.cos(r) - b * Math.sin(r)) * 14,
+					112 + (a * Math.sin(r) + b * Math.cos(r)) * 14
+				]),
+				4
+			),
+			{ fill: C.ice, w: 1.8 }
+		);
+		s.stroke(arc(630, 108, 27, 3, 0, 180), { w: 1.6 });
+		rod(s, join(bez([640, 82], [652, 78], [662, 88], [656, 104])), '#f29a3a', 4.5);
+		s.stroke(
+			poly(
+				[
+					[600, 90],
+					[602, BASE],
+					[658, BASE],
+					[660, 90]
+				],
+				[0, 6, 6, 0],
+				false
+			)
+		);
+		s.stroke(
+			[
+				[604, BASE - 7],
+				[656, BASE - 7]
+			],
+			{ w: 1.6 }
+		);
+		s.shape(ellipse(630, 90, 30, 4), { fill: 'none' });
+		s.stroke(
+			[
+				[607, 100],
+				[607, 122]
+			],
+			{ color: C.white, w: 2.4, a: 0 }
+		);
+	});
+
 	// Sparkles.
 	s.group('coupe', () => s.shape(sparkle(300, 52, 7), { fill: C.gold, w: 1.8 }));
 	s.shape(sparkle(195, 56, 4.5), { fill: C.gold, w: 1.6 });
@@ -449,6 +500,84 @@ function construction() {
 	return s;
 }
 
+/** Draws through s with every point moved by (dx, dy). */
+function shifted(s, dx, dy) {
+	const m = (pts) => pts.map(([x, y]) => [x + dx, y + dy]);
+	return {
+		shape: (p, o) => s.shape(m(p), o),
+		fill: (p, c, o) => s.fill(m(p), c, o),
+		stroke: (p, o) => s.stroke(m(p), o),
+		dot: (x, y, r, c) => s.dot(x + dx, y + dy, r, c)
+	};
+}
+
+function drawChisel(s) {
+	// Chisel resting on the board.
+	s.shape(
+		join(
+			bez([78, 113], [60, 111], [40, 110], [32, 113]),
+			bez([32, 113], [26, 116], [26, 121], [32, 124]),
+			bez([32, 124], [40, 127], [60, 126], [78, 124])
+		),
+		{ fill: C.woodDk }
+	);
+	s.stroke(
+		[
+			[42, 116],
+			[68, 115]
+		],
+		{ color: '#e3b57a', w: 2, a: 0.2 }
+	);
+	s.shape(rect(76, 112, 8, 13, 2), { fill: C.gold, w: 2 });
+	s.shape(rect(84, 115, 6, 7, 1), { fill: C.steelDk, w: 1.8 });
+	s.shape(
+		poly(
+			[
+				[90, 115.5],
+				[114, 115.5],
+				[122, 124],
+				[90, 124]
+			],
+			1
+		),
+		{ fill: C.steel, w: 2 }
+	);
+	s.stroke(
+		[
+			[95, 119],
+			[110, 119]
+		],
+		{ color: C.white, w: 1.6, a: 0 }
+	);
+}
+
+function drawShavings(s, spots) {
+	for (const [x, y, sc] of spots)
+		s.shape(
+			join(
+				bez(
+					[x - 9 * sc, y + 6 * sc],
+					[x - 12 * sc, y - 6 * sc],
+					[x + 8 * sc, y - 9 * sc],
+					[x + 9 * sc, y]
+				),
+				bez(
+					[x + 9 * sc, y],
+					[x + 9 * sc, y + 6 * sc],
+					[x - 2 * sc, y + 8 * sc],
+					[x - 3 * sc, y + 2 * sc]
+				),
+				bez(
+					[x - 3 * sc, y + 2 * sc],
+					[x - 3 * sc, y - 2 * sc],
+					[x + 3 * sc, y - 2 * sc],
+					[x + 4 * sc, y + 1 * sc]
+				)
+			),
+			{ fill: C.woodEnd, w: 1.6, closed: false }
+		);
+}
+
 function atlas() {
 	const s = makeScene({ width: W, height: H });
 
@@ -470,45 +599,7 @@ function atlas() {
 		{ w: 1.6 }
 	);
 
-	s.group('chisel', () => {
-		// Chisel resting on the board.
-		s.shape(
-			join(
-				bez([78, 113], [60, 111], [40, 110], [32, 113]),
-				bez([32, 113], [26, 116], [26, 121], [32, 124]),
-				bez([32, 124], [40, 127], [60, 126], [78, 124])
-			),
-			{ fill: C.woodDk }
-		);
-		s.stroke(
-			[
-				[42, 116],
-				[68, 115]
-			],
-			{ color: '#e3b57a', w: 2, a: 0.2 }
-		);
-		s.shape(rect(76, 112, 8, 13, 2), { fill: C.gold, w: 2 });
-		s.shape(rect(84, 115, 6, 7, 1), { fill: C.steelDk, w: 1.8 });
-		s.shape(
-			poly(
-				[
-					[90, 115.5],
-					[114, 115.5],
-					[122, 124],
-					[90, 124]
-				],
-				1
-			),
-			{ fill: C.steel, w: 2 }
-		);
-		s.stroke(
-			[
-				[95, 119],
-				[110, 119]
-			],
-			{ color: C.white, w: 1.6, a: 0 }
-		);
-	});
+	s.group('chisel', () => drawChisel(s));
 
 	s.group('square', () => {
 		// Combination square standing on the board: blade first, head over it.
@@ -539,36 +630,24 @@ function atlas() {
 		s.shape(ellipse(170, 117, 3.4, 3.4), { fill: C.steelDk, w: 1.6 });
 	});
 
-	s.group('shavings', () => {
-		// Shavings.
-		for (const [x, y, sc] of [
+	s.group('shavings', () =>
+		drawShavings(s, [
 			[204, 117, 1],
 			[226, 119, 0.8],
 			[244, 116, 0.65]
 		])
-			s.shape(
-				join(
-					bez(
-						[x - 9 * sc, y + 6 * sc],
-						[x - 12 * sc, y - 6 * sc],
-						[x + 8 * sc, y - 9 * sc],
-						[x + 9 * sc, y]
-					),
-					bez(
-						[x + 9 * sc, y],
-						[x + 9 * sc, y + 6 * sc],
-						[x - 2 * sc, y + 8 * sc],
-						[x - 3 * sc, y + 2 * sc]
-					),
-					bez(
-						[x - 3 * sc, y + 2 * sc],
-						[x - 3 * sc, y - 2 * sc],
-						[x + 3 * sc, y - 2 * sc],
-						[x + 4 * sc, y + 1 * sc]
-					)
-				),
-				{ fill: C.woodEnd, w: 1.6, closed: false }
-			);
+	);
+
+	// Sticker: the chisel on its own offcut with a few shavings, drawn off to the side of
+	// the scene so it only appears as an icon.
+	s.group('chiselboard', () => {
+		const o = shifted(s, 600, 0);
+		board(o, 14, 124, 140, 22, { face: '#e9c48f', knot: 118 });
+		drawChisel(o);
+		drawShavings(o, [
+			[134, 116, 0.85],
+			[150, 117, 0.6]
+		]);
 	});
 
 	s.group('tape', () => {
@@ -631,9 +710,9 @@ const iconOut = arg('--icons');
 if (iconOut) {
 	mkdirSync(iconOut, { recursive: true });
 	const icons = {
-		bar: ['beaker', 'coupe', 'egg', 'spoons'],
+		bar: ['beaker', 'coupe', 'egg', 'spoons', 'rocks'],
 		saw: ['lumber', 'saw'],
-		bench: ['chisel', 'square', 'tape']
+		bench: ['chiselboard', 'square', 'tape']
 	};
 	for (const [scene, names] of Object.entries(icons))
 		for (const name of names) writeFileSync(`${iconOut}/${name}.svg`, scenes[scene].icon(name));
