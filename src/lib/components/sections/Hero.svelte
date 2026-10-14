@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { hero } from '$lib/data/content';
+	import { hero, stats } from '$lib/data/content';
 </script>
 
 <section
@@ -61,6 +61,20 @@
 				Resume
 			</a>
 		</div>
+
+		<dl class="border-edge mt-12 grid grid-cols-2 gap-x-6 gap-y-7 border-t pt-8 md:grid-cols-4">
+			{#each stats as stat (stat.value)}
+				<!-- Label is the <dt> for screen readers; column-reverse puts the number on top visually. -->
+				<div class="flex flex-col-reverse justify-end">
+					<dt class="text-ink-muted mt-1.5 text-sm leading-snug">{stat.label}</dt>
+					<dd
+						class="text-ink-strong font-display text-3xl font-semibold tracking-tight md:text-4xl"
+					>
+						{stat.value}
+					</dd>
+				</div>
+			{/each}
+		</dl>
 	</div>
 </section>
 

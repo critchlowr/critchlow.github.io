@@ -33,7 +33,16 @@
 	ambient only behind body copy — the hero and footer carry no section band at all,
 	so they show the lamps undimmed.
 -->
-<section {id} aria-labelledby={headingId} class={alt ? 'bg-band/80' : 'bg-surface/68'}>
+<!--
+	overflow-x: clip stops left/right reveal transforms (About slides its text in from
+	1.5rem right) from widening the page on phones. `clip`, not `hidden`, so it creates
+	no scroll container.
+-->
+<section
+	{id}
+	aria-labelledby={headingId}
+	class={['overflow-x-clip', alt ? 'bg-band/80' : 'bg-surface/68']}
+>
 	<div class="mx-auto {measures[width]} px-5 py-20 md:py-28">
 		<div class="mb-12 flex items-baseline gap-4" use:inview={{ dir: 'up' }}>
 			<span

@@ -51,11 +51,17 @@
 	<meta property="og:description" content="Product · Research · Enterprise Systems" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://ryancritchlow.com" />
-	<meta property="og:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
+	<meta property="og:image" content="https://ryancritchlow.com/images/og-card.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta
+		property="og:image:alt"
+		content="Ryan Critchlow — Product · Research · Enterprise Systems"
+	/>
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Ryan Critchlow" />
 	<meta name="twitter:description" content="Product · Research · Enterprise Systems" />
-	<meta name="twitter:image" content="https://ryancritchlow.com/images/ryancritchlow.jpeg" />
+	<meta name="twitter:image" content="https://ryancritchlow.com/images/og-card.png" />
 	<!--
 		personSchema is a static object defined above, not user input, so there is no
 		injection surface here. The `<\/script>` escape is required: without it the HTML

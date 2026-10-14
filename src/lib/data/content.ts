@@ -4,7 +4,9 @@ import type {
 	Project,
 	Publication,
 	ContactLink,
-	SkillCategory
+	SkillCategory,
+	Stat,
+	Tool
 } from '$lib/types';
 
 export const hero = {
@@ -16,6 +18,15 @@ export const hero = {
 		'Open to product, solutions, analytics, and accessibility roles. Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
+
+// The headline numbers, pulled up from the Experience and Research sections so a
+// skimming reader meets them first. Each one is stated in full further down the page.
+export const stats: Stat[] = [
+	{ value: '4', label: 'enterprise accounts run at once, double the team average' },
+	{ value: '46%', label: 'more stable releases than the department average' },
+	{ value: '50%', label: 'faster new-hire ramp from a 30/60/90 framework I co-led' },
+	{ value: 'ASSETS', label: 'peer-reviewed paper, ACM accessibility conference 2026' }
+];
 
 export const about = {
 	heading: 'About Me',
@@ -173,19 +184,22 @@ export const skills: SkillCategory[] = [
 	}
 ];
 
-export const tools = [
-	{ name: 'T-SQL', icon: 'microsoftsqlserver/microsoftsqlserver-original' },
-	{ name: 'Python', icon: 'python/python-original' },
-	{ name: 'C#', icon: 'csharp/csharp-original' },
-	{ name: 'Java', icon: 'java/java-original' },
-	{ name: 'JavaScript', icon: 'javascript/javascript-original' },
-	{ name: 'Power BI', icon: 'azure/azure-original' },
-	{ name: 'Tableau', icon: 'firebase/firebase-original' },
-	{ name: 'MySQL', icon: 'mysql/mysql-original' },
-	{ name: 'Git', icon: 'git/git-original' },
-	{ name: 'Unity', icon: 'unity/unity-original' },
-	{ name: 'Svelte', icon: 'svelte/svelte-original' },
-	{ name: 'Tailwind', icon: 'tailwindcss/tailwindcss-original' }
+// Icons are devicon SVGs (MIT) served from static/icons. Neither devicon nor Simple
+// Icons ships Power BI or Tableau marks — both are trademark-restricted — so those
+// two leave `icon` unset and render a neutral chart glyph instead of a wrong logo.
+export const tools: Tool[] = [
+	{ name: 'T-SQL', icon: 'microsoftsqlserver' },
+	{ name: 'Python', icon: 'python' },
+	{ name: 'C#', icon: 'csharp' },
+	{ name: 'Java', icon: 'java' },
+	{ name: 'JavaScript', icon: 'javascript' },
+	{ name: 'Power BI' },
+	{ name: 'Tableau' },
+	{ name: 'MySQL', icon: 'mysql' },
+	{ name: 'Git', icon: 'git' },
+	{ name: 'Unity', icon: 'unity', mono: true },
+	{ name: 'Svelte', icon: 'svelte' },
+	{ name: 'Tailwind', icon: 'tailwindcss' }
 ];
 
 export const selectedWork: Project[] = [

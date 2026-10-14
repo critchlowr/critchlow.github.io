@@ -58,3 +58,16 @@ export interface SkillCategory {
 	label: string;
 	items: string[];
 }
+
+export interface Tool {
+	name: string;
+	/** File name in static/icons, without extension. Unset renders a generic chart glyph. */
+	icon?: string;
+	/** Single-colour dark mark that needs inverting to stay visible in dark mode. */
+	mono?: boolean;
+}
+
+export interface Stat {
+	value: string;
+	label: string;
+}
