@@ -1,5 +1,10 @@
 <script lang="ts">
-	let { status }: { status: string } = $props();
+	interface Props {
+		/** An order, pick or replenishment status. A " (Short)" suffix keeps the base colour. */
+		status: string;
+	}
+
+	let { status }: Props = $props();
 
 	const colorMap: Record<string, string> = {
 		Open: 'bg-warm-200 text-warm-700 dark:bg-warm-700 dark:text-warm-200',

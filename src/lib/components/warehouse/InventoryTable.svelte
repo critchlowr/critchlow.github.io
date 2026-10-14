@@ -2,7 +2,11 @@
 	import { scrollable } from '$lib/actions/scrollable';
 	import type { InventoryItem } from '$lib/data/warehouse';
 
-	let { inventory }: { inventory: InventoryItem[] } = $props();
+	interface Props {
+		inventory: InventoryItem[];
+	}
+
+	let { inventory }: Props = $props();
 </script>
 
 <div class="overflow-x-auto" use:scrollable={{ label: 'Inventory, scrolls horizontally' }}>

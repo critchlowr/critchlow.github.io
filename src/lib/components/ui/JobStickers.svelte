@@ -22,7 +22,11 @@
 		page?: Place;
 	}
 
-	let { set }: { set: 'bar' | 'saw' | 'bench' } = $props();
+	interface Props {
+		set: 'bar' | 'saw' | 'bench';
+	}
+
+	let { set }: Props = $props();
 
 	// Intrinsic sizes from each SVG's viewBox, for the width/height attributes.
 	const icons = {

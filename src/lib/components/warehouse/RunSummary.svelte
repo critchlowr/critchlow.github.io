@@ -14,19 +14,15 @@
 <script lang="ts">
 	import type { Order, OrderLine, Pick } from '$lib/data/warehouse';
 
-	let {
-		orders,
-		orderLines,
-		picks,
-		log,
-		onreset
-	}: {
+	interface Props {
 		orders: Order[];
 		orderLines: OrderLine[];
 		picks: Pick[];
 		log: RunLog;
 		onreset: () => void;
-	} = $props();
+	}
+
+	let { orders, orderLines, picks, log, onreset }: Props = $props();
 
 	// This replaces the whole panel, so the button that ended the run is gone and
 	// focus would fall to <body>. Landing on the heading restores it and reads the result.

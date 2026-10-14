@@ -1,4 +1,4 @@
-type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 function createThemeStore() {
 	let mode = $state<ThemeMode>('system');

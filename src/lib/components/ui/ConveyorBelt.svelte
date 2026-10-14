@@ -8,20 +8,13 @@
 	 * - "Run the belt again" replays it by re-creating the belt, which restarts the CSS
 	 *   animation. The button only exists when motion is allowed.
 	 */
+	import { prefersReducedMotion } from 'svelte/motion';
+
 	let root = $state<HTMLElement>();
 	let armed = $state(false);
 	let playing = $state(false);
 	let delivered = $state(false);
 	let run = $state(0);
-	let motionOK = $state(false);
-
-	$effect(() => {
-		const query = window.matchMedia('(prefers-reduced-motion: no-preference)');
-		const sync = () => (motionOK = query.matches);
-		sync();
-		query.addEventListener('change', sync);
-		return () => query.removeEventListener('change', sync);
-	});
 
 	$effect(() => {
 		const el = root;
@@ -77,7 +70,8 @@
 			{/each}
 		</div>
 	</div>
-	{#if motionOK && delivered}
+	<!-- `delivered` is false until after hydration, so the media query never causes a mismatch. -->
+	{#if delivered && !prefersReducedMotion.current}
 		<button type="button" class="replay text-ink-muted hover:text-ink-strong" onclick={replay}>
 			Run the belt again
 		</button>

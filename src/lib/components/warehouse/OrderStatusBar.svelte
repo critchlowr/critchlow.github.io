@@ -1,63 +1,50 @@
 <script lang="ts">
-	import type { Order, OrderLine, Pick } from '$lib/data/warehouse';
-	import { orderLineStatus } from '$lib/data/warehouse';
+	import { orderLineStatus, type Order, type OrderLine, type Pick } from '$lib/data/warehouse';
 	import StatusBadge from './StatusBadge.svelte';
 
-	let {
-		orders,
-		orderLines,
-		picks
-	}: {
+	interface Props {
 		orders: Order[];
 		orderLines: OrderLine[];
 		picks: Pick[];
-	} = $props();
+	}
 
-	function getProgressForOrder(order: Order) {
-		const p = orderLineStatus(order.orderId, orderLines, picks);
-		if (p.total === 0) return { done: 0, shorted: 0, total: 0, label: '' };
+	let { orders, orderLines, picks }: Props = $props();
 
-		let done: number;
-		let label: string;
-		switch (order.status) {
+	/** Which line count to show for each status: the furthest step the order has reached. */
+	function stepFor(status: Order['status']): 'loaded' | 'packed' | 'staged' | 'picked' {
+		switch (status) {
 			case 'Loaded':
 			case 'Shipped':
 			case 'Partial Ship':
-				done = p.loaded;
-				label = 'loaded';
-				break;
+				return 'loaded';
 			case 'Packed':
 			case 'Partial Pack':
-				done = p.packed;
-				label = 'packed';
-				break;
+				return 'packed';
 			case 'Staged':
 			case 'Partial Stage':
-				done = p.staged;
-				label = 'staged';
-				break;
+				return 'staged';
 			default:
-				done = p.picked;
-				label = 'picked';
-				break;
+				return 'picked';
 		}
-
-		return { done, shorted: p.shorted, total: p.total, label };
 	}
 
-	function displayStatus(order: Order): string {
-		const p = orderLineStatus(order.orderId, orderLines, picks);
-		if (p.shorted > 0 && order.status !== 'Shipped' && order.status !== 'Open') {
-			return `${order.status} (Short)`;
-		}
-		return order.status;
-	}
+	// One pass over each order's lines per update, shared by the progress and the badge.
+	const rows = $derived(
+		orders.map((order) => {
+			const lines = orderLineStatus(order.orderId, orderLines, picks);
+			const step = stepFor(order.status);
+			const showShort = lines.shorted > 0 && order.status !== 'Shipped' && order.status !== 'Open';
+			return {
+				order,
+				progress: { done: lines[step], shorted: lines.shorted, total: lines.total, label: step },
+				status: showShort ? `${order.status} (Short)` : order.status
+			};
+		})
+	);
 </script>
 
 <div class="mb-4 space-y-2">
-	{#each orders as order (order.orderId)}
-		{@const progress = getProgressForOrder(order)}
-		{@const status = displayStatus(order)}
+	{#each rows as { order, progress, status } (order.orderId)}
 		<div class="border-edge bg-surface-raised flex items-center gap-3 rounded-lg border px-3 py-2">
 			<span class="text-ink-muted font-mono text-xs font-semibold">{order.orderId}</span>
 			<span class="text-ink-muted truncate text-sm">{order.customer}</span>
