@@ -6,10 +6,10 @@
 	<div class="mx-auto max-w-4xl px-5">
 		<p class="text-ink-muted flex items-center gap-3 text-sm">
 			<img
-				src="/images/ryancritchlow.jpeg"
+				src="/images/ryancritchlow-96.webp"
 				alt=""
-				width="325"
-				height="325"
+				width="96"
+				height="96"
 				class="border-edge h-12 w-12 shrink-0 rounded-full border object-cover"
 			/>
 			<span>{hero.status} {hero.availability}</span>

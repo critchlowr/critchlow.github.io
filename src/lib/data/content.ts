@@ -28,7 +28,6 @@ export const stats: Stat[] = [
 ];
 
 export const about = {
-	heading: 'About Me',
 	paragraphs: [
 		"I've been building things for people my whole life. Growing up with a carpenter for a dad, I learned to solve complex problems in unusual ways, with skills you don't pick up in a classroom. In graduate school I started building software for people, and designing it with them.",
 		"The route here was not linear. I finished a degree in Management of Information Systems, then spent three years at Körber Supply Chain administering warehouse management systems for four enterprise accounts. I wanted to build the systems, not just support them, so I went back to Western for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm a carpenter again now.",
@@ -146,10 +145,8 @@ export const education: Education[] = [
 export const credentials = {
 	orcid: '0009-0007-7323-9177',
 	orcidHref: 'https://orcid.org/0009-0007-7323-9177',
-	// ORCID publishes the iD icon for exactly this use and licenses it openly, so it
-	// is served from static/. ACM's logo is a restricted trademark, so the membership
-	// chip is set typographically instead — see Research.svelte.
-	membership: 'ACM Member',
+	// ORCID licenses its iD icon for this use, so it is served from static/. ACM's
+	// logo is a restricted trademark, so Publications.svelte sets that chip in type.
 	membershipDetail: 'Association for Computing Machinery, 2026–present'
 };
 

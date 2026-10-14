@@ -5,10 +5,7 @@ export interface Experience {
 	period: string;
 	bullets: string[];
 	summary?: string;
-	tags?: string[];
-	href?: string;
-	hrefLabel?: string;
-	/** Shows the "Try the WMS Simulator" button and the conveyor belt on this card. */
+	/** Shows the link to the WMS simulator and the conveyor belt on this card. */
 	showSimulator?: boolean;
 	/** Anchor id for the card, so the Skills section can link to it. */
 	id?: string;
@@ -33,6 +30,8 @@ export interface Publication {
 	contribution: string;
 	href?: string;
 	hrefLabel?: string;
+	/** Opens in a new tab. */
+	external?: boolean;
 }
 
 export interface ContactLink {

@@ -11,9 +11,6 @@
 		<script>
 			(function () {
 				const root = document.documentElement;
-				// Reveal animations hide content only when this class is present, so the
-				// page stays readable if JavaScript never runs.
-				root.classList.add('js');
 				let saved = null;
 				try {
 					saved = localStorage.getItem('theme');
