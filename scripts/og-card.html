@@ -16,10 +16,6 @@
 				font-family: Inter;
 				src: url(../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2);
 			}
-			@font-face {
-				font-family: Mono;
-				src: url(../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2);
-			}
 			* {
 				margin: 0;
 				box-sizing: border-box;
@@ -28,105 +24,66 @@
 				width: 1200px;
 				height: 630px;
 				overflow: hidden;
-				background: #fbf9f6;
-				font-family: Inter;
-				color: #4e4538;
 				position: relative;
-			}
-			.wash {
-				position: absolute;
-				inset: 0;
-				background:
-					radial-gradient(
-						900px 480px at 8% -15%,
-						color-mix(in oklab, #f1ce82 62%, transparent),
-						transparent 72%
-					),
-					radial-gradient(
-						760px 460px at 96% 115%,
-						color-mix(in oklab, #e4c7e8 60%, transparent),
-						transparent 72%
-					),
-					radial-gradient(
-						520px 340px at 72% -6%,
-						color-mix(in oklab, #d1f3cb 30%, transparent),
-						transparent 70%
-					);
+				background: #fbf8f1;
+				color: #16213a;
+				font-family: Inter;
+				border-top: 14px solid #1f3d7a;
 			}
 			.c {
 				position: absolute;
-				inset: 0;
-				padding: 76px 88px;
-				display: flex;
-				flex-direction: column;
-			}
-			.k {
-				font-family: Mono;
-				font-size: 22px;
-				font-weight: 600;
-				letter-spacing: 0.14em;
-				text-transform: uppercase;
-				color: #6d4e00;
+				left: 88px;
+				top: 120px;
+				width: 680px;
 			}
 			h1 {
 				font-family: Fraunces;
-				font-weight: 600;
-				font-size: 118px;
+				font-size: 92px;
+				font-weight: 650;
+				letter-spacing: -0.02em;
 				line-height: 1;
-				color: #623d19;
-				margin-top: 34px;
-				letter-spacing: -0.01em;
 			}
 			.t {
-				font-size: 36px;
-				font-weight: 500;
-				color: #6d4e00;
-				margin-top: 26px;
-			}
-			.rule {
-				height: 2px;
-				background: #dfd0bc;
-				width: 640px;
-				margin-top: 40px;
+				margin-top: 22px;
+				font-size: 32px;
+				font-weight: 600;
+				color: #1f3d7a;
 			}
 			.s {
-				font-size: 25px;
+				margin-top: 28px;
+				font-size: 27px;
 				line-height: 1.45;
-				color: #4e4538;
-				margin-top: 30px;
-				max-width: 660px;
+				color: #4a5468;
 			}
 			.u {
 				position: absolute;
 				left: 88px;
-				bottom: 60px;
-				font-family: Mono;
+				bottom: 56px;
 				font-size: 24px;
-				color: #623d19;
 				font-weight: 600;
+				color: #1f3d7a;
+				background: #f7e6b5;
+				padding: 6px 14px;
+				border-radius: 8px;
 			}
 			img {
 				position: absolute;
-				right: 70px;
-				bottom: 58px;
-				width: 400px;
-				opacity: 0.9;
+				right: 80px;
+				bottom: 70px;
+				width: 340px;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="wash"></div>
 		<div class="c">
-			<div class="k">Portfolio</div>
 			<h1>Ryan Critchlow</h1>
-			<div class="t">Product · Research · Enterprise Systems</div>
-			<div class="rule"></div>
+			<div class="t">Accessibility and UX research · Enterprise technical support</div>
 			<div class="s">
-				Enterprise WMS accounts, an M.S. in Computer Science, and peer-reviewed accessibility
-				research.
+				Peer-reviewed research at ASSETS 2026, an M.S. in Computer Science, and three years of
+				enterprise WMS support.
 			</div>
 		</div>
 		<div class="u">ryancritchlow.com</div>
-		<img src="../static/images/logo-dog.png" />
+		<img src="../static/images/logo-dog.png" alt="" />
 	</body>
 </html>

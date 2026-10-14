@@ -166,83 +166,54 @@
 	--color-ink-strong: var(--t-ink-strong);
 	--color-brand: var(--t-brand);
 	--color-brand-strong: var(--t-brand-strong);
+	--color-on-brand: var(--t-on-brand);
 	--color-link: var(--t-link);
 	--color-footer: var(--t-footer);
 	--color-band: var(--t-band);
+	--color-chip: var(--t-chip);
 }
 
+/*
+	Palette "Navy and marigold" (docs/design-review, Hybrid). One hue family for the
+	page: navy carries text, links and buttons in light mode; marigold is a small accent
+	(chips) and becomes the button colour in dark mode. Every pair below is checked in
+	docs/design-review/a11y/palettes.json (all pass WCAG 2.2 AA).
+*/
 :root {
-	--t-surface: var(--color-warm-50);
+	--t-surface: #fbf8f1;
 	--t-surface-raised: #ffffff;
-	/*
-		warm-300, not warm-200. A white card on the warm-100 band was delineated only by
-		its border, and warm-200 sat 1.12:1 from that band — the card edge effectively
-		disappeared on alternating sections. warm-300 gives 1.37:1.
-	*/
-	--t-edge: var(--color-warm-300);
-	--t-edge-hover: var(--color-accent-500);
-	/*
-		Inks sit a stop lower than a plain parchment page would need. That is what pays
-		for the golden band below: at warm-700 muted text measured 4.50:1 on it, right
-		on the line. Dark brown on gold parchment is the register anyway.
-	*/
-	--t-ink: var(--color-warm-900);
-	--t-ink-muted: var(--color-warm-800);
-	--t-ink-strong: var(--color-primary-900);
-	/* accent-600 measured 3.95:1 on the alt ground — brand carries company names at
-	   16px, not just the big numerals, so it has to clear 4.5 rather than 3. */
-	--t-brand: var(--color-accent-800);
-	--t-brand-strong: var(--color-accent-800);
-	--t-link: var(--color-plum-800);
-	/* The footer gets a ground of its own so the page ends somewhere. */
-	--t-footer: #e3d5b0;
-	/*
-		Alternating band. warm-100 against warm-50 measured 1.02:1 — the two grounds were
-		effectively the same colour and the sections did not read as alternating at all.
-		This is a proper golden parchment: deeper, and with real chroma rather than a
-		near-neutral tint.
-	*/
-	--t-band: #eee0b8;
-	/*
-		Focus ring. accent-500 measured 2.97:1 on the page and 2.38:1 on the band, under
-		the 3:1 that WCAG 1.4.11 asks of a focus indicator. accent-700 clears 4.0:1 on
-		every light ground (page, card, band, footer).
-	*/
-	--t-focus: var(--color-accent-700);
+	--t-band: #f1ebdd;
+	--t-footer: #f1ebdd;
+	--t-edge: #ddd3bf;
+	--t-edge-hover: #7a8295;
+	--t-ink: #16213a;
+	--t-ink-muted: #4a5468;
+	--t-ink-strong: #16213a;
+	--t-brand: #1f3d7a;
+	--t-brand-strong: #162d5c;
+	--t-on-brand: #ffffff;
+	--t-link: #1f3d7a;
+	--t-chip: #f7e6b5;
+	--t-focus: #1f3d7a;
 	color-scheme: light;
 }
 
 :root.dark {
-	--t-surface: var(--color-warm-950);
-	/*
-		warm-800, not warm-900. At warm-900 a card sat 1.17:1 from the alt band it was
-		standing on — effectively invisible — and the ambient layer closed that to 1.12
-		by lifting the ground onto the card colour. Cards now sit two stops above the
-		page and the band moves the other way (see --t-band), so alternation and card
-		separation stop competing for the same few luminance steps.
-	*/
-	--t-surface-raised: var(--color-warm-800);
-	--t-edge: var(--color-warm-600);
-	--t-edge-hover: var(--color-accent-400);
-	--t-ink: var(--color-warm-200);
-	--t-ink-muted: var(--color-warm-300);
-	--t-ink-strong: var(--color-primary-200);
-	--t-brand: var(--color-accent-300);
-	--t-brand-strong: var(--color-accent-700);
-	--t-link: var(--color-plum-300);
-	/*
-		A deep aubergine between plum-950 and plum-900. plum-950 sits 1.01:1 from the
-		page ground — the hue would shift but the band would not read as separate.
-	*/
-	--t-footer: #43284a;
-	/*
-		Lighter than the page, the conventional direction. This only works because cards
-		moved up to warm-800: when cards were warm-900 this band sat on top of them and
-		the card edge vanished. Card separation here is 2.05:1 via the border.
-	*/
-	--t-band: var(--color-warm-900);
-	/* accent-300 clears 5.0:1 on every dark ground, including the warm-800 cards. */
-	--t-focus: var(--color-accent-300);
+	--t-surface: #0f1628;
+	--t-surface-raised: #19233d;
+	--t-band: #141d33;
+	--t-footer: #141d33;
+	--t-edge: #2c3856;
+	--t-edge-hover: #76819a;
+	--t-ink: #eaeef6;
+	--t-ink-muted: #b0b9cb;
+	--t-ink-strong: #ffffff;
+	--t-brand: #f2c55c;
+	--t-brand-strong: #f7d88d;
+	--t-on-brand: #0f1628;
+	--t-link: #9fbcf5;
+	--t-chip: #3a3220;
+	--t-focus: #f2c55c;
 	color-scheme: dark;
 }
 
@@ -277,7 +248,8 @@ html {
 	}
 
 	::selection {
-		@apply bg-accent-200 text-warm-950 dark:bg-plum-800 dark:text-warm-50;
+		background: var(--t-chip);
+		color: var(--t-ink);
 	}
 
 	h1,

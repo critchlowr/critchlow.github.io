@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { publications, credentials } from '$lib/data/content';
-	import { inview } from '$lib/actions/inview';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
@@ -14,25 +13,23 @@
 	];
 </script>
 
-<SectionWrapper id="research" headingId="research-heading" number="05" title="Research">
+<SectionWrapper id="publications" headingId="publications-heading" title="Publications">
 	<div class="space-y-12">
 		{#each groups as group (group.label)}
 			{#if group.items.length > 0}
 				<div>
-					<h3
-						class="text-ink-muted mb-4 font-mono text-xs font-semibold tracking-[0.14em] uppercase"
-					>
+					<h3 class="text-ink-muted mb-4 text-sm font-semibold tracking-[0.1em] uppercase">
 						{group.label}
 					</h3>
-					<div class="stagger space-y-5" use:inview>
-						{#each group.items as pub, i (pub.title)}
-							<div style="--i: {i}">
-								<Card as="article" interactive class="p-6 md:p-7">
+					<div class="space-y-5">
+						{#each group.items as pub (pub.title)}
+							<div>
+								<Card as="article" class="p-6 md:p-7">
 									<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
 										{pub.title}
 									</h4>
 									<p class="text-ink-muted mt-2 text-base">{pub.authors}</p>
-									<p class="text-brand mt-1 text-base italic">
+									<p class="text-ink-muted mt-1 text-base italic">
 										{pub.venue}
 									</p>
 									{#if pub.summary}
@@ -57,7 +54,7 @@
 			{/if}
 		{/each}
 
-		<ul class="flex flex-wrap items-center gap-x-3 gap-y-2" use:inview={{ dir: 'up' }}>
+		<ul class="flex flex-wrap items-center gap-x-3 gap-y-2">
 			<li>
 				<a
 					href={credentials.orcidHref}
@@ -78,7 +75,7 @@
 					than the corporate logo.
 				-->
 				<span
-					class="bg-warm-200 text-warm-800 dark:bg-warm-800 dark:text-warm-200 inline-flex h-4 items-center rounded-full px-1.5 text-[0.6rem] font-bold tracking-tight"
+					class="bg-chip text-ink inline-flex h-4 items-center rounded-full px-1.5 text-[0.6rem] font-bold tracking-tight"
 					aria-hidden="true"
 				>
 					ACM

@@ -67,13 +67,9 @@
 <header class="border-edge bg-surface/85 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md">
 	<nav
 		aria-label="Main navigation"
-		class="mx-auto flex max-w-5xl items-center justify-between px-5 py-3"
+		class="mx-auto flex max-w-4xl items-center justify-between px-5 py-3"
 	>
-		<a
-			href="/#hero"
-			class="text-ink-strong flex items-center"
-			aria-label="Ryan Critchlow - back to top"
-		>
+		<a href="/" class="text-ink-strong flex items-center" aria-label="Ryan Critchlow - back to top">
 			<!--
 				Drawn as a mask over currentColor rather than an <img>, so the line art
 				takes the ink colour and stays visible in dark mode. The negative margin
@@ -107,7 +103,7 @@
 				aria-expanded={mobileOpen}
 				aria-controls="mobile-menu"
 				aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-				class="text-ink-muted hover:bg-warm-200 dark:hover:bg-warm-800 rounded-lg p-2 transition-colors"
+				class="text-ink-muted hover:bg-band rounded-lg p-2 transition-colors"
 			>
 				{#if mobileOpen}
 					<svg
@@ -150,8 +146,8 @@
 					onclick={closeMobile}
 					class="block rounded-md px-3 py-2 text-sm font-medium transition-colors {activeSection ===
 					hashOf(link.href)
-						? 'bg-accent-100 text-accent-800 dark:bg-accent-950 dark:text-accent-200'
-						: 'text-ink-muted hover:bg-warm-100 dark:hover:bg-warm-900'}"
+						? 'bg-chip text-ink-strong'
+						: 'text-ink-muted hover:bg-band'}"
 					aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
 				>
 					{link.label}
@@ -174,7 +170,7 @@
 		bottom: 0.15rem;
 		height: 2px;
 		border-radius: 2px;
-		background: var(--color-accent-500);
+		background: var(--t-brand);
 		transform: scaleX(0);
 		transition: transform 0.22s var(--ease-spring);
 	}
