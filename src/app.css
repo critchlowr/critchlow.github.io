@@ -7,8 +7,6 @@
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/jetbrains-mono';
 
-@plugin '@tailwindcss/typography';
-
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
