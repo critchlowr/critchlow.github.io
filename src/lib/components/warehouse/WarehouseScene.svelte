@@ -1,7 +1,4 @@
-<script lang="ts">
-	import { untrack } from 'svelte';
-	import type { InventoryItem } from '$lib/data/warehouse';
-
+<script lang="ts" module>
 	export type SceneAction =
 		| { type: 'idle' }
 		/** `cartBefore` is the cart's contents before this pick. The model adds the
@@ -14,25 +11,30 @@
 		    the cart being wheeled over with something in it. */
 		| { type: 'stage'; boxes: string[] }
 		| { type: 'pack' }
-		| { type: 'load' }
 		| { type: 'ship' }
-		| { type: 'replen'; sku: string };
+		| { type: 'replen'; sku: string }
+		/** The picker reached the slot and found it empty. */
+		| { type: 'short'; sku: string }
+		/** A short order was kept back in staging. */
+		| { type: 'hold' };
+</script>
 
-	let {
-		action = { type: 'idle' } as SceneAction,
-		cartSkus = [] as string[],
-		stagedSkus = [] as string[],
-		packedCount = 0,
-		loadedCount = 0,
-		inventory = [] as InventoryItem[]
-	}: {
+<script lang="ts">
+	import { onDestroy, untrack } from 'svelte';
+	import { physicalOnHand, type InventoryItem } from '$lib/data/warehouse';
+
+	interface Props {
 		action: SceneAction;
 		cartSkus: string[];
 		stagedSkus: string[];
+		heldSkus: string[];
 		packedCount: number;
 		loadedCount: number;
 		inventory: InventoryItem[];
-	} = $props();
+	}
+
+	let { action, cartSkus, stagedSkus, heldSkus, packedCount, loadedCount, inventory }: Props =
+		$props();
 
 	/* Loose goods are colour-coded by SKU so you can follow an item from the rack into
 	   the cart and on to staging. Packing erases the distinction: everything becomes
@@ -85,6 +87,9 @@
 	// Shelf glow on replen
 	let shelfFlash = $state(false);
 
+	// Shown over the picker's head at an empty slot.
+	let puzzled = $state(false);
+
 	// Pack station flash when an order gets sealed
 	let packFlash = $state(false);
 
@@ -100,6 +105,49 @@
 	// when they arrive rather than when the button is clicked.
 	let holdCart = $state(false);
 
+	/*
+		The scene stays mounted for the whole run, so a new trip has to cancel the
+		previous one for the same worker. Otherwise a stale "walk back" timer from the
+		last pick lands in the middle of this one. Each worker has its own group, so
+		the picker and the replen runner can be on the floor at the same time.
+	*/
+	type Group = 'picker' | 'runner' | 'truck';
+	const timers: Record<Group, ReturnType<typeof setTimeout>[]> = {
+		picker: [],
+		runner: [],
+		truck: []
+	};
+	function after(group: Group, ms: number, fn: () => void) {
+		timers[group].push(setTimeout(fn, ms));
+	}
+	function cancel(group: Group) {
+		timers[group].forEach(clearTimeout);
+		timers[group] = [];
+	}
+	onDestroy(() => (Object.keys(timers) as Group[]).forEach(cancel));
+
+	// Cancels the picker's current trip and puts them, and the cart, back at rest,
+	// so a trip cut short never leaves the cart stranded at staging.
+	function settlePicker() {
+		cancel('picker');
+		workerPos = 'idle';
+		workerCarrying = false;
+		puzzled = false;
+		cartPos = 'at-pick';
+		holdCart = false;
+	}
+
+	// Back to the opening frame, for Reset.
+	function resetScene() {
+		(Object.keys(timers) as Group[]).forEach(cancel);
+		settlePicker();
+		replenWorkerPos = 'at-inbound';
+		replenCarrying = false;
+		truckState = 'parked';
+		shelfFlash = false;
+		packFlash = false;
+	}
+
 	// Only `action` may retrigger an animation. The dispatch is untracked because the
 	// animations call columnOf(), which reads `inventory` — that made inventory a
 	// dependency of this effect, so completing a replenishment (which reassigns
@@ -107,10 +155,12 @@
 	$effect(() => {
 		const a = action;
 		untrack(() => {
-			if (a.type === 'pick') animatePick(a.sku, a.cartBefore);
+			if (a.type === 'idle') resetScene();
+			else if (a.type === 'pick') animatePick(a.sku, a.cartBefore);
+			else if (a.type === 'short') animateShort(a.sku);
+			else if (a.type === 'hold') animatePack();
 			else if (a.type === 'stage') animateStage(a.boxes);
 			else if (a.type === 'pack') animatePack();
-			else if (a.type === 'load') animateLoad();
 			else if (a.type === 'ship') animateShip();
 			else if (a.type === 'replen') animateReplen(a.sku);
 		});
@@ -125,6 +175,7 @@
 	// Walk to the rack empty-handed, pick the item up there, carry it back, and only
 	// then drop it in the cart.
 	function animatePick(sku: string, cartBefore: string[]) {
+		settlePicker();
 		holdCart = true;
 		cartDisplay = cartBefore;
 		carriedSku = sku;
@@ -133,66 +184,80 @@
 		workerPos = 'at-shelf';
 
 		// Arrives at the column and lifts the carton.
-		setTimeout(() => {
+		after('picker', 700, () => {
 			workerCarrying = true;
-		}, 700);
+		});
 		// Beat at the rack, then walks back with it.
-		setTimeout(() => {
+		after('picker', 1300, () => {
 			workerPos = 'carrying-back';
-		}, 1300);
+		});
 		// Reaches the cart and puts it in.
-		setTimeout(() => {
+		after('picker', 1750, () => {
 			workerPos = 'idle';
 			workerCarrying = false;
 			holdCart = false;
-		}, 1750);
+		});
+	}
+
+	// Same trip as a pick, but the slot is empty: a beat at the rack, then back
+	// with nothing.
+	function animateShort(sku: string) {
+		settlePicker();
+		pickColumn = columnOf(sku);
+		workerPos = 'at-shelf';
+		after('picker', 700, () => {
+			puzzled = true;
+		});
+		after('picker', 1500, () => {
+			puzzled = false;
+			workerPos = 'carrying-back';
+		});
+		after('picker', 1950, () => {
+			workerPos = 'idle';
+		});
 	}
 
 	// The picker wheels the loaded cart over to staging, unloads it, and brings it back.
 	function animateStage(boxes: string[]) {
+		settlePicker();
 		holdCart = true;
 		cartDisplay = boxes;
 		workerCarrying = false;
 		workerPos = 'at-staging';
 		cartPos = 'at-staging';
-		setTimeout(() => {
+		after('picker', 700, () => {
 			cartDisplay = [];
-		}, 700);
-		setTimeout(() => {
+		});
+		after('picker', 1000, () => {
 			workerPos = 'idle';
 			cartPos = 'at-pick';
 			holdCart = false;
-		}, 1000);
+		});
 	}
 
 	function animatePack() {
+		settlePicker();
 		workerPos = 'at-staging';
 		packFlash = true;
-		setTimeout(() => {
+		after('picker', 700, () => {
 			packFlash = false;
-		}, 700);
-		setTimeout(() => {
+		});
+		after('picker', 900, () => {
 			workerPos = 'idle';
-		}, 900);
-	}
-
-	function animateLoad() {
-		workerPos = 'at-staging';
-		setTimeout(() => {
-			workerPos = 'idle';
-		}, 800);
+		});
 	}
 
 	// The trailer takes 1s to clear the frame. Hold the dock empty for a beat before
 	// the next one backs in, otherwise it reads as the same truck bouncing.
 	function animateShip() {
+		cancel('truck');
 		truckState = 'leaving';
-		setTimeout(() => {
+		after('truck', 2800, () => {
 			truckState = 'arriving';
-		}, 2800);
-		setTimeout(() => {
+		});
+		after('truck', 4000, () => {
 			truckState = 'parked';
-		}, 4000);
+		});
 	}
 
 	// The mirror image of the picker: collect a carton at receiving, carry it to the
@@ -200,6 +265,7 @@
 	// when the game completes the replenishment, so the column refills under the
 	// worker's hands rather than after they have gone home.
 	function animateReplen(sku: string) {
+		cancel('runner');
 		replenColumn = columnOf(sku);
 		replenSku = sku;
 
@@ -208,22 +274,22 @@
 		replenWorkerPos = 'at-inbound';
 
 		// Carries it across to the rack.
-		setTimeout(() => {
+		after('runner', 600, () => {
 			replenWorkerPos = 'walking-to-shelf';
-		}, 600);
+		});
 		// Sets it down in the slot.
-		setTimeout(() => {
+		after('runner', 1500, () => {
 			replenCarrying = false;
 			shelfFlash = true;
-		}, 1500);
+		});
 		// Heads back to receiving.
-		setTimeout(() => {
+		after('runner', 2100, () => {
 			shelfFlash = false;
 			replenWorkerPos = 'walking-back';
-		}, 2100);
-		setTimeout(() => {
+		});
+		after('runner', 2800, () => {
 			replenWorkerPos = 'at-inbound';
-		}, 2800);
+		});
 	}
 </script>
 
@@ -292,8 +358,8 @@
 		<!-- Shelf/rack — each slot shows inventory -->
 		<div class="shelf" class:shelf-flash={shelfFlash}>
 			{#each inventory as item (item.sku)}
-				<div class="shelf-col" title="{item.itemName} ({item.qtyOnHand})">
-					{#each { length: stockBars(item.qtyOnHand) } as _, i (i)}
+				<div class="shelf-col" title="{item.itemName} ({physicalOnHand(item)})">
+					{#each { length: stockBars(physicalOnHand(item)) } as _, i (i)}
 						<div class="shelf-box" style={tone(item.sku)}></div>
 					{/each}
 				</div>
@@ -315,6 +381,9 @@
 			<div class="worker-legs"></div>
 			{#if workerCarrying}
 				<div class="carried-box" style={tone(carriedSku)}></div>
+			{/if}
+			{#if puzzled}
+				<div class="puzzled">?</div>
 			{/if}
 		</div>
 
@@ -346,6 +415,12 @@
 			{#each stagedSkus.slice(0, 12 - Math.min(packedCount, 12)) as sku, i (i)}
 				<div class="staged-box" style={tone(sku)}></div>
 			{/each}
+			{#each heldSkus.slice(0, 6) as sku, i (i)}
+				<div class="staged-box held-box" style={tone(sku)}></div>
+			{/each}
+			{#if heldSkus.length > 0}
+				<div class="hold-tag">HOLD</div>
+			{/if}
 		</div>
 
 		<!-- Outbound dock -->
@@ -451,7 +526,7 @@
 	}
 
 	:global(.dark) .building-sign {
-		color: #d4b896;
+		color: var(--color-warm-300);
 	}
 
 	/* ═══ INBOUND LEFT SIDE ═══ */
@@ -620,14 +695,14 @@
 		transform: translateX(-50%);
 		font-size: 8px;
 		font-weight: 700;
-		color: #8b7355;
+		color: #5a3a1a;
 		font-family: var(--font-mono);
 		white-space: nowrap;
 		z-index: 5;
 	}
 
 	:global(.dark) .receiving-label {
-		color: var(--color-warm-400);
+		color: var(--color-warm-300);
 	}
 
 	.receiving-box {
@@ -920,6 +995,20 @@
 		right: calc(var(--carton) * -1 - 3px);
 	}
 
+	/* Above the picker's hard hat while they stand at an empty slot. */
+	.puzzled {
+		position: absolute;
+		top: -14px;
+		left: 50%;
+		transform: translateX(-50%);
+		font: 700 11px/1 var(--font-mono);
+		color: var(--color-ember-800);
+		background: #fff;
+		border: 1px solid var(--color-ember-700);
+		border-radius: 3px;
+		padding: 1px 3px;
+	}
+
 	/* ═══ OUTBOUND RIGHT SIDE ═══ */
 
 	/* Staging area */
@@ -952,14 +1041,31 @@
 		transform: translateX(-50%);
 		font-size: 8px;
 		font-weight: 700;
-		color: var(--color-warm-600);
+		color: #5a3a1a;
 		font-family: var(--font-mono);
 		white-space: nowrap;
 		z-index: 5;
 	}
 
 	:global(.dark) .staging-label {
-		color: var(--color-warm-400);
+		color: var(--color-warm-300);
+	}
+
+	/* A held order's goods stay loose in staging, outlined so they read as set aside. */
+	.held-box {
+		outline: 1px dashed var(--color-ember-700);
+		outline-offset: 1px;
+	}
+
+	.hold-tag {
+		position: absolute;
+		top: -12px;
+		right: 0;
+		font: 700 7px/1 var(--font-mono);
+		color: #fff;
+		background: var(--color-ember-700);
+		border-radius: 2px;
+		padding: 2px 3px;
 	}
 
 	/* Packed — sealed with tape, ready for the truck */
@@ -1159,6 +1265,20 @@
 		}
 	}
 
+	/*
+		Short landscape — a phone turned sideways. The scene is a decorative,
+		aria-hidden diorama, so dropping it costs no information and frees the height
+		the game actually needs. This replaces a blocking "turn your phone upright"
+		overlay, which restricted operation to one orientation and so failed SC 1.3.4;
+		"it renders badly in landscape" is a layout limitation, not the essential-use
+		exception. The panel below already scrolls, so the game just works.
+	*/
+	@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+		.scene {
+			display: none;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.scene {
 			height: 150px;
@@ -1192,8 +1312,16 @@
 			left: 73%;
 		}
 		.building-sign {
-			font-size: 9px;
+			font-size: 10px;
 		}
+		/*
+			These two stay at 6px on purpose. The whole .scene is aria-hidden
+			decoration inside a 150px-tall diorama, and every fact they label is
+			also delivered as >=14px text in PickingPanel and OrderStatusBar.
+			Growing them here only buys overlap with the half-dozen other elements
+			this media query repositions. WAVE flags them as small text; that alert
+			is accepted, not an oversight.
+		*/
 		.staging-label,
 		.receiving-label {
 			font-size: 6px;

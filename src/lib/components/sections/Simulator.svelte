@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { scrollable } from '$lib/actions/scrollable';
 	import Card from '$lib/components/ui/Card.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import WarehouseModal from '$lib/components/warehouse/WarehouseModal.svelte';
 	import WarehouseGame from '$lib/components/warehouse/WarehouseGame.svelte';
-	import { simulator } from '$lib/stores/simulator.svelte';
+
+	let open = $state(false);
 
 	// The main sequence. Shorting is not a step in it — see the branch below.
 	const steps = ['Wave', 'Pick', 'Stage', 'Pack', 'Load', 'Ship'];
@@ -40,15 +42,11 @@
 					One grid so the exception branch can start in the same column as Pick.
 					Each step is a column; the branch is a final list item placed at column 2
 					(Pick) and spanning to the end, which keeps it aligned no matter how the
-					pill widths change. Scrolls inside itself on narrow screens, so it takes
-					focus: Safari and Firefox don't let keyboard users scroll it otherwise.
+					pill widths change. Scrolls inside itself on narrow screens.
 				-->
-				<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 				<div
 					class="overflow-x-auto pt-2"
-					role="region"
-					aria-label="Fulfillment sequence diagram"
-					tabindex="0"
+					use:scrollable={{ label: 'Fulfillment sequence diagram', role: 'group' }}
 				>
 					<ol
 						class="grid w-max items-center gap-x-1 gap-y-2"
@@ -84,7 +82,7 @@
 					<button
 						type="button"
 						class="bg-brand hover:bg-brand-strong text-on-brand inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
-						onclick={() => simulator.launch()}
+						onclick={() => (open = true)}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -107,6 +105,6 @@
 	</div>
 </section>
 
-<WarehouseModal open={simulator.open} onclose={() => simulator.close()}>
-	<WarehouseGame onclose={() => simulator.close()} />
+<WarehouseModal {open} onclose={() => (open = false)}>
+	<WarehouseGame onclose={() => (open = false)} />
 </WarehouseModal>

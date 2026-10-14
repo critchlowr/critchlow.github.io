@@ -21,7 +21,7 @@
 	};
 
 	const baseStatus = $derived(status.split(' (')[0]);
-	const classes = $derived(colorMap[status] ?? colorMap[baseStatus] ?? 'bg-warm-200 text-warm-700');
+	const classes = $derived(colorMap[status] ?? colorMap[baseStatus] ?? colorMap.Open);
 </script>
 
 <span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold {classes}">

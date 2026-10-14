@@ -169,6 +169,20 @@
 	--color-footer: var(--t-footer);
 	--color-band: var(--t-band);
 	--color-chip: var(--t-chip);
+
+	/*
+		Simulator action fills. Each carries white text and clears 4.5:1 against it,
+		and is dark enough to keep doing so in both themes, so none is redefined for
+		dark mode. Primary actions use bg-brand instead.
+	*/
+	--color-action-go: var(--color-moss-700);
+	--color-action-go-hover: var(--color-moss-800);
+	--color-action-warn: var(--color-ember-700);
+	--color-action-warn-hover: var(--color-ember-800);
+	--color-action-neutral: var(--color-blue-700);
+	--color-action-neutral-hover: var(--color-blue-800);
+	--color-action-ship: var(--color-plum-700);
+	--color-action-ship-hover: var(--color-plum-800);
 }
 
 /*

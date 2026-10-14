@@ -28,9 +28,7 @@
 
 <SkipLink />
 <Nav />
-<main id="main-content" tabindex="-1" class="relative z-10">
+<main id="main-content" tabindex="-1">
 	{@render children()}
 </main>
-<div class="relative z-10">
-	<Footer />
-</div>
+<Footer />
