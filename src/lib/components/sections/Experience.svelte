@@ -4,7 +4,7 @@
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
-	import JobScene from '$lib/components/ui/JobScene.svelte';
+	import JobStickers from '$lib/components/ui/JobStickers.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 	import { simulator } from '$lib/stores/simulator.svelte';
@@ -16,9 +16,10 @@
 		what gives each role an edge against the tint behind it — and with seven entries
 		the boundaries are what make the column scannable.
 	-->
-	<ul class="stagger space-y-5" use:inview>
+	<!-- A wider gap than usual leaves room for the stickers on the card edges. -->
+	<ul class="stagger space-y-10" use:inview>
 		{#each experience as job, jobIndex (job.company + job.title)}
-			<Card as="li" interactive class="group p-6 md:p-7" style="--i: {jobIndex}">
+			<Card as="li" interactive class="group relative p-6 md:p-7" style="--i: {jobIndex}">
 				<div
 					class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-start sm:justify-between sm:gap-6 sm:text-left"
 				>
@@ -93,10 +94,8 @@
 						<ConveyorBelt />
 					</div>
 				{/if}
-				{#if job.scene}
-					<div class="bleed">
-						<JobScene scene={job.scene} />
-					</div>
+				{#if job.stickers}
+					<JobStickers set={job.stickers} />
 				{/if}
 			</Card>
 		{/each}
