@@ -96,7 +96,7 @@ export const experience: Experience[] = [
 			'Worked through my undergraduate degree, starting as support staff and moving up to serving and bartending.',
 		bullets: [
 			'Helped the brewery through one of its busiest summers up to that point',
-			'Received the Outstanding Support Staff award for dedication to shift coverage, including closing one night and opening the next morning'
+			'Received the Outstanding Support Staff award for dedication to shift coverage and accuracy on the job'
 		]
 	},
 	{
