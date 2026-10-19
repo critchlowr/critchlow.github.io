@@ -52,6 +52,15 @@ export const experience: Experience[] = [
 		]
 	},
 	{
+		title: 'Graduate Teaching Assistant',
+		company: 'Western Washington University',
+		location: 'Bellingham, WA',
+		period: '2024 – 2025',
+		summary:
+			'Supported 30+ students per quarter across DATA 311 (Fundamentals of Data Science), CSCI 102 (Computer Mediated Communications), and CSCI 345 (Object-Oriented Design).',
+		bullets: []
+	},
+	{
 		title: 'Support Analyst L4',
 		id: 'korber',
 		company: 'Körber Supply Chain (now Infios)',
@@ -65,15 +74,6 @@ export const experience: Experience[] = [
 			'Served as on-site technical lead at two system go-lives, and co-led a 30/60/90 onboarding framework that cut new-hire ramp time by 50%'
 		],
 		showSimulator: true
-	},
-	{
-		title: 'Graduate Teaching Assistant',
-		company: 'Western Washington University',
-		location: 'Bellingham, WA',
-		period: '2024 – 2025',
-		summary:
-			'Supported 30+ students per quarter across DATA 311 (Fundamentals of Data Science), CSCI 102 (Computer Mediated Communications), and CSCI 345 (Object-Oriented Design).',
-		bullets: []
 	},
 	{
 		title: 'Bartender',
