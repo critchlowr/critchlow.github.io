@@ -276,8 +276,8 @@ export const contact: ContactLink[] = [
 
 export const navLinks = [
 	{ label: 'About', href: '/#about' },
+	{ label: 'Education', href: '/#education' },
 	{ label: 'Publications', href: '/#publications' },
 	{ label: 'Experience', href: '/#experience' },
-	{ label: 'Skills', href: '/#skills' },
-	{ label: 'Education', href: '/#education' }
+	{ label: 'Skills', href: '/#skills' }
 ];

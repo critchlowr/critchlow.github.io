@@ -8,7 +8,7 @@
 	evidence rather than keywords. No ratings or logo walls: they don't tell a reader
 	how well someone knows a thing.
 -->
-<SectionWrapper id="skills" headingId="skills-heading" title="Skills" alt>
+<SectionWrapper id="skills" headingId="skills-heading" title="Skills">
 	<ul class="grid gap-5 md:grid-cols-2">
 		{#each skills as group (group.label)}
 			<li class="border-edge bg-surface-raised rounded-xl border p-5 md:p-6">

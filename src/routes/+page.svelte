@@ -68,7 +68,7 @@
 
 <Hero />
 <About />
+<Education />
 <Publications />
 <Experience />
 <Skills />
-<Education />

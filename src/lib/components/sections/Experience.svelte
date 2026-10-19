@@ -6,7 +6,7 @@
 	import JobStickers from '$lib/components/ui/JobStickers.svelte';
 </script>
 
-<SectionWrapper id="experience" headingId="experience-heading" title="Experience" alt>
+<SectionWrapper id="experience" headingId="experience-heading" title="Experience">
 	<!-- A wider gap than usual leaves room for the stickers on the card edges. -->
 	<ul class="space-y-10">
 		{#each experience as job (job.company + job.title)}
