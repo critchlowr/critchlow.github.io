@@ -47,7 +47,7 @@ export const experience: Experience[] = [
 		summary:
 			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026.',
 		bullets: [
-			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs before they reach the floor',
+			'Moving into material takeoffs for millwork projects: reading drawings, quantifying materials, and scoping jobs',
 			"Took over the shop's Squarespace site, handling content and structure updates"
 		],
 		stickers: 'bench'
