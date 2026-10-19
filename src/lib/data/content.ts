@@ -77,7 +77,7 @@ export const experience: Experience[] = [
 			'Primary technical point of contact for four enterprise warehouse-management accounts, double the team average of two.',
 		bullets: [
 			"Isolated faults across system boundaries, using WMS data to establish whether an issue originated in the warehouse system, the customer's order management system, Dynamics 365, or their network; resolved issues directly and escalated those that needed cloud or database administration expertise to the responsible team, with the evidence behind them",
-			'Translated stakeholder requests into custom SQL reporting and web-based deliverables, achieving 46% more stable releases than the department average, and resolved deadlocks on high-traffic production systems',
+			'Translated stakeholder requests into bug fixes, platform and web page enhancements, and custom SQL reporting, with 46% more stable releases than the department average; resolved deadlocks on high-traffic production systems',
 			'Served as on-site technical lead at two system go-lives, and co-led a 30/60/90 onboarding framework that cut new-hire ramp time by 50%'
 		],
 		showSimulator: true
