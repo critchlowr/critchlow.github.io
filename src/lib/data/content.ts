@@ -245,22 +245,17 @@ export const publications: Publication[] = [
 			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
 	},
 	{
-		authors: 'Ryan Critchlow, Yasmine N. Elglaly, Clare Gaskill, and Tyanin Opdahl',
+		authors: 'Anonymous authors',
 		title:
-			'You and I: A Participatory Evaluation Study of a Serious Game to Practice Pronouns for Autistic Children',
-		venue:
-			'Targeting the 26th Annual ACM Interaction Design and Children Conference (IDC 2027), Seattle, WA, June 2027. In preparation',
+			'A Participatory Evaluation Study of Language Learning Tools with Neurodivergent Children',
+		venue: 'In preparation for a 2027 ACM conference',
 		status: 'in-preparation',
 		contribution:
-			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.',
-		href: 'https://idc.acm.org/2027/calls/',
-		hrefLabel: 'IDC 2027 call for papers',
-		external: true
+			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
 	},
 	{
-		authors: 'Thuan Nguyen, Selah Bellscheidt, Yasmine N. Elglaly, and Ryan Critchlow',
-		title:
-			'Motivation Yields Better Alt Text: A Study of Design Triggers that Encourage Authoring Behavior',
+		authors: 'Anonymous authors',
+		title: 'A Study of Motivation in Alt Text Authoring',
 		venue: 'Target venue TBD, in preparation',
 		status: 'in-preparation',
 		contribution:
