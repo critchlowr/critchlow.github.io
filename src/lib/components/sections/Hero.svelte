@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { hero, stats } from '$lib/data/content';
+	import { hero } from '$lib/data/content';
 </script>
 
 <section id="hero" class="pt-28 pb-14 md:pt-32" aria-label="Introduction">
@@ -37,21 +37,5 @@
 				Résumé (PDF)
 			</a>
 		</div>
-
-		<dl class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4">
-			{#each stats as stat (stat.value)}
-				<!-- The label is the <dt> for screen readers; column-reverse puts the number on top. -->
-				<div
-					class="border-edge bg-surface-raised flex flex-col-reverse justify-end rounded-lg border border-t-[3px] border-t-[var(--t-brand)] px-4 py-3"
-				>
-					<dt class="text-ink-muted mt-1 text-sm leading-snug">{stat.label}</dt>
-					<dd
-						class="text-ink-strong font-display text-2xl font-semibold tracking-tight sm:text-3xl"
-					>
-						{stat.value}
-					</dd>
-				</div>
-			{/each}
-		</dl>
 	</div>
 </section>

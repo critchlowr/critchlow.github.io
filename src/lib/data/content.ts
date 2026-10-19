@@ -1,11 +1,4 @@
-import type {
-	Experience,
-	Education,
-	Publication,
-	ContactLink,
-	SkillCategory,
-	Stat
-} from '$lib/types';
+import type { Experience, Education, Publication, ContactLink, SkillCategory } from '$lib/types';
 
 export const hero = {
 	name: 'Ryan Critchlow',
@@ -17,15 +10,6 @@ export const hero = {
 		'Open to UX research, accessibility engineer, and technical support engineer roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
-
-// Headline numbers for the intro, so a skimming reader meets them first. Each is
-// stated in full in Experience or Publications.
-export const stats: Stat[] = [
-	{ value: 'ASSETS', label: 'peer-reviewed paper, ACM accessibility conference 2026' },
-	{ value: '4', label: 'enterprise accounts run at once, double the team average' },
-	{ value: '46%', label: 'more stable releases than the department average' },
-	{ value: '50%', label: 'faster new-hire ramp from a 30/60/90 framework I co-led' }
-];
 
 export const about = {
 	paragraphs: [
@@ -62,7 +46,7 @@ export const experience: Experience[] = [
 		summary:
 			'Designed and ran a participatory user study with neurodivergent children and their families: literature review, survey instruments, assessment methodology, and data collection plans.',
 		bullets: [
-			'Conducted an in-home participatory evaluation with four neurodivergent children and their families, following the Co-Design Beyond Words methodology, with semi-structured caregiver interviews, child-facing visual surveys, and sessions averaging 85 minutes',
+			'Conducted an in-home participatory evaluation with neurodivergent children and their families, using semi-structured caregiver interviews and child-facing visual surveys',
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
 			'Mentored an undergraduate researcher in amending the IRB protocol to add an in-home co-design pilot, and re-sequenced the study to absorb a quarter-long recruiting delay'
 		]
@@ -259,7 +243,7 @@ export const publications: Publication[] = [
 		venue: 'Target venue TBD, in preparation',
 		status: 'in-preparation',
 		contribution:
-			'I joined after the original authors had graduated and the paper had been rejected from a prior conference. I revised the discussion section for resubmission, addressed reviewer feedback, and worked with the faculty advisor to bring the manuscript back to submission readiness.'
+			'I joined after the original authors had graduated. I revised the discussion section and worked with the faculty advisor to bring the manuscript to submission readiness.'
 	}
 ];
 

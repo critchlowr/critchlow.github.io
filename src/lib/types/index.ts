@@ -51,8 +51,3 @@ export interface SkillCategory {
 	/** Where these skills were used: links to the role or section that shows them. */
 	from: { label: string; href: string }[];
 }
-
-export interface Stat {
-	value: string;
-	label: string;
-}
