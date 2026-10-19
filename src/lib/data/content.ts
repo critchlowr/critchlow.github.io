@@ -14,7 +14,7 @@ export const hero = {
 		'I study how people use technology, and I troubleshoot the enterprise systems they depend on. Peer-reviewed accessibility research at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
 	status: 'At ASSETS 2026 in Vila Nova de Gaia, Portugal, October 25–28.',
 	availability:
-		'Open to UX research, accessibility, and technical support roles in the Pacific Northwest or remote.',
+		'Open to UX research, accessibility engineer, and technical support engineer roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
