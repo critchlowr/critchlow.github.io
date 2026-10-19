@@ -48,7 +48,7 @@ export const experience: Experience[] = [
 		bullets: [
 			'Conducted an in-home participatory evaluation with neurodivergent children and their families, using semi-structured caregiver interviews and child-facing visual surveys',
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
-			'Mentored an undergraduate researcher in amending the IRB protocol to add an in-home co-design pilot, and re-sequenced the study to absorb a quarter-long recruiting delay'
+			'Mentored undergraduate researchers in IRB protocols, Unity development, and participatory design methods, and took on an extra academic quarter to recruit families and run the study when recruiting fell behind'
 		]
 	},
 	{
