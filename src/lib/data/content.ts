@@ -240,7 +240,7 @@ export const publications: Publication[] = [
 	{
 		authors: 'Anonymous authors',
 		title: 'A Study of Motivation in Alt Text Authoring',
-		venue: 'Target venue TBD, in preparation',
+		venue: 'In preparation for a 2027 ACM conference',
 		status: 'in-preparation',
 		contribution:
 			'I joined after the original authors had graduated. I revised the discussion section and worked with the faculty advisor to bring the manuscript to submission readiness.'
