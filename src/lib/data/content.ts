@@ -96,8 +96,11 @@ export const experience: Experience[] = [
 		company: 'Redlight',
 		location: 'Bellingham, WA',
 		period: '2023 – 2025',
-		summary: 'Made cocktails in a fast-paced downtown bar to finance graduate school.',
-		bullets: [],
+		summary:
+			'Crafted high-end cocktails in a downtown bar, working 30+ hours a week to pay my way through graduate school.',
+		bullets: [
+			'Part of the core team that grew Redlight into a high-volume venue and moved it to a larger location, as Friday sales went from $3,500 to $11,000'
+		],
 		stickers: 'bar'
 	},
 	{
