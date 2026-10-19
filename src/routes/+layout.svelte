@@ -6,8 +6,9 @@
 	import Footer from '$lib/components/layout/Footer.svelte';
 	import SkipLink from '$lib/components/layout/SkipLink.svelte';
 	// The font packages' exports block direct file imports, hence the root-relative paths.
-	import frauncesLatin from '/node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
-	import interLatin from '/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+	import serifLatin from '/node_modules/@fontsource-variable/baskervville/files/baskervville-latin-wght-normal.woff2?url';
+	import serifItalicLatin from '/node_modules/@fontsource-variable/baskervville/files/baskervville-latin-wght-italic.woff2?url';
+	import sansLatin from '/node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2?url';
 
 	interface Props {
 		children: Snippet;
@@ -29,11 +30,13 @@
 
 <!--
 	Fonts are otherwise found only after the stylesheet is parsed. Preloading the
-	Latin subsets of the heading and body faces starts both downloads at once.
+	Latin subsets of the faces used above the fold (serif, its italic for the
+	tagline, and the sans) starts those downloads at once.
 -->
 <svelte:head>
-	<link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin="anonymous" />
-	<link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin="anonymous" />
+	<link rel="preload" href={serifLatin} as="font" type="font/woff2" crossorigin="anonymous" />
+	<link rel="preload" href={serifItalicLatin} as="font" type="font/woff2" crossorigin="anonymous" />
+	<link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin="anonymous" />
 </svelte:head>
 
 <SkipLink />

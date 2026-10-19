@@ -1,8 +1,14 @@
 @import 'tailwindcss';
 
-/* Self-hosted, so the font stack declared below is the one that loads. */
-@import '@fontsource-variable/fraunces';
-@import '@fontsource-variable/inter';
+/*
+	Self-hosted, so the font stack declared below is the one that loads. Baskervville
+	and Jost are free stand-ins for Baskerville and Futura, the faces on Ryan's
+	business card.
+*/
+@import '@fontsource-variable/baskervville';
+@import '@fontsource-variable/baskervville/wght-italic.css';
+@import '@fontsource-variable/jost';
+@import '@fontsource-variable/jost/wght-italic.css';
 @import '@fontsource-variable/jetbrains-mono';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -81,8 +87,8 @@
 	--color-plum-950: #301a33;
 
 	/* Typefaces */
-	--font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-	--font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+	--font-sans: 'Jost Variable', Futura, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-display: 'Baskervville Variable', Baskerville, Georgia, 'Times New Roman', serif;
 	--font-mono: 'JetBrains Mono Variable', 'Fira Code', Consolas, monospace;
 
 	/*
@@ -91,10 +97,10 @@
 	*/
 	--text-display: 4.25rem;
 	--text-display--line-height: 1.02;
-	--text-display--letter-spacing: -0.03em;
+	--text-display--letter-spacing: -0.01em;
 	--text-title: 2.25rem;
 	--text-title--line-height: 1.15;
-	--text-title--letter-spacing: -0.02em;
+	--text-title--letter-spacing: -0.01em;
 	--text-lede: 1.25rem;
 	--text-lede--line-height: 1.55;
 	--text-body: 1.0625rem;

@@ -16,11 +16,11 @@
 		</p>
 
 		<h1
-			class="text-ink-strong font-display mt-6 text-[clamp(2.5rem,1.4rem+5vw,4.25rem)] leading-[1.02] font-semibold tracking-[-0.03em]"
+			class="text-ink-strong font-display mt-6 text-[clamp(2.5rem,1.4rem+5vw,4.25rem)] leading-[1.05] font-semibold tracking-[-0.01em]"
 		>
 			{hero.name}
 		</h1>
-		<p class="text-brand mt-3 text-xl font-medium">{hero.tagline}</p>
+		<p class="text-brand font-display mt-3 text-2xl italic">{hero.tagline}</p>
 		<p class="text-ink text-lede mt-6 max-w-2xl">{hero.summary}</p>
 
 		<div class="mt-8 flex flex-wrap items-center gap-3">
