@@ -506,13 +506,6 @@ export function stageAll(picks: Pick[]): void {
 }
 
 /**
- * Orders that have staged picks waiting at the pack station.
- */
-export function ordersAwaitingPack(orderIds: string[], picks: Pick[]): string[] {
-	return orderIds.filter((id) => picks.some((p) => p.orderId === id && p.status === 'Staged'));
-}
-
-/**
  * Can this order be packed complete — is every ordered unit accounted for?
  * False when a line is still short, or when a line has unstaged work outstanding.
  */
