@@ -128,10 +128,7 @@ export const education: Education[] = [
 		degree: 'Bachelor of Arts in Management of Information Systems',
 		location: 'Bellingham, WA',
 		period: 'Awarded June 2020',
-		notes: [
-			'Minor in Data Analytics',
-			'Coursework: Business Intelligence & Analytics, Predictive Analytics for Business, Applied Text Analytics, Systems Analysis & Design, Project Management'
-		]
+		notes: ['Minor in Data Analytics']
 	}
 ];
 
