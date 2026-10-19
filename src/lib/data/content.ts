@@ -108,8 +108,12 @@ export const experience: Experience[] = [
 		company: 'Aslan Brewing Company',
 		location: 'Bellingham, WA',
 		period: 'March 2018 – March 2020',
-		summary: 'Bartended through my undergraduate degree.',
-		bullets: []
+		summary:
+			'Worked through my undergraduate degree, starting as support staff and moving up to serving and bartending.',
+		bullets: [
+			'Helped the brewery through one of its busiest summers up to that point',
+			'Received a staff award for hard work and dedication, one of the few given to support staff'
+		]
 	},
 	{
 		title: 'Carpenter',
@@ -117,7 +121,9 @@ export const experience: Experience[] = [
 		location: 'Bellingham, WA',
 		period: '2015 – 2017',
 		summary: 'Custom residential construction and finish carpentry.',
-		bullets: [],
+		bullets: [
+			'Led a three-person crew across seven projects, assigning tasks by skill level to keep job sites running efficiently'
+		],
 		stickers: 'saw'
 	}
 ];
