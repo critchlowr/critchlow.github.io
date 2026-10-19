@@ -47,7 +47,7 @@ export const experience: Experience[] = [
 		summary:
 			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026.',
 		bullets: [
-			'Adapt designs on site to fit 100-year-old homes, combining traditional building practices with modern ones, especially for waterproofing',
+			'Work independently in the field, making design decisions on site to fit 100-year-old homes and combining traditional building practices with modern ones, especially for waterproofing',
 			'Moving into material takeoffs for millwork that the shop designs and then installs in the field: reading drawings, quantifying materials, and scoping jobs',
 			"Took over the shop's Squarespace site, handling content and structure updates"
 		],
