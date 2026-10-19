@@ -19,6 +19,8 @@ const config = {
 		 *   they are left out rather than implied.
 		 * - The theme script in app.html runs before this tag is parsed, so it is not
 		 *   governed by the policy and needs no hash.
+		 * - No upgrade-insecure-requests: every URL is already relative or https, and
+		 *   Safari applies it to http://localhost, which breaks images in local dev.
 		 */
 		csp: {
 			mode: 'hash',
@@ -31,8 +33,7 @@ const config = {
 				'connect-src': ['self'],
 				'object-src': ['none'],
 				'base-uri': ['self'],
-				'form-action': ['self'],
-				'upgrade-insecure-requests': true
+				'form-action': ['self']
 			}
 		}
 	}
