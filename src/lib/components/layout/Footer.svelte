@@ -17,14 +17,19 @@
 				<li><ContactLink {link} /></li>
 			{/each}
 		</ul>
-		<!-- The CI link is the evidence: anyone can see the accessibility checks run on each change. -->
+		<!-- The test-runs link is the evidence: anyone can see the checks run on each change. -->
 		<p class="text-ink-muted mt-12 text-sm">
-			&copy; {new Date().getFullYear()} Ryan Critchlow · Built to WCAG 2.2 AA. Every change is
-			<a
-				href="https://github.com/critchlowr/critchlow.github.io/actions"
-				class="text-link underline underline-offset-4">checked with axe and pa11y</a
+			&copy; {new Date().getFullYear()} Ryan Critchlow · Built to WCAG 2.2 AA. Every change is checked
+			with
+			<a href="https://github.com/dequelabs/axe-core" class="text-link underline underline-offset-4"
+				>axe</a
 			>
-			before it goes live. Found a barrier?
+			and
+			<a href="https://pa11y.org/" class="text-link underline underline-offset-4">pa11y</a>
+			before it goes live (<a
+				href="https://github.com/critchlowr/critchlow.github.io/actions"
+				class="text-link underline underline-offset-4">see the test runs</a
+			>). Found a barrier?
 			<a
 				href="mailto:critchlow.rc@gmail.com?subject=Accessibility%20barrier"
 				class="text-link underline underline-offset-4">Email me</a
