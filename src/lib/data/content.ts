@@ -9,9 +9,9 @@ import type {
 
 export const hero = {
 	name: 'Ryan Critchlow',
-	tagline: 'Accessibility and UX research · Enterprise technical support',
+	tagline: 'UX researcher focused on accessibility',
 	summary:
-		'I study how people use technology, and I troubleshoot enterprise systems. Peer-reviewed accessibility research at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
+		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper at ASSETS 2026 and hold an M.S. in Computer Science. Before graduate school, I spent three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
 	status: 'At ASSETS 2026 in Vila Nova de Gaia, Portugal, October 25–28.',
 	availability:
 		'Open to UX research, accessibility engineer, and technical support engineer roles in the Pacific Northwest or remote.',
@@ -162,19 +162,6 @@ export const credentials = {
 // Each group says where it was used, so the list reads as evidence, not keywords.
 export const skills: SkillCategory[] = [
 	{
-		label: 'Troubleshooting & support',
-		items: [
-			'Fault isolation across systems',
-			'Escalation with evidence',
-			'SQL performance tuning',
-			'Deadlock resolution',
-			'Go-live support',
-			'Knowledge base writing',
-			'Onboarding & training'
-		],
-		from: [{ label: 'Körber', href: '#korber' }]
-	},
-	{
 		label: 'Research methods',
 		items: [
 			'Participatory evaluation',
@@ -190,6 +177,19 @@ export const skills: SkillCategory[] = [
 			{ label: 'KIND Lab', href: '#kind-lab' },
 			{ label: 'ASSETS 2026', href: '#publications' }
 		]
+	},
+	{
+		label: 'Troubleshooting & support',
+		items: [
+			'Fault isolation across systems',
+			'Escalation with evidence',
+			'SQL performance tuning',
+			'Deadlock resolution',
+			'Go-live support',
+			'Knowledge base writing',
+			'Onboarding & training'
+		],
+		from: [{ label: 'Körber', href: '#korber' }]
 	},
 	{
 		label: 'Process & stakeholders',
@@ -297,8 +297,8 @@ export const contact: ContactLink[] = [
 
 export const navLinks = [
 	{ label: 'About', href: '/#about' },
-	{ label: 'Experience', href: '/#experience' },
 	{ label: 'Publications', href: '/#publications' },
+	{ label: 'Experience', href: '/#experience' },
 	{ label: 'Skills', href: '/#skills' },
 	{ label: 'Education', href: '/#education' }
 ];

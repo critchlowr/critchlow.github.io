@@ -7,7 +7,7 @@
 	import Education from '$lib/components/sections/Education.svelte';
 
 	const description =
-		'Ryan Critchlow: accessibility and UX research, and enterprise technical support. Peer-reviewed research at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts.';
+		'Ryan Critchlow is a UX researcher focused on accessibility, with a peer-reviewed paper at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts.';
 
 	const personSchema = {
 		'@context': 'https://schema.org',
@@ -16,7 +16,7 @@
 		url: 'https://ryancritchlow.com',
 		image: 'https://ryancritchlow.com/images/ryancritchlow.jpeg',
 		email: 'mailto:critchlow.rc@gmail.com',
-		jobTitle: 'Accessibility and UX Researcher; Technical Support Engineer',
+		jobTitle: 'UX Researcher',
 		identifier: 'https://orcid.org/0009-0007-7323-9177',
 		alumniOf: {
 			'@type': 'CollegeOrUniversity',
@@ -44,28 +44,19 @@
 </script>
 
 <svelte:head>
-	<title>Ryan Critchlow | Accessibility and UX research · Enterprise technical support</title>
+	<title>Ryan Critchlow | UX researcher focused on accessibility</title>
 	<meta name="description" content={description} />
 	<meta property="og:title" content="Ryan Critchlow" />
-	<meta
-		property="og:description"
-		content="Accessibility and UX research · Enterprise technical support"
-	/>
+	<meta property="og:description" content="UX researcher focused on accessibility" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://ryancritchlow.com" />
 	<meta property="og:image" content="https://ryancritchlow.com/images/og-card.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
-	<meta
-		property="og:image:alt"
-		content="Ryan Critchlow — Accessibility and UX research · Enterprise technical support"
-	/>
+	<meta property="og:image:alt" content="Ryan Critchlow — UX researcher focused on accessibility" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Ryan Critchlow" />
-	<meta
-		name="twitter:description"
-		content="Accessibility and UX research · Enterprise technical support"
-	/>
+	<meta name="twitter:description" content="UX researcher focused on accessibility" />
 	<meta name="twitter:image" content="https://ryancritchlow.com/images/og-card.png" />
 	<!--
 		{@html} is the only way to emit a JSON-LD block. The data is static and escaped
@@ -77,7 +68,7 @@
 
 <Hero />
 <About />
-<Experience />
 <Publications />
+<Experience />
 <Skills />
 <Education />
