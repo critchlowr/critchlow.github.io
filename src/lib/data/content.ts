@@ -4,15 +4,14 @@ export const hero = {
 	name: 'Ryan Critchlow',
 	tagline: 'UX researcher focused on accessibility',
 	summary:
-		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science. Before graduate school, I spent three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
-	availability:
-		'Open to UX research, accessibility engineer, and technical support engineer roles in the Pacific Northwest or remote.',
+		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science with a concentration in human-computer interaction. Before graduate school, I spent three years at Körber as the main contact for four enterprise warehouse-management accounts, gathering requirements from the people who used the software and writing them up for engineering.',
+	availability: 'Open to UX research roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
 export const about = {
 	paragraphs: [
-		"I've been building things for people my whole life, technical or otherwise. My father is a carpenter, so I grew up on job sites learning to build things that last and that suit the style and age of the homes they go into. I carried the problem-solving I learned there into my work as a technical support analyst at Körber Supply Chain, where I troubleshot SQL Server issues, supported customer go-lives, and administered warehouse management systems. I wanted to build the systems, not just support them, so I went back to Western Washington University for an M.S. in Computer Science. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
+		"I've been building things for people my whole life, technical or otherwise. My father is a carpenter, so I grew up on job sites learning to build things that last and that suit the style and age of the homes they go into. I carried the problem-solving I learned there into my work as a technical support analyst at Körber Supply Chain, where I troubleshot SQL Server issues, supported customer go-lives, and administered warehouse management systems. I wanted to work on how those systems are designed for the people using them, not just support them, so I went back to Western Washington University for an M.S. in Computer Science with a concentration in human-computer interaction. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
 		"My graduate work in the KIND Lab gave me experience designing ethical research studies with human participants. I led a project to build a Unity-based learning tool that helps neurodivergent children practice and learn language skills, using Claude to rapidly prototype it. I made the game's art myself. I scoped an IRB-approved study, designing the survey instruments, the analysis methods, and the game itself based on practitioner feedback. Before launching that study, I shifted to a pilot study with four families to refine the game's design with the children who would use it. The language assessment is left to a future team.",
 		"When I'm not working, you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking and reading, and I like being outside as much as I can, though sometimes I spend a little too long playing Stardew Valley, Age of Empires II, or Legend of Zelda."
 	]
@@ -66,11 +65,11 @@ export const experience: Experience[] = [
 		location: 'Bellingham, WA',
 		period: '2020 – 2023',
 		summary:
-			'Primary technical point of contact for four enterprise warehouse-management accounts, double the team average of two.',
+			'Primary point of contact for four enterprise warehouse-management accounts, double the team average of two, working between the warehouse teams who used the software and the engineers who built it.',
 		bullets: [
-			"Isolated faults across system boundaries, using WMS data to establish whether an issue originated in the warehouse system, the customer's order management system, Dynamics 365, or their network; resolved issues directly and escalated those that needed cloud or database administration expertise to the responsible team, with the evidence behind them",
-			'Translated stakeholder requests into bug fixes, platform and web page enhancements, and custom SQL reporting, with 46% more stable releases than the department average; resolved deadlocks on high-traffic production systems',
-			'Served as on-site technical lead at two system go-lives, and co-led a 30/60/90 onboarding framework that cut new-hire ramp time by 50%'
+			'Served as on-site technical lead at two system go-lives and one improvement trip, fixing bugs and refining process flows with warehouse staff as they worked',
+			'Wrote requirement specs for engineering when a customer request went beyond the statement of work, and adjusted scope with stakeholders when a request conflicted with technical feasibility, contract hours, or SLA commitments',
+			'Rebuilt ticket categorization during a NetSuite-to-ServiceNow migration so customers could report issues more easily, and trained four enterprise customers on the new system'
 		],
 		showSimulator: true
 	},
@@ -159,50 +158,23 @@ export const skills: SkillCategory[] = [
 		]
 	},
 	{
-		label: 'Troubleshooting & support',
-		items: [
-			'Fault isolation across systems',
-			'Escalation with evidence',
-			'SQL performance tuning',
-			'Deadlock resolution',
-			'Go-live support',
-			'Knowledge base writing',
-			'Onboarding & training'
-		],
-		from: [{ label: 'Körber', href: '#korber' }]
-	},
-	{
-		label: 'Process & stakeholders',
+		label: 'Stakeholders & requirements',
 		items: [
 			'Requirements gathering',
 			'Stakeholder management',
 			'Scope & change control',
 			'Prioritization & tradeoffs',
-			'Material takeoffs & scoping'
+			'On-site go-live support',
+			'Customer training'
 		],
-		from: [
-			{ label: 'Körber', href: '#korber' },
-			{ label: 'Atlas Woodworks', href: '#atlas' }
-		]
+		from: [{ label: 'Körber', href: '#korber' }]
 	},
 	{
-		label: 'Data & tools',
-		items: [
-			'T-SQL',
-			'MySQL',
-			'Python',
-			'Power BI',
-			'Tableau',
-			'C#',
-			'Java',
-			'JavaScript',
-			'Unity',
-			'Svelte',
-			'Git'
-		],
+		label: 'Prototyping & analysis',
+		items: ['Unity', 'C#', 'Python', 'SQL', 'Power BI', 'Tableau', 'Git'],
 		from: [
-			{ label: 'Körber', href: '#korber' },
 			{ label: 'KIND Lab', href: '#kind-lab' },
+			{ label: 'Körber', href: '#korber' },
 			{ label: 'M.S.', href: '#education' }
 		]
 	}

@@ -7,7 +7,7 @@
 	import Education from '$lib/components/sections/Education.svelte';
 
 	const description =
-		'Ryan Critchlow is a UX researcher focused on accessibility, with a peer-reviewed paper at ASSETS 2026, an M.S. in Computer Science, and three years as an L4 support analyst on enterprise warehouse-management accounts.';
+		'Ryan Critchlow is a UX researcher focused on accessibility, with a peer-reviewed paper presented at ASSETS 2026 and an M.S. in Computer Science concentrating in human-computer interaction.';
 
 	const personSchema = {
 		'@context': 'https://schema.org',
@@ -24,13 +24,13 @@
 		},
 		knowsAbout: [
 			'UX Research',
-			'Technical Support',
-			'Troubleshooting',
-			'Warehouse Management Systems',
-			'SQL',
-			'Human-Computer Interaction',
 			'Accessibility',
-			'Participatory Design'
+			'Human-Computer Interaction',
+			'Participatory Design',
+			'Qualitative Research',
+			'Semi-Structured Interviews',
+			'Thematic Analysis',
+			'Survey Design'
 		],
 		sameAs: [
 			'https://linkedin.com/in/ryan-critchlow',
