@@ -5,7 +5,8 @@ export const hero = {
 	tagline: 'UX researcher focused on accessibility',
 	summary:
 		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science with a concentration in human-computer interaction. Before graduate school, I spent three years at Körber as the main contact for four enterprise warehouse-management accounts, gathering requirements from the people who used the software and writing them up for engineering.',
-	availability: 'Open to UX research roles in the Pacific Northwest or remote.',
+	availability:
+		'Open to UX research roles. Based in Bellingham, WA, and open to relocating or working remotely.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
 };
 
