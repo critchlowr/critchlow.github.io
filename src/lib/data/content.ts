@@ -4,8 +4,7 @@ export const hero = {
 	name: 'Ryan Critchlow',
 	tagline: 'UX researcher focused on accessibility',
 	summary:
-		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper at ASSETS 2026 and hold an M.S. in Computer Science. Before graduate school, I spent three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
-	status: 'At ASSETS 2026 in Vila Nova de Gaia, Portugal, October 25–28.',
+		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science. Before graduate school, I spent three years as an L4 support analyst on enterprise warehouse-management accounts at Körber.',
 	availability:
 		'Open to UX research, accessibility engineer, and technical support engineer roles in the Pacific Northwest or remote.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
@@ -215,7 +214,7 @@ export const publications: Publication[] = [
 		title:
 			'Ableism Unchecked: A Literature Review of Disability Misconceptions in Computing Education',
 		venue:
-			'To appear in Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
+			'In Proceedings of the 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026), Vila Nova de Gaia, Portugal, October 2026',
 		status: 'published',
 		honor: 'Nominated for the Social Impact Award',
 		funding:
@@ -223,7 +222,10 @@ export const publications: Publication[] = [
 		summary:
 			"Little work has examined how accessibility education affects students' assumptions about disability, or the ableist framings that can coexist with reported empathy and knowledge gains. In the first of two studies, many of 53 students' reflections from a Computer Systems course activity on assistive technology showed knowledge gains and critical engagement, but a considerable portion also contained unsubstantiated claims about assistive technology, deficit-based language, and erasure of disabled people's agency. The second, a review of 35 accessibility education papers reporting attitudinal outcomes, identified six ableist categories, such as exclusion of disabled participants and normalization of inaccessibility, in intervention designs, evaluation instruments, study framing, and reported student data. The paper recommends explicitly teaching disability bias, designing evaluation instruments that detect disability misconceptions, and adopting disability-centric, reflexive research practices.",
 		contribution:
-			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. This is my first conference presentation.'
+			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. I presented the paper at the conference. It was my first conference talk.',
+		href: 'https://doi.org/10.1145/3797867.3829046',
+		hrefLabel: 'Read the paper in the ACM Digital Library',
+		external: true
 	},
 	{
 		authors: 'Anonymous authors',

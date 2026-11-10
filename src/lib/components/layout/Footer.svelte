@@ -10,7 +10,7 @@
 		</h2>
 		<p class="text-ink-muted text-body mt-3 max-w-xl">
 			Open to UX research, accessibility engineer, and technical support engineer roles in the
-			Pacific Northwest or remote. At ASSETS 2026? Come say hello.
+			Pacific Northwest or remote.
 		</p>
 		<ul class="mt-6 flex flex-wrap items-center gap-2">
 			{#each contact as link (link.href)}

@@ -12,7 +12,7 @@
 				height="96"
 				class="border-edge h-12 w-12 shrink-0 rounded-full border object-cover"
 			/>
-			<span>{hero.status} {hero.availability}</span>
+			<span>{hero.availability}</span>
 		</p>
 
 		<h1
