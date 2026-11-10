@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { contact } from '$lib/data/content';
+	import { contact, hero } from '$lib/data/content';
 	import ContactLink from '$lib/components/ui/ContactLink.svelte';
 </script>
 
@@ -8,10 +8,8 @@
 		<h2 id="contact-heading" class="text-ink-strong font-display text-title font-semibold">
 			Get in touch
 		</h2>
-		<p class="text-ink-muted text-body mt-3 max-w-xl">
-			Open to UX research, accessibility engineer, and technical support engineer roles in the
-			Pacific Northwest or remote. At ASSETS 2026? Come say hello.
-		</p>
+		<!-- The same line as the hero, so the two can't drift apart. -->
+		<p class="text-ink-muted text-body mt-3 max-w-xl">{hero.availability}</p>
 		<ul class="mt-6 flex flex-wrap items-center gap-2">
 			{#each contact as link (link.href)}
 				<li><ContactLink {link} /></li>
