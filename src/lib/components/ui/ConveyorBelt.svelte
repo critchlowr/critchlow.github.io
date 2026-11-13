@@ -39,7 +39,7 @@
 </script>
 
 <div
-	class="bg-warm-100 dark:bg-warm-800 relative rounded-b-xl pt-9 pb-3 select-none"
+	class="belt border-edge relative rounded-b-xl border-t pt-9 pb-3 select-none"
 	class:armed
 	class:playing
 	bind:this={root}
@@ -93,29 +93,28 @@
 		flex-shrink: 0;
 	}
 
+	/*
+		The belt's own colours. Dark mode swaps the parchment band for the page's
+		band colour, so the strip sits inside the card instead of standing out as a
+		brown slab.
+	*/
+	.belt {
+		--belt-line: var(--color-warm-600);
+		background: var(--color-warm-100);
+	}
+
+	:global(.dark) .belt {
+		--belt-line: var(--t-edge-hover);
+		background: var(--t-band);
+	}
+
 	.belt-track {
 		position: absolute;
 		bottom: 6px;
 		left: 0;
 		width: 100%;
 		height: 2px;
-		background: repeating-linear-gradient(
-			to right,
-			var(--color-warm-600) 0px,
-			var(--color-warm-600) 6px,
-			transparent 6px,
-			transparent 12px
-		);
-	}
-
-	:global(.dark) .belt-track {
-		background: repeating-linear-gradient(
-			to right,
-			var(--color-warm-400) 0px,
-			var(--color-warm-400) 6px,
-			transparent 6px,
-			transparent 12px
-		);
+		background: repeating-linear-gradient(to right, var(--belt-line) 0 6px, transparent 6px 12px);
 	}
 
 	.box {
@@ -147,11 +146,7 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		border: 1.5px solid var(--color-warm-600);
-	}
-
-	:global(.dark) .roller {
-		border-color: var(--color-warm-400);
+		border: 1.5px solid var(--belt-line);
 	}
 
 	.replay {

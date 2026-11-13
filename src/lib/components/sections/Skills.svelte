@@ -29,7 +29,7 @@
 					{#each group.from as place, i (place.href + place.label)}
 						{i > 0 ? (i === group.from.length - 1 ? ' and ' : ', ') : ''}<a
 							href={place.href}
-							class="text-link font-medium underline underline-offset-4">{place.label}</a
+							class="link font-medium">{place.label}</a
 						>
 					{/each}
 				</p>

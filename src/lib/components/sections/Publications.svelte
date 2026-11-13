@@ -23,41 +23,39 @@
 					</h3>
 					<div class="space-y-5">
 						{#each group.items as pub (pub.title)}
-							<div>
-								<Card as="article" class="p-6 md:p-7">
-									<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
-										{pub.title}
-									</h4>
-									<p class="text-ink-muted mt-2 text-base">{pub.authors}</p>
-									<p class="text-ink-muted mt-1 text-base italic">
-										{pub.venue}
+							<Card as="article" class="p-6 md:p-7">
+								<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
+									{pub.title}
+								</h4>
+								<p class="text-ink-muted mt-2 text-base">{pub.authors}</p>
+								<p class="text-ink-muted mt-1 text-base italic">
+									{pub.venue}
+								</p>
+								{#if pub.honor}
+									<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
+								{/if}
+								{#if pub.summary}
+									<p class="text-ink text-body mt-3">
+										{pub.summary}
 									</p>
-									{#if pub.honor}
-										<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
-									{/if}
-									{#if pub.summary}
-										<p class="text-ink text-body mt-3">
-											{pub.summary}
-										</p>
-									{/if}
-									<p class="border-edge text-ink-muted text-body mt-4 border-t pt-4">
-										<span class="text-ink-strong font-semibold">My contribution:</span>
-										{pub.contribution}
+								{/if}
+								<p class="border-edge text-ink-muted text-body mt-4 border-t pt-4">
+									<span class="text-ink-strong font-semibold">My contribution:</span>
+									{pub.contribution}
+								</p>
+								{#if pub.funding}
+									<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
+								{/if}
+								{#if pub.href}
+									<p class="mt-4">
+										<ArrowLink
+											href={pub.href}
+											label={pub.hrefLabel ?? 'Read more'}
+											external={pub.external}
+										/>
 									</p>
-									{#if pub.funding}
-										<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
-									{/if}
-									{#if pub.href}
-										<p class="mt-4">
-											<ArrowLink
-												href={pub.href}
-												label={pub.hrefLabel ?? 'Read more'}
-												external={pub.external}
-											/>
-										</p>
-									{/if}
-								</Card>
-							</div>
+								{/if}
+							</Card>
 						{/each}
 					</div>
 				</div>

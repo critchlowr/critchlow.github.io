@@ -10,11 +10,10 @@
 		createSeedOrders,
 		createSeedOrderLines,
 		createSeedInventory,
-		resetCounters,
+		resetPickIds,
 		waveRelease,
 		executePick,
 		reportEmpty,
-		createReplen,
 		completeReplen,
 		stageAll,
 		packOrder,
@@ -30,6 +29,7 @@
 		getReplenishableDemand,
 		nextPickId
 	} from '$lib/data/warehouse';
+	import Icon from '$lib/components/ui/Icon.svelte';
 	import WarehouseScene, { type SceneAction } from './WarehouseScene.svelte';
 	import OrderStatusBar from './OrderStatusBar.svelte';
 	import PickingPanel from './PickingPanel.svelte';
@@ -43,8 +43,15 @@
 	let { onclose }: Props = $props();
 
 	const CART_CAPACITY = 6;
-	/** How long the picker takes to walk an item back to the cart in the scene. */
+
+	// Delays that keep the model in step with the animations in WarehouseScene.
+	/** The picker's walk to the rack and back to the cart. */
 	const PICK_WALK_MS = 1800;
+	/** The runner's walk from receiving to the rack; stock lands when it ends. */
+	const REPLEN_CARRY_MS = 1500;
+	/** Wait before the runner sets off, so the slot is seen empty first. */
+	const REPLEN_AFTER_PICK_MS = 2000;
+	const REPLEN_AFTER_EMPTY_MS = 900;
 
 	// ── Game state ──
 	// $state is deeply reactive, so the model functions in warehouse.ts can
@@ -171,7 +178,7 @@
 
 	function reset() {
 		cancelTimers();
-		resetCounters();
+		resetPickIds();
 		orders = createSeedOrders();
 		orderLines = createSeedOrderLines();
 		inventory = createSeedInventory();
@@ -218,15 +225,14 @@
 			replensInFlight++;
 			narration += ` Replenishment scheduled: ${demand.replenQty} ${itemName} moving to ${demand.location}.`;
 
-			// Starts once the pick animation is done and the slot is visibly empty.
+			// Starts once the pick animation is done.
 			later(() => {
-				const replen = createReplen(demand.sku, demand.replenQty, demand.location);
 				log.replenishments.push({ itemName, qty: demand.replenQty, location: demand.location });
 				triggerScene({ type: 'replen', sku: demand.sku });
 
 				// Lands when the runner sets the carton down in the scene.
 				later(() => {
-					completeReplen(replen, inventory, picks);
+					completeReplen(demand.sku, demand.replenQty, inventory, picks);
 
 					const inv = inventory.find((i) => i.sku === demand.sku);
 					if (inv) inv.qtyAllocated += demand.replenQty;
@@ -247,8 +253,8 @@
 						`Replenishment complete. ${itemName} back at ${demand.location}. Pick re-issued.`
 					);
 					stageIfDone();
-				}, 1500);
-			}, 2000);
+				}, REPLEN_CARRY_MS);
+			}, REPLEN_AFTER_PICK_MS);
 		}
 
 		announce(narration);
@@ -289,17 +295,15 @@
 			const location = inv?.location ?? 'A-01-01';
 			const shortQty = getShortQtyForSku(pick.sku, picks);
 			const replenQty = inv ? Math.min(shortQty, inv.qtyAvailable) : shortQty;
-			const replen = createReplen(pick.sku, replenQty, location);
 			replensInFlight++;
 			log.replenishments.push({ itemName: itemNameFor(pick.sku), qty: replenQty, location });
 
-			// A beat first, so the slot is visibly empty before the runner sets off.
 			later(() => {
 				triggerScene({ type: 'replen', sku: pick.sku });
 
 				// Lands when the runner sets the carton down in the scene.
 				later(() => {
-					completeReplen(replen, inventory, picks);
+					completeReplen(pick.sku, replenQty, inventory, picks);
 
 					// Re-issued picks go to the back of the queue.
 					const reissued = picks.filter((p) => p.sku === pick.sku && p.status === 'Assigned');
@@ -308,8 +312,8 @@
 					replensInFlight--;
 					refreshOrderStatuses(orders, orderLines, picks);
 					stageIfDone();
-				}, 1500);
-			}, 900);
+				}, REPLEN_CARRY_MS);
+			}, REPLEN_AFTER_EMPTY_MS);
 		}
 
 		announce(
@@ -348,8 +352,7 @@
 
 	function handleShipShort(orderId: string) {
 		const missing = missingFor(orderId);
-		const result = packOrder(orderId, orderLines, picks, true);
-		if (!result.packed) return;
+		if (!packOrder(orderId, orderLines, picks, true)) return;
 
 		log.decisions.push({
 			orderId,
@@ -413,19 +416,7 @@
 			onclick={onclose}
 			aria-label="Close simulator"
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-5 w-5"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				aria-hidden="true"
-			>
-				<line x1="18" y1="6" x2="6" y2="18" />
-				<line x1="6" y1="6" x2="18" y2="18" />
-			</svg>
+			<Icon name="close" />
 		</button>
 	</div>
 </div>

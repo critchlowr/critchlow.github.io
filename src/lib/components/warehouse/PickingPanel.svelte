@@ -1,10 +1,12 @@
 <script lang="ts" module>
+	import type { Shortfall } from '$lib/data/warehouse';
+
 	/** An order at the pack station, and why it can or cannot ship complete. */
 	export interface PackQueueEntry {
 		orderId: string;
 		customer: string;
 		complete: boolean;
-		shortfall: { lineNum: number; sku: string; itemName: string; missingQty: number }[];
+		shortfall: Shortfall[];
 	}
 </script>
 

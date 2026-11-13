@@ -239,10 +239,10 @@ export const contact: ContactLink[] = [
 		display: 'critchlowr'
 	},
 	{
-		label: 'Resume',
+		label: 'Résumé',
 		href: '/Ryans_Resume_2026.pdf',
 		icon: 'resume',
-		display: 'Resume (PDF)'
+		display: 'Résumé (PDF)'
 	}
 ];
 

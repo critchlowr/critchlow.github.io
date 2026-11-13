@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { scrollable } from '$lib/actions/scrollable';
 	import Card from '$lib/components/ui/Card.svelte';
+	import Icon from '$lib/components/ui/Icon.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import WarehouseModal from '$lib/components/warehouse/WarehouseModal.svelte';
 	import WarehouseGame from '$lib/components/warehouse/WarehouseGame.svelte';
@@ -15,9 +16,7 @@
 <section class="pt-28 pb-20 md:pt-32" aria-labelledby="simulator-heading">
 	<div class="mx-auto max-w-4xl px-5">
 		<p class="mb-4">
-			<a href="/#experience" class="text-link text-sm font-semibold underline underline-offset-4"
-				>Back to Experience</a
-			>
+			<a href="/#experience" class="link text-sm font-semibold">Back to Experience</a>
 		</p>
 		<h1 id="simulator-heading" class="text-ink-strong font-display text-title mb-8 font-semibold">
 			WMS Simulator
@@ -78,24 +77,8 @@
 				</div>
 
 				<div class="pt-2">
-					<button
-						type="button"
-						class="bg-brand hover:bg-brand-strong text-on-brand inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
-						onclick={() => (open = true)}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-4 w-4"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							aria-hidden="true"
-						>
-							<path
-								fill-rule="evenodd"
-								d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm3 1h6v4H7V5zm2 6h2v2H9v-2z"
-								clip-rule="evenodd"
-							/>
-						</svg>
+					<button type="button" class="btn btn-primary" onclick={() => (open = true)}>
+						<Icon name="play" class="h-4 w-4" />
 						Run the simulator
 					</button>
 				</div>

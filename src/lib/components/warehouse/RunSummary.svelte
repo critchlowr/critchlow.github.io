@@ -105,11 +105,5 @@
 		{/if}
 	</ul>
 
-	<button
-		type="button"
-		class="bg-brand hover:bg-brand-strong text-on-brand mt-6 rounded-lg px-6 py-3 text-sm font-semibold transition-colors"
-		onclick={onreset}
-	>
-		Run another shift
-	</button>
+	<button type="button" class="btn btn-primary mt-6" onclick={onreset}> Run another shift </button>
 </div>
