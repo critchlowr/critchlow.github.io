@@ -18,15 +18,12 @@
 		<p class="text-ink-muted mt-12 text-sm">
 			&copy; {new Date().getFullYear()} Ryan Critchlow · Built to WCAG 2.2 AA. Every change is checked
 			with
-			<a href="https://github.com/dequelabs/axe-core" class="text-link underline underline-offset-4"
-				>axe</a
-			>
+			<a href="https://github.com/dequelabs/axe-core" class="link">axe</a>
 			and
-			<a href="https://pa11y.org/" class="text-link underline underline-offset-4">pa11y</a>
+			<a href="https://pa11y.org/" class="link">pa11y</a>
 			before it goes live. Found a barrier?
-			<a
-				href="mailto:critchlow.rc@gmail.com?subject=Accessibility%20barrier"
-				class="text-link underline underline-offset-4">Email me</a
+			<a href="mailto:critchlow.rc@gmail.com?subject=Accessibility%20barrier" class="link"
+				>Email me</a
 			>.
 		</p>
 	</div>

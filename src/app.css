@@ -192,6 +192,39 @@
 	color-scheme: dark;
 }
 
+/*
+	Shared controls. Written once here so every button and text link on the site
+	has the same shape, weight and hover behaviour.
+*/
+@utility btn {
+	@apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none;
+}
+
+@utility btn-primary {
+	background-color: var(--t-brand);
+	color: var(--t-on-brand);
+
+	&:hover {
+		background-color: var(--t-brand-strong);
+	}
+}
+
+@utility btn-secondary {
+	border: 1px solid var(--t-edge);
+	color: var(--t-ink);
+
+	&:hover {
+		border-color: var(--t-edge-hover);
+	}
+}
+
+/* Underlined at rest, so a link never depends on colour alone (SC 1.4.1). */
+@utility link {
+	color: var(--t-link);
+	text-decoration-line: underline;
+	text-underline-offset: 4px;
+}
+
 html {
 	scroll-behavior: smooth;
 	/* The header is fixed, so anchor jumps and focused elements land below it. */
@@ -229,7 +262,14 @@ html {
 
 	h1,
 	h2,
-	h3 {
+	h3,
+	h4 {
 		text-wrap: balance;
+	}
+
+	/* Avoids a last line of one short word where the browser supports it. */
+	p,
+	li {
+		text-wrap: pretty;
 	}
 }

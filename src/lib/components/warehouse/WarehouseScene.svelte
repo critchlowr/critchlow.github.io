@@ -24,7 +24,7 @@
 
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
-	import { physicalOnHand, type InventoryItem } from '$lib/data/warehouse';
+	import { WAREHOUSE_NAME, physicalOnHand, type InventoryItem } from '$lib/data/warehouse';
 
 	interface Props {
 		action: SceneAction;
@@ -295,7 +295,7 @@
 	<div class="scene-bg">
 		<!-- Building -->
 		<div class="building">
-			<div class="building-sign">Really Cool Big Warehouse</div>
+			<div class="building-sign">{WAREHOUSE_NAME}</div>
 		</div>
 
 		<!-- Floor -->

@@ -21,21 +21,11 @@
 			{hero.name}
 		</h1>
 		<p class="text-brand font-display mt-3 text-2xl italic">{hero.tagline}</p>
-		<p class="text-ink text-lede mt-6 max-w-2xl">{hero.summary}</p>
+		<p class="text-ink text-body sm:text-lede mt-6 max-w-2xl">{hero.summary}</p>
 
 		<div class="mt-8 flex flex-wrap items-center gap-3">
-			<a
-				href="#contact"
-				class="bg-brand hover:bg-brand-strong text-on-brand inline-block rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
-			>
-				Get in touch
-			</a>
-			<a
-				href={hero.resumeHref}
-				class="border-edge text-ink hover:border-edge-hover inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
-			>
-				Résumé (PDF)
-			</a>
+			<a href="#contact" class="btn btn-primary"> Get in touch </a>
+			<a href={hero.resumeHref} class="btn btn-secondary"> Résumé (PDF) </a>
 		</div>
 	</div>
 </section>

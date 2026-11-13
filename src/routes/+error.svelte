@@ -29,11 +29,6 @@
 				{page.error?.message ?? 'An unexpected error stopped this page from loading.'}
 			{/if}
 		</p>
-		<a
-			href="/"
-			class="bg-brand hover:bg-brand-strong text-on-brand mt-10 inline-block rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none"
-		>
-			Back to the main page
-		</a>
+		<a href="/" class="btn btn-primary mt-10"> Back to the main page </a>
 	</div>
 </section>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { navLinks } from '$lib/data/content';
+	import Icon from '$lib/components/ui/Icon.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	let activeSection = $state('');
@@ -33,27 +34,27 @@
 	// Scrollspy. The active link is recomputed from the scroll position on each
 	// frame, so it cannot drift out of step with the page.
 	$effect(() => {
-		const hashes = navLinks.map((l) => hashOf(l.href)).filter(Boolean);
+		// Looked up once. On a page without these sections (the simulator, the
+		// error page) the list is empty and no link is ever marked current.
+		const sections = navLinks
+			.map((l) => document.querySelector<HTMLElement>(hashOf(l.href) || ':not(*)'))
+			.filter((el) => el !== null);
 
 		function update() {
 			// A section is "current" once its top passes this line down the viewport.
 			const line = window.innerHeight * 0.3;
 
 			let current = '';
-			for (const hash of hashes) {
-				const el = document.querySelector(hash);
-				if (el && el.getBoundingClientRect().top <= line) {
-					current = hash;
-				}
+			for (const el of sections) {
+				if (el.getBoundingClientRect().top <= line) current = `#${el.id}`;
 			}
 
 			// The last section can be too short to reach the line, so it wins at the
 			// bottom of the page.
 			const atBottom =
 				window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-			if (atBottom && hashes.length > 0) {
-				current = hashes[hashes.length - 1];
-			}
+			const last = sections.at(-1);
+			if (atBottom && last) current = `#${last.id}`;
 
 			activeSection = current;
 		}
@@ -86,7 +87,7 @@
 		aria-label="Main navigation"
 		class="mx-auto flex max-w-4xl items-center justify-between px-5 py-3"
 	>
-		<a href="/" class="text-ink-strong flex items-center" aria-label="Ryan Critchlow - back to top">
+		<a href="/" class="text-ink-strong flex items-center" aria-label="Ryan Critchlow, home">
 			<!--
 				Drawn as a mask over currentColor rather than an <img>, so the line art
 				takes the ink colour and stays visible in dark mode. The negative margin
@@ -123,34 +124,7 @@
 				aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
 				class="text-ink-muted hover:bg-band rounded-lg p-2 transition-colors"
 			>
-				{#if mobileOpen}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						aria-hidden="true"
-					>
-						<line x1="18" y1="6" x2="6" y2="18" />
-						<line x1="6" y1="6" x2="18" y2="18" />
-					</svg>
-				{:else}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						aria-hidden="true"
-					>
-						<line x1="3" y1="12" x2="21" y2="12" />
-						<line x1="3" y1="6" x2="21" y2="6" />
-						<line x1="3" y1="18" x2="21" y2="18" />
-					</svg>
-				{/if}
+				<Icon name={mobileOpen ? 'close' : 'menu'} />
 			</button>
 		</div>
 	</nav>

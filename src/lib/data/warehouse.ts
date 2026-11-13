@@ -23,14 +23,12 @@ export type OrderStatus =
 	| 'Held';
 export type PickStatus =
 	'Assigned' | 'Picked' | 'Staged' | 'Packed' | 'Loaded' | 'Shipped' | 'Short' | 'Held';
-export type ReplenStatus = 'Pending' | 'In Transit' | 'Complete';
 export type GamePhase = 'pre-wave' | 'picking' | 'packing' | 'loading' | 'victory';
 
 export interface Order {
 	orderId: string;
 	customer: string;
 	status: OrderStatus;
-	createdAt: string;
 }
 
 export interface OrderLine {
@@ -57,11 +55,6 @@ export interface InventoryItem {
 	qtyMissing?: number;
 }
 
-/** What is actually on the shelf, as opposed to what the system thinks. */
-export function physicalOnHand(inv: InventoryItem): number {
-	return Math.max(0, inv.qtyOnHand - (inv.qtyMissing ?? 0));
-}
-
 export interface Pick {
 	pickId: string;
 	orderId: string;
@@ -70,182 +63,140 @@ export interface Pick {
 	fromLocation: string;
 	qtyToPick: number;
 	status: PickStatus;
+	/** Set on a Short pick that came from a location reported empty. */
 	source?: 'report-empty';
 }
 
-export interface Replen {
-	replenId: string;
+/** Units of one order line that no pick covers. */
+export interface Shortfall {
+	lineNum: number;
 	sku: string;
-	toLocation: string;
-	qty: number;
-	status: ReplenStatus;
+	itemName: string;
+	missingQty: number;
 }
 
 // ── Seed data ──
 
 export const WAREHOUSE_NAME = 'Really Cool Big Warehouse';
 
+const ITEM_NAMES: Record<string, string> = {
+	'BBP-01': 'Baby Bottle Pop',
+	'HMM-01': 'Hannah Montana Microphone',
+	'STH-01': 'Stiletto Hammer',
+	'MAYO-01': 'Mayonnaise',
+	'RTV-01': 'Really Tiny Violin',
+	'PEX-01': 'Photo of Your Ex'
+};
+
 export function createSeedOrders(): Order[] {
 	return [
-		{ orderId: 'ORD-001', customer: 'Little Baby', status: 'Open', createdAt: '2024-01-15' },
-		{
-			orderId: 'ORD-002',
-			customer: 'Giraffe Incorporated',
-			status: 'Open',
-			createdAt: '2024-01-16'
-		},
-		{
-			orderId: 'ORD-003',
-			customer: 'Kind of Insignificant Solutions',
-			status: 'Open',
-			createdAt: '2024-01-17'
-		}
+		{ orderId: 'ORD-001', customer: 'Little Baby', status: 'Open' },
+		{ orderId: 'ORD-002', customer: 'Giraffe Incorporated', status: 'Open' },
+		{ orderId: 'ORD-003', customer: 'Kind of Insignificant Solutions', status: 'Open' }
 	];
 }
 
 export function createSeedOrderLines(): OrderLine[] {
+	const line = (orderId: string, lineNum: number, sku: string, qtyOrdered: number): OrderLine => ({
+		orderId,
+		lineNum,
+		sku,
+		itemName: ITEM_NAMES[sku],
+		qtyOrdered,
+		qtyPicked: 0,
+		qtyShipped: 0
+	});
+
 	return [
-		{
-			orderId: 'ORD-001',
-			lineNum: 1,
-			sku: 'BBP-01',
-			itemName: 'Baby Bottle Pop',
-			qtyOrdered: 3,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-001',
-			lineNum: 2,
-			sku: 'HMM-01',
-			itemName: 'Hannah Montana Microphone',
-			qtyOrdered: 2,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-002',
-			lineNum: 1,
-			sku: 'STH-01',
-			itemName: 'Stiletto Hammer',
-			qtyOrdered: 4,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-002',
-			lineNum: 2,
-			sku: 'MAYO-01',
-			itemName: 'Mayonnaise',
-			qtyOrdered: 2,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-002',
-			lineNum: 3,
-			sku: 'RTV-01',
-			itemName: 'Really Tiny Violin',
-			qtyOrdered: 6,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-003',
-			lineNum: 1,
-			sku: 'PEX-01',
-			itemName: 'Photo of Your Ex',
-			qtyOrdered: 5,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-003',
-			lineNum: 2,
-			sku: 'BBP-01',
-			itemName: 'Baby Bottle Pop',
-			qtyOrdered: 2,
-			qtyPicked: 0,
-			qtyShipped: 0
-		},
-		{
-			orderId: 'ORD-003',
-			lineNum: 3,
-			sku: 'HMM-01',
-			itemName: 'Hannah Montana Microphone',
-			qtyOrdered: 1,
-			qtyPicked: 0,
-			qtyShipped: 0
-		}
+		line('ORD-001', 1, 'BBP-01', 3),
+		line('ORD-001', 2, 'HMM-01', 2),
+		line('ORD-002', 1, 'STH-01', 4),
+		line('ORD-002', 2, 'MAYO-01', 2),
+		line('ORD-002', 3, 'RTV-01', 6),
+		line('ORD-003', 1, 'PEX-01', 5),
+		line('ORD-003', 2, 'BBP-01', 2),
+		line('ORD-003', 3, 'HMM-01', 1)
 	];
 }
 
 export function createSeedInventory(): InventoryItem[] {
+	const stock = (
+		sku: string,
+		location: string,
+		qtyAvailable: number,
+		qtyOnHand: number,
+		qtyMissing?: number
+	): InventoryItem => ({
+		sku,
+		itemName: ITEM_NAMES[sku],
+		location,
+		qtyAvailable,
+		qtyOnHand,
+		qtyAllocated: 0,
+		...(qtyMissing ? { qtyMissing } : {})
+	});
+
 	return [
-		{
-			sku: 'BBP-01',
-			itemName: 'Baby Bottle Pop',
-			location: 'A-01-01',
-			qtyAvailable: 5,
-			qtyOnHand: 10,
-			qtyAllocated: 0
-		},
-		{
-			sku: 'HMM-01',
-			itemName: 'Hannah Montana Microphone',
-			location: 'A-01-02',
-			qtyAvailable: 4,
-			qtyOnHand: 8,
-			qtyAllocated: 0
-		},
-		{
-			sku: 'STH-01',
-			itemName: 'Stiletto Hammer',
-			location: 'B-02-01',
-			qtyAvailable: 3,
-			qtyOnHand: 6,
-			qtyAllocated: 0
-		},
-		{
-			sku: 'MAYO-01',
-			itemName: 'Mayonnaise',
-			location: 'B-02-03',
-			qtyAvailable: 2,
-			qtyOnHand: 5,
-			qtyAllocated: 0,
-			// The system counts 5 but the shelf is empty, so the picker finds an empty
-			// location and has to report it. Count discrepancies like this are routine.
-			qtyMissing: 5
-		},
-		{
-			sku: 'RTV-01',
-			itemName: 'Really Tiny Violin',
-			location: 'C-03-01',
-			qtyAvailable: 6,
-			qtyOnHand: 12,
-			qtyAllocated: 0
-		},
-		{
-			sku: 'PEX-01',
-			itemName: 'Photo of Your Ex',
-			location: 'C-03-02',
-			// Reserve is one unit under ORD-003's demand, so every run reaches the
-			// pack station with one order short and a hold-or-ship decision to make.
-			qtyAvailable: 2,
-			qtyOnHand: 2,
-			qtyAllocated: 0
-		}
+		//    SKU        location   reserve  on hand  missing
+		stock('BBP-01', 'A-01-01', 5, 10),
+		stock('HMM-01', 'A-01-02', 4, 8),
+		stock('STH-01', 'B-02-01', 3, 6),
+		// The system counts 5 but the shelf is empty, so the picker finds an empty
+		// location and has to report it. Count discrepancies like this are routine.
+		stock('MAYO-01', 'B-02-03', 2, 5, 5),
+		stock('RTV-01', 'C-03-01', 6, 12),
+		// Reserve is one unit under ORD-003's demand, so every run reaches the
+		// pack station with one order short and a hold-or-ship decision to make.
+		stock('PEX-01', 'C-03-02', 2, 2)
 	];
 }
 
-// ── Model ──
+// ── Lookups ──
+
+/** What is actually on the shelf, as opposed to what the system thinks. */
+export function physicalOnHand(inv: InventoryItem): number {
+	return Math.max(0, inv.qtyOnHand - (inv.qtyMissing ?? 0));
+}
+
+const stockOf = (sku: string, inventory: InventoryItem[]) => inventory.find((i) => i.sku === sku);
+
+const linesOf = (orderId: string, orderLines: OrderLine[]) =>
+	orderLines.filter((l) => l.orderId === orderId);
+
+/** The order line a pick, or an (order, line number) pair, belongs to. */
+const lineOf = (ref: { orderId: string; lineNum: number }, orderLines: OrderLine[]) =>
+	orderLines.find((l) => l.orderId === ref.orderId && l.lineNum === ref.lineNum);
+
+const picksOfLine = (line: OrderLine, picks: Pick[]) =>
+	picks.filter((p) => p.orderId === line.orderId && p.lineNum === line.lineNum);
+
+/** Units of a line no pick covers: ordered, less shipped, less every pick that has not shorted. */
+function missingQty(line: OrderLine, picks: Pick[]): number {
+	const covered = picksOfLine(line, picks)
+		.filter((p) => p.status !== 'Short')
+		.reduce((sum, p) => sum + p.qtyToPick, 0);
+	return line.qtyOrdered - line.qtyShipped - covered;
+}
+
+/** Whether any pick has the given status. */
+export function anyPicksWithStatus(picks: Pick[], status: PickStatus): boolean {
+	return picks.some((p) => p.status === status);
+}
+
+/** Total short quantity for a SKU across all short picks. */
+export function getShortQtyForSku(sku: string, picks: Pick[]): number {
+	return picks
+		.filter((p) => p.sku === sku && p.status === 'Short')
+		.reduce((sum, p) => sum + p.qtyToPick, 0);
+}
+
+// ── Pick ids ──
 
 let pickCounter = 0;
-let replenCounter = 0;
 
-export function resetCounters() {
+/** Restarts pick numbering at PCK-001, for a new run. */
+export function resetPickIds() {
 	pickCounter = 0;
-	replenCounter = 0;
 }
 
 export function nextPickId(): string {
@@ -253,10 +204,7 @@ export function nextPickId(): string {
 	return `PCK-${String(pickCounter).padStart(3, '0')}`;
 }
 
-function nextReplenId(): string {
-	replenCounter++;
-	return `RPL-${String(replenCounter).padStart(3, '0')}`;
-}
+// ── Wave and pick ──
 
 /**
  * Releases a wave: allocates stock to every open order and creates picks for
@@ -268,33 +216,27 @@ export function waveRelease(
 	inventory: InventoryItem[]
 ): Pick[] {
 	const newPicks: Pick[] = [];
-	const openOrders = orders.filter((o) => o.status === 'Open');
 
-	for (const order of openOrders) {
-		const lines = orderLines.filter((l) => l.orderId === order.orderId);
+	for (const order of orders.filter((o) => o.status === 'Open')) {
+		for (const line of linesOf(order.orderId, orderLines)) {
+			const inv = stockOf(line.sku, inventory);
+			if (!inv) continue;
 
-		for (const line of lines) {
-			const inv = inventory.find((i) => i.sku === line.sku);
-			const location = inv?.location ?? '???';
 			const needed = line.qtyOrdered - line.qtyPicked;
+			const unallocated = Math.max(0, inv.qtyOnHand - inv.qtyAllocated);
+			const assignQty = Math.min(unallocated, needed);
+			if (assignQty <= 0) continue;
 
-			if (needed <= 0) continue;
-
-			const available = inv ? Math.max(0, inv.qtyOnHand - inv.qtyAllocated) : 0;
-			const assignQty = Math.min(available, needed);
-
-			if (assignQty > 0 && inv) {
-				inv.qtyAllocated += assignQty;
-				newPicks.push({
-					pickId: nextPickId(),
-					orderId: order.orderId,
-					lineNum: line.lineNum,
-					sku: line.sku,
-					fromLocation: location,
-					qtyToPick: assignQty,
-					status: 'Assigned'
-				});
-			}
+			inv.qtyAllocated += assignQty;
+			newPicks.push({
+				pickId: nextPickId(),
+				orderId: order.orderId,
+				lineNum: line.lineNum,
+				sku: line.sku,
+				fromLocation: inv.location,
+				qtyToPick: assignQty,
+				status: 'Assigned'
+			});
 		}
 
 		order.status = 'Released';
@@ -303,22 +245,28 @@ export function waveRelease(
 	return newPicks;
 }
 
-/**
- * Confirms a pick: takes it from the shelf and credits the order line.
- */
-export function executePick(pick: Pick, inventory: InventoryItem[], orderLines: OrderLine[]): void {
-	const inv = inventory.find((i) => i.sku === pick.sku);
+/** Takes `qty` units of a pick off the shelf and credits its order line. */
+function takeFromShelf(
+	pick: Pick,
+	qty: number,
+	inventory: InventoryItem[],
+	orderLines: OrderLine[]
+) {
+	const inv = stockOf(pick.sku, inventory);
 	if (inv) {
-		inv.qtyOnHand -= pick.qtyToPick;
-		inv.qtyAllocated -= pick.qtyToPick;
+		inv.qtyOnHand -= qty;
+		inv.qtyAllocated -= qty;
 	}
 
-	const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
-	if (line) {
-		line.qtyPicked += pick.qtyToPick;
-	}
+	const line = lineOf(pick, orderLines);
+	if (line) line.qtyPicked += qty;
 
 	pick.status = 'Picked';
+}
+
+/** Confirms a pick: takes it from the shelf and credits the order line. */
+export function executePick(pick: Pick, inventory: InventoryItem[], orderLines: OrderLine[]): void {
+	takeFromShelf(pick, pick.qtyToPick, inventory, orderLines);
 }
 
 /**
@@ -338,29 +286,18 @@ export function reportEmpty(
 ): { pickedQty: number; canReplen: boolean } {
 	if (pick.status !== 'Assigned') return { pickedQty: 0, canReplen: false };
 
-	const inv = inventory.find((i) => i.sku === pick.sku);
-	const onHandQty = inv ? physicalOnHand(inv) : 0;
+	const inv = stockOf(pick.sku, inventory);
+	const onShelf = inv ? physicalOnHand(inv) : 0;
 	let pickedQty = 0;
 
-	if (onHandQty > 0 && onHandQty < pick.qtyToPick) {
-		// Partial pick: the picker takes what is there.
-		pickedQty = onHandQty;
-		const remainder = pick.qtyToPick - onHandQty;
+	if (onShelf > 0 && onShelf < pick.qtyToPick) {
+		// Partial pick: the picker takes what is there, and the remainder shorts.
+		pickedQty = onShelf;
+		const remainder = pick.qtyToPick - pickedQty;
 
 		pick.qtyToPick = pickedQty;
-		pick.status = 'Picked';
+		takeFromShelf(pick, pickedQty, inventory, orderLines);
 
-		if (inv) {
-			inv.qtyOnHand -= pickedQty;
-			inv.qtyAllocated -= pickedQty;
-		}
-
-		const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
-		if (line) {
-			line.qtyPicked += pickedQty;
-		}
-
-		// The remainder becomes a Short pick.
 		picks.push({
 			pickId: nextPickId(),
 			orderId: pick.orderId,
@@ -373,77 +310,60 @@ export function reportEmpty(
 		});
 	} else {
 		// Nothing usable on hand: the whole pick shorts.
-		if (inv) {
-			inv.qtyAllocated -= pick.qtyToPick;
-		}
 		pick.status = 'Short';
 		pick.source = 'report-empty';
 	}
 
-	// Zero out forward pick location; the report doubles as a count.
+	// The location is empty for everyone, so every other open pick of this SKU shorts too.
+	for (const other of picks) {
+		if (other.sku === pick.sku && other.status === 'Assigned') {
+			other.status = 'Short';
+			other.source = 'report-empty';
+		}
+	}
+
+	// The report doubles as a count: the location holds nothing, so nothing in it
+	// is allocated either.
 	if (inv) {
 		inv.qtyOnHand = 0;
 		inv.qtyMissing = 0;
-		inv.qtyAllocated = Math.max(0, inv.qtyAllocated);
+		inv.qtyAllocated = 0;
 	}
 
-	// The location is empty for everyone, so every other open pick of this SKU shorts too.
-	const otherAssigned = picks.filter(
-		(p) => p.sku === pick.sku && p.status === 'Assigned' && p.pickId !== pick.pickId
-	);
-	for (const other of otherAssigned) {
-		if (inv) inv.qtyAllocated -= other.qtyToPick;
-		other.status = 'Short';
-		other.source = 'report-empty';
-	}
-	if (inv) inv.qtyAllocated = Math.max(0, inv.qtyAllocated);
-
-	const canReplen = inv ? inv.qtyAvailable > 0 : false;
-	return { pickedQty, canReplen };
+	return { pickedQty, canReplen: !!inv && inv.qtyAvailable > 0 };
 }
 
-/**
- * Creates a replenishment task for a short SKU.
- */
-export function createReplen(sku: string, qty: number, toLocation: string): Replen {
-	return {
-		replenId: nextReplenId(),
-		sku,
-		toLocation,
-		qty,
-		status: 'Pending'
-	};
-}
+// ── Replenishment ──
 
 /**
- * Completes a replenishment: moves stock from reserve to the pick location, then
- * re-opens the short picks it covers.
+ * Completes a replenishment: moves up to `qty` units of a SKU from reserve to
+ * its pick location, then re-opens the short picks that stock covers.
  */
-export function completeReplen(replen: Replen, inventory: InventoryItem[], picks: Pick[]): void {
-	const inv = inventory.find((i) => i.sku === replen.sku);
+export function completeReplen(
+	sku: string,
+	qty: number,
+	inventory: InventoryItem[],
+	picks: Pick[]
+): void {
+	const inv = stockOf(sku, inventory);
 	if (inv) {
-		const moveQty = Math.min(replen.qty, inv.qtyAvailable);
+		const moveQty = Math.min(qty, inv.qtyAvailable);
 		inv.qtyAvailable -= moveQty;
 		inv.qtyOnHand += moveQty;
 	}
 
-	replen.status = 'Complete';
-
-	let remaining = replen.qty;
+	let remaining = qty;
 	for (const pick of picks) {
-		if (pick.sku === replen.sku && pick.status === 'Short' && remaining > 0) {
-			if (pick.qtyToPick <= remaining) {
-				pick.status = 'Assigned';
-				if (inv) inv.qtyAllocated += pick.qtyToPick;
-				remaining -= pick.qtyToPick;
-			}
-		}
+		if (pick.sku !== sku || pick.status !== 'Short' || pick.qtyToPick > remaining) continue;
+		pick.status = 'Assigned';
+		if (inv) inv.qtyAllocated += pick.qtyToPick;
+		remaining -= pick.qtyToPick;
 	}
 }
 
 /**
- * Unmet demand on an order line that reserve stock can cover, or null if none.
- * `replenQty` is the smaller of the unmet demand and the reserve on hand.
+ * Demand on an order line that no pick covers but reserve stock can, or null if
+ * there is none. `replenQty` is the smaller of that demand and the reserve.
  */
 export function getReplenishableDemand(
 	orderId: string,
@@ -451,74 +371,37 @@ export function getReplenishableDemand(
 	orderLines: OrderLine[],
 	picks: Pick[],
 	inventory: InventoryItem[]
-): { sku: string; unmetQty: number; replenQty: number; location: string } | null {
-	const line = orderLines.find((l) => l.orderId === orderId && l.lineNum === lineNum);
+): { sku: string; replenQty: number; location: string } | null {
+	const line = lineOf({ orderId, lineNum }, orderLines);
 	if (!line) return null;
 
-	// Units already covered by picks that have not shorted, or already shipped.
-	const activePicks = picks.filter(
-		(p) => p.orderId === orderId && p.lineNum === lineNum && p.status !== 'Short'
-	);
-	const coveredQty = activePicks.reduce((sum, p) => sum + p.qtyToPick, 0) + line.qtyShipped;
-	const unmetQty = line.qtyOrdered - coveredQty;
+	const unmet = missingQty(line, picks);
+	const inv = stockOf(line.sku, inventory);
+	if (unmet <= 0 || !inv || inv.qtyAvailable <= 0) return null;
 
-	if (unmetQty <= 0) return null;
-
-	const inv = inventory.find((i) => i.sku === line.sku);
-	if (!inv || inv.qtyAvailable <= 0) return null;
-
-	const replenQty = Math.min(unmetQty, inv.qtyAvailable);
-	return { sku: line.sku, unmetQty, replenQty, location: inv.location };
+	return {
+		sku: line.sku,
+		replenQty: Math.min(unmet, inv.qtyAvailable),
+		location: inv.location
+	};
 }
 
-/**
- * Whether an order still has short picks.
- */
-export function hasShortPicks(orderId: string, picks: Pick[]): boolean {
-	return picks.some((p) => p.orderId === orderId && p.status === 'Short');
-}
+// ── Stage, pack, load, ship ──
 
-/**
- * Total short quantity for a SKU across all short picks.
- */
-export function getShortQtyForSku(sku: string, picks: Pick[]): number {
-	return picks
-		.filter((p) => p.sku === sku && p.status === 'Short')
-		.reduce((sum, p) => sum + p.qtyToPick, 0);
-}
-
-/**
- * Whether any pick has the given status.
- */
-export function anyPicksWithStatus(picks: Pick[], status: PickStatus): boolean {
-	return picks.some((p) => p.status === status);
-}
-
-/**
- * Stages every picked item, across all orders.
- */
-export function stageAll(picks: Pick[]): void {
+/** Moves every pick with status `from` on to `to`, optionally for one order only. */
+function advance(picks: Pick[], from: PickStatus, to: PickStatus, orderId?: string): number {
+	let moved = 0;
 	for (const pick of picks) {
-		if (pick.status === 'Picked') {
-			pick.status = 'Staged';
-		}
+		if (pick.status !== from || (orderId && pick.orderId !== orderId)) continue;
+		pick.status = to;
+		moved++;
 	}
+	return moved;
 }
 
-/**
- * Can this order be packed complete — is every ordered unit accounted for?
- * False when a line is still short, or when a line has unstaged work outstanding.
- */
-export function canPackComplete(orderId: string, orderLines: OrderLine[], picks: Pick[]): boolean {
-	if (hasShortPicks(orderId, picks)) return false;
-
-	const lines = orderLines.filter((l) => l.orderId === orderId);
-	return lines.every((line) => {
-		const covered = picks
-			.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short')
-			.reduce((sum, p) => sum + p.qtyToPick, 0);
-		return covered + line.qtyShipped >= line.qtyOrdered;
-	});
+/** Stages every picked item, across all orders. */
+export function stageAll(picks: Pick[]): void {
+	advance(picks, 'Picked', 'Staged');
 }
 
 /**
@@ -529,70 +412,53 @@ export function getPackShortfall(
 	orderId: string,
 	orderLines: OrderLine[],
 	picks: Pick[]
-): { lineNum: number; sku: string; itemName: string; missingQty: number }[] {
-	const lines = orderLines.filter((l) => l.orderId === orderId);
-	const shortfall: { lineNum: number; sku: string; itemName: string; missingQty: number }[] = [];
-
-	for (const line of lines) {
-		const covered = picks
-			.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum && p.status !== 'Short')
-			.reduce((sum, p) => sum + p.qtyToPick, 0);
-		const missing = line.qtyOrdered - covered - line.qtyShipped;
-		if (missing > 0) {
-			shortfall.push({
-				lineNum: line.lineNum,
-				sku: line.sku,
-				itemName: line.itemName,
-				missingQty: missing
-			});
-		}
-	}
-
-	return shortfall;
+): Shortfall[] {
+	return linesOf(orderId, orderLines)
+		.map((line) => ({
+			lineNum: line.lineNum,
+			sku: line.sku,
+			itemName: line.itemName,
+			missingQty: missingQty(line, picks)
+		}))
+		.filter((s) => s.missingQty > 0);
 }
 
 /**
- * Pack one order. Packing is order-scoped: it asks whether the order is whole
+ * Can this order be packed complete — is every ordered unit accounted for?
+ * False when a line is still short, or has demand no pick covers.
+ */
+export function canPackComplete(orderId: string, orderLines: OrderLine[], picks: Pick[]): boolean {
+	const hasShort = picks.some((p) => p.orderId === orderId && p.status === 'Short');
+	return !hasShort && getPackShortfall(orderId, orderLines, picks).length === 0;
+}
+
+/**
+ * Packs one order. Packing is order-scoped: it asks whether the order is whole
  * enough to ship, which is where a short finally costs something.
  *
  * - Complete order: staged picks become Packed.
  * - Incomplete and force=false: refuses, so the player can wait for replen.
  * - Incomplete and force=true: packs what is there and the order ships partial.
+ *
+ * Returns whether anything was packed.
  */
 export function packOrder(
 	orderId: string,
 	orderLines: OrderLine[],
 	picks: Pick[],
 	force = false
-): { packed: boolean; packedCount: number; shortfall: number } {
-	const shortfall = getPackShortfall(orderId, orderLines, picks).reduce(
-		(sum, s) => sum + s.missingQty,
-		0
-	);
-
-	if (shortfall > 0 && !force) {
-		return { packed: false, packedCount: 0, shortfall };
-	}
-
-	let packedCount = 0;
-	for (const pick of picks) {
-		if (pick.orderId === orderId && pick.status === 'Staged') {
-			pick.status = 'Packed';
-			packedCount++;
-		}
-	}
-
-	return { packed: packedCount > 0, packedCount, shortfall };
+): boolean {
+	const complete = getPackShortfall(orderId, orderLines, picks).length === 0;
+	if (!complete && !force) return false;
+	return advance(picks, 'Staged', 'Packed', orderId) > 0;
 }
 
 /**
- * Hold a short order instead of shipping it partial. Its staged stock stays in
+ * Holds a short order instead of shipping it partial. Its staged stock stays in
  * staging and the order waits for the next inbound to ship complete.
  */
 export function holdOrder(orderId: string, orders: Order[], picks: Pick[]): void {
-	for (const pick of picks) {
-		if (pick.orderId === orderId && pick.status === 'Staged') pick.status = 'Held';
-	}
+	advance(picks, 'Staged', 'Held', orderId);
 	const order = orders.find((o) => o.orderId === orderId);
 	if (order) order.status = 'Held';
 }
@@ -602,39 +468,54 @@ export function holdOrder(orderId: string, orders: Order[], picks: Pick[]): void
  * nothing goes on the truck until it has been packed.
  */
 export function loadAll(picks: Pick[]): void {
-	for (const pick of picks) {
-		if (pick.status === 'Packed') {
-			pick.status = 'Loaded';
-		}
-	}
+	advance(picks, 'Packed', 'Loaded');
 }
 
-/**
- * Ships every loaded item and updates order statuses.
- * Returns the IDs of the orders that shipped something.
- */
-export function shipAllLoaded(picks: Pick[], orderLines: OrderLine[], orders: Order[]): string[] {
-	const affectedOrderIds = new Set<string>();
-
+/** Ships every loaded item, credits the order lines, and updates order statuses. */
+export function shipAllLoaded(picks: Pick[], orderLines: OrderLine[], orders: Order[]): void {
 	for (const pick of picks) {
-		if (pick.status === 'Loaded') {
-			pick.status = 'Shipped';
-			affectedOrderIds.add(pick.orderId);
-
-			const line = orderLines.find((l) => l.orderId === pick.orderId && l.lineNum === pick.lineNum);
-			if (line) {
-				line.qtyShipped += pick.qtyToPick;
-			}
-		}
+		if (pick.status !== 'Loaded') continue;
+		pick.status = 'Shipped';
+		const line = lineOf(pick, orderLines);
+		if (line) line.qtyShipped += pick.qtyToPick;
 	}
 
 	refreshOrderStatuses(orders, orderLines, picks);
+}
 
-	return [...affectedOrderIds];
+// ── Order status ──
+
+/** The status an in-flight order should show, worked out from its lines and picks. */
+function statusFor(order: Order, orderLines: OrderLine[], picks: Pick[]): OrderStatus {
+	const lines = linesOf(order.orderId, orderLines);
+	const orderPicks = picks.filter((p) => p.orderId === order.orderId);
+	const has = (status: PickStatus) => orderPicks.some((p) => p.status === status);
+
+	if (lines.every((l) => l.qtyShipped >= l.qtyOrdered)) return 'Shipped';
+
+	if (lines.some((l) => l.qtyShipped > 0)) {
+		// Every pick shipped or shorted: the order is done, even if partial.
+		const done = orderPicks.every((p) => p.status === 'Shipped' || p.status === 'Short');
+		return done ? 'Shipped' : 'Partial Ship';
+	}
+
+	if (orderPicks.length === 0) return 'Released';
+
+	// Everything shorted and nothing left to fulfil: the order is done.
+	if (orderPicks.every((p) => p.status === 'Short')) return 'Shipped';
+
+	// Otherwise the order takes the furthest status among its picks.
+	const pickingStill = has('Assigned') || has('Picked');
+	if (has('Loaded')) return 'Loaded';
+	// Packed short: the player chose to ship it incomplete.
+	if (has('Packed')) return has('Short') ? 'Partial Pack' : 'Packed';
+	if (has('Staged')) return pickingStill ? 'Partial Stage' : 'Staged';
+	return pickingStill ? 'Picking' : 'Released';
 }
 
 /**
- * Recomputes every order's status from its picks. Call after any pick changes.
+ * Recomputes every in-flight order's status from its picks. Call after any pick
+ * changes. Open, Shipped and Held orders are left as they are.
  */
 export function refreshOrderStatuses(
 	orders: Order[],
@@ -642,84 +523,23 @@ export function refreshOrderStatuses(
 	picks: Pick[]
 ): void {
 	for (const order of orders) {
-		if (order.status === 'Open') continue;
-		if (order.status === 'Shipped') continue;
-		if (order.status === 'Held') continue;
-
-		const orderPicks = picks.filter((p) => p.orderId === order.orderId);
-		const lines = orderLines.filter((l) => l.orderId === order.orderId);
-		const allLinesFullyShipped = lines.every((l) => l.qtyShipped >= l.qtyOrdered);
-
-		if (allLinesFullyShipped) {
-			order.status = 'Shipped';
-			continue;
-		}
-
-		const anyShipped = lines.some((l) => l.qtyShipped > 0);
-		if (anyShipped) {
-			// Every pick shipped or shorted: the order is done, even if partial.
-			const allPicksTerminal =
-				orderPicks.length > 0 &&
-				orderPicks.every((p) => p.status === 'Shipped' || p.status === 'Short');
-			if (allPicksTerminal) {
-				order.status = 'Shipped';
-			} else {
-				order.status = 'Partial Ship';
-			}
-			continue;
-		}
-
-		if (orderPicks.length === 0) {
-			order.status = 'Released';
-			continue;
-		}
-
-		// Everything shorted and nothing left to fulfil: the order is done.
-		const allShort = orderPicks.every((p) => p.status === 'Short');
-		if (allShort) {
-			order.status = 'Shipped';
-			continue;
-		}
-
-		// Otherwise the order takes the furthest status among its picks.
-		const hasLoaded = orderPicks.some((p) => p.status === 'Loaded');
-		const hasPacked = orderPicks.some((p) => p.status === 'Packed');
-		const hasStaged = orderPicks.some((p) => p.status === 'Staged');
-		const hasPicked = orderPicks.some((p) => p.status === 'Picked');
-		const hasAssigned = orderPicks.some((p) => p.status === 'Assigned');
-		const hasShort = orderPicks.some((p) => p.status === 'Short');
-		const hasActiveWork = hasAssigned || hasPicked;
-
-		if (hasLoaded) {
-			order.status = 'Loaded';
-		} else if (hasPacked && hasShort) {
-			// Packed short — the player chose to ship it incomplete.
-			order.status = 'Partial Pack';
-		} else if (hasPacked) {
-			order.status = 'Packed';
-		} else if (hasStaged && hasActiveWork) {
-			order.status = 'Partial Stage';
-		} else if (hasStaged) {
-			order.status = 'Staged';
-		} else if (hasPicked || hasAssigned) {
-			order.status = 'Picking';
-		} else {
-			order.status = 'Released';
-		}
+		if (order.status === 'Open' || order.status === 'Shipped' || order.status === 'Held') continue;
+		order.status = statusFor(order, orderLines, picks);
 	}
 }
 
-/**
- * The run is over once every order has either shipped or been held.
- */
+/** The run is over once every order has either shipped or been held. */
 export function allOrdersResolved(orders: Order[]): boolean {
 	return orders.every((o) => o.status === 'Shipped' || o.status === 'Held');
 }
 
+/** The steps a line's picks move through, in order. */
+const PROGRESS_STEPS = ['Picked', 'Staged', 'Packed', 'Loaded', 'Shipped'] as const;
+
 /**
  * Per-order progress counted in lines, not picks. Each line counts at the
- * furthest step its picks have reached; a line with a Short pick also counts
- * as shorted.
+ * furthest step any of its picks has reached, and at every step before it; a
+ * line with a Short pick also counts as shorted.
  */
 export function orderLineStatus(
 	orderId: string,
@@ -734,55 +554,23 @@ export function orderLineStatus(
 	shorted: number;
 	total: number;
 } {
-	const lines = orderLines.filter((l) => l.orderId === orderId);
-	const total = lines.length;
-	let picked = 0,
-		staged = 0,
-		packed = 0,
-		loaded = 0,
-		shipped = 0,
-		shorted = 0;
+	const lines = linesOf(orderId, orderLines);
+	// Lines that have reached each step, indexed like PROGRESS_STEPS.
+	const reached = PROGRESS_STEPS.map(() => 0);
+	let shorted = 0;
 
 	for (const line of lines) {
-		const linePicks = picks.filter((p) => p.orderId === orderId && p.lineNum === line.lineNum);
+		const statuses = picksOfLine(line, picks).map((p) => p.status);
+		if (statuses.includes('Short')) shorted++;
 
-		const hasShort = linePicks.some((p) => p.status === 'Short');
-		if (hasShort) shorted++;
-
-		if (linePicks.length === 0) continue;
-
-		// Each line counts at the furthest step any of its picks has reached.
-		const hasShipped = linePicks.some((p) => p.status === 'Shipped');
-		const hasLoaded = linePicks.some((p) => p.status === 'Loaded');
-		const hasPacked = linePicks.some((p) => p.status === 'Packed');
-		const hasStaged = linePicks.some((p) => p.status === 'Staged');
-		const hasPicked = linePicks.some((p) => p.status === 'Picked');
-		const allShort = linePicks.every((p) => p.status === 'Short');
-
-		if (allShort) {
-			// Only short picks: the line has not progressed.
-		} else if (hasShipped) {
-			shipped++;
-			loaded++;
-			packed++;
-			staged++;
-			picked++;
-		} else if (hasLoaded) {
-			loaded++;
-			packed++;
-			staged++;
-			picked++;
-		} else if (hasPacked) {
-			packed++;
-			staged++;
-			picked++;
-		} else if (hasStaged) {
-			staged++;
-			picked++;
-		} else if (hasPicked) {
-			picked++;
-		}
+		// -1 when no pick has been picked yet (all Assigned, Short or Held).
+		const furthest = Math.max(
+			-1,
+			...statuses.map((s) => PROGRESS_STEPS.indexOf(s as (typeof PROGRESS_STEPS)[number]))
+		);
+		for (let step = 0; step <= furthest; step++) reached[step]++;
 	}
 
-	return { picked, staged, packed, loaded, shipped, shorted, total };
+	const [picked, staged, packed, loaded, shipped] = reached;
+	return { picked, staged, packed, loaded, shipped, shorted, total: lines.length };
 }

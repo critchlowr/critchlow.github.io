@@ -16,10 +16,13 @@
 						<h3 class="text-ink-strong font-display text-2xl font-semibold">{job.title}</h3>
 						<p class="text-brand mt-0.5 text-base font-medium">{job.company}</p>
 					</div>
-					<p class="text-ink-muted shrink-0 text-sm sm:text-right">
-						{job.period}<span class="sm:hidden"> · </span><br
-							class="hidden sm:block"
-						/>{job.location}
+					<!-- One line with a dot between on phones; stacked and right-aligned beside the title above that. -->
+					<p
+						class="text-ink-muted flex shrink-0 flex-wrap gap-x-2 text-sm sm:flex-col sm:items-end"
+					>
+						<span>{job.period}</span>
+						<span class="sm:hidden" aria-hidden="true">·</span>
+						<span>{job.location}</span>
 					</p>
 				</div>
 				{#if job.summary}
@@ -34,7 +37,7 @@
 				{/if}
 				{#if job.showSimulator}
 					<p class="mt-5">
-						<a href="/simulator" class="text-link font-semibold underline underline-offset-4">
+						<a href="/simulator" class="link font-semibold">
 							See how the work flowed: try the WMS simulator
 						</a>
 					</p>
