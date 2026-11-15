@@ -158,11 +158,11 @@
 }
 
 /*
-	Palette "Sand, umber and moss". Earth tones taken from the site's illustrations:
-	the umber of their ink for text, moss green for links and buttons, and ochre as a
-	small accent (chips, selection) that becomes the button colour in dark mode. The
-	dark theme is peat brown, not black. Every text pair passes WCAG 2.2 AA; CI checks
-	the rendered pages with axe and pa11y.
+	Palette "Sand, umber and moss". Taken from the site's illustrations: the umber of
+	their ink for text and moss green for links and buttons, on a sand ground. There
+	is no second accent; chips and selection use a pale tint of the same green. The
+	dark theme is peat brown with a light moss for buttons and links. Every text pair
+	passes WCAG 2.2 AA; CI checks the rendered pages with axe and pa11y.
 */
 :root {
 	--t-surface: #f5f0e6;
@@ -178,7 +178,7 @@
 	--t-brand-strong: #2d4520;
 	--t-on-brand: #ffffff;
 	--t-link: #3d5a2c;
-	--t-chip: #edc86a;
+	--t-chip: #d9e3c8;
 	--t-focus: #3d5a2c;
 	color-scheme: light;
 }
@@ -193,12 +193,12 @@
 	--t-ink: #f0e8db;
 	--t-ink-muted: #c2b5a2;
 	--t-ink-strong: #ffffff;
-	--t-brand: #e5b552;
-	--t-brand-strong: #efcb80;
+	--t-brand: #bdd893;
+	--t-brand-strong: #d3e6b3;
 	--t-on-brand: #1e1914;
 	--t-link: #bdd893;
-	--t-chip: #4a3a17;
-	--t-focus: #e5b552;
+	--t-chip: #36432b;
+	--t-focus: #bdd893;
 	color-scheme: dark;
 }
 
