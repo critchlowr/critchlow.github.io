@@ -1,27 +1,28 @@
 <script lang="ts">
 	import { education } from '$lib/data/content';
-	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import Entry from '$lib/components/ui/Entry.svelte';
 </script>
 
-<SectionWrapper id="education" headingId="education-heading" title="Education">
-	<ul class="space-y-10">
+<!-- Shares a row with Skills on wide screens; the page lays the two out. -->
+<section id="education" aria-labelledby="education-heading">
+	<h2 id="education-heading" class="font-display text-ink-strong text-section mb-9 font-extrabold">
+		Education
+	</h2>
+	<ul class="space-y-8">
 		{#each education as edu (edu.degree)}
-			<Entry title={edu.degree}>
-				{#snippet meta()}
-					<p>{edu.period}</p>
-				{/snippet}
-				{#snippet lead()}
-					<p class="text-brand mt-0.5 font-medium">{edu.school}</p>
-				{/snippet}
+			<li>
+				<h3 class="font-display text-ink-strong text-[1.6rem] leading-[1.1] font-bold">
+					{edu.degree}
+				</h3>
+				<p class="text-olive mt-1 font-bold">{edu.school}</p>
+				<p class="text-ink-muted text-sm font-semibold">{edu.period}</p>
 				{#if edu.notes && edu.notes.length > 0}
-					<ul class="text-ink-muted text-body list-disc space-y-1 pl-5">
+					<ul class="text-ink-muted text-body mt-2 space-y-1">
 						{#each edu.notes as note (note)}
 							<li>{note}</li>
 						{/each}
 					</ul>
 				{/if}
-			</Entry>
+			</li>
 		{/each}
 	</ul>
-</SectionWrapper>
+</section>

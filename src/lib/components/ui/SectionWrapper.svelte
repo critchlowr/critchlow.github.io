@@ -5,24 +5,24 @@
 		id: string;
 		headingId: string;
 		title: string;
+		/** Sets the section on the sand band instead of the page colour. */
+		band?: boolean;
 		children: Snippet;
 	}
 
-	let { id, headingId, title, children }: Props = $props();
+	let { id, headingId, title, band = false, children }: Props = $props();
 </script>
 
 <!--
-	One plain section: a heading and its content on one container width, so every
-	section shares the same left edge. A rule across the column marks where each one
-	starts; there are no numbers or reveal animations.
+	One section: a large heading and its content on the shared page width. Sections
+	are told apart by their ground colour and their own layout, so there is no rule
+	between them.
 -->
-<section {id} aria-labelledby={headingId}>
-	<div class="mx-auto max-w-4xl px-5">
-		<div class="border-edge border-t py-16 md:py-20">
-			<h2 id={headingId} class="text-ink-strong text-title mb-10 font-extrabold">
-				{title}
-			</h2>
-			{@render children()}
-		</div>
+<section {id} aria-labelledby={headingId} class={[band && 'bg-band']}>
+	<div class="wrap py-16 md:py-24">
+		<h2 id={headingId} class="font-display text-ink-strong text-section mb-9 font-extrabold">
+			{title}
+		</h2>
+		{@render children()}
 	</div>
 </section>

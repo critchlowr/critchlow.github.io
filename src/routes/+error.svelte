@@ -13,7 +13,7 @@
 	<div class="mx-auto w-full max-w-2xl">
 		<!-- Georgia, from the header logo. Masked so the line art takes the ink colour in both themes. -->
 		<span class="logo-mark text-ink-strong block h-28 w-44 bg-current" aria-hidden="true"></span>
-		<h1 id="error-heading" class="text-ink-strong text-display mt-8 font-extrabold">
+		<h1 id="error-heading" class="font-display text-ink-strong text-display mt-8 font-extrabold">
 			{notFound ? 'Page not found' : 'Something went wrong'}
 		</h1>
 		<p class="text-ink text-body mt-6 max-w-xl">

@@ -6,15 +6,16 @@
 	 */
 	interface Props {
 		set: 'bar' | 'saw' | 'bench' | 'research' | 'warehouse';
+		/** Multiplies every object's width; the sizes below are for a 10rem column. */
+		scale?: number;
 	}
 
-	let { set }: Props = $props();
+	let { set, scale = 1 }: Props = $props();
 
 	// Intrinsic sizes from each SVG's viewBox, for the width/height attributes.
 	const icons = {
 		beaker: [99, 149],
 		coupe: [110, 108],
-		egg: [72, 42],
 		spoons: [55, 133],
 		lumber: [180, 82],
 		saw: [200, 109],
@@ -56,10 +57,7 @@
 	};
 </script>
 
-<div
-	class="flex flex-wrap items-end justify-end gap-x-2 gap-y-1 md:justify-start"
-	aria-hidden="true"
->
+<div class="stickers flex flex-wrap items-end gap-x-3 gap-y-2" aria-hidden="true">
 	{#each sets[set] as [icon, w, tilt] (icon)}
 		<img
 			class="ink-art h-auto"
@@ -69,7 +67,24 @@
 			height={icons[icon][1]}
 			loading="lazy"
 			decoding="async"
-			style="width: {w}px; rotate: {tilt}deg;"
+			style="width: {w * scale}px; --tilt: {tilt}deg;"
 		/>
 	{/each}
 </div>
+
+<style>
+	/*
+		Each object rests at its own tilt. `--lean` is set by a hovered row, and tips the
+		objects a little further the same way.
+	*/
+	img {
+		rotate: calc(var(--tilt) * var(--lean, 1));
+		transform-origin: 50% 100%;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		img {
+			transition: rotate 0.35s var(--ease-spring);
+		}
+	}
+</style>

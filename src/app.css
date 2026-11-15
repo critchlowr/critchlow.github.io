@@ -4,11 +4,25 @@
 	Self-hosted, so the font stack declared below is the one that loads. Atkinson
 	Hyperlegible was drawn by the Braille Institute so that letters that are easy to
 	confuse (I, l, 1; O, 0) stay distinct for low-vision readers. One family carries
-	the whole site; its monospace cut sets the simulator's location and order codes.
+	text and controls; its monospace cut sets the simulator's location and order codes.
+	There is no italic file: nothing on the site is set in italics.
 */
 @import '@fontsource-variable/atkinson-hyperlegible-next';
-@import '@fontsource-variable/atkinson-hyperlegible-next/wght-italic.css';
 @import '@fontsource-variable/atkinson-hyperlegible-mono';
+
+/*
+	Headings on the main page: Bricolage Grotesque (SIL Open Font License) at its
+	narrowest width. The file is a 23 KB cut of the full family with the width pinned
+	at 75, weights 600 to 800 and basic Latin only. scripts/make-display-font.mjs
+	rebuilds it.
+*/
+@font-face {
+	font-family: 'Bricolage Grotesque Condensed';
+	font-style: normal;
+	font-weight: 600 800;
+	font-display: swap;
+	src: url('./lib/assets/fonts/bricolage-grotesque-condensed.woff2') format('woff2');
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -84,10 +98,10 @@
 	--color-plum-900: #583a5c;
 	--color-plum-950: #301a33;
 
-	/* Typefaces. --font-display is the same family: headings differ by weight and size. */
+	/* Typefaces. --font-display is the condensed heading face, used on the main page. */
 	--font-sans:
 		'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-	--font-display: var(--font-sans);
+	--font-display: 'Bricolage Grotesque Condensed', var(--font-sans);
 	--font-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Consolas, monospace;
 
 	/*
@@ -101,6 +115,12 @@
 	--text-title: 2.25rem;
 	--text-title--line-height: 1.1;
 	--text-title--letter-spacing: -0.02em;
+	/* Section headings and row titles on the main page, set in the display face. */
+	--text-section: clamp(2.75rem, 7vw, 4.5rem);
+	--text-section--line-height: 0.95;
+	--text-section--letter-spacing: -0.02em;
+	--text-row: clamp(1.6rem, 3vw, 2.1rem);
+	--text-row--line-height: 1.05;
 	--text-entry: 1.3125rem;
 	--text-entry--line-height: 1.25;
 	--text-lede: 1.25rem;
@@ -141,6 +161,14 @@
 	--color-footer: var(--t-footer);
 	--color-band: var(--t-band);
 	--color-chip: var(--t-chip);
+	--color-outline: var(--t-outline);
+	--color-hero: var(--t-hero);
+	--color-on-hero: var(--t-on-hero);
+	--color-on-hero-muted: var(--t-on-hero-muted);
+	--color-feature: var(--t-feature);
+	--color-on-feature: var(--t-on-feature);
+	--color-on-feature-muted: var(--t-on-feature-muted);
+	--color-olive: var(--t-olive);
 
 	/*
 		Simulator action fills. Each carries white text and clears 4.5:1 against it,
@@ -158,48 +186,88 @@
 }
 
 /*
-	Palette "Sand, umber and moss". Taken from the site's illustrations: the umber of
-	their ink for text and moss green for links and buttons, on a sand ground. There
-	is no second accent; chips and selection use a pale tint of the same green. The
-	dark theme is peat brown with a light moss for buttons and links. Every text pair
-	passes WCAG 2.2 AA; CI checks the rendered pages with axe and pa11y.
+	Palette "Brick, bone and olive". Bone paper and umber ink carry the reading. Brick
+	burgundy is the brand colour: the hero block, buttons and links. Deep olive is
+	used once, for the published paper, and a pale olive tints chips. Controls and
+	blocks are outlined in ink with a hard offset shadow, like the outlined
+	illustrations. Every text pair passes WCAG 2.2 AA; CI checks the rendered pages
+	with axe and pa11y.
 */
 :root {
-	--t-surface: #f5f0e6;
-	--t-surface-raised: #fffdf8;
-	--t-band: #ebe3d4;
-	--t-footer: #ebe3d4;
-	--t-edge: #d6cab6;
-	--t-edge-hover: #857663;
-	--t-ink: #2a2017;
-	--t-ink-muted: #5a4d3f;
-	--t-ink-strong: #1f170f;
-	--t-brand: #3d5a2c;
-	--t-brand-strong: #2d4520;
-	--t-on-brand: #ffffff;
-	--t-link: #3d5a2c;
-	--t-chip: #d9e3c8;
-	--t-focus: #3d5a2c;
+	--t-surface: #f5efe2;
+	--t-surface-raised: #fffaf0;
+	--t-band: #eadfc8;
+	--t-footer: #eadfc8;
+	--t-edge: #cdbfa3;
+	--t-edge-hover: #231a12;
+	--t-ink: #231a12;
+	--t-ink-muted: #54473a;
+	--t-ink-strong: #1a120b;
+	--t-brand: #7a2a26;
+	--t-brand-strong: #5c1d1b;
+	--t-on-brand: #fff8ec;
+	--t-link: #7a2a26;
+	--t-chip: #dfe0bd;
+	--t-focus: #231a12;
+	--t-outline: #231a12;
+	--t-shadow: #231a12;
+	--t-hero: #7a2a26;
+	--t-on-hero: #fff3e0;
+	--t-on-hero-muted: #f3d9cb;
+	--t-feature: #3b4420;
+	--t-on-feature: #f5efe2;
+	--t-on-feature-muted: #dcdcbf;
+	--t-olive: #4a5325;
 	color-scheme: light;
 }
 
 :root.dark {
-	--t-surface: #1e1914;
-	--t-surface-raised: #2a231b;
-	--t-band: #251f18;
-	--t-footer: #251f18;
-	--t-edge: #453a2d;
-	--t-edge-hover: #9c8d79;
-	--t-ink: #f0e8db;
-	--t-ink-muted: #c2b5a2;
+	--t-surface: #1c1712;
+	--t-surface-raised: #272019;
+	--t-band: #241e17;
+	--t-footer: #241e17;
+	--t-edge: #4a3e30;
+	--t-edge-hover: #f1e9dc;
+	--t-ink: #f1e9dc;
+	--t-ink-muted: #c8bba8;
 	--t-ink-strong: #ffffff;
-	--t-brand: #bdd893;
-	--t-brand-strong: #d3e6b3;
-	--t-on-brand: #1e1914;
-	--t-link: #bdd893;
-	--t-chip: #36432b;
-	--t-focus: #bdd893;
+	--t-brand: #f0a898;
+	--t-brand-strong: #f7c1b4;
+	--t-on-brand: #1c1712;
+	--t-link: #f0a898;
+	--t-chip: #37402a;
+	--t-focus: #f1e9dc;
+	--t-outline: #f1e9dc;
+	--t-shadow: #000000;
+	--t-hero: #5e1f1d;
+	--t-on-hero: #fff3e0;
+	--t-on-hero-muted: #f3d9cb;
+	--t-feature: #2f3619;
+	--t-on-feature: #f1e9dc;
+	--t-on-feature-muted: #d3d3b4;
+	--t-olive: #c5d49a;
 	color-scheme: dark;
+}
+
+/* Blocks with their own dark ground take a light focus ring in both themes. */
+.on-dark {
+	--t-focus: #fff3e0;
+}
+
+/* One page width, shared by the header, every section and the footer. */
+@utility wrap {
+	max-width: 68rem;
+	margin-inline: auto;
+	padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+/*
+	The outlined block: an ink border and a hard offset shadow. `--lift` is the
+	shadow's offset, so a control can press into it.
+*/
+@utility inked {
+	border: 2.5px solid var(--t-outline);
+	box-shadow: var(--lift, 4px) var(--lift, 4px) 0 var(--t-shadow);
 }
 
 /*
@@ -207,7 +275,34 @@
 	has the same shape, weight and hover behaviour.
 */
 @utility btn {
-	@apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-base font-bold transition-colors motion-reduce:transition-none;
+	@apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-base font-bold;
+	--lift: 3px;
+	border: 2.5px solid var(--t-outline);
+	box-shadow: var(--lift) var(--lift) 0 var(--t-shadow);
+	transition:
+		translate 0.12s ease-out,
+		box-shadow 0.12s ease-out,
+		background-color 0.15s;
+
+	/* The button moves into its shadow: a little on hover, all the way when pressed. */
+	&:hover {
+		translate: 1px 1px;
+		--lift: 2px;
+	}
+
+	&:active {
+		translate: 3px 3px;
+		--lift: 0px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+
+		&:hover,
+		&:active {
+			translate: none;
+		}
+	}
 }
 
 @utility btn-primary {
@@ -220,12 +315,8 @@
 }
 
 @utility btn-secondary {
-	border: 1px solid var(--t-edge);
+	background-color: var(--t-surface-raised);
 	color: var(--t-ink);
-
-	&:hover {
-		border-color: var(--t-edge-hover);
-	}
 }
 
 /* Underlined at rest, so a link never depends on colour alone (SC 1.4.1). */
@@ -236,9 +327,10 @@
 }
 
 /*
-	The illustrations are drawn in dark ink. On the dark theme a thin light edge, like
-	a die-cut sticker, keeps their outlines readable.
+	The illustrations are drawn in dark ink. On the dark theme, and on the brick hero in
+	both themes, a thin light edge like a die-cut sticker keeps their outlines readable.
 */
+.sticker-edge,
 .dark .ink-art {
 	filter: drop-shadow(1px 0 0 rgb(255 248 235 / 0.8)) drop-shadow(-1px 0 0 rgb(255 248 235 / 0.8))
 		drop-shadow(0 1px 0 rgb(255 248 235 / 0.8)) drop-shadow(0 -1px 0 rgb(255 248 235 / 0.8));

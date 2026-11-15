@@ -80,13 +80,10 @@
 <svelte:window onkeydown={onWindowKeydown} />
 
 <header
-	class="border-edge bg-surface/85 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md"
+	class="border-outline bg-surface/90 fixed top-0 right-0 left-0 z-40 border-b-[2.5px] backdrop-blur-md"
 	onfocusout={onHeaderFocusout}
 >
-	<nav
-		aria-label="Main navigation"
-		class="mx-auto flex max-w-4xl items-center justify-between px-5 py-3"
-	>
+	<nav aria-label="Main navigation" class="wrap flex items-center justify-between py-2">
 		<a href="/" class="text-ink-strong flex items-center" aria-label="Ryan Critchlow, home">
 			<!--
 				Drawn as a mask over currentColor rather than an <img>, so the line art
@@ -101,7 +98,7 @@
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
-					class="nav-link relative px-3 py-1.5 text-sm font-medium transition-colors {activeSection ===
+					class="nav-link relative px-3 py-3 text-sm font-semibold transition-colors {activeSection ===
 					hashOf(link.href)
 						? 'text-ink-strong is-active'
 						: 'text-ink-muted hover:text-ink-strong'}"
@@ -122,7 +119,7 @@
 				aria-expanded={mobileOpen}
 				aria-controls="mobile-menu"
 				aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-				class="text-ink-muted hover:bg-band rounded-lg p-2 transition-colors"
+				class="text-ink-muted hover:bg-band rounded-lg p-3 transition-colors"
 			>
 				<Icon name={mobileOpen ? 'close' : 'menu'} />
 			</button>
@@ -136,13 +133,13 @@
 	{#if mobileOpen}
 		<div
 			id="mobile-menu"
-			class="border-edge bg-surface max-h-[calc(100dvh-4rem)] overflow-y-auto border-t px-5 py-2 md:hidden"
+			class="border-edge bg-surface max-h-[calc(100dvh-4rem)] overflow-y-auto border-t px-[clamp(1.25rem,4vw,2.5rem)] py-2 md:hidden"
 		>
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
 					onclick={closeMobile}
-					class="block rounded-md px-3 py-2 text-sm font-medium transition-colors {activeSection ===
+					class="block rounded-md px-3 py-3 text-base font-semibold transition-colors {activeSection ===
 					hashOf(link.href)
 						? 'bg-chip text-ink-strong'
 						: 'text-ink-muted hover:bg-band'}"
@@ -164,8 +161,8 @@
 		content: '';
 		position: absolute;
 		inset-inline: 0.75rem;
-		bottom: 0.15rem;
-		height: 2px;
+		bottom: 0.45rem;
+		height: 3px;
 		border-radius: 2px;
 		background: var(--t-brand);
 		transform: scaleX(0);

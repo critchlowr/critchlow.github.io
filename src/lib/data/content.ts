@@ -12,13 +12,14 @@ export const hero = {
 
 export const about = {
 	paragraphs: [
-		"I'm a UX researcher and a journeyman carpenter in Bellingham, Washington. I've run in-home studies with neurodivergent children and their families, co-authored a literature review of disability misconceptions in computing education, and supported enterprise warehouse systems at Körber. For the KIND Lab study I built the game in Unity and made its art myself.",
+		"I'm a UX researcher and a journeyman carpenter in Bellingham, Washington. For the KIND Lab study I built the game in Unity and made its art myself.",
 		"Outside of work, I'm usually on a trail with Georgia, my chocolate lab, training for a half marathon, or on a road bike. I also read, make cocktails, and play Stardew Valley, Age of Empires II, and Legend of Zelda."
 	]
 };
 
 // Each role is one summary line plus at most three bullets. The full detail lives in
-// the résumé PDF, which is one click away from every section.
+// the résumé PDF, which is one click away from every section. Roles marked `open`
+// start unfolded; the rest are one row each until the reader opens them.
 export const experience: Experience[] = [
 	{
 		title: 'Journeyman Carpenter',
@@ -26,6 +27,7 @@ export const experience: Experience[] = [
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
+		open: true,
 		summary:
 			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026.',
 		bullets: [
@@ -42,6 +44,7 @@ export const experience: Experience[] = [
 		company: 'KIND Lab, Western Washington University',
 		location: 'Bellingham, WA',
 		period: 'Winter 2025 – June 2026',
+		open: true,
 		summary:
 			'Designed and ran a participatory user study with neurodivergent children and their families: literature review, survey instruments, assessment methodology, and data collection plans.',
 		bullets: [
@@ -65,6 +68,7 @@ export const experience: Experience[] = [
 		company: 'Körber Supply Chain (now Infios)',
 		location: 'Bellingham, WA',
 		period: '2020 – 2023',
+		open: true,
 		summary:
 			'Primary point of contact for four enterprise warehouse-management accounts, double the team average of two, working between the warehouse teams who used the software and the engineers who built it.',
 		bullets: [
@@ -252,9 +256,9 @@ export const contact: ContactLink[] = [
 
 // In page order: the header's scrollspy walks these top to bottom.
 export const navLinks = [
+	{ label: 'About', href: '/#about' },
 	{ label: 'Research', href: '/#publications' },
 	{ label: 'Experience', href: '/#experience' },
 	{ label: 'Education', href: '/#education' },
-	{ label: 'Skills', href: '/#skills' },
-	{ label: 'About', href: '/#about' }
+	{ label: 'Skills', href: '/#skills' }
 ];

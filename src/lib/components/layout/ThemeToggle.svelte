@@ -15,7 +15,7 @@
 <button
 	onclick={theme.toggle}
 	aria-label={labels[theme.mode]}
-	class="text-ink-muted hover:bg-band hover:text-ink-strong rounded-lg p-2 transition-colors"
+	class="text-ink-muted hover:bg-band hover:text-ink-strong rounded-lg p-3 transition-colors"
 >
 	<Icon name={icons[theme.mode]} />
 </button>

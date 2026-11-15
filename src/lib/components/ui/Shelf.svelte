@@ -8,6 +8,13 @@
 	 * they are simply there.
 	 */
 
+	interface Props {
+		/** Gives every object a light die-cut edge, for a dark ground. */
+		sticker?: boolean;
+	}
+
+	let { sticker = false }: Props = $props();
+
 	/** File name, width at full size (px), intrinsic size, and whether phones show it. */
 	type Item = [icon: string, w: number, vw: number, vh: number, phone: boolean];
 
@@ -44,7 +51,11 @@
 			<div class="flex items-end gap-[calc(var(--k)*10px)]">
 				{#each group as [icon, w, vw, vh, phone] (icon)}
 					<img
-						class={['object ink-art h-auto', !phone && 'hidden sm:block']}
+						class={[
+							'object ink-art h-auto',
+							sticker && 'sticker-edge',
+							!phone && 'hidden sm:block'
+						]}
 						src="/illustrations/{icon}.svg"
 						alt=""
 						width={vw}
@@ -57,14 +68,14 @@
 	</div>
 	<!-- Two cuts of the plank, so the drawn line keeps its weight at either width. -->
 	<img
-		class="ink-art -mt-1 block h-auto w-full sm:hidden"
+		class={['ink-art -mt-1 block h-auto w-full sm:hidden', sticker && 'sticker-edge']}
 		src="/illustrations/plank-short.svg"
 		alt=""
 		width="360"
 		height="28"
 	/>
 	<img
-		class="ink-art -mt-1 hidden h-auto w-full sm:block"
+		class={['ink-art -mt-1 hidden h-auto w-full sm:block', sticker && 'sticker-edge']}
 		src="/illustrations/plank.svg"
 		alt=""
 		width="880"
@@ -87,6 +98,12 @@
 	@media (width >= 48rem) {
 		.shelf {
 			--k: 1;
+		}
+	}
+
+	@media (width >= 64rem) {
+		.shelf {
+			--k: 1.2;
 		}
 	}
 

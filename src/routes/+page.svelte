@@ -66,10 +66,12 @@
 	{@html `<script type="application/ld+json">${personJsonLd}<\/script>`}
 </svelte:head>
 
-<!-- Research first, then where it was done; the personal note closes the page. -->
+<!-- The introduction and the personal note first, then the research and where it was done. -->
 <Hero />
+<About />
 <Publications />
 <Experience />
-<Education />
-<Skills />
-<About />
+<div class="wrap grid gap-x-16 gap-y-16 py-16 md:py-24 lg:grid-cols-[2fr_3fr]">
+	<Education />
+	<Skills />
+</div>

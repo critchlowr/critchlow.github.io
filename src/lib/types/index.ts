@@ -9,7 +9,9 @@ export interface Experience {
 	showSimulator?: boolean;
 	/** Anchor id for the role, so the Skills section can link to it. */
 	id?: string;
-	/** Hand-drawn objects shown under the role's dates. */
+	/** Starts unfolded on the main page. */
+	open?: boolean;
+	/** Hand-drawn objects shown beside the role when it is unfolded. */
 	stickers?: 'bar' | 'saw' | 'bench' | 'research' | 'warehouse';
 }
 

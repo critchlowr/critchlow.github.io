@@ -13,11 +13,14 @@
 </script>
 
 <section class="pt-28 pb-20 md:pt-32" aria-labelledby="simulator-heading">
-	<div class="mx-auto max-w-4xl px-5">
+	<div class="wrap">
 		<p class="mb-4">
 			<a href="/#experience" class="link text-sm font-semibold">Back to Experience</a>
 		</p>
-		<h1 id="simulator-heading" class="text-ink-strong text-title mb-8 font-extrabold">
+		<h1
+			id="simulator-heading"
+			class="font-display text-ink-strong text-section mb-8 font-extrabold"
+		>
 			WMS Simulator
 		</h1>
 		<div>
