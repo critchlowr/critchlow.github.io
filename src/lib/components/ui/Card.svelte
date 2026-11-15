@@ -13,10 +13,8 @@
 
 	let { children, as = 'div', class: extra = '', id }: Props = $props();
 
-	// `@container` lets contents size to the card rather than the viewport. The
-	// resting shadow separates a white card from the light page band, where the
-	// 1px border alone is faint.
-	const shell = '@container rounded-xl border border-edge bg-surface-raised shadow-sm';
+	// `@container` lets contents size to the card rather than the viewport.
+	const shell = '@container rounded-md border border-edge bg-surface-raised';
 </script>
 
 <svelte:element this={as} {id} class="{shell} {extra}">

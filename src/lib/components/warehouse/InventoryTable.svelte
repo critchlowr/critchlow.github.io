@@ -15,9 +15,7 @@
 			>Warehouse inventory by location, with inbound, on-hand, and allocated quantities.</caption
 		>
 		<thead>
-			<tr
-				class="border-edge text-ink-muted border-b text-xs font-semibold tracking-wider uppercase"
-			>
+			<tr class="border-edge text-ink-muted border-b text-xs font-semibold">
 				<th scope="col" class="px-3 py-2">Location</th>
 				<th scope="col" class="px-3 py-2">Item</th>
 				<th scope="col" class="px-3 py-2 text-right">Inbound</th>

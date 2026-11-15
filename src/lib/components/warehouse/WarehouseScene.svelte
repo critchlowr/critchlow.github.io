@@ -82,6 +82,26 @@
 	);
 	let replenCarrying = $state(false);
 
+	// Which way each worker faces, and whether they are mid-walk. Walking is read
+	// from the CSS transition on `left`, so the legs move exactly while the body does.
+	type Facing = 'left' | 'right';
+	let pickerFacing = $state<Facing>('right');
+	let runnerFacing = $state<Facing>('right');
+	let pickerWalking = $state(false);
+	let runnerWalking = $state(false);
+
+	function onWalk(e: TransitionEvent, who: 'picker' | 'runner', walking: boolean) {
+		if (e.propertyName !== 'left' || e.target !== e.currentTarget) return;
+		if (who === 'picker') {
+			pickerWalking = walking;
+			// Back at rest beside the cart, the picker turns to face it again.
+			if (!walking && workerPos === 'idle') pickerFacing = 'right';
+		} else {
+			runnerWalking = walking;
+			if (!walking && replenWorkerPos === 'at-inbound') runnerFacing = 'right';
+		}
+	}
+
 	// Outbound truck
 	let truckState = $state<'parked' | 'leaving' | 'arriving'>('parked');
 
@@ -135,6 +155,7 @@
 		puzzled = false;
 		cartPos = 'at-pick';
 		holdCart = false;
+		pickerFacing = 'right';
 	}
 
 	// Back to the opening frame, for Reset.
@@ -143,6 +164,7 @@
 		settlePicker();
 		replenWorkerPos = 'at-inbound';
 		replenCarrying = false;
+		runnerFacing = 'right';
 		truckState = 'parked';
 		shelfFlash = false;
 		packFlash = false;
@@ -180,6 +202,7 @@
 		carriedSku = sku;
 		pickColumn = columnOf(sku);
 		workerCarrying = false;
+		pickerFacing = 'left';
 		workerPos = 'at-shelf';
 
 		// Arrives at the column and lifts the carton.
@@ -188,6 +211,7 @@
 		});
 		// Beat at the rack, then walks back with it.
 		after('picker', 1300, () => {
+			pickerFacing = 'right';
 			workerPos = 'carrying-back';
 		});
 		// Reaches the cart and puts it in.
@@ -203,12 +227,14 @@
 	function animateShort(sku: string) {
 		settlePicker();
 		pickColumn = columnOf(sku);
+		pickerFacing = 'left';
 		workerPos = 'at-shelf';
 		after('picker', 700, () => {
 			puzzled = true;
 		});
 		after('picker', 1500, () => {
 			puzzled = false;
+			pickerFacing = 'right';
 			workerPos = 'carrying-back';
 		});
 		after('picker', 1950, () => {
@@ -228,6 +254,7 @@
 			cartDisplay = [];
 		});
 		after('picker', 1000, () => {
+			pickerFacing = 'left';
 			workerPos = 'idle';
 			cartPos = 'at-pick';
 			holdCart = false;
@@ -242,6 +269,7 @@
 			packFlash = false;
 		});
 		after('picker', 900, () => {
+			pickerFacing = 'left';
 			workerPos = 'idle';
 		});
 	}
@@ -283,6 +311,7 @@
 		// Heads back to receiving.
 		after('runner', 2100, () => {
 			shelfFlash = false;
+			runnerFacing = 'left';
 			replenWorkerPos = 'walking-back';
 		});
 		after('runner', 2800, () => {
@@ -291,324 +320,331 @@
 	}
 </script>
 
+<!--
+	The trucks, workers and wheels are drawn by docs/design-review/illustrations, in the
+	same hand as the site's other illustrations. Cartons, the rack and the cart are
+	plain boxes because their number and colour change as the game runs.
+-->
 <div class="scene" aria-hidden="true">
-	<div class="scene-bg">
-		<!-- Building -->
-		<div class="building">
-			<div class="building-sign">{WAREHOUSE_NAME}</div>
-		</div>
+	<!-- Building, with the floor running under it and out to both trucks. -->
+	<div class="building">
+		<div class="building-sign">{WAREHOUSE_NAME}</div>
+	</div>
+	<div class="floor"></div>
 
-		<!-- Floor -->
-		<div class="floor"></div>
+	<!-- ── Inbound (left) ── -->
 
-		<!-- ── Inbound (left) ── -->
+	<!-- Inbound truck: parked, backed up to the building, cab off to the left. -->
+	<div class="inbound-truck">
+		<img class="truck-art ink-art" src="/illustrations/sim/truck-in.svg" alt="" />
+		<img class="wheel ink-art w-1" src="/illustrations/sim/wheel.svg" alt="" />
+		<img class="wheel ink-art w-2" src="/illustrations/sim/wheel.svg" alt="" />
+		<img class="wheel ink-art w-3" src="/illustrations/sim/wheel.svg" alt="" />
+	</div>
 
-		<!-- Inbound truck (parked, static) -->
-		<div class="inbound-truck">
-			<div class="inbound-trailer"></div>
-			<div class="inbound-cab">
-				<div class="inbound-cab-window"></div>
-			</div>
-			<div class="truck-wheel itw-1"></div>
-			<div class="truck-wheel itw-2"></div>
-		</div>
+	<!-- Conveyor from the truck to the receiving area -->
+	<div class="conveyor">
+		<div class="conveyor-line"></div>
+		<div class="conveyor-roller"></div>
+		<div class="conveyor-roller cr-2"></div>
+		<div class="conveyor-roller cr-3"></div>
+		<div class="conveyor-roller cr-4"></div>
+		<div class="conveyor-roller cr-5"></div>
+	</div>
 
-		<!-- Inbound dock -->
-		<div class="inbound-dock"></div>
+	<!-- Receiving area -->
+	<div class="area-label receiving-label">Receiving</div>
+	<div class="receiving-area">
+		<div class="receiving-box"></div>
+		<div class="receiving-box"></div>
+	</div>
 
-		<!-- Conveyor lines from truck to receiving area -->
-		<div class="conveyor">
-			<div class="conveyor-line"></div>
-			<div class="conveyor-roller"></div>
-			<div class="conveyor-roller cr-2"></div>
-			<div class="conveyor-roller cr-3"></div>
-			<div class="conveyor-roller cr-4"></div>
-			<div class="conveyor-roller cr-5"></div>
-		</div>
-
-		<!-- Receiving area -->
-		<div class="receiving-label">RECEIVING</div>
-		<div class="receiving-area">
-			<div class="receiving-box"></div>
-			<div class="receiving-box"></div>
-		</div>
-
-		<!-- Receiving/replen worker -->
-		<div
-			class="replen-worker"
-			style="--col-i: {replenColumn}"
-			class:rw-at-inbound={replenWorkerPos === 'at-inbound'}
-			class:rw-walking-to-shelf={replenWorkerPos === 'walking-to-shelf'}
-			class:rw-at-shelf={replenWorkerPos === 'at-shelf'}
-			class:rw-walking-back={replenWorkerPos === 'walking-back'}
-		>
-			<div class="worker-hardhat replen-hat"></div>
-			<div class="worker-head"></div>
-			<div class="worker-body replen-body"></div>
-			<div class="worker-legs"></div>
+	<!-- Receiving/replen worker -->
+	<div
+		class="worker replen-worker"
+		style="--col-i: {replenColumn}"
+		class:rw-at-inbound={replenWorkerPos === 'at-inbound'}
+		class:rw-walking-to-shelf={replenWorkerPos === 'walking-to-shelf'}
+		class:rw-at-shelf={replenWorkerPos === 'at-shelf'}
+		class:rw-walking-back={replenWorkerPos === 'walking-back'}
+		class:walking={runnerWalking}
+		class:face-left={runnerFacing === 'left'}
+		ontransitionrun={(e) => onWalk(e, 'runner', true)}
+		ontransitionend={(e) => onWalk(e, 'runner', false)}
+		ontransitioncancel={(e) => onWalk(e, 'runner', false)}
+	>
+		<div class="figure">
+			<img class="leg leg-a ink-art" src="/illustrations/sim/worker-leg.svg" alt="" />
+			<img class="leg leg-b ink-art" src="/illustrations/sim/worker-leg.svg" alt="" />
+			<img class="torso ink-art" src="/illustrations/sim/worker-runner.svg" alt="" />
 			{#if replenCarrying}
 				<div class="carried-box" style={tone(replenSku)}></div>
 			{/if}
 		</div>
+	</div>
 
-		<!-- ── Centre ── -->
+	<!-- ── Centre ── -->
 
-		<!-- Shelf/rack — each slot shows inventory -->
-		<div class="shelf" class:shelf-flash={shelfFlash}>
-			{#each inventory as item (item.sku)}
-				<div class="shelf-col" title="{item.itemName} ({physicalOnHand(item)})">
-					{#each { length: stockBars(physicalOnHand(item)) } as _, i (i)}
-						<div class="shelf-box" style={tone(item.sku)}></div>
-					{/each}
-				</div>
-			{/each}
-		</div>
+	<!-- Rack: each column shows one item's stock -->
+	<div class="shelf" class:shelf-flash={shelfFlash}>
+		{#each inventory as item (item.sku)}
+			<div class="shelf-col" title="{item.itemName} ({physicalOnHand(item)})">
+				{#each { length: stockBars(physicalOnHand(item)) } as _, i (i)}
+					<div class="shelf-box" style={tone(item.sku)}></div>
+				{/each}
+			</div>
+		{/each}
+	</div>
 
-		<!-- Picker worker -->
-		<div
-			class="worker"
-			style="--col-i: {pickColumn}"
-			class:worker-idle={workerPos === 'idle'}
-			class:worker-at-shelf={workerPos === 'at-shelf'}
-			class:worker-carrying-back={workerPos === 'carrying-back'}
-			class:worker-at-staging={workerPos === 'at-staging'}
-		>
-			<div class="worker-hardhat"></div>
-			<div class="worker-head"></div>
-			<div class="worker-body"></div>
-			<div class="worker-legs"></div>
+	<!-- Picker worker -->
+	<div
+		class="worker picker"
+		style="--col-i: {pickColumn}"
+		class:worker-idle={workerPos === 'idle'}
+		class:worker-at-shelf={workerPos === 'at-shelf'}
+		class:worker-carrying-back={workerPos === 'carrying-back'}
+		class:worker-at-staging={workerPos === 'at-staging'}
+		class:walking={pickerWalking}
+		class:face-left={pickerFacing === 'left'}
+		ontransitionrun={(e) => onWalk(e, 'picker', true)}
+		ontransitionend={(e) => onWalk(e, 'picker', false)}
+		ontransitioncancel={(e) => onWalk(e, 'picker', false)}
+	>
+		<div class="figure">
+			<img class="leg leg-a ink-art" src="/illustrations/sim/worker-leg.svg" alt="" />
+			<img class="leg leg-b ink-art" src="/illustrations/sim/worker-leg.svg" alt="" />
+			<img class="torso ink-art" src="/illustrations/sim/worker-picker.svg" alt="" />
 			{#if workerCarrying}
 				<div class="carried-box" style={tone(carriedSku)}></div>
 			{/if}
-			{#if puzzled}
-				<div class="puzzled">?</div>
-			{/if}
 		</div>
+		<!-- Outside the figure, so it is not mirrored when the picker faces left. -->
+		{#if puzzled}
+			<div class="puzzled">?</div>
+		{/if}
+	</div>
 
-		<!-- The picker's cart: fills as items are picked, then is wheeled to staging. -->
-		<div
-			class="cart"
-			class:cart-at-pick={cartPos === 'at-pick'}
-			class:cart-at-staging={cartPos === 'at-staging'}
-		>
-			<div class="cart-basket">
-				{#each cartDisplay.slice(0, 6) as sku, i (i)}
-					<div class="cart-box" style={tone(sku)}></div>
-				{/each}
-			</div>
-			<div class="cart-handle"></div>
-			<div class="cart-wheel cw-1"></div>
-			<div class="cart-wheel cw-2"></div>
-		</div>
-
-		<!-- ── Outbound (right) ── -->
-
-		<!-- Staging area — loose boxes waiting, sealed boxes packed and ready to load -->
-		<div class="staging-label">STAGING</div>
-		<div class="staging-area" class:pack-flash={packFlash}>
-			{#each { length: Math.min(packedCount, 12) } as _, i (i)}
-				<div class="packed-box"></div>
+	<!-- The picker's cart: fills as items are picked, then is wheeled to staging. -->
+	<div
+		class="cart"
+		class:cart-at-pick={cartPos === 'at-pick'}
+		class:cart-at-staging={cartPos === 'at-staging'}
+	>
+		<div class="cart-basket">
+			{#each cartDisplay.slice(0, 6) as sku, i (i)}
+				<div class="cart-box" style={tone(sku)}></div>
 			{/each}
-			{#each stagedSkus.slice(0, 12 - Math.min(packedCount, 12)) as sku, i (i)}
-				<div class="staged-box" style={tone(sku)}></div>
-			{/each}
-			{#each heldSkus.slice(0, 6) as sku, i (i)}
-				<div class="staged-box held-box" style={tone(sku)}></div>
-			{/each}
-			{#if heldSkus.length > 0}
-				<div class="hold-tag">HOLD</div>
-			{/if}
 		</div>
+		<div class="cart-handle"></div>
+		<div class="cart-wheel cw-1"></div>
+		<div class="cart-wheel cw-2"></div>
+	</div>
 
-		<!-- Outbound dock -->
-		<div class="outbound-dock"></div>
+	<!-- ── Outbound (right) ── -->
 
-		<!-- Outbound truck -->
-		<div
-			class="truck"
-			class:truck-parked={truckState === 'parked'}
-			class:truck-leaving={truckState === 'leaving'}
-			class:truck-arriving={truckState === 'arriving'}
-		>
-			<div class="truck-trailer">
-				{#each { length: Math.min(loadedCount, 12) } as _, i (i)}
-					<div class="loaded-box"></div>
-				{/each}
-			</div>
-			<div class="truck-cab">
-				<div class="cab-window"></div>
-				<div class="cab-bumper"></div>
-			</div>
-			<div class="truck-wheel tw-1"></div>
-			<div class="truck-wheel tw-2"></div>
-			<div class="truck-wheel tw-3"></div>
-			<div class="truck-wheel tw-4"></div>
+	<!-- Staging area: loose boxes waiting, sealed boxes packed and ready to load -->
+	<div class="area-label staging-label">Staging</div>
+	<div class="staging-area" class:pack-flash={packFlash}>
+		{#each { length: Math.min(packedCount, 12) } as _, i (i)}
+			<div class="packed-box"></div>
+		{/each}
+		{#each stagedSkus.slice(0, 12 - Math.min(packedCount, 12)) as sku, i (i)}
+			<div class="staged-box" style={tone(sku)}></div>
+		{/each}
+		{#each heldSkus.slice(0, 6) as sku, i (i)}
+			<div class="staged-box held-box" style={tone(sku)}></div>
+		{/each}
+		{#if heldSkus.length > 0}
+			<div class="hold-tag">Hold</div>
+		{/if}
+	</div>
+
+	<!-- Outbound truck. Its trailer is open-sided, so loaded cartons show inside. -->
+	<div
+		class="truck"
+		class:truck-parked={truckState === 'parked'}
+		class:truck-leaving={truckState === 'leaving'}
+		class:truck-arriving={truckState === 'arriving'}
+	>
+		<img class="truck-art ink-art" src="/illustrations/sim/truck-out.svg" alt="" />
+		<div class="truck-trailer">
+			{#each { length: Math.min(loadedCount, 12) } as _, i (i)}
+				<div class="loaded-box"></div>
+			{/each}
 		</div>
+		<img class="wheel ink-art w-1" src="/illustrations/sim/wheel.svg" alt="" />
+		<img class="wheel ink-art w-2" src="/illustrations/sim/wheel.svg" alt="" />
+		<img class="wheel ink-art w-3" src="/illustrations/sim/wheel.svg" alt="" />
 	</div>
 </div>
 
 <style>
 	.scene {
-		/* One carton size for the cart, staging and the truck, so goods keep their
+		/* One carton size for the rack, cart, staging and truck, so goods keep their
 		   size as they move. */
-		--carton: 8px;
+		--carton: 10px;
 		/* Where the rack starts. Worker shelf positions are derived from it so they
 		   land on the right column at any breakpoint. */
 		--rack-left: 34%;
+		/* Scales both trucks together. */
+		--u: 1;
+		/* Height of the floor strip; everything stands on its top edge. */
+		--ground: 20%;
+		/* Line colour for the parts drawn in CSS, matching the illustrations' ink. */
+		--ink: #3b2a1e;
+		--wall: #fbf6ea;
+		--floor: #e2dccd;
 
 		position: relative;
 		width: 100%;
-		height: 195px;
+		height: 210px;
 		/* A flex child of the modal; without this it shrinks when the panel below grows. */
 		flex-shrink: 0;
 		overflow: hidden;
-		border-bottom: 1px solid var(--color-warm-200);
-		background: linear-gradient(to bottom, #87ceeb 0%, #b0e0e6 50%, transparent 50%);
+		border-bottom: 1px solid var(--t-edge);
+		background: var(--t-band);
 	}
 
 	:global(.dark) .scene {
-		background: linear-gradient(to bottom, #1a1a3e 0%, #2a2a4e 50%, transparent 50%);
-		border-color: var(--color-warm-700);
-	}
-
-	.scene-bg {
-		position: absolute;
-		inset: 0;
+		--ink: #d6cdbf;
+		--wall: #2a231b;
+		--floor: #382e23;
 	}
 
 	.floor {
 		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		height: 22%;
-		background: #8b7355;
+		inset: auto 0 0;
+		height: var(--ground);
+		border-top: 2px solid var(--ink);
+		background: var(--floor);
 	}
 
-	:global(.dark) .floor {
-		background: #4a3828;
-	}
-
-	/* Building */
+	/* Building: spans from one dock to the other, with the trucks outside it. */
 	.building {
 		position: absolute;
-		bottom: 22%;
-		left: 1%;
-		width: 98%;
-		height: 62%;
-		background: #d2b48c;
-		border: 2px solid #8b7355;
+		bottom: var(--ground);
+		left: 12%;
+		right: 15%;
+		height: 66%;
+		border: 2px solid var(--ink);
 		border-bottom: none;
-	}
-
-	:global(.dark) .building {
-		background: #5a4a3a;
-		border-color: #3a2a1a;
+		border-radius: 6px 6px 0 0;
+		background: var(--wall);
 	}
 
 	.building-sign {
 		position: absolute;
-		top: 6px;
+		top: 7px;
 		left: 50%;
 		transform: translateX(-50%);
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: 700;
-		color: #5a3a1a;
+		color: var(--ink);
 		white-space: nowrap;
-		font-family: var(--font-mono);
-		letter-spacing: 0.5px;
 	}
 
-	:global(.dark) .building-sign {
-		color: var(--color-warm-300);
+	/* Names for the two marked-out floor areas. */
+	.area-label {
+		position: absolute;
+		/* Clear of the workers' hard hats, which pass underneath. */
+		bottom: calc(var(--ground) + 54px);
+		transform: translateX(-50%);
+		font-size: 10px;
+		font-weight: 700;
+		color: var(--ink);
+		white-space: nowrap;
+		z-index: 5;
+	}
+
+	/* ── Trucks ── */
+
+	.truck,
+	.inbound-truck {
+		position: absolute;
+		/* The drawing leaves 2px under the wheels at full size. */
+		bottom: calc(var(--ground) - 2px * var(--u));
+		width: calc(120px * var(--u));
+		height: calc(64px * var(--u));
+	}
+
+	.truck-art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.wheel {
+		position: absolute;
+		top: 71.9%;
+		width: 13.33%;
+		height: auto;
+		aspect-ratio: 1;
+	}
+
+	.w-1 {
+		left: 8.3%;
+	}
+	.w-2 {
+		left: 20.8%;
+	}
+	.w-3 {
+		left: 72.5%;
+	}
+
+	/* Mirrored, so its trailer backs onto the building and the cab points away. */
+	.inbound-truck {
+		--u: 0.85;
+		right: 88%;
+		transform: scaleX(-1);
+	}
+
+	.truck {
+		left: 85%;
+		transition: transform 1s ease-in;
+	}
+
+	.truck-parked {
+		transform: translateX(0);
+	}
+	.truck-leaving {
+		transform: translateX(220%);
+	}
+	.truck-arriving {
+		transform: translateX(0);
+		animation: truck-arrive 1s cubic-bezier(0.2, 0.7, 0.3, 1);
+	}
+
+	@keyframes truck-arrive {
+		from {
+			transform: translateX(220%);
+		}
+		to {
+			transform: translateX(0);
+		}
+	}
+
+	/* The open side of the trailer, in the drawing's own proportions. */
+	.truck-trailer {
+		position: absolute;
+		left: 3%;
+		top: 11%;
+		width: 61%;
+		height: 67%;
+		display: flex;
+		flex-wrap: wrap-reverse;
+		direction: rtl;
+		align-content: flex-start;
+		gap: 2px;
+		padding: 3px;
+		overflow: hidden;
 	}
 
 	/* ── Inbound (left) ── */
 
-	/* Inbound truck — facing left (cab on left) */
-	.inbound-truck {
-		position: absolute;
-		bottom: 22%;
-		left: 0%;
-		width: 11%;
-		height: 34%;
-	}
-
-	.inbound-trailer {
-		position: absolute;
-		right: 0;
-		bottom: 10px;
-		width: 55%;
-		height: 80%;
-		background: #e8e8e8;
-		border: 2px solid #b0b0b0;
-		border-radius: 1px;
-	}
-
-	:global(.dark) .inbound-trailer {
-		background: #6a6a6a;
-		border-color: #4a4a4a;
-	}
-
-	.inbound-cab {
-		position: absolute;
-		left: 0;
-		bottom: 10px;
-		width: 38%;
-		height: 42%;
-		background: #2e86c1;
-		border: 2px solid #1b4f72;
-		border-radius: 4px 1px 1px 1px;
-	}
-
-	:global(.dark) .inbound-cab {
-		background: #1a5276;
-		border-color: #0e3a5c;
-	}
-
-	.inbound-cab-window {
-		position: absolute;
-		top: 3px;
-		left: 3px;
-		width: 55%;
-		height: 40%;
-		background: #aed6f1;
-		border: 1px solid #85c1e9;
-		border-radius: 3px 1px 0 0;
-	}
-
-	:global(.dark) .inbound-cab-window {
-		background: #5b8db8;
-		border-color: #417a9b;
-	}
-
-	.itw-1 {
-		left: 5%;
-	}
-	.itw-2 {
-		right: 8%;
-	}
-
-	/* Inbound dock */
-	.inbound-dock {
-		position: absolute;
-		bottom: 22%;
-		left: 10%;
-		width: 3%;
-		height: 8px;
-		background: #8b7355;
-		border: 1px solid #6b5335;
-	}
-
-	:global(.dark) .inbound-dock {
-		background: #5a4328;
-		border-color: #3a2318;
-	}
-
-	/* Conveyor from dock to receiving */
 	.conveyor {
 		position: absolute;
-		bottom: calc(22% + 5px);
+		bottom: calc(var(--ground) + 5px);
 		left: 12%;
 		width: 10%;
 		height: 6px;
@@ -620,23 +656,7 @@
 		left: 0;
 		right: 0;
 		height: 2px;
-		background: repeating-linear-gradient(
-			to right,
-			#666 0px,
-			#666 4px,
-			transparent 4px,
-			transparent 7px
-		);
-	}
-
-	:global(.dark) .conveyor-line {
-		background: repeating-linear-gradient(
-			to right,
-			#888 0px,
-			#888 4px,
-			transparent 4px,
-			transparent 7px
-		);
+		background: repeating-linear-gradient(to right, var(--ink) 0 4px, transparent 4px 7px);
 	}
 
 	.conveyor-roller {
@@ -646,8 +666,8 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: #888;
-		border: 1px solid #666;
+		background: #d3d8de;
+		border: 1.5px solid var(--ink);
 	}
 
 	.cr-2 {
@@ -663,97 +683,135 @@
 		left: 88%;
 	}
 
-	/* Receiving area */
-	.receiving-area {
+	.receiving-area,
+	.staging-area {
 		position: absolute;
-		bottom: 22%;
-		left: 22%;
-		width: calc(var(--carton) * 2 + 14px);
-		height: calc(var(--carton) * 2 + 12px);
-		border: 1px dashed #8b7355;
+		bottom: var(--ground);
+		border: 1.5px dashed var(--ink);
 		border-bottom: none;
+		border-radius: 3px 3px 0 0;
 		display: flex;
-		align-items: flex-end;
-		gap: 3px;
 		padding: 3px;
 	}
 
-	:global(.dark) .receiving-area {
-		border-color: var(--color-warm-400);
+	.receiving-area {
+		left: 22%;
+		width: calc(var(--carton) * 2 + 14px);
+		height: calc(var(--carton) * 2 + 12px);
+		align-items: flex-end;
+		gap: 3px;
 	}
 
 	.receiving-label {
+		left: calc(22% + var(--carton) + 7px);
+	}
+
+	/* ── Workers ── */
+
+	.worker {
 		position: absolute;
-		bottom: calc(22% + 54px);
-		left: 26%;
-		transform: translateX(-50%);
-		font-size: 8px;
-		font-weight: 700;
-		color: #5a3a1a;
-		font-family: var(--font-mono);
-		white-space: nowrap;
-		z-index: 5;
-	}
-
-	:global(.dark) .receiving-label {
-		color: var(--color-warm-300);
-	}
-
-	.receiving-box {
-		width: var(--carton);
-		height: var(--carton);
-		background: var(--color-accent-100);
-		border: 1px solid var(--color-accent-500);
-		border-radius: 1px;
-		flex-shrink: 0;
-	}
-
-	/* Replen/receiving worker */
-	.replen-worker {
-		position: absolute;
-		bottom: 22%;
+		bottom: var(--ground);
 		width: 24px;
-		height: 48px;
-		transition: left 0.7s ease-in-out;
+		height: 49px;
 		z-index: 10;
 	}
 
-	.rw-at-inbound {
-		left: 24%;
+	.picker {
+		transition: left 0.4s ease-in-out;
 	}
-	.rw-walking-to-shelf {
-		left: calc(
-			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
-				12px
-		);
+
+	.replen-worker {
+		transition: left 0.7s ease-in-out;
 	}
-	.rw-at-shelf {
-		left: calc(
-			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
-				12px
-		);
+
+	/* Turns the whole figure, carried carton included. */
+	.figure {
+		position: absolute;
+		inset: 0;
 	}
+
+	.face-left .figure {
+		transform: scaleX(-1);
+	}
+
+	.torso {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 24px;
+		height: 37px;
+	}
+
+	.leg {
+		position: absolute;
+		top: 33px;
+		width: 8px;
+		height: 16px;
+		transform-origin: 50% 2px;
+	}
+
+	.leg-a {
+		left: 5px;
+	}
+	.leg-b {
+		left: 11px;
+	}
+
+	.rw-at-inbound,
 	.rw-walking-back {
 		left: 24%;
 	}
 
-	.replen-hat {
-		background: #ff6b35 !important;
+	/* Centre of column --col-i: rack padding and border, then one column pitch per
+	   index, then half a column, less half the worker's width. */
+	.rw-walking-to-shelf,
+	.rw-at-shelf,
+	.worker-at-shelf {
+		left: calc(
+			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
+				12px
+		);
 	}
 
-	.replen-body {
-		background: #2e8b57 !important;
+	.worker-idle,
+	.worker-carrying-back {
+		left: 52%;
 	}
-	:global(.dark) .replen-body {
-		background: #1a6b37 !important;
+	.worker-at-staging {
+		left: 62%;
 	}
 
-	/* ── Centre ── */
+	/* Held out in front, at chest height. */
+	.carried-box {
+		position: absolute;
+		top: 20px;
+		right: calc(var(--carton) * -1 + 3px);
+	}
 
-	/* Shelf */
+	/* Above the picker's hard hat while they stand at an empty slot. */
+	.puzzled {
+		position: absolute;
+		top: -17px;
+		left: 50%;
+		translate: -50% 0;
+		font: 700 12px/1 var(--font-sans);
+		color: var(--color-ember-800);
+		background: #fff;
+		border: 1.5px solid #3b2a1e;
+		border-radius: 6px;
+		padding: 2px 5px;
+	}
+
+	/* ── Rack ── */
+
+	/*
+		The rack, cart and cartons keep their own colours in both themes, as the
+		illustrations do. On the dark theme a light outline stands in for the
+		illustrations' die-cut edge.
+	*/
 	.shelf {
 		position: absolute;
-		bottom: 22%;
+		bottom: var(--ground);
 		left: var(--rack-left);
 		/* max-content, not a calculated width. A width that came up short would squeeze
 		   empty columns to their borders while full ones kept their size. */
@@ -763,14 +821,15 @@
 		align-items: stretch;
 		gap: 2px;
 		padding: 3px;
-		background: #8b6914;
-		border: 2px solid #6b4914;
+		background: #c8914f;
+		border: 2px solid #3b2a1e;
+		border-radius: 3px 3px 0 0;
 		transition: box-shadow 0.3s;
 	}
 
-	:global(.dark) .shelf {
-		background: #6b5914;
-		border-color: #4b3914;
+	:global(.dark) .shelf,
+	:global(.dark) .cart-basket {
+		outline: 1px solid rgb(255 248 235 / 0.8);
 	}
 
 	.shelf-flash {
@@ -787,14 +846,10 @@
 		align-items: center;
 		justify-content: flex-start;
 		gap: 2px;
-		background: #c4a55a;
-		border: 1px solid #a48530;
+		background: #f2d3a0;
+		border: 1px solid #3b2a1e;
+		border-radius: 1px;
 		padding-bottom: 1px;
-	}
-
-	:global(.dark) .shelf-col {
-		background: #8a7540;
-		border-color: #6a5530;
 	}
 
 	/* Loose goods, still identifiable as a particular SKU. --fill and --edge are set
@@ -806,103 +861,16 @@
 		width: var(--carton);
 		height: var(--carton);
 		flex-shrink: 0;
-		border: 1px solid var(--edge, var(--color-ember-500));
-		border-radius: 1px;
-		background: var(--fill, var(--color-ember-100));
-	}
-
-	.shelf-box {
-		transition:
-			opacity 0.3s,
-			transform 0.3s;
-	}
-
-	/*
-		No dark-mode override: the per-SKU pastels read fine on the dark rack, and a
-		single override colour would hide which item is which.
-	*/
-
-	/* Picker worker */
-	.worker {
-		position: absolute;
-		bottom: 22%;
-		width: 24px;
-		height: 48px;
-		transition: left 0.4s ease-in-out;
-		z-index: 10;
-	}
-
-	.worker-idle {
-		left: 52%;
-	}
-	/* Centre of column --col-i: rack padding and border, then one column pitch per
-	   index, then half a column, less half the worker's width. */
-	.worker-at-shelf {
-		left: calc(
-			var(--rack-left) + 5px + var(--col-i, 0) * (var(--carton) + 6px) + (var(--carton) + 4px) / 2 -
-				12px
-		);
-	}
-	.worker-carrying-back {
-		left: 52%;
-	}
-	.worker-at-staging {
-		left: 62%;
-	}
-
-	.worker-hardhat {
-		position: absolute;
-		top: 0;
-		left: 2px;
-		width: 20px;
-		height: 9px;
-		background: #ffd700;
-		border-radius: 4px 4px 0 0;
-	}
-
-	.worker-head {
-		position: absolute;
-		top: 9px;
-		left: 5px;
-		width: 14px;
-		height: 12px;
-		background: #fdbcb4;
-		border-radius: 3px;
-	}
-
-	:global(.dark) .worker-head {
-		background: #d4a090;
-	}
-
-	.worker-body {
-		position: absolute;
-		top: 21px;
-		left: 3px;
-		width: 18px;
-		height: 15px;
-		background: #4169e1;
+		border: 1.5px solid var(--edge, var(--color-ember-500));
 		border-radius: 2px;
-	}
-
-	:global(.dark) .worker-body {
-		background: #2a4a9a;
-	}
-
-	.worker-legs {
-		position: absolute;
-		top: 36px;
-		left: 5px;
-		width: 14px;
-		height: 12px;
-		background: #2f4f4f;
-		border-radius: 0 0 3px 3px;
+		background: var(--fill, var(--color-ember-100));
 	}
 
 	/* ── Picker's cart ── */
 
 	.cart {
 		position: absolute;
-		bottom: 22%;
+		bottom: var(--ground);
 		width: calc(var(--carton) * 2 + 14px);
 		height: calc(var(--carton) * 3 + 14px);
 		transition: left 0.4s ease-in-out;
@@ -921,11 +889,10 @@
 
 	.cart-basket {
 		position: absolute;
-		bottom: 4px;
+		bottom: 5px;
 		left: 0;
 		display: flex;
-		/* Holds CART_CAPACITY (6): two across, three down. Narrow enough to sit
-		   between the picker and staging without crowding either. */
+		/* Holds CART_CAPACITY (6): two across, three down. */
 		width: calc(var(--carton) * 2 + 10px);
 		height: calc(var(--carton) * 3 + 8px);
 		flex-wrap: wrap-reverse;
@@ -933,41 +900,34 @@
 		gap: 1px;
 		overflow: hidden;
 		padding: 1px;
-		border: 1px solid var(--color-warm-600);
+		border: 1.5px solid #3b2a1e;
 		border-top: none;
-		background: var(--color-warm-100);
+		border-radius: 0 0 3px 3px;
+		background: #fff;
 	}
 
 	:global(.dark) .cart-basket {
-		border-color: var(--color-warm-400);
-		background: var(--color-warm-700);
+		background: #e9e4d8;
 	}
 
 	.cart-handle {
 		position: absolute;
 		right: -3px;
-		bottom: 4px;
-		width: 4px;
+		bottom: 5px;
+		width: 5px;
 		height: calc(var(--carton) * 3 + 11px);
-		border-top: 1px solid var(--color-warm-600);
-		border-right: 1px solid var(--color-warm-600);
-	}
-
-	:global(.dark) .cart-handle {
-		border-color: var(--color-warm-400);
+		border-top: 1.5px solid var(--ink);
+		border-right: 1.5px solid var(--ink);
+		border-radius: 0 3px 0 0;
 	}
 
 	.cart-wheel {
 		position: absolute;
 		bottom: 0;
-		width: 4px;
-		height: 4px;
+		width: 5px;
+		height: 5px;
 		border-radius: 50%;
-		background: var(--color-warm-700);
-	}
-
-	:global(.dark) .cart-wheel {
-		background: var(--color-warm-400);
+		background: var(--ink);
 	}
 
 	.cw-1 {
@@ -978,66 +938,26 @@
 		right: 5px;
 	}
 
-	.carried-box {
-		position: absolute;
-		top: 3px;
-		right: calc(var(--carton) * -1 - 3px);
-	}
-
-	/* Above the picker's hard hat while they stand at an empty slot. */
-	.puzzled {
-		position: absolute;
-		top: -14px;
-		left: 50%;
-		transform: translateX(-50%);
-		font: 700 11px/1 var(--font-mono);
-		color: var(--color-ember-800);
-		background: #fff;
-		border: 1px solid var(--color-ember-700);
-		border-radius: 3px;
-		padding: 1px 3px;
-	}
-
 	/* ── Outbound (right) ── */
 
-	/* Staging area */
 	.staging-area {
-		position: absolute;
-		bottom: 22%;
 		left: 60%;
 		/* Holds the 12 cartons it renders: four across, three down. */
 		width: calc(var(--carton) * 4 + 15px);
 		height: calc(var(--carton) * 3 + 12px);
-		border: 1px dashed var(--color-warm-600);
-		border-bottom: none;
-		display: flex;
 		flex-wrap: wrap-reverse;
 		direction: rtl;
 		align-content: flex-start;
 		gap: 2px;
-		padding: 3px;
 		overflow: hidden;
-	}
-
-	:global(.dark) .staging-area {
-		border-color: var(--color-warm-400);
+		/* On the base rule so the flash fades out as well as in. */
+		transition:
+			box-shadow 0.25s ease,
+			border-color 0.25s ease;
 	}
 
 	.staging-label {
-		position: absolute;
-		bottom: calc(22% + 54px);
-		left: 65%;
-		transform: translateX(-50%);
-		font-size: 8px;
-		font-weight: 700;
-		color: #5a3a1a;
-		font-family: var(--font-mono);
-		white-space: nowrap;
-		z-index: 5;
-	}
-
-	:global(.dark) .staging-label {
-		color: var(--color-warm-300);
+		left: calc(60% + var(--carton) * 2 + 7px);
 	}
 
 	/* A held order's goods stay loose in staging, outlined so they read as set aside. */
@@ -1048,42 +968,35 @@
 
 	.hold-tag {
 		position: absolute;
-		top: -12px;
+		top: -13px;
 		right: 0;
-		font: 700 7px/1 var(--font-mono);
+		font: 700 8px/1 var(--font-sans);
 		color: #fff;
 		background: var(--color-ember-700);
-		border-radius: 2px;
-		padding: 2px 3px;
+		border-radius: 3px;
+		padding: 2px 4px;
 	}
 
-	/* Packed — sealed with tape, ready for the truck */
 	/* Goods keep one carton colour the whole way through the warehouse. What changes
 	   is the tape: a plain box is loose, a taped box is sealed. So staged boxes are
-	   plain, and packed and loaded boxes carry the same tape stripe. */
+	   plain, and packed and loaded boxes are cardboard with a tape stripe. */
 	.packed-box,
-	.loaded-box {
+	.loaded-box,
+	.receiving-box {
 		width: var(--carton);
 		height: var(--carton);
-		background: var(--color-ember-100);
-		border: 1px solid var(--color-ember-500);
-		border-radius: 1px;
+		background: #e6bd85;
+		border: 1.5px solid #3b2a1e;
+		border-radius: 2px;
 		flex-shrink: 0;
-		/* A fixed 2px band; a percentage of an 8px carton rounds to nothing. */
+		/* A fixed 2px band; a percentage of a small carton rounds to nothing. */
 		background-image: linear-gradient(
 			to bottom,
 			transparent calc(50% - 1px),
-			var(--color-ember-600) calc(50% - 1px),
-			var(--color-ember-600) calc(50% + 1px),
+			#b77a3c calc(50% - 1px),
+			#b77a3c calc(50% + 1px),
 			transparent calc(50% + 1px)
 		);
-	}
-
-	/* On the base rule so the flash fades out as well as in. */
-	.staging-area {
-		transition:
-			box-shadow 0.25s ease,
-			border-color 0.25s ease;
 	}
 
 	.staging-area.pack-flash {
@@ -1091,155 +1004,90 @@
 		box-shadow: 0 0 8px 1px var(--color-ember-400);
 	}
 
+	/* ── Motion ── */
+
+	@media (prefers-reduced-motion: no-preference) {
+		/* Legs swing and the figure bobs for exactly as long as the worker is moving. */
+		.walking .leg-a {
+			animation: stride 0.3s ease-in-out infinite alternate;
+		}
+		.walking .leg-b {
+			animation: stride 0.3s ease-in-out infinite alternate-reverse;
+		}
+		.walking .torso,
+		.walking .carried-box {
+			animation: bob 0.15s ease-in-out infinite alternate;
+		}
+
+		/* Wheels turn with the truck: forward as it pulls out, back as it reverses in. */
+		.truck-leaving .wheel {
+			animation: roll 0.45s linear infinite;
+		}
+		.truck-arriving .wheel {
+			animation: roll 0.6s linear infinite reverse;
+		}
+
+		/* A carton settles as it is set down, wherever it lands. */
+		.shelf-box,
+		.cart-box,
+		.staged-box,
+		.packed-box,
+		.loaded-box {
+			animation: set-down 0.22s var(--ease-spring) backwards;
+		}
+
+		.puzzled {
+			animation: pop 0.2s var(--ease-spring) backwards;
+		}
+	}
+
+	@keyframes stride {
+		from {
+			rotate: -24deg;
+		}
+		to {
+			rotate: 24deg;
+		}
+	}
+
+	@keyframes bob {
+		to {
+			translate: 0 -1px;
+		}
+	}
+
+	@keyframes roll {
+		to {
+			rotate: 360deg;
+		}
+	}
+
+	@keyframes set-down {
+		from {
+			translate: 0 -5px;
+			scale: 0.75;
+		}
+	}
+
+	@keyframes pop {
+		from {
+			scale: 0.4;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
+		.picker,
+		.replen-worker,
+		.cart,
+		.truck {
+			transition-duration: 0.01s;
+		}
+
 		.staging-area {
 			transition: none;
 		}
 		.staging-area.pack-flash {
 			box-shadow: none;
-		}
-	}
-
-	/* Outbound dock */
-	.outbound-dock {
-		position: absolute;
-		bottom: 22%;
-		right: 5%;
-		width: 3%;
-		height: 8px;
-		background: #8b7355;
-		border: 1px solid #6b5335;
-	}
-
-	:global(.dark) .outbound-dock {
-		background: #5a4328;
-		border-color: #3a2318;
-	}
-
-	/* Outbound truck */
-	.truck {
-		position: absolute;
-		bottom: 22%;
-		right: 0%;
-		width: 16%;
-		height: 34%;
-		transition: transform 1s ease-in-out;
-	}
-
-	.truck-parked {
-		transform: translateX(0);
-	}
-	.truck-leaving {
-		transform: translateX(160%);
-	}
-	.truck-arriving {
-		transform: translateX(0);
-		animation: truck-arrive 1s ease-out;
-	}
-
-	@keyframes truck-arrive {
-		from {
-			transform: translateX(160%);
-		}
-		to {
-			transform: translateX(0);
-		}
-	}
-
-	.truck-trailer {
-		position: absolute;
-		left: 0;
-		bottom: 10px;
-		width: 58%;
-		height: 80%;
-		background: #e8e8e8;
-		border: 2px solid #b0b0b0;
-		border-radius: 1px;
-		display: flex;
-		flex-wrap: wrap-reverse;
-		direction: rtl;
-		align-content: flex-start;
-		gap: 2px;
-		padding: 3px;
-		overflow: hidden;
-	}
-
-	:global(.dark) .truck-trailer {
-		background: #6a6a6a;
-		border-color: #4a4a4a;
-	}
-
-	.truck-cab {
-		position: absolute;
-		right: 0;
-		bottom: 10px;
-		width: 36%;
-		height: 45%;
-		background: #c0392b;
-		border: 2px solid #96281b;
-		border-radius: 1px 4px 1px 1px;
-	}
-
-	:global(.dark) .truck-cab {
-		background: #922316;
-		border-color: #6c1a11;
-	}
-
-	.cab-window {
-		position: absolute;
-		top: 3px;
-		right: 3px;
-		width: 55%;
-		height: 40%;
-		background: #aed6f1;
-		border: 1px solid #85c1e9;
-		border-radius: 1px 3px 0 0;
-	}
-
-	:global(.dark) .cab-window {
-		background: #5b8db8;
-		border-color: #417a9b;
-	}
-
-	.cab-bumper {
-		position: absolute;
-		bottom: -2px;
-		right: -2px;
-		width: 30%;
-		height: 4px;
-		background: #7f8c8d;
-		border-radius: 0 0 2px 0;
-	}
-
-	/* Shared wheel style */
-	.truck-wheel {
-		position: absolute;
-		bottom: 2px;
-		width: 10px;
-		height: 10px;
-		background: #2c3e50;
-		border-radius: 50%;
-		border: 2px solid #555;
-	}
-
-	.tw-1 {
-		left: 6%;
-	}
-	.tw-2 {
-		left: 18%;
-	}
-	.tw-3 {
-		right: 14%;
-	}
-	.tw-4 {
-		right: 3%;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.worker,
-		.replen-worker,
-		.truck {
-			transition-duration: 0.01s;
 		}
 
 		@keyframes truck-arrive {
@@ -1249,6 +1097,21 @@
 			to {
 				transform: translateX(0);
 			}
+		}
+	}
+
+	/*
+		On a wide modal the fixed-size figures would look lost, so the whole scene is
+		drawn larger. `zoom` scales the pixel sizes and keeps the percentage layout.
+	*/
+	@media (min-width: 900px) and (min-height: 720px) {
+		.scene {
+			zoom: 1.2;
+			/* Trucks grow with the zoom but their docks do not move, so trim them to fit. */
+			--u: 0.85;
+		}
+		.inbound-truck {
+			--u: 0.72;
 		}
 	}
 
@@ -1265,47 +1128,60 @@
 
 	@media (max-width: 640px) {
 		.scene {
-			height: 150px;
-			--carton: 6px;
+			height: 160px;
+			--carton: 7px;
 			--rack-left: 32%;
+			--u: 0.55;
 		}
 		/* The scene is percentage-positioned but its contents are fixed px, so on a
 		   narrow screen everything crowds. Spread the chain across the space that is
 		   actually there: the rack clears the replen runner parked at 24%, and the
-		   picker, cart and staging move out toward the truck at 84%. */
+		   picker, cart and staging move out toward the truck. */
+		.building {
+			left: 13%;
+			right: 18%;
+		}
+		.inbound-truck {
+			--u: 0.5;
+			right: 89%;
+		}
+		.truck {
+			left: 82.5%;
+		}
 		.receiving-area {
 			left: 19%;
 		}
+		.receiving-label {
+			left: calc(19% + var(--carton) + 7px);
+		}
 		.worker-idle,
 		.worker-carrying-back {
-			left: 55%;
+			left: 53%;
 		}
 		.cart-at-pick {
-			left: 62%;
+			left: 60%;
 		}
 		.staging-area {
-			left: 70%;
+			left: 68%;
 		}
 		.staging-label {
-			left: 75%;
+			left: calc(68% + var(--carton) * 2 + 7px);
 		}
 		.worker-at-staging {
-			left: 72%;
+			left: 69%;
 		}
 		.cart-at-staging {
-			left: 73%;
+			left: 71%;
 		}
 		.building-sign {
-			font-size: 10px;
+			font-size: 11px;
 		}
 		/*
-			These two stay at 6px on purpose. The scene is aria-hidden decoration,
-			and everything they label is also shown as 14px+ text in PickingPanel
-			and OrderStatusBar. WAVE flags them as small text; that is accepted.
+			Small on purpose. The scene is aria-hidden decoration, and everything these
+			label is also shown as 14px+ text in PickingPanel and OrderStatusBar.
 		*/
-		.staging-label,
-		.receiving-label {
-			font-size: 6px;
+		.area-label {
+			font-size: 8px;
 		}
 	}
 </style>

@@ -46,7 +46,7 @@
 			header, with its Close and Reset buttons, off the top of the screen.
 		-->
 		<div
-			class="bg-surface modal-panel relative z-10 flex h-full w-screen flex-col overflow-hidden shadow-2xl md:h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-2xl"
+			class="bg-surface modal-panel relative z-10 flex h-full w-screen flex-col overflow-hidden shadow-2xl md:h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-lg"
 		>
 			{@render children()}
 		</div>

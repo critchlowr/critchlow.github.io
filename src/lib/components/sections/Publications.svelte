@@ -1,98 +1,66 @@
 <script lang="ts">
-	import { publications, credentials } from '$lib/data/content';
+	import { publications, credentials, researchInterests } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import Entry from '$lib/components/ui/Entry.svelte';
 	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
 
-	const peerReviewed = publications.filter((p) => p.status === 'published');
-	const inPreparation = publications.filter((p) => p.status === 'in-preparation');
-
-	const groups = [
-		{ label: 'Peer-Reviewed', items: peerReviewed },
-		{ label: 'In Preparation', items: inPreparation }
-	];
+	const statusLabel = { published: 'Peer-reviewed', 'under-review': 'Under review' };
 </script>
 
-<SectionWrapper id="publications" headingId="publications-heading" title="Publications">
+<SectionWrapper id="publications" headingId="publications-heading" title="Research">
 	<div class="space-y-12">
-		{#each groups as group (group.label)}
-			{#if group.items.length > 0}
-				<div>
-					<h3 class="text-ink-muted mb-4 text-sm font-semibold tracking-[0.1em] uppercase">
-						{group.label}
-					</h3>
-					<div class="space-y-5">
-						{#each group.items as pub (pub.title)}
-							<Card as="article" class="p-6 md:p-7">
-								<h4 class="text-ink-strong font-display text-xl leading-snug font-semibold">
-									{pub.title}
-								</h4>
-								<p class="text-ink-muted mt-2 text-base">{pub.authors}</p>
-								<p class="text-ink-muted mt-1 text-base italic">
-									{pub.venue}
-								</p>
-								{#if pub.honor}
-									<p class="text-ink-strong mt-1 text-base font-semibold">{pub.honor}</p>
-								{/if}
-								{#if pub.summary}
-									<p class="text-ink text-body mt-3">
-										{pub.summary}
-									</p>
-								{/if}
-								<p class="border-edge text-ink-muted text-body mt-4 border-t pt-4">
-									<span class="text-ink-strong font-semibold">My contribution:</span>
-									{pub.contribution}
-								</p>
-								{#if pub.funding}
-									<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
-								{/if}
-								{#if pub.href}
-									<p class="mt-4">
-										<ArrowLink
-											href={pub.href}
-											label={pub.hrefLabel ?? 'Read more'}
-											external={pub.external}
-										/>
-									</p>
-								{/if}
-							</Card>
-						{/each}
-					</div>
-				</div>
-			{/if}
-		{/each}
+		<p class="text-ink text-body sm:text-lede max-w-measure">{researchInterests}</p>
+		<ul class="space-y-12">
+			{#each publications as pub (pub.title)}
+				<Entry title={pub.title}>
+					{#snippet meta()}
+						<p>{statusLabel[pub.status]}</p>
+					{/snippet}
+					{#snippet lead()}
+						<p class="text-ink-muted mt-2">{pub.authors}</p>
+						<p class="text-ink-muted mt-1 italic">{pub.venue}</p>
+						{#if pub.honor}
+							<p class="text-ink-strong mt-1 font-semibold">{pub.honor}</p>
+						{/if}
+					{/snippet}
+					{#if pub.summary}
+						<p class="text-ink text-body mb-4">{pub.summary}</p>
+					{/if}
+					<p class="text-ink-muted text-body">
+						<span class="text-ink-strong font-semibold">My contribution:</span>
+						{pub.contribution}
+					</p>
+					{#if pub.funding}
+						<p class="text-ink-muted mt-3 text-sm">{pub.funding}</p>
+					{/if}
+					{#if pub.href}
+						<p class="mt-4">
+							<ArrowLink
+								href={pub.href}
+								label={pub.hrefLabel ?? 'Read more'}
+								external={pub.external}
+							/>
+						</p>
+					{/if}
+				</Entry>
+			{/each}
+		</ul>
 
-		<ul class="flex flex-wrap items-center gap-x-3 gap-y-2">
+		<!-- Indented to the entries' text column. -->
+		<ul class="text-ink-muted space-y-1 text-sm md:pl-48">
 			<li>
 				<a
 					href={credentials.orcidHref}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="border-edge hover:border-edge-hover inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5 text-sm transition-colors"
+					class="link inline-flex items-center gap-1.5"
 				>
 					<img src="/images/orcid-id.svg" alt="" class="h-4 w-4" width="16" height="16" />
-					<span class="text-ink-muted">
-						<span class="sr-only">ORCID iD:</span>
-						{credentials.orcid}
-					</span>
+					<span>ORCID iD {credentials.orcid}</span>
 					<span class="sr-only">(opens in a new tab)</span>
 				</a>
 			</li>
-			<li class="border-edge inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1.5">
-				<!--
-					ACM's logo is a restricted trademark, so this is a typographic mark rather
-					than the corporate logo.
-				-->
-				<span
-					class="bg-chip text-ink inline-flex h-4 items-center rounded-full px-1.5 text-[0.6rem] font-bold tracking-tight"
-					aria-hidden="true"
-				>
-					ACM
-				</span>
-				<span class="text-ink-muted text-sm">
-					{credentials.membershipDetail}
-				</span>
-			</li>
+			<li>Member, {credentials.membershipDetail}</li>
 		</ul>
 	</div>
 </SectionWrapper>

@@ -13,17 +13,16 @@
 
 <!--
 	One plain section: a heading and its content on one container width, so every
-	section shares the same left edge. No numbers, rules or reveal animations; the
-	page should read like a résumé.
-
-	`odd:bg-band` shades every other section by its position on the page (the hero
-	is the first child), so the alternation survives reordering the sections.
+	section shares the same left edge. A rule across the column marks where each one
+	starts; there are no numbers or reveal animations.
 -->
-<section {id} aria-labelledby={headingId} class="odd:bg-band">
-	<div class="mx-auto max-w-4xl px-5 py-16 md:py-20">
-		<h2 id={headingId} class="text-ink-strong font-display text-title mb-8 font-semibold">
-			{title}
-		</h2>
-		{@render children()}
+<section {id} aria-labelledby={headingId}>
+	<div class="mx-auto max-w-4xl px-5">
+		<div class="border-edge border-t py-16 md:py-20">
+			<h2 id={headingId} class="text-ink-strong text-title mb-10 font-extrabold">
+				{title}
+			</h2>
+			{@render children()}
+		</div>
 	</div>
 </section>

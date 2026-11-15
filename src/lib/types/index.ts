@@ -5,12 +5,12 @@ export interface Experience {
 	period: string;
 	bullets: string[];
 	summary?: string;
-	/** Shows the link to the WMS simulator and the conveyor belt on this card. */
+	/** Shows the link to the WMS simulator and the conveyor belt under this role. */
 	showSimulator?: boolean;
-	/** Anchor id for the card, so the Skills section can link to it. */
+	/** Anchor id for the role, so the Skills section can link to it. */
 	id?: string;
-	/** Hand-drawn stickers around the card's edges. */
-	stickers?: 'bar' | 'saw' | 'bench';
+	/** Hand-drawn objects shown under the role's dates. */
+	stickers?: 'bar' | 'saw' | 'bench' | 'research' | 'warehouse';
 }
 
 export interface Education {
@@ -25,7 +25,7 @@ export interface Publication {
 	authors: string;
 	title: string;
 	venue: string;
-	status: 'published' | 'in-preparation';
+	status: 'published' | 'under-review';
 	/** An award or nomination, shown under the venue. */
 	honor?: string;
 	/** Funding acknowledgment, worded as in the paper. */

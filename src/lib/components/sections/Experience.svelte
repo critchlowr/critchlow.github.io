@@ -1,32 +1,34 @@
 <script lang="ts">
 	import { experience } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import Entry from '$lib/components/ui/Entry.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
 	import JobStickers from '$lib/components/ui/JobStickers.svelte';
 </script>
 
 <SectionWrapper id="experience" headingId="experience-heading" title="Experience">
-	<!-- A wider gap than usual leaves room for the stickers on the card edges. -->
-	<ul class="space-y-10">
+	<ul class="space-y-12">
 		{#each experience as job (job.company + job.title)}
-			<Card as="li" id={job.id} class="group relative p-6 md:p-7">
-				<div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-					<div>
-						<h3 class="text-ink-strong font-display text-2xl font-semibold">{job.title}</h3>
-						<p class="text-brand mt-0.5 text-base font-medium">{job.company}</p>
+			<Entry id={job.id} title={job.title}>
+				{#snippet meta()}
+					<!-- Dates beside the stickers on phones; stacked in the left column above that. -->
+					<div class="flex items-end justify-between gap-4 md:block">
+						<p>
+							<span class="block">{job.period}</span>
+							<span class="block">{job.location}</span>
+						</p>
+						{#if job.stickers}
+							<div class="max-w-[55%] md:mt-4 md:max-w-none">
+								<JobStickers set={job.stickers} />
+							</div>
+						{/if}
 					</div>
-					<!-- One line with a dot between on phones; stacked and right-aligned beside the title above that. -->
-					<p
-						class="text-ink-muted flex shrink-0 flex-wrap gap-x-2 text-sm sm:flex-col sm:items-end"
-					>
-						<span>{job.period}</span>
-						<span class="sm:hidden" aria-hidden="true">·</span>
-						<span>{job.location}</span>
-					</p>
-				</div>
+				{/snippet}
+				{#snippet lead()}
+					<p class="text-brand mt-0.5 font-medium">{job.company}</p>
+				{/snippet}
 				{#if job.summary}
-					<p class="text-ink text-body mt-4">{job.summary}</p>
+					<p class="text-ink text-body">{job.summary}</p>
 				{/if}
 				{#if job.bullets.length > 0}
 					<ul class="text-ink-muted text-body mt-3 list-disc space-y-2 pl-5">
@@ -41,30 +43,11 @@
 							See how the work flowed: try the WMS simulator
 						</a>
 					</p>
-					<!-- Runs to the card edges instead of nesting a second border inside the card. -->
-					<div class="bleed">
+					<div class="mt-2">
 						<ConveyorBelt />
 					</div>
 				{/if}
-				{#if job.stickers}
-					<JobStickers set={job.stickers} />
-				{/if}
-			</Card>
+			</Entry>
 		{/each}
 	</ul>
 </SectionWrapper>
-
-<style>
-	/* Bleeds a bottom strip to the card edges, matching the card's padding. */
-	.bleed {
-		margin: 1.5rem -1.5rem -1.5rem;
-		overflow: hidden;
-		border-radius: 0 0 0.75rem 0.75rem;
-	}
-
-	@media (width >= 48rem) {
-		.bleed {
-			margin: 1.5rem -1.75rem -1.75rem;
-		}
-	}
-</style>
