@@ -38,12 +38,7 @@
 	}
 </script>
 
-<div
-	class="belt border-edge relative rounded-b-xl border-t pt-9 pb-3 select-none"
-	class:armed
-	class:playing
-	bind:this={root}
->
+<div class="belt relative pt-9 select-none" class:armed class:playing bind:this={root}>
 	<div class="relative h-10 overflow-hidden" aria-hidden="true">
 		{#key run}
 			<!-- The track and boxes travel together, so the belt reads as carrying them. -->
@@ -93,19 +88,13 @@
 		flex-shrink: 0;
 	}
 
-	/*
-		The belt's own colours. Dark mode swaps the parchment band for the page's
-		band colour, so the strip sits inside the card instead of standing out as a
-		brown slab.
-	*/
+	/* The belt has no ground of its own: the track and boxes sit on the page. */
 	.belt {
-		--belt-line: var(--color-warm-600);
-		background: var(--color-warm-100);
+		--belt-line: var(--t-ink-muted);
 	}
 
 	:global(.dark) .belt {
 		--belt-line: var(--t-edge-hover);
-		background: var(--t-band);
 	}
 
 	.belt-track {
@@ -117,16 +106,23 @@
 		background: repeating-linear-gradient(to right, var(--belt-line) 0 6px, transparent 6px 12px);
 	}
 
+	/* Taped cartons, in the same cardboard and ink as the simulator's. */
 	.box {
 		position: absolute;
 		border-radius: 3px;
-		border: 1px solid var(--color-ember-500);
-		background-color: var(--color-ember-50);
+		border: 1.5px solid #3b2a1e;
+		background: #e6bd85
+			linear-gradient(
+				to bottom,
+				transparent calc(50% - 1.5px),
+				#b77a3c calc(50% - 1.5px),
+				#b77a3c calc(50% + 1.5px),
+				transparent calc(50% + 1.5px)
+			);
 	}
 
 	:global(.dark) .box {
-		border-color: var(--color-ember-400);
-		background-color: var(--color-ember-900);
+		outline: 1px solid rgb(255 248 235 / 0.8);
 	}
 
 	.belt-rollers {
@@ -147,12 +143,13 @@
 		height: 6px;
 		border-radius: 50%;
 		border: 1.5px solid var(--belt-line);
+		background: var(--t-surface);
 	}
 
 	.replay {
 		position: absolute;
 		top: 0.5rem;
-		right: 1rem;
+		right: 0;
 		font-size: 0.8125rem;
 		font-weight: 600;
 		text-decoration: underline;

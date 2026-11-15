@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { scrollable } from '$lib/actions/scrollable';
-	import Card from '$lib/components/ui/Card.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import WarehouseModal from '$lib/components/warehouse/WarehouseModal.svelte';
@@ -18,11 +17,11 @@
 		<p class="mb-4">
 			<a href="/#experience" class="link text-sm font-semibold">Back to Experience</a>
 		</p>
-		<h1 id="simulator-heading" class="text-ink-strong font-display text-title mb-8 font-semibold">
+		<h1 id="simulator-heading" class="text-ink-strong text-title mb-8 font-extrabold">
 			WMS Simulator
 		</h1>
-		<Card class="p-6 md:p-8">
-			<div class="max-w-2xl space-y-5">
+		<div>
+			<div class="max-w-measure space-y-5">
 				<p class="text-ink text-body">
 					For three years I administered warehouse management systems for four enterprise accounts.
 					Most of that job was explaining the same flow to people who had never worked in a
@@ -83,7 +82,7 @@
 					</button>
 				</div>
 			</div>
-		</Card>
+		</div>
 	</div>
 </section>
 

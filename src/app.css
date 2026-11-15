@@ -1,23 +1,21 @@
 @import 'tailwindcss';
 
 /*
-	Self-hosted, so the font stack declared below is the one that loads. Baskervville
-	and Jost are free stand-ins for Baskerville and Futura, the faces on Ryan's
-	business card.
+	Self-hosted, so the font stack declared below is the one that loads. Atkinson
+	Hyperlegible was drawn by the Braille Institute so that letters that are easy to
+	confuse (I, l, 1; O, 0) stay distinct for low-vision readers. One family carries
+	the whole site; its monospace cut sets the simulator's location and order codes.
 */
-@import '@fontsource-variable/baskervville';
-@import '@fontsource-variable/baskervville/wght-italic.css';
-@import '@fontsource-variable/jost';
-@import '@fontsource-variable/jost/wght-italic.css';
-@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/atkinson-hyperlegible-next';
+@import '@fontsource-variable/atkinson-hyperlegible-next/wght-italic.css';
+@import '@fontsource-variable/atkinson-hyperlegible-mono';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
 	/*
-		Colour ramps from the earlier "Valley" palette. The page itself uses the
-		semantic tokens further down; these remain for the simulator, its status
-		badges and the conveyor belt. Each ramp is generated in OKLCH on Tailwind's
+		Colour ramps for the simulator and its status badges. The page itself uses the
+		semantic tokens further down. Each ramp is generated in OKLCH on Tailwind's
 		lightness curve, so a stop number means the same lightness on every ramp.
 	*/
 
@@ -47,7 +45,7 @@
 	--color-moss-900: #2d5128;
 	--color-moss-950: #112a0e;
 
-	/* warm — parchment neutral, low chroma so it can carry large areas */
+	/* warm — the simulator's neutral: parchment, low chroma so it can carry large areas */
 	--color-warm-50: #fbf9f6;
 	--color-warm-100: #f8f3ed;
 	--color-warm-200: #efe6d8;
@@ -86,25 +84,35 @@
 	--color-plum-900: #583a5c;
 	--color-plum-950: #301a33;
 
-	/* Typefaces */
-	--font-sans: 'Jost Variable', Futura, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-	--font-display: 'Baskervville Variable', Baskerville, Georgia, 'Times New Roman', serif;
-	--font-mono: 'JetBrains Mono Variable', 'Fira Code', Consolas, monospace;
+	/* Typefaces. --font-display is the same family: headings differ by weight and size. */
+	--font-sans:
+		'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-display: var(--font-sans);
+	--font-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Consolas, monospace;
 
 	/*
-		Named type steps. Adding steps, rather than redefining --text-base and the
-		rest, leaves the simulator's text-sm and text-base sizes untouched.
+		Named type steps on the classical scale (17, 21, 36, then the fluid name in the
+		hero). Adding steps, rather than redefining --text-base and the rest, leaves
+		the simulator's text-sm and text-base sizes untouched.
 	*/
-	--text-display: 4.25rem;
-	--text-display--line-height: 1.02;
-	--text-display--letter-spacing: -0.01em;
+	--text-display: 4.5rem;
+	--text-display--line-height: 1;
+	--text-display--letter-spacing: -0.03em;
 	--text-title: 2.25rem;
-	--text-title--line-height: 1.15;
-	--text-title--letter-spacing: -0.01em;
+	--text-title--line-height: 1.1;
+	--text-title--letter-spacing: -0.02em;
+	--text-entry: 1.3125rem;
+	--text-entry--line-height: 1.25;
 	--text-lede: 1.25rem;
-	--text-lede--line-height: 1.55;
+	--text-lede--line-height: 1.5;
 	--text-body: 1.0625rem;
-	--text-body--line-height: 1.68;
+	--text-body--line-height: 1.6;
+
+	/*
+		Reading measure for body copy: about 70 characters at the body size. Gives the
+		max-w-measure utility.
+	*/
+	--container-measure: 38rem;
 
 	/* Easing for small hover movements. */
 	--ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
@@ -150,45 +158,47 @@
 }
 
 /*
-	Palette "Navy and marigold". Navy carries text, links and buttons in light mode;
-	marigold is a small accent (chips) and becomes the button colour in dark mode.
-	Every text pair passes WCAG 2.2 AA; CI checks the rendered pages with axe and pa11y.
+	Palette "Sand, umber and moss". Earth tones taken from the site's illustrations:
+	the umber of their ink for text, moss green for links and buttons, and ochre as a
+	small accent (chips, selection) that becomes the button colour in dark mode. The
+	dark theme is peat brown, not black. Every text pair passes WCAG 2.2 AA; CI checks
+	the rendered pages with axe and pa11y.
 */
 :root {
-	--t-surface: #fbf8f1;
-	--t-surface-raised: #ffffff;
-	--t-band: #f1ebdd;
-	--t-footer: #f1ebdd;
-	--t-edge: #ddd3bf;
-	--t-edge-hover: #7a8295;
-	--t-ink: #16213a;
-	--t-ink-muted: #4a5468;
-	--t-ink-strong: #16213a;
-	--t-brand: #1f3d7a;
-	--t-brand-strong: #162d5c;
+	--t-surface: #f5f0e6;
+	--t-surface-raised: #fffdf8;
+	--t-band: #ebe3d4;
+	--t-footer: #ebe3d4;
+	--t-edge: #d6cab6;
+	--t-edge-hover: #857663;
+	--t-ink: #2a2017;
+	--t-ink-muted: #5a4d3f;
+	--t-ink-strong: #1f170f;
+	--t-brand: #3d5a2c;
+	--t-brand-strong: #2d4520;
 	--t-on-brand: #ffffff;
-	--t-link: #1f3d7a;
-	--t-chip: #f7e6b5;
-	--t-focus: #1f3d7a;
+	--t-link: #3d5a2c;
+	--t-chip: #edc86a;
+	--t-focus: #3d5a2c;
 	color-scheme: light;
 }
 
 :root.dark {
-	--t-surface: #0f1628;
-	--t-surface-raised: #19233d;
-	--t-band: #141d33;
-	--t-footer: #141d33;
-	--t-edge: #2c3856;
-	--t-edge-hover: #76819a;
-	--t-ink: #eaeef6;
-	--t-ink-muted: #b0b9cb;
+	--t-surface: #1e1914;
+	--t-surface-raised: #2a231b;
+	--t-band: #251f18;
+	--t-footer: #251f18;
+	--t-edge: #453a2d;
+	--t-edge-hover: #9c8d79;
+	--t-ink: #f0e8db;
+	--t-ink-muted: #c2b5a2;
 	--t-ink-strong: #ffffff;
-	--t-brand: #f2c55c;
-	--t-brand-strong: #f7d88d;
-	--t-on-brand: #0f1628;
-	--t-link: #9fbcf5;
-	--t-chip: #3a3220;
-	--t-focus: #f2c55c;
+	--t-brand: #e5b552;
+	--t-brand-strong: #efcb80;
+	--t-on-brand: #1e1914;
+	--t-link: #bdd893;
+	--t-chip: #4a3a17;
+	--t-focus: #e5b552;
 	color-scheme: dark;
 }
 
@@ -197,7 +207,7 @@
 	has the same shape, weight and hover behaviour.
 */
 @utility btn {
-	@apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors motion-reduce:transition-none;
+	@apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-base font-bold transition-colors motion-reduce:transition-none;
 }
 
 @utility btn-primary {
@@ -223,6 +233,15 @@
 	color: var(--t-link);
 	text-decoration-line: underline;
 	text-underline-offset: 4px;
+}
+
+/*
+	The illustrations are drawn in dark ink. On the dark theme a thin light edge, like
+	a die-cut sticker, keeps their outlines readable.
+*/
+.dark .ink-art {
+	filter: drop-shadow(1px 0 0 rgb(255 248 235 / 0.8)) drop-shadow(-1px 0 0 rgb(255 248 235 / 0.8))
+		drop-shadow(0 1px 0 rgb(255 248 235 / 0.8)) drop-shadow(0 -1px 0 rgb(255 248 235 / 0.8));
 }
 
 html {

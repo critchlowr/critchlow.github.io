@@ -405,14 +405,14 @@
 	<div class="flex shrink-0 items-center gap-1.5">
 		<button
 			type="button"
-			class="border-edge text-ink-muted hover:border-edge-hover hover:bg-band inline-flex h-11 items-center rounded-lg border px-3 text-xs font-semibold transition-colors"
+			class="border-edge text-ink-muted hover:border-edge-hover hover:bg-band inline-flex h-11 items-center rounded-md border px-3 text-xs font-semibold transition-colors"
 			onclick={reset}
 		>
 			Reset
 		</button>
 		<button
 			type="button"
-			class="text-ink-muted hover:bg-band hover:text-ink-strong inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors"
+			class="text-ink-muted hover:bg-band hover:text-ink-strong inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors"
 			onclick={onclose}
 			aria-label="Close simulator"
 		>

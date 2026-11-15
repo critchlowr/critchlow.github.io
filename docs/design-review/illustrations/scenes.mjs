@@ -578,6 +578,277 @@ function drawShavings(s, spots) {
 		);
 }
 
+/** Combination square standing on a board whose top edge is at y = 124. */
+function drawSquare(s) {
+	// Combination square standing on the board: blade first, head over it.
+	s.shape(rect(150, 20, 11, 100, 1.5), { fill: C.steel, w: 2 });
+	for (let i = 0, y = 26; y < 100; i++, y += 5)
+		s.stroke(
+			[
+				[150, y],
+				[150 + (i % 4 === 0 ? 7 : i % 2 === 0 ? 5 : 3), y]
+			],
+			{ w: 1.1, a: 0 }
+		);
+	s.shape(
+		poly(
+			[
+				[132, 98],
+				[166, 98],
+				[178, 110],
+				[178, 124],
+				[132, 124]
+			],
+			3
+		),
+		{ fill: C.plum }
+	);
+	s.shape(rect(139, 105, 16, 7, 3), { fill: '#d3eaa4', w: 1.6 });
+	s.dot(149, 108.5, 1.8, C.white);
+	s.shape(ellipse(170, 117, 3.4, 3.4), { fill: C.steelDk, w: 1.6 });
+}
+
+/**
+ * Research tools for the hero's shelf: a clipboard of interview notes, three sticky
+ * notes (a small affinity cluster) and a pencil. Each stands on y = 178.
+ */
+function research() {
+	const s = makeScene({ width: 320, height: 190 });
+	const TOP = 178;
+
+	s.group('notes', () => {
+		for (const [x, y, color, tilt] of [
+			[120, 112, C.tape, -7],
+			[146, 124, '#e4c7e8', 8],
+			[126, 142, '#d1f3cb', 2]
+		]) {
+			const r = (tilt * Math.PI) / 180;
+			const at = (a, b) => [
+				x + 17 + (a - 17) * Math.cos(r) - (b - 17) * Math.sin(r),
+				y + 17 + (a - 17) * Math.sin(r) + (b - 17) * Math.cos(r)
+			];
+			s.shape(poly([at(0, 0), at(34, 0), at(34, 34), at(0, 34)], 2), { fill: color, w: 2 });
+			s.stroke([at(7, 11), at(27, 11)], { w: 1.4, a: 0.3 });
+			s.stroke([at(7, 18), at(23, 18)], { w: 1.4, a: 0.3 });
+			s.stroke([at(7, 25), at(18, 25)], { w: 1.4, a: 0.3 });
+		}
+	});
+
+	s.group('clipboard', () => {
+		// Leaning back a little: backing, paper, clip, then the notes.
+		const lean = (x, y) => [x + (TOP - y) * 0.12, y];
+		s.shape(poly([lean(22, 84), lean(84, 84), lean(84, TOP), lean(22, TOP)], 4), {
+			fill: C.woodDk
+		});
+		s.shape(poly([lean(28, 96), lean(78, 96), lean(78, TOP - 6), lean(28, TOP - 6)], 1.5), {
+			fill: C.white,
+			w: 1.8
+		});
+		s.shape(poly([lean(42, 80), lean(64, 80), lean(64, 92), lean(42, 92)], 3), {
+			fill: C.steel,
+			w: 2
+		});
+		for (const [y, len, box] of [
+			[108, 30, true],
+			[119, 24, true],
+			[130, 32, true],
+			[143, 40, false],
+			[152, 34, false],
+			[161, 22, false]
+		]) {
+			if (box)
+				s.shape(poly([lean(33, y - 3), lean(39, y - 3), lean(39, y + 3), lean(33, y + 3)], 1), {
+					w: 1.3,
+					a: 0.2
+				});
+			const x0 = box ? 44 : 33;
+			s.stroke([lean(x0, y), lean(Math.min(x0 + len, 73), y)], { w: 1.4, a: 0.3 });
+		}
+		// Two boxes ticked.
+		for (const y of [108, 130])
+			s.stroke([lean(34, y), lean(36, y + 2), lean(40, y - 5)], {
+				color: C.bitters,
+				w: 1.6,
+				a: 0
+			});
+	});
+
+	s.group('pencil', () => {
+		// Lying down, point to the left.
+		s.shape(rect(232, TOP - 8, 44, 8, 1.5), { fill: C.pencil, w: 2 });
+		s.shape(
+			poly(
+				[
+					[232, TOP - 8],
+					[220, TOP - 4],
+					[232, TOP]
+				],
+				1
+			),
+			{ fill: C.woodEnd, w: 1.8 }
+		);
+		s.shape(rect(276, TOP - 8, 7, 8, 2), { fill: '#e89a9a', w: 1.8 });
+		s.dot(221.5, TOP - 4, 1.3, C.ink);
+	});
+
+	return s;
+}
+
+/** Two shipping cartons, for the warehouse-systems years. */
+function warehouse() {
+	const s = makeScene({ width: 120, height: 110 });
+	s.group('cartons', () => {
+		const carton = (x, y, w, h, label) => {
+			s.shape(rect(x, y, w, h, 2), { fill: C.wood });
+			// Packing tape over the top seam.
+			s.shape(rect(x + w / 2 - 5, y, 10, h * 0.42, 1), { fill: C.woodEnd, w: 1.6 });
+			s.stroke(
+				[
+					[x + 3, y + h * 0.2],
+					[x + w / 2 - 6, y + h * 0.2]
+				],
+				{ w: 1.3, a: 0.2 }
+			);
+			s.stroke(
+				[
+					[x + w / 2 + 6, y + h * 0.2],
+					[x + w - 3, y + h * 0.2]
+				],
+				{ w: 1.3, a: 0.2 }
+			);
+			if (label) {
+				s.shape(rect(x + w - 26, y + h - 20, 19, 13, 1), { fill: C.white, w: 1.4 });
+				s.stroke(
+					[
+						[x + w - 23, y + h - 16],
+						[x + w - 11, y + h - 16]
+					],
+					{ w: 1.1, a: 0 }
+				);
+				s.stroke(
+					[
+						[x + w - 23, y + h - 12],
+						[x + w - 15, y + h - 12]
+					],
+					{ w: 1.1, a: 0 }
+				);
+			}
+		};
+		carton(12, 54, 76, 50, true);
+		carton(30, 22, 44, 32, false);
+	});
+	return s;
+}
+
+/** The shelf itself, in a long and a short cut so neither is stretched far. */
+function plank(len) {
+	const s = makeScene({ width: len, height: 28 });
+	board(s, 3, 3, len - 6, 22, { face: '#e9c48f', knot: len * 0.82 });
+	return s;
+}
+
+/**
+ * Parts for the WMS simulator's scene, drawn at twice their display size. Each is
+ * written whole (not cropped), so the scene can place it on a fixed box. Workers and
+ * trucks face right; the scene mirrors them as needed.
+ */
+function sim() {
+	const opts = { sw: 2.6, amp: 0.4, step: 4 };
+	const parts = {};
+
+	// A worker from the waist up: hard hat, head, torso in a vest, one arm.
+	const worker = (hat, vest) => {
+		const s = makeScene({ width: 48, height: 74, ...opts });
+		s.shape(rect(9, 38, 30, 34, 7), { fill: vest });
+		s.shape(rect(12, 16, 24, 23, 9), { fill: C.egg });
+		s.dot(30, 27, 1.8);
+		s.shape(
+			join(arc(24, 18, 16, 14, 180, 360), [
+				[46, 18],
+				[8, 18]
+			]),
+			{ fill: hat }
+		);
+		rod(
+			s,
+			[
+				[23, 45],
+				[27, 62]
+			],
+			vest,
+			3.4
+		);
+		return s;
+	};
+	parts['worker-picker'] = worker(C.tape, C.plum);
+	parts['worker-runner'] = worker(C.saw, C.moss);
+
+	// One leg, hung from its top centre so the scene can swing it.
+	const leg = makeScene({ width: 16, height: 32, ...opts });
+	leg.shape(rect(3, 2, 10, 24, 3), { fill: '#6f7f8f' });
+	leg.shape(rect(2, 23, 13, 7, 3), { fill: C.black, w: 2 });
+	parts['worker-leg'] = leg;
+
+	// A box truck with an open-sided trailer, so the scene can show what is loaded.
+	const truck = (cab) => {
+		const s = makeScene({ width: 240, height: 128, ...opts });
+		s.shape(rect(4, 12, 152, 90, 4), { fill: '#f6f1e4' });
+		s.stroke(
+			[
+				[4, 102],
+				[228, 102]
+			],
+			{ w: 3 }
+		);
+		s.shape(
+			poly(
+				[
+					[162, 50],
+					[204, 50],
+					[226, 76],
+					[234, 80],
+					[234, 102],
+					[162, 102]
+				],
+				[4, 6, 4, 4, 3, 2]
+			),
+			{ fill: cab }
+		);
+		s.shape(
+			poly(
+				[
+					[172, 58],
+					[200, 58],
+					[214, 76],
+					[172, 76]
+				],
+				3
+			),
+			{ fill: C.water, w: 2 }
+		);
+		s.shape(rect(226, 96, 11, 8, 2), { fill: C.steelDk, w: 2 });
+		s.stroke(
+			[
+				[156, 96],
+				[162, 96]
+			],
+			{ w: 3 }
+		);
+		return s;
+	};
+	parts['truck-out'] = truck(C.saw);
+	parts['truck-in'] = truck('#8fb4dc');
+
+	// A wheel with one bolt off centre, so it visibly turns.
+	const wheel = makeScene({ width: 32, height: 32, ...opts });
+	wheel.shape(ellipse(16, 16, 13, 13), { fill: C.black });
+	wheel.shape(ellipse(16, 16, 5, 5), { fill: C.steel, w: 2 });
+	wheel.dot(16, 8.5, 1.6, C.steel);
+	parts['wheel'] = wheel;
+
+	return parts;
+}
+
 function atlas() {
 	const s = makeScene({ width: W, height: H });
 
@@ -601,34 +872,7 @@ function atlas() {
 
 	s.group('chisel', () => drawChisel(s));
 
-	s.group('square', () => {
-		// Combination square standing on the board: blade first, head over it.
-		s.shape(rect(150, 20, 11, 100, 1.5), { fill: C.steel, w: 2 });
-		for (let i = 0, y = 26; y < 100; i++, y += 5)
-			s.stroke(
-				[
-					[150, y],
-					[150 + (i % 4 === 0 ? 7 : i % 2 === 0 ? 5 : 3), y]
-				],
-				{ w: 1.1, a: 0 }
-			);
-		s.shape(
-			poly(
-				[
-					[132, 98],
-					[166, 98],
-					[178, 110],
-					[178, 124],
-					[132, 124]
-				],
-				3
-			),
-			{ fill: C.plum }
-		);
-		s.shape(rect(139, 105, 16, 7, 3), { fill: '#d3eaa4', w: 1.6 });
-		s.dot(149, 108.5, 1.8, C.white);
-		s.shape(ellipse(170, 117, 3.4, 3.4), { fill: C.steelDk, w: 1.6 });
-	});
+	s.group('square', () => drawSquare(s));
 
 	s.group('shavings', () =>
 		drawShavings(s, [
@@ -700,7 +944,15 @@ const arg = (flag) => {
 	const i = process.argv.indexOf(flag);
 	return i > -1 ? process.argv[i + 1] : undefined;
 };
-const scenes = { bar: bar(), saw: construction(), bench: atlas() };
+const scenes = {
+	bar: bar(),
+	saw: construction(),
+	bench: atlas(),
+	research: research(),
+	warehouse: warehouse()
+};
+// The hero's shelf is used whole, so the planks are written alongside the icons.
+const whole = { plank: plank(880), 'plank-short': plank(360) };
 const sceneOut = arg('--scenes');
 if (sceneOut) {
 	mkdirSync(sceneOut, { recursive: true });
@@ -712,9 +964,15 @@ if (iconOut) {
 	const icons = {
 		bar: ['beaker', 'coupe', 'egg', 'spoons', 'rocks'],
 		saw: ['lumber', 'saw'],
-		bench: ['chiselboard', 'square', 'tape']
+		bench: ['chiselboard', 'square', 'tape'],
+		research: ['clipboard', 'notes', 'pencil'],
+		warehouse: ['cartons']
 	};
 	for (const [scene, names] of Object.entries(icons))
 		for (const name of names) writeFileSync(`${iconOut}/${name}.svg`, scenes[scene].icon(name));
+	for (const [name, s] of Object.entries(whole)) writeFileSync(`${iconOut}/${name}.svg`, s.svg());
+	mkdirSync(`${iconOut}/sim`, { recursive: true });
+	for (const [name, s] of Object.entries(sim()))
+		writeFileSync(`${iconOut}/sim/${name}.svg`, s.svg());
 }
 if (!sceneOut && !iconOut) console.log('usage: node scenes.mjs --icons <dir> [--scenes <dir>]');

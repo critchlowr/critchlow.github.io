@@ -4,7 +4,7 @@
 </script>
 
 <SectionWrapper id="about" headingId="about-heading" title="About">
-	<div class="max-w-2xl space-y-5">
+	<div class="max-w-measure space-y-5">
 		{#each about.paragraphs as paragraph (paragraph)}
 			<p class="text-ink text-body">{paragraph}</p>
 		{/each}

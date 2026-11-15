@@ -12,7 +12,7 @@
 <a
 	href={link.href}
 	aria-label="{link.label}: {link.display}"
-	class="text-ink border-edge hover:border-edge-hover bg-surface-raised flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors motion-reduce:transition-none"
+	class="text-ink border-edge hover:border-edge-hover bg-surface-raised flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors motion-reduce:transition-none"
 >
 	<Icon name={link.icon} />
 	<span>{link.display}</span>

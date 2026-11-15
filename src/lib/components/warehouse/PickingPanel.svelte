@@ -140,7 +140,7 @@
 	);
 
 	const button =
-		'rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed';
+		'rounded-md px-6 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed';
 	// Primary actions use the site's brand colour; the rest use the semantic fills.
 	const primary = `${button} bg-brand text-on-brand hover:bg-brand-strong`;
 	const fill = `${button} text-white`;
@@ -164,7 +164,7 @@
 			</div>
 		{:else if gamePhase === 'picking'}
 			<div class="border-edge flex items-center gap-2 border-b px-4 py-2">
-				<span class="text-ink-muted text-xs font-semibold tracking-wider uppercase"> Cart </span>
+				<span class="text-ink-muted text-xs font-semibold"> Cart </span>
 				<div class="flex gap-0.5" aria-hidden="true">
 					{#each { length: cartCapacity } as _, i (i)}
 						<div
@@ -185,7 +185,7 @@
 			<div class="p-4">
 				{#if replenNotice}
 					<div
-						class="border-accent-300 bg-accent-50 dark:border-accent-600 dark:bg-accent-900 mb-4 rounded-lg border px-4 py-3"
+						class="border-accent-300 bg-accent-50 dark:border-accent-600 dark:bg-accent-900 mb-4 rounded-md border px-4 py-3"
 					>
 						<p class="text-accent-800 dark:text-accent-200 text-sm font-semibold">
 							Replenishment scheduled
@@ -209,7 +209,7 @@
 					</p>
 
 					<div
-						class="border-accent-300 bg-accent-50 dark:border-accent-500 dark:bg-accent-900 rounded-lg border-2 p-4"
+						class="border-accent-300 bg-accent-50 dark:border-accent-500 dark:bg-accent-900 rounded-md border-2 p-4"
 					>
 						<div class="mb-3 flex items-center justify-between">
 							<span class="text-accent-700 dark:text-accent-200 font-mono text-xs font-semibold">
@@ -228,9 +228,7 @@
 						<dl class="mb-4 flex justify-center gap-6 text-center">
 							{#each [['Location', currentPick.fromLocation], ['Ordered', currentLine.qtyOrdered], ['Pick qty', currentPick.qtyToPick]] as [label, value] (label)}
 								<div>
-									<dt
-										class="text-ink-muted dark:text-accent-200 text-xs font-semibold tracking-wider uppercase"
-									>
+									<dt class="text-ink-muted dark:text-accent-200 text-xs font-semibold">
 										{label}
 									</dt>
 									<dd class="text-ink-strong mt-0.5 font-mono text-lg font-bold">
@@ -289,7 +287,7 @@
 			<div class="space-y-3 p-4">
 				{#if readyOrders.length > 0}
 					<div
-						class="border-moss-300 bg-moss-50 dark:border-moss-600 dark:bg-moss-900 rounded-lg border-2 p-4"
+						class="border-moss-300 bg-moss-50 dark:border-moss-600 dark:bg-moss-900 rounded-md border-2 p-4"
 					>
 						<p class="text-moss-800 dark:text-moss-200 mb-2 text-sm font-medium">
 							Complete and ready to pack:
@@ -315,7 +313,7 @@
 				{#each shortOrders as entry (entry.orderId)}
 					{@const missingUnits = entry.shortfall.reduce((s, l) => s + l.missingQty, 0)}
 					<div
-						class="border-ember-300 bg-ember-50 dark:border-ember-600 dark:bg-ember-950 rounded-lg border-2 p-4"
+						class="border-ember-300 bg-ember-50 dark:border-ember-600 dark:bg-ember-950 rounded-md border-2 p-4"
 					>
 						<div class="mb-2 flex items-center justify-between">
 							<span class="text-ink-strong font-mono text-xs font-semibold">

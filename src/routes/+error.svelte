@@ -9,22 +9,17 @@
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
-<!--
-	Worded as a WMS short-pick exception, the same event the simulator stages when a
-	picker reaches an empty location.
--->
 <section class="flex min-h-[80vh] items-center px-5 pt-24 pb-16" aria-labelledby="error-heading">
 	<div class="mx-auto w-full max-w-2xl">
-		<p class="text-brand font-mono text-sm font-semibold tracking-[0.14em] uppercase">
-			{notFound ? 'Exception · Location empty' : `Exception · ${page.status}`}
-		</p>
-		<h1 id="error-heading" class="text-ink-strong font-display text-display mt-4 font-semibold">
-			{notFound ? 'Nothing at this location.' : 'Something went wrong.'}
+		<!-- Georgia, from the header logo. Masked so the line art takes the ink colour in both themes. -->
+		<span class="logo-mark text-ink-strong block h-28 w-44 bg-current" aria-hidden="true"></span>
+		<h1 id="error-heading" class="text-ink-strong text-display mt-8 font-extrabold">
+			{notFound ? 'Page not found' : 'Something went wrong'}
 		</h1>
 		<p class="text-ink text-body mt-6 max-w-xl">
 			{#if notFound}
-				The picker reached <code class="font-mono text-base">{page.url.pathname}</code> and found the
-				slot empty. The page may have moved, or the link may have a typo.
+				There is nothing at <code class="font-mono text-base">{page.url.pathname}</code>. The link
+				may have a typo, or the page may have moved.
 			{:else}
 				{page.error?.message ?? 'An unexpected error stopped this page from loading.'}
 			{/if}
@@ -32,3 +27,18 @@
 		<a href="/" class="btn btn-primary mt-10"> Back to the main page </a>
 	</div>
 </section>
+
+<style>
+	.logo-mark {
+		mask: url('/images/logo-dog.png') left center / contain no-repeat;
+		-webkit-mask: url('/images/logo-dog.png') left center / contain no-repeat;
+	}
+
+	/* Forced-colours mode repaints backgrounds, which would hide the masked logo. */
+	@media (forced-colors: active) {
+		.logo-mark {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
+	}
+</style>

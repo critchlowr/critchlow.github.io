@@ -53,7 +53,7 @@
 	<meta property="og:image" content="https://ryancritchlow.com/images/og-card.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
-	<meta property="og:image:alt" content="Ryan Critchlow — UX researcher focused on accessibility" />
+	<meta property="og:image:alt" content="Ryan Critchlow, UX researcher focused on accessibility" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Ryan Critchlow" />
 	<meta name="twitter:description" content="UX researcher focused on accessibility" />
@@ -66,9 +66,10 @@
 	{@html `<script type="application/ld+json">${personJsonLd}<\/script>`}
 </svelte:head>
 
+<!-- Research first, then where it was done; the personal note closes the page. -->
 <Hero />
-<About />
-<Education />
 <Publications />
 <Experience />
+<Education />
 <Skills />
+<About />

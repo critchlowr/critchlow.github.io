@@ -73,7 +73,7 @@
 	<h4 class="text-ink-strong mt-6 text-sm font-semibold">Orders</h4>
 	<ul class="mt-2 space-y-2">
 		{#each outcomes as order (order.orderId)}
-			<li class="border-edge bg-surface-raised rounded-lg border px-3 py-2 text-sm">
+			<li class="border-edge bg-surface-raised rounded-md border px-3 py-2 text-sm">
 				<span class="text-ink-strong font-mono text-xs font-semibold">
 					{order.orderId}
 				</span>

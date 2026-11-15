@@ -45,7 +45,7 @@
 
 <div class="mb-4 space-y-2">
 	{#each rows as { order, progress, status } (order.orderId)}
-		<div class="border-edge bg-surface-raised flex items-center gap-3 rounded-lg border px-3 py-2">
+		<div class="border-edge bg-surface-raised flex items-center gap-3 rounded-md border px-3 py-2">
 			<span class="text-ink-muted font-mono text-xs font-semibold">{order.orderId}</span>
 			<span class="text-ink-muted truncate text-sm">{order.customer}</span>
 			<div class="ml-auto flex items-center gap-2">

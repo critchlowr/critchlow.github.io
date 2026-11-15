@@ -4,7 +4,7 @@ export const hero = {
 	name: 'Ryan Critchlow',
 	tagline: 'UX researcher focused on accessibility',
 	summary:
-		'I plan and run research with the people a technology is for, using participatory design, semi-structured interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science with a concentration in human-computer interaction. Before graduate school, I spent three years at Körber in technical support engineering for four enterprise warehouse-management accounts, troubleshooting critical issues on production systems and writing requirements for engineering.',
+		'I plan and run research with the people a technology is for, using participatory design, interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science with a concentration in human-computer interaction. Before that, I spent three years at Körber in technical support engineering, troubleshooting critical issues on production warehouse systems.',
 	availability:
 		'Open to UX research roles. Based in Bellingham, WA, and open to relocating or working remotely.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
@@ -12,9 +12,8 @@ export const hero = {
 
 export const about = {
 	paragraphs: [
-		"I've been building things for people my whole life, technical or otherwise. My father is a carpenter, so I grew up on job sites learning to build things that last and that suit the style and age of the homes they go into. I carried the problem-solving I learned there into my work as a technical support analyst at Körber Supply Chain, where I troubleshot SQL Server issues, supported customer go-lives, and administered warehouse management systems. I wanted to work on how those systems are designed for the people using them, not just support them, so I went back to Western Washington University for an M.S. in Computer Science with a concentration in human-computer interaction. I've been a bartender and a carpenter along the way, and I'm working as a journeyman carpenter now.",
-		"My graduate work in the KIND Lab gave me experience designing ethical research studies with human participants. I led a project to build a Unity-based learning tool that helps neurodivergent children practice and learn language skills, using Claude to rapidly prototype it. I made the game's art myself. I scoped an IRB-approved study, designing the survey instruments, the analysis methods, and the game itself based on practitioner feedback. Before launching that study, I shifted to a pilot study with four families to refine the game's design with the children who would use it. The language assessment is left to a future team.",
-		"When I'm not working, you'll find me on a trail with Georgia, my chocolate lab, training for my next half marathon, or behind a bar making cocktails. I'm into road biking and reading, and I like being outside as much as I can, though sometimes I spend a little too long playing Stardew Valley, Age of Empires II, or Legend of Zelda."
+		"I'm a UX researcher and a journeyman carpenter in Bellingham, Washington. I've run in-home studies with neurodivergent children and their families, co-authored a literature review of disability misconceptions in computing education, and supported enterprise warehouse systems at Körber. For the KIND Lab study I built the game in Unity and made its art myself.",
+		"Outside of work, I'm usually on a trail with Georgia, my chocolate lab, training for a half marathon, or on a road bike. I also read, make cocktails, and play Stardew Valley, Age of Empires II, and Legend of Zelda."
 	]
 };
 
@@ -39,7 +38,8 @@ export const experience: Experience[] = [
 	{
 		title: 'Graduate Researcher',
 		id: 'kind-lab',
-		company: 'Western Washington University — KIND Lab',
+		stickers: 'research',
+		company: 'KIND Lab, Western Washington University',
 		location: 'Bellingham, WA',
 		period: 'Winter 2025 – June 2026',
 		summary:
@@ -72,7 +72,8 @@ export const experience: Experience[] = [
 			'Wrote requirement specs for engineering when a customer request went beyond the statement of work, and adjusted scope with stakeholders when a request conflicted with technical feasibility, contract hours, or SLA commitments',
 			'Rebuilt ticket categorization during a NetSuite-to-ServiceNow migration so customers could report issues more easily, and trained four enterprise customers on the new system'
 		],
-		showSimulator: true
+		showSimulator: true,
+		stickers: 'warehouse'
 	},
 	{
 		title: 'Bartender',
@@ -134,8 +135,7 @@ export const education: Education[] = [
 export const credentials = {
 	orcid: '0009-0007-7323-9177',
 	orcidHref: 'https://orcid.org/0009-0007-7323-9177',
-	// ORCID licenses its iD icon for this use, so it is served from static/. ACM's
-	// logo is a restricted trademark, so Publications.svelte sets that chip in type.
+	// ORCID licenses its iD icon for this use, so it is served from static/.
 	membershipDetail: 'Association for Computing Machinery, 2026–present'
 };
 
@@ -181,6 +181,10 @@ export const skills: SkillCategory[] = [
 	}
 ];
 
+// Shown above the papers. Stated plainly: two research interests and one side interest.
+export const researchInterests =
+	"I'm interested in accessibility education and accessible urban design. I also have a side interest in vertically integrated supply chains in textiles.";
+
 export const publications: Publication[] = [
 	{
 		authors: 'Yasmine N. Elglaly, Ryan Critchlow, Kristen Shinohara, and Catherine M. Baker',
@@ -204,16 +208,16 @@ export const publications: Publication[] = [
 		authors: 'Anonymous authors',
 		title:
 			'A Participatory Evaluation Study of Language Learning Tools with Neurodivergent Children',
-		venue: 'In preparation for a 2027 ACM conference',
-		status: 'in-preparation',
+		venue: 'Under review for a 2027 ACM conference',
+		status: 'under-review',
 		contribution:
 			'First author. I planned the build, ran recruitment, designed the instruments, ran the in-home sessions, and coded the analysis. Findings are held until publication.'
 	},
 	{
 		authors: 'Anonymous authors',
 		title: 'A Study of Motivation in Alt Text Authoring',
-		venue: 'In preparation for a 2027 ACM conference',
-		status: 'in-preparation',
+		venue: 'Under review for a 2027 ACM conference',
+		status: 'under-review',
 		contribution:
 			'I joined after the original authors had graduated. I revised the discussion section and worked with the faculty advisor to bring the manuscript to submission readiness.'
 	}
@@ -246,10 +250,11 @@ export const contact: ContactLink[] = [
 	}
 ];
 
+// In page order: the header's scrollspy walks these top to bottom.
 export const navLinks = [
-	{ label: 'About', href: '/#about' },
-	{ label: 'Education', href: '/#education' },
-	{ label: 'Publications', href: '/#publications' },
+	{ label: 'Research', href: '/#publications' },
 	{ label: 'Experience', href: '/#experience' },
-	{ label: 'Skills', href: '/#skills' }
+	{ label: 'Education', href: '/#education' },
+	{ label: 'Skills', href: '/#skills' },
+	{ label: 'About', href: '/#about' }
 ];

@@ -5,9 +5,7 @@
 
 <footer id="contact" class="bg-footer border-edge border-t" aria-labelledby="contact-heading">
 	<div class="mx-auto max-w-4xl px-5 py-16">
-		<h2 id="contact-heading" class="text-ink-strong font-display text-title font-semibold">
-			Get in touch
-		</h2>
+		<h2 id="contact-heading" class="text-ink-strong text-title font-extrabold">Get in touch</h2>
 		<!-- The same line as the hero, so the two can't drift apart. -->
 		<p class="text-ink-muted text-body mt-3 max-w-xl">{hero.availability}</p>
 		<ul class="mt-6 flex flex-wrap items-center gap-2">
@@ -15,8 +13,8 @@
 				<li><ContactLink {link} /></li>
 			{/each}
 		</ul>
-		<p class="text-ink-muted mt-12 text-sm">
-			&copy; {new Date().getFullYear()} Ryan Critchlow · Built to WCAG 2.2 AA. Every change is checked
+		<p class="text-ink-muted max-w-measure mt-12 text-sm">
+			&copy; {new Date().getFullYear()} Ryan Critchlow. Built to WCAG 2.2 AA. Every change is checked
 			with
 			<a href="https://github.com/dequelabs/axe-core" class="link">axe</a>
 			and
