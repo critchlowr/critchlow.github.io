@@ -40,7 +40,6 @@ axe and pa11y check the rendered pages.
 | `text-section` | `clamp(2.25rem, 5vw, 3.5rem)` / 1     | Section headings              |
 | `text-row`     | `clamp(1.4rem, 2.5vw, 1.75rem)` / 1.1 | Experience row titles         |
 | tile heading   | `clamp(1.35rem, 2.2vw, 1.7rem)` / 1.1 | Headings on the board's tiles |
-| `text-lede`    | 1.25rem / 1.5                         | Lead paragraphs               |
 | `text-body`    | 1.0625rem / 1.6                       | Body copy                     |
 
 Nothing is set in italics, so no italic font file is loaded.

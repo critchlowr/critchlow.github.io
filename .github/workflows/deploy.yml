@@ -48,6 +48,10 @@ jobs:
       - name: Type and a11y check
         run: npm run check
 
+      # The simulator's rules: waves, picks, shorts, replenishment, packing.
+      - name: Unit tests
+        run: npm test
+
       - name: Build
         run: npm run build
 

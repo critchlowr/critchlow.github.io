@@ -104,16 +104,12 @@
 	--font-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Consolas, monospace;
 
 	/*
-		Named type steps on the classical scale (17, 21, 36, then the fluid name in the
-		hero). Adding steps, rather than redefining --text-base and the rest, leaves
-		the simulator's text-sm and text-base sizes untouched.
+		Named type steps for the pages. Adding steps, rather than redefining --text-base
+		and the rest, leaves the simulator's text-sm and text-base sizes untouched.
 	*/
 	--text-display: 4.5rem;
 	--text-display--line-height: 1;
 	--text-display--letter-spacing: -0.03em;
-	--text-title: 2.25rem;
-	--text-title--line-height: 1.1;
-	--text-title--letter-spacing: -0.02em;
 	/* Section headings and row titles on the main page, set in the display face. */
 	--text-section: clamp(2.25rem, 5vw, 3.5rem);
 	--text-section--line-height: 1;
@@ -121,10 +117,6 @@
 	--text-row: clamp(1.4rem, 2.5vw, 1.75rem);
 	--text-row--line-height: 1.1;
 	--text-row--letter-spacing: -0.015em;
-	--text-entry: 1.3125rem;
-	--text-entry--line-height: 1.25;
-	--text-lede: 1.25rem;
-	--text-lede--line-height: 1.5;
 	--text-body: 1.0625rem;
 	--text-body--line-height: 1.6;
 
@@ -166,16 +158,10 @@
 	--color-footer: var(--t-footer);
 	--color-band: var(--t-band);
 	--color-chip: var(--t-chip);
-	--color-outline: var(--t-outline);
-	--color-hero: var(--t-hero);
-	--color-on-hero: var(--t-on-hero);
-	--color-on-hero-muted: var(--t-on-hero-muted);
 	--color-feature: var(--t-feature);
 	--color-on-feature: var(--t-on-feature);
 	--color-on-feature-muted: var(--t-on-feature-muted);
 	--color-olive: var(--t-olive);
-	--color-tan: var(--t-tan);
-	--color-on-tan: var(--t-on-tan);
 	--color-espresso: var(--t-espresso);
 	--color-on-espresso: var(--t-on-espresso);
 
@@ -220,7 +206,6 @@
 	--t-outline: #2b1e16;
 	--t-hero: #7a2a26;
 	--t-on-hero: #fff3e0;
-	--t-on-hero-muted: #f3d9cb;
 	--t-feature: #454e22;
 	--t-on-feature: #f6f1df;
 	--t-on-feature-muted: #dedfc2;
@@ -251,7 +236,6 @@
 	--t-outline: #f2e7d6;
 	--t-hero: #6f2623;
 	--t-on-hero: #fff3e0;
-	--t-on-hero-muted: #f3d9cb;
 	--t-feature: #353d1a;
 	--t-on-feature: #f2e7d6;
 	--t-on-feature-muted: #d3d3b4;

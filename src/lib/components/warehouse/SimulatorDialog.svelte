@@ -16,9 +16,12 @@
 	// The main sequence. Shorting is not a step in it; the note under it covers that.
 	const steps = ['Wave', 'Pick', 'Stage', 'Pack', 'Load', 'Ship'];
 
-	function close() {
+	async function close() {
 		simulator.hide();
 		started = false;
+		// After the dialog is gone and the page behind it can take focus again.
+		await tick();
+		simulator.restoreFocus();
 	}
 
 	async function start() {
