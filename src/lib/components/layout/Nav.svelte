@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { navLinks } from '$lib/data/content';
-	import Icon from '$lib/components/ui/Icon.svelte';
+	import { navLinks } from '#lib/data/content.ts';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	let activeSection = $state('');

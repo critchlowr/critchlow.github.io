@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { hero, publications } from '$lib/data/content';
-	import { simulator } from '$lib/stores/simulator.svelte';
-	import Icon from '$lib/components/ui/Icon.svelte';
+	import { hero, publications } from '#lib/data/content.ts';
+	import { simulator } from '#lib/stores/simulator.svelte.ts';
+	import Icon from '#lib/components/ui/Icon.svelte';
 
 	// The paper tile quotes the published paper, so its title and nomination have one source.
 	const paper = publications.find((p) => p.status === 'published');

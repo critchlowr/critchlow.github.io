@@ -1,4 +1,10 @@
-import type { Experience, Education, Publication, ContactLink, SkillCategory } from '$lib/types';
+import type {
+	Experience,
+	Education,
+	Publication,
+	ContactLink,
+	SkillCategory
+} from '#lib/types/index.ts';
 
 export const hero = {
 	name: 'Ryan Critchlow',

@@ -5,8 +5,8 @@
 		the game. Mounted once, in the layout, and opened through the simulator store.
 	*/
 	import { tick } from 'svelte';
-	import { simulator } from '$lib/stores/simulator.svelte';
-	import Icon from '$lib/components/ui/Icon.svelte';
+	import { simulator } from '#lib/stores/simulator.svelte.ts';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import WarehouseModal from './WarehouseModal.svelte';
 	import WarehouseGame from './WarehouseGame.svelte';
 

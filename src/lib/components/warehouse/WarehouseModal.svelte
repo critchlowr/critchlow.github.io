@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { dialog } from '$lib/actions/dialog';
+	import { dialog } from '#lib/actions/dialog.ts';
 
 	interface Props {
 		open: boolean;

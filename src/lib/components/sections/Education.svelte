@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { education } from '$lib/data/content';
+	import { education } from '#lib/data/content.ts';
 </script>
 
 <!-- Shares a row with Skills on wide screens; the page lays the two out. -->

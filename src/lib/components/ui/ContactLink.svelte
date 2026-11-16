@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ContactLink as ContactLinkType } from '$lib/types';
+	import type { ContactLink as ContactLinkType } from '#lib/types/index.ts';
 	import Icon from './Icon.svelte';
 
 	interface Props {

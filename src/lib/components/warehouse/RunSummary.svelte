@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts">
-	import type { Order, OrderLine, Pick } from '$lib/data/warehouse';
+	import type { Order, OrderLine, Pick } from '#lib/data/warehouse.ts';
 
 	interface Props {
 		orders: Order[];

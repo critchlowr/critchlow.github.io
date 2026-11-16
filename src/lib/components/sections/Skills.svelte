@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { skills } from '$lib/data/content';
+	import { skills } from '#lib/data/content.ts';
 </script>
 
 <!--

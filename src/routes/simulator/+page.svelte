@@ -6,11 +6,11 @@
 	*/
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { simulator } from '$lib/stores/simulator.svelte';
+	import { simulator } from '#lib/stores/simulator.svelte.ts';
 
 	// Opened after the move: a navigation resets focus, which would pull it out of the dialog.
 	onMount(async () => {
-		await goto(`/${location.search}`, { replaceState: true });
+		await goto(`/${location.search}`, { replace: true });
 		simulator.show();
 	});
 </script>

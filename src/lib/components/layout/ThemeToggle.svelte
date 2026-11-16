@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { theme, type ThemeMode } from '$lib/stores/theme.svelte';
-	import Icon, { type IconName } from '$lib/components/ui/Icon.svelte';
+	import { theme, type ThemeMode } from '#lib/stores/theme.svelte.ts';
+	import Icon, { type IconName } from '#lib/components/ui/Icon.svelte';
 
 	// Current state, then what activating does. "Click" would assume a mouse.
 	const labels: Record<ThemeMode, string> = {
