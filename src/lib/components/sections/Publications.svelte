@@ -31,16 +31,8 @@
 				</h3>
 				<p class="text-on-feature-muted mt-5 max-w-[44rem]">{pub.authors}. {pub.venue}</p>
 
-				<div
-					class="mt-8 grid gap-x-12 gap-y-8 border-t-2 border-white/20 pt-8 lg:grid-cols-[3fr_2fr]"
-				>
-					{#if pub.summary}
-						<div>
-							<h4 class="font-display mb-2 text-xl font-bold">What the paper found</h4>
-							<p class="text-body">{pub.summary}</p>
-						</div>
-					{/if}
-					<div>
+				<div class="mt-8 border-t-2 border-white/20 pt-8">
+					<div class="max-w-[44rem]">
 						<h4 class="font-display mb-2 text-xl font-bold">My contribution</h4>
 						<p class="text-body">{pub.contribution}</p>
 						{#if pub.href}
@@ -61,6 +53,20 @@
 							<p class="text-on-feature-muted mt-5 text-sm">{pub.funding}</p>
 						{/if}
 					</div>
+
+					<!--
+						The abstract is long, so it starts folded, like the roles in Experience.
+						A native details element: its text is still found by find-in-page.
+					-->
+					{#if pub.summary}
+						<details class="abstract mt-8">
+							<summary>
+								<h4 class="font-display text-xl font-bold">What the paper found</h4>
+								<span class="pm" aria-hidden="true"></span>
+							</summary>
+							<p class="text-body max-w-[44rem] pb-2">{pub.summary}</p>
+						</details>
+					{/if}
 				</div>
 			</li>
 		{/each}
@@ -113,6 +119,80 @@
 		background: var(--t-on-feature);
 		border-color: var(--t-on-feature);
 		color: #262d12;
+	}
+
+	.abstract {
+		border-top: 2px solid rgb(255 255 255 / 0.2);
+	}
+
+	.abstract summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		min-height: 44px;
+		padding-block: 1rem;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.abstract summary::-webkit-details-marker {
+		display: none;
+	}
+
+	/* A plus that turns to a minus when the abstract is open, as on the Experience rows. */
+	.pm {
+		position: relative;
+		flex-shrink: 0;
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	.pm::before,
+	.pm::after {
+		content: '';
+		position: absolute;
+		inset: calc(50% - 1.5px) 0 auto 0;
+		height: 3px;
+		background: currentColor;
+	}
+
+	.pm::after {
+		rotate: 90deg;
+	}
+
+	details[open] .pm::after {
+		rotate: 0deg;
+	}
+
+	/* Slides open where the browser can animate to an element's own height. */
+	.abstract::details-content {
+		interpolate-size: allow-keywords;
+		overflow: clip;
+	}
+
+	.abstract:not([open])::details-content {
+		block-size: 0;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.pm::after {
+			transition: rotate 0.2s;
+		}
+
+		.abstract::details-content {
+			transition: block-size, content-visibility;
+			transition-duration: 0.3s;
+			transition-timing-function: ease-in-out;
+			transition-behavior: allow-discrete;
+		}
+	}
+
+	@media (forced-colors: active) {
+		.pm::before,
+		.pm::after {
+			background: CanvasText;
+		}
 	}
 
 	/* The shared link colour is brick, which does not read on olive. */

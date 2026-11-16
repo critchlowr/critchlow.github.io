@@ -25,7 +25,8 @@ export const hero = {
 
 // Each role is one summary line plus at most three bullets. The full detail lives in
 // the résumé PDF, which is one click away from every section. Roles marked `open`
-// start unfolded; the rest are one row each until the reader opens them.
+// start unfolded (the research role and Körber); the rest are one row each until the
+// reader opens them.
 export const experience: Experience[] = [
 	{
 		title: 'Journeyman Carpenter',
@@ -33,7 +34,6 @@ export const experience: Experience[] = [
 		company: 'Atlas Woodworks',
 		location: 'Bellingham, WA',
 		period: 'January 2026 – Present',
-		open: true,
 		summary:
 			'Restoration, custom interior and exterior millwork, and casework installation for a worker-owned shop in Whatcom County. Started part time while finishing my M.S. and moved to full time in June 2026.',
 		bullets: [

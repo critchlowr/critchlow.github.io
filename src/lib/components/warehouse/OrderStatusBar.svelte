@@ -45,12 +45,20 @@
 
 <div class="mb-4 space-y-2">
 	{#each rows as { order, progress, status } (order.orderId)}
-		<div class="border-edge bg-surface-raised flex items-center gap-3 rounded-md border px-3 py-2">
-			<span class="text-ink-muted font-mono text-xs font-semibold">{order.orderId}</span>
-			<span class="text-ink-muted truncate text-sm">{order.customer}</span>
-			<div class="ml-auto flex items-center gap-2">
+		<!--
+			On a phone the progress drops to a second line, so the order code stays on one
+			line and the customer's name is shown in full.
+		-->
+		<div
+			class="border-edge bg-surface-raised flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border px-3 py-2"
+		>
+			<span class="text-ink-muted shrink-0 font-mono text-xs font-semibold whitespace-nowrap"
+				>{order.orderId}</span
+			>
+			<span class="text-ink-muted min-w-0 flex-1 text-sm">{order.customer}</span>
+			<div class="flex shrink-0 items-center gap-2 max-sm:w-full sm:ml-auto">
 				{#if progress.total > 0}
-					<span class="text-ink-muted text-xs"
+					<span class="text-ink-muted text-xs whitespace-nowrap"
 						>{progress.done}/{progress.total} {progress.label}</span
 					>
 					<div class="flex gap-0.5">
@@ -66,7 +74,7 @@
 						{/each}
 					</div>
 				{/if}
-				<StatusBadge {status} />
+				<span class="max-sm:ml-auto"><StatusBadge {status} /></span>
 			</div>
 		</div>
 	{/each}

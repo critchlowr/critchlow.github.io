@@ -95,7 +95,7 @@ name, paper and Körber tiles, the published paper and the simulator callout).
 ### Experience rows
 
 - Each role is a native `<details>`. Roles with `open: true` in `content.ts` start
-  unfolded (currently Atlas, KIND Lab and Körber).
+  unfolded (currently KIND Lab and Körber).
 - A link to a role's id (`#korber`, `#kind-lab`) opens that row.
 - Closed rows are still found by the browser's find-in-page.
 
