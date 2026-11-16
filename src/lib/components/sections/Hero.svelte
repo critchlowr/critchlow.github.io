@@ -9,9 +9,10 @@
 
 <!--
 	The board: one fact per tile. It replaces the old hero paragraph and the About
-	section. The paper and degree tiles link to the sections that back them up, and
-	the Körber tile opens the simulator. On load the tiles are placed one after
-	another, once; with reduced motion on they are simply there.
+	section. The paper, Körber and degree tiles link to the sections that back them
+	up, and the Körber tile also has a button that opens the simulator. On load the
+	tiles are placed one after another, once; with reduced motion on they are simply
+	there.
 -->
 <section id="hero" class="wrap board" aria-label="Introduction">
 	<div class="tile name on-dark" style="--i:0">
@@ -54,7 +55,7 @@
 			width="84"
 			height="90"
 		/>
-		<h2 class="font-display">{hero.korber.title}</h2>
+		<h2 class="font-display"><a href={hero.korber.href}>{hero.korber.title}</a></h2>
 		<p>{hero.korber.detail}</p>
 		<button type="button" class="btn btn-light mt-5" onclick={simulator.show}>
 			<Icon name="play" class="h-4 w-4" />
@@ -198,6 +199,12 @@
 	.sim {
 		background: var(--t-espresso);
 		color: var(--t-on-espresso);
+	}
+
+	/* The tile is a link to the Körber row, so its button sits above the link's target. */
+	.sim .btn {
+		position: relative;
+		z-index: 1;
 	}
 
 	.cartons {

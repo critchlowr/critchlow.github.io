@@ -85,14 +85,14 @@ const ITEM_NAMES: Record<string, string> = {
 	'STH-01': 'Stiletto Hammer',
 	'MAYO-01': 'Mayonnaise',
 	'RTV-01': 'Really Tiny Violin',
-	'PEX-01': 'Photo of Your Ex'
+	'PKZ-01': 'Pocket Kazoo'
 };
 
 export function createSeedOrders(): Order[] {
 	return [
-		{ orderId: 'ORD-001', customer: 'Little Baby', status: 'Open' },
-		{ orderId: 'ORD-002', customer: 'Giraffe Incorporated', status: 'Open' },
-		{ orderId: 'ORD-003', customer: 'Kind of Insignificant Solutions', status: 'Open' }
+		{ orderId: '1001', customer: 'Little Baby', status: 'Open' },
+		{ orderId: '1002', customer: 'Giraffe Incorporated', status: 'Open' },
+		{ orderId: '1003', customer: 'Kind of Insignificant Solutions', status: 'Open' }
 	];
 }
 
@@ -108,14 +108,14 @@ export function createSeedOrderLines(): OrderLine[] {
 	});
 
 	return [
-		line('ORD-001', 1, 'BBP-01', 3),
-		line('ORD-001', 2, 'HMM-01', 2),
-		line('ORD-002', 1, 'STH-01', 4),
-		line('ORD-002', 2, 'MAYO-01', 2),
-		line('ORD-002', 3, 'RTV-01', 6),
-		line('ORD-003', 1, 'PEX-01', 5),
-		line('ORD-003', 2, 'BBP-01', 2),
-		line('ORD-003', 3, 'HMM-01', 1)
+		line('1001', 1, 'BBP-01', 3),
+		line('1001', 2, 'HMM-01', 2),
+		line('1002', 1, 'STH-01', 4),
+		line('1002', 2, 'MAYO-01', 2),
+		line('1002', 3, 'RTV-01', 6),
+		line('1003', 1, 'PKZ-01', 5),
+		line('1003', 2, 'BBP-01', 2),
+		line('1003', 3, 'HMM-01', 1)
 	];
 }
 
@@ -145,9 +145,9 @@ export function createSeedInventory(): InventoryItem[] {
 		// location and has to report it. Count discrepancies like this are routine.
 		stock('MAYO-01', 'B-02-03', 2, 5, 5),
 		stock('RTV-01', 'C-03-01', 6, 12),
-		// Reserve is one unit under ORD-003's demand, so every run reaches the
+		// Reserve is one unit under order 1003's demand, so every run reaches the
 		// pack station with one order short and a hold-or-ship decision to make.
-		stock('PEX-01', 'C-03-02', 2, 2)
+		stock('PKZ-01', 'C-03-02', 2, 2)
 	];
 }
 

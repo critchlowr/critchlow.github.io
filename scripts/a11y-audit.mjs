@@ -68,14 +68,14 @@ async function playShift(page, theme) {
 		.locator('#korber')
 		.getByRole('button', { name: /play the warehouse simulator/i })
 		.click();
-	const dialog = page.locator('[role="dialog"]');
+	const dialog = page.locator('dialog[open]');
 	await dialog.waitFor();
 
 	const seen = new Set();
 	const auditOnce = async (phase) => {
 		if (seen.has(phase)) return;
 		seen.add(phase);
-		await audit(page, `simulator ${theme}, dialog: ${phase}`, '[role="dialog"]');
+		await audit(page, `simulator ${theme}, dialog: ${phase}`, 'dialog[open]');
 	};
 	const button = (name) => dialog.getByRole('button', { name }).first();
 	const ready = async (name) =>
@@ -133,7 +133,7 @@ for (const theme of THEMES) {
 
 	// The old simulator address sends the reader to the main page with the dialog open.
 	const moved = await open(browser, '/simulator', theme);
-	await moved.locator('[role="dialog"]').waitFor();
+	await moved.locator('dialog[open]').waitFor();
 	if (new URL(moved.url()).pathname !== '/') {
 		console.log(`\n/simulator ${theme}: FAIL did not land on the main page`);
 		violations++;

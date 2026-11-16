@@ -15,7 +15,8 @@ export const hero = {
 	paper: { label: 'Peer-reviewed paper', title: 'Presented at ASSETS 2026', href: '#publications' },
 	korber: {
 		title: 'Three years at Körber in technical support engineering',
-		detail: 'Troubleshooting critical issues on production warehouse systems.'
+		detail: 'Troubleshooting critical issues on production warehouse systems.',
+		href: '#korber'
 	},
 	degree: {
 		title: 'M.S. in Computer Science',

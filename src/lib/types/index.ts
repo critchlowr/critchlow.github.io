@@ -46,7 +46,7 @@ export interface Publication {
 export interface ContactLink {
 	label: string;
 	href: string;
-	icon: 'email' | 'phone' | 'linkedin' | 'github' | 'resume';
+	icon: 'email' | 'linkedin' | 'github' | 'resume';
 	display: string;
 }
 

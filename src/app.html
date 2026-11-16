@@ -8,6 +8,13 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<!--
+			The colour mobile browsers use for their own toolbars: the page ground,
+			--t-surface in app.css. With scripts off these follow the system setting; the
+			script below and the theme store set both to the theme in use.
+		-->
+		<meta name="theme-color" content="#efe4cf" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#1a1410" media="(prefers-color-scheme: dark)" />
 		<script>
 			(function () {
 				const root = document.documentElement;
@@ -25,6 +32,9 @@
 					? forced === 'dark'
 					: saved === 'dark' || (saved !== 'light' && prefersDark);
 				if (dark) root.classList.add('dark');
+				document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+					meta.content = dark ? '#1a1410' : '#efe4cf';
+				});
 			})();
 		</script>
 		%sveltekit.head%

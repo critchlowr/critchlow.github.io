@@ -347,7 +347,7 @@
 		refreshOrderStatuses(orders, orderLines, picks);
 
 		triggerScene({ type: 'pack' });
-		announce(`Packed ${ready.join(', ')}.`);
+		announce(`Packed ${ready.length === 1 ? 'order' : 'orders'} ${ready.join(', ')}.`);
 	}
 
 	function handleShipShort(orderId: string) {
@@ -363,7 +363,7 @@
 		refreshOrderStatuses(orders, orderLines, picks);
 
 		triggerScene({ type: 'pack' });
-		announce(`${orderId} packed short.`);
+		announce(`Order ${orderId} packed short.`);
 	}
 
 	function handleHold(orderId: string) {
@@ -376,7 +376,7 @@
 		holdOrder(orderId, orders, picks);
 
 		triggerScene({ type: 'hold' });
-		announce(`${orderId} held in staging until stock arrives.`);
+		announce(`Order ${orderId} held in staging until stock arrives.`);
 	}
 
 	function handleLoadAndShip() {

@@ -27,7 +27,7 @@
 	async function start() {
 		// Found before the swap: the Start button is about to be removed, so focus
 		// goes to the dialog itself, which is then named by the game's title.
-		const dialog = intro?.closest<HTMLElement>('[role="dialog"]');
+		const dialog = intro?.closest<HTMLElement>('dialog');
 		started = true;
 		await tick();
 		dialog?.focus();
