@@ -2,7 +2,7 @@
 /**
  * axe-core against the built site in both themes, including states that only
  * exist after interaction: the mobile menu, and each phase of a full simulator
- * shift played through to the summary.
+ * shift, opened from the main page and played through to the summary.
  *
  * Violations fail the run. axe's "incomplete" results, usually a background it
  * cannot resolve through a translucent layer, are printed for review only.
@@ -20,7 +20,7 @@ const axeSource = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = process.env.A11Y_BASE ?? 'http://localhost:4173';
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-const PAGES = ['/', '/simulator', '/404.html'];
+const PAGES = ['/', '/404.html'];
 const THEMES = ['light', 'dark'];
 
 // Measure finished states, not frames of a transition.
@@ -63,7 +63,11 @@ async function audit(page, label, scope = 'html') {
 
 /** Plays one shift by role and name, auditing the dialog once in each phase. */
 async function playShift(page, theme) {
-	await page.getByRole('button', { name: /run the simulator/i }).click();
+	// Opened from the Körber row in Experience, the entry point furthest down the page.
+	await page
+		.locator('#korber')
+		.getByRole('button', { name: /play the warehouse simulator/i })
+		.click();
 	const dialog = page.locator('[role="dialog"]');
 	await dialog.waitFor();
 
@@ -71,12 +75,15 @@ async function playShift(page, theme) {
 	const auditOnce = async (phase) => {
 		if (seen.has(phase)) return;
 		seen.add(phase);
-		await audit(page, `/simulator ${theme}, dialog: ${phase}`, '[role="dialog"]');
+		await audit(page, `simulator ${theme}, dialog: ${phase}`, '[role="dialog"]');
 	};
 	const button = (name) => dialog.getByRole('button', { name }).first();
 	const ready = async (name) =>
 		(await button(name).count()) > 0 && (await button(name).isEnabled());
 
+	await auditOnce('introduction');
+	await button(/start the shift/i).click();
+	await button(/wave orders/i).waitFor();
 	await auditOnce('ready to start');
 	await button(/wave orders/i).click();
 
@@ -109,7 +116,7 @@ async function playShift(page, theme) {
 	if (await dialog.getByRole('heading', { name: /shift summary/i }).count()) {
 		await auditOnce('shift summary');
 	} else {
-		console.log(`\n/simulator ${theme}: FAIL the shift never reached its summary`);
+		console.log(`\nsimulator ${theme}: FAIL the shift never reached its summary`);
 		violations++;
 	}
 }
@@ -120,9 +127,19 @@ for (const theme of THEMES) {
 	for (const path of PAGES) {
 		const page = await open(browser, path, theme);
 		await audit(page, `${path} ${theme}`);
-		if (path === '/simulator') await playShift(page, theme);
+		if (path === '/') await playShift(page, theme);
 		await page.close();
 	}
+
+	// The old simulator address sends the reader to the main page with the dialog open.
+	const moved = await open(browser, '/simulator', theme);
+	await moved.locator('[role="dialog"]').waitFor();
+	if (new URL(moved.url()).pathname !== '/') {
+		console.log(`\n/simulator ${theme}: FAIL did not land on the main page`);
+		violations++;
+	}
+	await audit(moved, `/simulator ${theme}, landed on / with the dialog open`);
+	await moved.close();
 
 	const phone = await open(browser, '/', theme, { width: 390, height: 844 });
 	await phone.getByRole('button', { name: /open menu/i }).click();

@@ -2,7 +2,9 @@
 	import { experience } from '$lib/data/content';
 	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
 	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
+	import Icon from '$lib/components/ui/Icon.svelte';
 	import JobStickers from '$lib/components/ui/JobStickers.svelte';
+	import { simulator } from '$lib/stores/simulator.svelte';
 
 	/*
 		Each role is one row that unfolds. A link elsewhere on the page can point at a
@@ -58,13 +60,17 @@
 								</ul>
 							{/if}
 							{#if job.showSimulator}
+								<!-- Opens the simulator over the page, so the reader stays on this row. -->
 								<div
-									class="simulator inked mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl px-5 py-4"
+									class="on-dark bg-espresso text-on-espresso tile mt-6 flex flex-wrap items-center justify-between gap-4 px-6 py-5"
 								>
 									<p class="font-display text-2xl leading-tight font-bold">
 										See how the work flowed
 									</p>
-									<a href="/simulator" class="btn btn-secondary">Try the WMS simulator</a>
+									<button type="button" class="btn btn-light" onclick={simulator.show}>
+										<Icon name="play" class="h-4 w-4" />
+										Play the warehouse simulator
+									</button>
 								</div>
 								<div class="mt-2">
 									<ConveyorBelt />
@@ -85,11 +91,11 @@
 
 <style>
 	.rows {
-		border-bottom: 2.5px solid var(--t-outline);
+		border-bottom: 2px solid var(--t-edge);
 	}
 
 	.row {
-		border-top: 2.5px solid var(--t-outline);
+		border-top: 2px solid var(--t-edge);
 		/* An opened row lands below the fixed header when a link jumps to it. */
 		scroll-margin-top: 4.5rem;
 	}
@@ -188,13 +194,6 @@
 			transition-timing-function: ease-in-out;
 			transition-behavior: allow-discrete;
 		}
-	}
-
-	/* The simulator callout is ink on both themes, so its text is always light. */
-	.simulator {
-		--t-shadow: var(--t-brand);
-		background: #231a12;
-		color: #f5efe2;
 	}
 
 	@media (forced-colors: active) {

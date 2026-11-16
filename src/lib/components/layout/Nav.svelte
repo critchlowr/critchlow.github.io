@@ -24,7 +24,7 @@
 		if (!header.contains(e.relatedTarget as Node | null)) closeMobile();
 	}
 
-	// Nav hrefs are root-relative ("/#about") so they also work from sub-pages.
+	// Nav hrefs are root-relative ("/#experience") so they also work from sub-pages.
 	// querySelector needs the bare hash.
 	function hashOf(href: string) {
 		const i = href.indexOf('#');
@@ -34,8 +34,8 @@
 	// Scrollspy. The active link is recomputed from the scroll position on each
 	// frame, so it cannot drift out of step with the page.
 	$effect(() => {
-		// Looked up once. On a page without these sections (the simulator, the
-		// error page) the list is empty and no link is ever marked current.
+		// Looked up once. On a page without these sections (the error page) the
+		// list is empty and no link is ever marked current.
 		const sections = navLinks
 			.map((l) => document.querySelector<HTMLElement>(hashOf(l.href) || ':not(*)'))
 			.filter((el) => el !== null);
@@ -80,7 +80,7 @@
 <svelte:window onkeydown={onWindowKeydown} />
 
 <header
-	class="border-outline bg-surface/90 fixed top-0 right-0 left-0 z-40 border-b-[2.5px] backdrop-blur-md"
+	class="border-edge bg-surface/90 fixed top-0 right-0 left-0 z-40 border-b-2 backdrop-blur-md"
 	onfocusout={onHeaderFocusout}
 >
 	<nav aria-label="Main navigation" class="wrap flex items-center justify-between py-2">

@@ -1,81 +1,296 @@
 <script lang="ts">
-	import { hero } from '$lib/data/content';
-	import Shelf from '$lib/components/ui/Shelf.svelte';
+	import { hero, publications } from '$lib/data/content';
+	import { simulator } from '$lib/stores/simulator.svelte';
+	import Icon from '$lib/components/ui/Icon.svelte';
+
+	// The paper tile quotes the published paper, so its title and nomination have one source.
+	const paper = publications.find((p) => p.status === 'published');
 </script>
 
 <!--
-	The one brick block on the page. The name is set in the condensed heading face and
-	sized to run close to the full width of the column at every width.
+	The board: one fact per tile. It replaces the old hero paragraph and the About
+	section. The paper and degree tiles link to the sections that back them up, and
+	the Körber tile opens the simulator. On load the tiles are placed one after
+	another, once; with reduced motion on they are simply there.
 -->
-<section id="hero" class="on-dark bg-hero text-on-hero pt-24 md:pt-28" aria-label="Introduction">
-	<div class="wrap">
-		<h1
-			class="font-display text-[clamp(3rem,17.2vw,12.25rem)] leading-[0.82] font-extrabold tracking-[-0.03em]"
-		>
-			{hero.name}
-		</h1>
-		<p
-			class="font-display mt-[clamp(1.5rem,3.5vw,3rem)] text-[clamp(1.4rem,2.8vw,2rem)] leading-tight font-bold"
-		>
-			{hero.tagline}
-		</p>
-
-		<!--
-			From lg up the summary and buttons share a row with the photo. Below that the
-			photo sits beside the availability line, under the buttons.
-		-->
-		<div
-			class="mt-[clamp(1.5rem,3vw,2.25rem)] grid gap-x-14 gap-y-8 lg:grid-cols-[minmax(0,1fr)_15rem]"
-		>
-			<div>
-				<p class="text-body sm:text-lede max-w-[40rem]">{hero.summary}</p>
-				<div class="mt-7 flex flex-wrap gap-3">
-					<a href="#contact" class="btn hero-btn hero-btn-primary">Get in touch</a>
-					<a href={hero.resumeHref} class="btn hero-btn">Résumé (PDF)</a>
-				</div>
-			</div>
-			<div class="flex items-center gap-5 lg:block">
-				<img
-					src="/images/ryancritchlow-325.webp"
-					alt="Ryan Critchlow"
-					width="325"
-					height="325"
-					fetchpriority="high"
-					class="photo aspect-square w-28 shrink-0 rounded-xl object-cover object-[50%_30%] sm:w-32 lg:w-full"
-				/>
-				<p class="text-on-hero-muted max-w-[17rem] text-sm lg:mt-6">{hero.availability}</p>
-			</div>
+<section id="hero" class="wrap board" aria-label="Introduction">
+	<div class="tile name on-dark" style="--i:0">
+		<h1 class="font-display">{hero.name}</h1>
+		<p class="font-display tagline">{hero.tagline}</p>
+		<p class="intro">{hero.intro}</p>
+		<div class="mt-7 flex flex-wrap gap-2.5">
+			<a href="#contact" class="btn btn-light">Get in touch</a>
+			<a href={hero.resumeHref} class="btn btn-ghost">Résumé (PDF)</a>
 		</div>
+	</div>
 
-		<!-- The plank straddles the edge between the brick block and the page below. -->
-		<div class="relative z-1 mt-[clamp(2.5rem,6vw,4.5rem)] -mb-3.5">
-			<Shelf sticker />
+	<div class="tile photo" style="--i:1">
+		<img
+			src="/images/ryancritchlow-325.webp"
+			alt="Ryan Critchlow"
+			width="325"
+			height="325"
+			fetchpriority="high"
+		/>
+	</div>
+
+	<div class="tile avail" style="--i:2">
+		<p>{hero.availability}</p>
+	</div>
+
+	{#if paper}
+		<div class="tile paper on-dark" style="--i:3">
+			<p class="kind">{hero.paper.label}</p>
+			<h2 class="font-display"><a href={hero.paper.href}>{hero.paper.title}</a></h2>
+			<p>Co-author of “{paper.title}”. {paper.honor}.</p>
 		</div>
+	{/if}
+
+	<div class="tile sim on-dark" style="--i:4">
+		<img
+			class="sticker-edge cartons"
+			src="/illustrations/cartons.svg"
+			alt=""
+			width="84"
+			height="90"
+		/>
+		<h2 class="font-display">{hero.korber.title}</h2>
+		<p>{hero.korber.detail}</p>
+		<button type="button" class="btn btn-light mt-5" onclick={simulator.show}>
+			<Icon name="play" class="h-4 w-4" />
+			Play the warehouse simulator
+		</button>
+	</div>
+
+	<div class="tile degree" style="--i:5">
+		<h2 class="font-display"><a href={hero.degree.href}>{hero.degree.title}</a></h2>
+		<p>{hero.degree.detail}</p>
+	</div>
+
+	<div class="tile personal" style="--i:6">
+		<!-- The lab from the header, masked so the line art takes the ink colour in both themes. -->
+		<span class="logo-mark" aria-hidden="true"></span>
+		<p>{hero.personal}</p>
 	</div>
 </section>
 
 <style>
-	/* On brick the buttons are outlined in the hero's light ink, not the page's dark ink. */
-	.hero-btn {
-		--t-outline: var(--t-on-hero);
-		--t-shadow: #2a0d0c;
+	/* The header is fixed, so the board starts below it. */
+	.board {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
+		padding-top: 5rem;
+		padding-bottom: clamp(1rem, 3vw, 2rem);
+	}
+
+	.tile {
+		position: relative;
+		grid-column: 1 / -1;
+		padding: clamp(1.25rem, 2.6vw, 2rem);
+		background: var(--t-surface-raised);
+	}
+
+	.tile p {
+		line-height: 1.45;
+	}
+
+	h2 {
+		margin-bottom: 0.5rem;
+		font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+		line-height: 1.1;
+		font-weight: 700;
+		letter-spacing: -0.015em;
+	}
+
+	h2 a {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-underline-offset: 4px;
+	}
+
+	/* The whole tile is the link's target; the heading text is its name. */
+	h2 a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius-tile);
+	}
+
+	/*
+		The focus ring is drawn on the tile, not the heading text inside it. It sits
+		just inside the tile's edge, so it is always seen against the tile's own colour.
+	*/
+	h2 a:focus-visible {
+		outline: none;
+	}
+
+	h2 a:focus-visible::after {
+		outline: 3px solid var(--t-focus);
+		outline-offset: -7px;
+	}
+
+	.name {
+		padding: clamp(1.5rem, 4vw, 3rem);
+		background: var(--t-hero);
 		color: var(--t-on-hero);
 	}
 
-	.hero-btn:hover {
-		background-color: rgb(255 243 224 / 0.12);
+	h1 {
+		font-size: clamp(3rem, 9vw, 6.25rem);
+		line-height: 0.9;
+		font-weight: 800;
+		letter-spacing: -0.035em;
 	}
 
-	.hero-btn-primary,
-	.hero-btn-primary:hover {
-		background-color: var(--t-on-hero);
-		color: #4a1614;
+	.tagline {
+		margin-top: 1rem;
+		font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+		line-height: 1.15;
+		font-weight: 600;
 	}
 
-	/* The photo sits like a print set down on the block, slightly off square. */
+	.intro {
+		max-width: 30rem;
+		margin-top: 0.75rem;
+		font-size: 1.125rem;
+	}
+
 	.photo {
-		border: 5px solid var(--t-on-hero);
-		box-shadow: 5px 5px 0 #2a0d0c;
-		rotate: 2.5deg;
+		grid-column: span 1;
+		min-height: 10rem;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	.photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 50% 25%;
+	}
+
+	.avail {
+		grid-column: span 1;
+		display: flex;
+		align-items: end;
+		background: var(--t-tan);
+		color: var(--t-on-tan);
+		font-weight: 600;
+	}
+
+	.paper {
+		background: var(--t-feature);
+		color: var(--t-on-feature);
+	}
+
+	.kind {
+		display: inline-block;
+		margin-bottom: 0.9rem;
+		padding: 0.15rem 0.75rem;
+		border-radius: 999px;
+		background: var(--t-on-feature);
+		color: #262d12;
+		font-size: 0.9rem;
+		font-weight: 700;
+	}
+
+	.sim {
+		background: var(--t-espresso);
+		color: var(--t-on-espresso);
+	}
+
+	.cartons {
+		float: right;
+		width: clamp(4rem, 9vw, 6rem);
+		height: auto;
+		margin: 0 0 0.5rem 1rem;
+		rotate: 5deg;
+	}
+
+	.degree {
+		background: var(--t-chip);
+	}
+
+	.personal {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+	}
+
+	.logo-mark {
+		flex-shrink: 0;
+		width: clamp(6rem, 12vw, 8.5rem);
+		aspect-ratio: 297 / 192;
+		background: var(--t-ink-strong);
+		mask: url('/images/logo-dog.png') center / contain no-repeat;
+		-webkit-mask: url('/images/logo-dog.png') center / contain no-repeat;
+	}
+
+	@media (width >= 60rem) {
+		.board {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+		}
+
+		.name {
+			grid-column: span 7;
+			grid-row: span 2;
+		}
+
+		.photo {
+			grid-column: span 2;
+		}
+
+		.avail {
+			grid-column: span 3;
+		}
+
+		.paper,
+		.sim {
+			grid-column: span 5;
+		}
+
+		.degree {
+			grid-column: span 3;
+		}
+
+		.personal {
+			grid-column: span 4;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.tile {
+			animation: place 0.45s var(--ease-out) backwards;
+			animation-delay: calc(var(--i) * 60ms);
+		}
+
+		@keyframes place {
+			from {
+				opacity: 0;
+				scale: 0.96;
+			}
+		}
+	}
+
+	/* A linked tile lifts a little under a mouse. Touch screens would leave it stuck. */
+	@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+		.tile:has(h2 a) {
+			transition: translate 0.15s ease-out;
+		}
+
+		.tile:has(h2 a):hover {
+			translate: 0 -3px;
+		}
+	}
+
+	/* Forced-colours mode repaints backgrounds, which would hide the masked logo. */
+	@media (forced-colors: active) {
+		.logo-mark {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
 	}
 </style>

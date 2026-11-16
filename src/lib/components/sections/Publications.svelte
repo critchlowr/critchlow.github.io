@@ -5,7 +5,7 @@
 
 	const statusLabel = { published: 'Peer-reviewed', 'under-review': 'Under review' };
 
-	// The published paper gets the olive block; papers under review are smaller cards.
+	// The published paper gets the olive tile; papers under review are smaller tiles.
 	const published = publications.filter((p) => p.status === 'published');
 	const underReview = publications.filter((p) => p.status === 'under-review');
 </script>
@@ -17,9 +17,7 @@
 
 	<ul class="space-y-6">
 		{#each published as pub (pub.title)}
-			<li
-				class="on-dark bg-feature text-on-feature inked rounded-2xl p-[clamp(1.5rem,4vw,3.25rem)] [--lift:6px]"
-			>
+			<li class="on-dark bg-feature text-on-feature tile p-[clamp(1.5rem,4vw,3.25rem)]">
 				<p class="mb-5 flex flex-wrap gap-2">
 					<span class="pill pill-solid">{statusLabel[pub.status]}</span>
 					{#if pub.honor}
@@ -65,7 +63,7 @@
 
 	<ul class="mt-7 grid gap-6 md:grid-cols-2">
 		{#each underReview as pub (pub.title)}
-			<li class="bg-surface-raised inked rounded-2xl p-[clamp(1.25rem,3vw,2rem)]">
+			<li class="bg-surface-raised tile p-[clamp(1.25rem,3vw,2rem)]">
 				<p><span class="pill">{statusLabel[pub.status]}</span></p>
 				<h3 class="font-display text-ink-strong mt-4 text-[1.6rem] leading-[1.1] font-bold">
 					{pub.title}

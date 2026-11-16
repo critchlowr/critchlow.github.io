@@ -11,17 +11,16 @@
 @import '@fontsource-variable/atkinson-hyperlegible-mono';
 
 /*
-	Headings on the main page: Bricolage Grotesque (SIL Open Font License) at its
-	narrowest width. The file is a 23 KB cut of the full family with the width pinned
-	at 75, weights 600 to 800 and basic Latin only. scripts/make-display-font.mjs
-	rebuilds it.
+	Headings: Gabarito (SIL Open Font License), a rounded geometric face. The file is
+	a 19 KB cut of the family with weights 600 to 800 and basic Latin only.
+	scripts/make-display-font.mjs rebuilds it.
 */
 @font-face {
-	font-family: 'Bricolage Grotesque Condensed';
+	font-family: 'Gabarito Display';
 	font-style: normal;
 	font-weight: 600 800;
 	font-display: swap;
-	src: url('./lib/assets/fonts/bricolage-grotesque-condensed.woff2') format('woff2');
+	src: url('./lib/assets/fonts/gabarito-display.woff2') format('woff2');
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -98,10 +97,10 @@
 	--color-plum-900: #583a5c;
 	--color-plum-950: #301a33;
 
-	/* Typefaces. --font-display is the condensed heading face, used on the main page. */
+	/* Typefaces. --font-display is the rounded heading face. */
 	--font-sans:
 		'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-	--font-display: 'Bricolage Grotesque Condensed', var(--font-sans);
+	--font-display: 'Gabarito Display', var(--font-sans);
 	--font-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Consolas, monospace;
 
 	/*
@@ -116,11 +115,12 @@
 	--text-title--line-height: 1.1;
 	--text-title--letter-spacing: -0.02em;
 	/* Section headings and row titles on the main page, set in the display face. */
-	--text-section: clamp(2.75rem, 7vw, 4.5rem);
-	--text-section--line-height: 0.95;
+	--text-section: clamp(2.25rem, 5vw, 3.5rem);
+	--text-section--line-height: 1;
 	--text-section--letter-spacing: -0.02em;
-	--text-row: clamp(1.6rem, 3vw, 2.1rem);
-	--text-row--line-height: 1.05;
+	--text-row: clamp(1.4rem, 2.5vw, 1.75rem);
+	--text-row--line-height: 1.1;
+	--text-row--letter-spacing: -0.015em;
 	--text-entry: 1.3125rem;
 	--text-entry--line-height: 1.25;
 	--text-lede: 1.25rem;
@@ -136,6 +136,11 @@
 
 	/* Easing for small hover movements. */
 	--ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+	/* Easing for things arriving: fast at first, then settling. */
+	--ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+	/* Tiles, cards and the published paper share one corner radius. */
+	--radius-tile: 1.75rem;
 }
 
 /*
@@ -169,6 +174,10 @@
 	--color-on-feature: var(--t-on-feature);
 	--color-on-feature-muted: var(--t-on-feature-muted);
 	--color-olive: var(--t-olive);
+	--color-tan: var(--t-tan);
+	--color-on-tan: var(--t-on-tan);
+	--color-espresso: var(--t-espresso);
+	--color-on-espresso: var(--t-on-espresso);
 
 	/*
 		Simulator action fills. Each carries white text and clears 4.5:1 against it,
@@ -186,66 +195,71 @@
 }
 
 /*
-	Palette "Brick, bone and olive". Bone paper and umber ink carry the reading. Brick
-	burgundy is the brand colour: the hero block, buttons and links. Deep olive is
-	used once, for the published paper, and a pale olive tints chips. Controls and
-	blocks are outlined in ink with a hard offset shadow, like the outlined
-	illustrations. Every text pair passes WCAG 2.2 AA; CI checks the rendered pages
-	with axe and pa11y.
+	Palette "Pegboard". Kraft paper and espresso ink carry the reading. Brick
+	burgundy is the brand colour: the name tile, buttons and links. Olive is the
+	published paper, espresso the simulator tile, and tan and pale kraft the quieter
+	tiles. Blocks are told apart by their colour, with no outlines or shadows. Every
+	text pair passes WCAG 2.2 AA; CI checks the rendered pages with axe and pa11y.
 */
 :root {
-	--t-surface: #f5efe2;
-	--t-surface-raised: #fffaf0;
-	--t-band: #eadfc8;
-	--t-footer: #eadfc8;
-	--t-edge: #cdbfa3;
-	--t-edge-hover: #231a12;
-	--t-ink: #231a12;
-	--t-ink-muted: #54473a;
-	--t-ink-strong: #1a120b;
+	--t-surface: #efe4cf;
+	--t-surface-raised: #fbf4e6;
+	--t-band: #e6d7bc;
+	--t-footer: #e6d7bc;
+	--t-edge: #bfa98a;
+	--t-edge-hover: #2b1e16;
+	--t-ink: #2b1e16;
+	--t-ink-muted: #5a4a3c;
+	--t-ink-strong: #1e140e;
 	--t-brand: #7a2a26;
 	--t-brand-strong: #5c1d1b;
 	--t-on-brand: #fff8ec;
 	--t-link: #7a2a26;
-	--t-chip: #dfe0bd;
-	--t-focus: #231a12;
-	--t-outline: #231a12;
-	--t-shadow: #231a12;
+	--t-chip: #dfd0b0;
+	--t-focus: #2b1e16;
+	--t-outline: #2b1e16;
 	--t-hero: #7a2a26;
 	--t-on-hero: #fff3e0;
 	--t-on-hero-muted: #f3d9cb;
-	--t-feature: #3b4420;
-	--t-on-feature: #f5efe2;
-	--t-on-feature-muted: #dcdcbf;
+	--t-feature: #454e22;
+	--t-on-feature: #f6f1df;
+	--t-on-feature-muted: #dedfc2;
 	--t-olive: #4a5325;
+	--t-tan: #d8b98f;
+	--t-on-tan: #2b1e16;
+	--t-espresso: #2b1e16;
+	--t-on-espresso: #f5efe2;
 	color-scheme: light;
 }
 
 :root.dark {
-	--t-surface: #1c1712;
-	--t-surface-raised: #272019;
-	--t-band: #241e17;
-	--t-footer: #241e17;
-	--t-edge: #4a3e30;
-	--t-edge-hover: #f1e9dc;
-	--t-ink: #f1e9dc;
-	--t-ink-muted: #c8bba8;
+	--t-surface: #1a1410;
+	--t-surface-raised: #261d16;
+	--t-band: #211913;
+	--t-footer: #211913;
+	--t-edge: #5a4937;
+	--t-edge-hover: #f2e7d6;
+	--t-ink: #f2e7d6;
+	--t-ink-muted: #cdbda6;
 	--t-ink-strong: #ffffff;
 	--t-brand: #f0a898;
 	--t-brand-strong: #f7c1b4;
-	--t-on-brand: #1c1712;
+	--t-on-brand: #1a1410;
 	--t-link: #f0a898;
-	--t-chip: #37402a;
-	--t-focus: #f1e9dc;
-	--t-outline: #f1e9dc;
-	--t-shadow: #000000;
-	--t-hero: #5e1f1d;
+	--t-chip: #3a2e22;
+	--t-focus: #f2e7d6;
+	--t-outline: #f2e7d6;
+	--t-hero: #6f2623;
 	--t-on-hero: #fff3e0;
 	--t-on-hero-muted: #f3d9cb;
-	--t-feature: #2f3619;
-	--t-on-feature: #f1e9dc;
+	--t-feature: #353d1a;
+	--t-on-feature: #f2e7d6;
 	--t-on-feature-muted: #d3d3b4;
 	--t-olive: #c5d49a;
+	--t-tan: #d8b98f;
+	--t-on-tan: #2b1e16;
+	--t-espresso: #2e2219;
+	--t-on-espresso: #f5efe2;
 	color-scheme: dark;
 }
 
@@ -262,46 +276,42 @@
 }
 
 /*
-	The outlined block: an ink border and a hard offset shadow. `--lift` is the
-	shadow's offset, so a control can press into it.
+	The tile: a rounded block told apart by its colour alone. Forced-colours mode
+	removes background colours, so there it gets a border instead.
 */
-@utility inked {
-	border: 2.5px solid var(--t-outline);
-	box-shadow: var(--lift, 4px) var(--lift, 4px) 0 var(--t-shadow);
+@utility tile {
+	border-radius: var(--radius-tile);
+
+	@media (forced-colors: active) {
+		border: 1px solid CanvasText;
+	}
 }
 
 /*
 	Shared controls. Written once here so every button and text link on the site
-	has the same shape, weight and hover behaviour.
+	has the same shape, weight and press behaviour.
 */
 @utility btn {
-	@apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-base font-bold;
-	--lift: 3px;
-	border: 2.5px solid var(--t-outline);
-	box-shadow: var(--lift) var(--lift) 0 var(--t-shadow);
+	@apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold;
 	transition:
-		translate 0.12s ease-out,
-		box-shadow 0.12s ease-out,
-		background-color 0.15s;
+		scale 0.12s ease-out,
+		background-color 0.15s ease;
 
-	/* The button moves into its shadow: a little on hover, all the way when pressed. */
-	&:hover {
-		translate: 1px 1px;
-		--lift: 2px;
-	}
-
+	/* The button gives a little when pressed. */
 	&:active {
-		translate: 3px 3px;
-		--lift: 0px;
+		scale: 0.97;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
 		transition: none;
 
-		&:hover,
 		&:active {
-			translate: none;
+			scale: none;
 		}
+	}
+
+	@media (forced-colors: active) {
+		border: 1px solid ButtonText;
 	}
 }
 
@@ -314,9 +324,34 @@
 	}
 }
 
+/* Outlined with an inset ring, so it has an edge on any tile colour. */
 @utility btn-secondary {
 	background-color: var(--t-surface-raised);
 	color: var(--t-ink);
+	box-shadow: inset 0 0 0 2px var(--t-outline);
+
+	&:hover {
+		background-color: var(--t-chip);
+	}
+}
+
+/* The two buttons used on the dark tiles: a cream fill, and a cream outline. */
+@utility btn-light {
+	background-color: var(--t-on-hero);
+	color: #3a1210;
+
+	&:hover {
+		background-color: #ffe4c2;
+	}
+}
+
+@utility btn-ghost {
+	color: var(--t-on-hero);
+	box-shadow: inset 0 0 0 2px var(--t-on-hero);
+
+	&:hover {
+		background-color: rgb(255 243 224 / 0.12);
+	}
 }
 
 /* Underlined at rest, so a link never depends on colour alone (SC 1.4.1). */
@@ -327,7 +362,7 @@
 }
 
 /*
-	The illustrations are drawn in dark ink. On the dark theme, and on the brick hero in
+	The illustrations are drawn in dark ink. On the dark theme, and on the dark tiles in
 	both themes, a thin light edge like a die-cut sticker keeps their outlines readable.
 */
 .sticker-edge,

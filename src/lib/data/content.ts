@@ -3,18 +3,24 @@ import type { Experience, Education, Publication, ContactLink, SkillCategory } f
 export const hero = {
 	name: 'Ryan Critchlow',
 	tagline: 'UX researcher focused on accessibility',
-	summary:
-		'I plan and run research with the people a technology is for, using participatory design, interviews, and thematic analysis. I co-authored a peer-reviewed paper and presented it at ASSETS 2026, and I hold an M.S. in Computer Science with a concentration in human-computer interaction. Before that, I spent three years at Körber in technical support engineering, troubleshooting critical issues on production warehouse systems.',
+	intro: 'I plan and run research with the people a technology is for.',
+	// One tile each on the board at the top of the page. The paper's tile takes its
+	// title and nomination from the publications list below.
+	paper: { label: 'Peer-reviewed paper', title: 'Presented at ASSETS 2026', href: '#publications' },
+	korber: {
+		title: 'Three years at Körber in technical support engineering',
+		detail: 'Troubleshooting critical issues on production warehouse systems.'
+	},
+	degree: {
+		title: 'M.S. in Computer Science',
+		detail: 'Concentration in human-computer interaction.',
+		href: '#education'
+	},
+	personal:
+		"Also a journeyman carpenter in Bellingham, Washington. Outside of work I'm usually on a trail with Georgia, my chocolate lab.",
 	availability:
 		'Open to UX research roles. Based in Bellingham, WA, and open to relocating or working remotely.',
 	resumeHref: '/Ryans_Resume_2026.pdf'
-};
-
-export const about = {
-	paragraphs: [
-		"I'm a UX researcher and a journeyman carpenter in Bellingham, Washington. For the KIND Lab study I built the game in Unity and made its art myself.",
-		"Outside of work, I'm usually on a trail with Georgia, my chocolate lab, training for a half marathon, or on a road bike. I also read, make cocktails, and play Stardew Valley, Age of Empires II, and Legend of Zelda."
-	]
 };
 
 // Each role is one summary line plus at most three bullets. The full detail lives in
@@ -46,7 +52,7 @@ export const experience: Experience[] = [
 		period: 'Winter 2025 – June 2026',
 		open: true,
 		summary:
-			'Designed and ran a participatory user study with neurodivergent children and their families: literature review, survey instruments, assessment methodology, and data collection plans.',
+			'Designed and ran a participatory user study with neurodivergent children and their families: literature review, survey instruments, assessment methodology, and data collection plans. I built the game used in the study in Unity and made its art myself.',
 		bullets: [
 			'Conducted an in-home participatory evaluation with neurodivergent children and their families, using semi-structured caregiver interviews and child-facing visual surveys',
 			"Applied Braun and Clarke's inductive thematic coding to caregiver interview transcripts across three coding rounds; separately coded video recordings for emotional engagement cues",
@@ -256,7 +262,6 @@ export const contact: ContactLink[] = [
 
 // In page order: the header's scrollspy walks these top to bottom.
 export const navLinks = [
-	{ label: 'About', href: '/#about' },
 	{ label: 'Research', href: '/#publications' },
 	{ label: 'Experience', href: '/#experience' },
 	{ label: 'Education', href: '/#education' },

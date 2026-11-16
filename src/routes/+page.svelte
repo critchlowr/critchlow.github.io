@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Hero from '$lib/components/sections/Hero.svelte';
-	import About from '$lib/components/sections/About.svelte';
 	import Experience from '$lib/components/sections/Experience.svelte';
 	import Publications from '$lib/components/sections/Publications.svelte';
 	import Skills from '$lib/components/sections/Skills.svelte';
@@ -66,9 +65,8 @@
 	{@html `<script type="application/ld+json">${personJsonLd}<\/script>`}
 </svelte:head>
 
-<!-- The introduction and the personal note first, then the research and where it was done. -->
+<!-- The introduction first, then the research and where it was done. -->
 <Hero />
-<About />
 <Publications />
 <Experience />
 <div class="wrap grid gap-x-16 gap-y-16 py-16 md:py-24 lg:grid-cols-[2fr_3fr]">

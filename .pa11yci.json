@@ -12,8 +12,6 @@
 	"urls": [
 		"http://localhost:4173/?theme=light",
 		"http://localhost:4173/?theme=dark",
-		"http://localhost:4173/simulator?theme=light",
-		"http://localhost:4173/simulator?theme=dark",
 		"http://localhost:4173/404.html?theme=light",
 		"http://localhost:4173/404.html?theme=dark"
 	]

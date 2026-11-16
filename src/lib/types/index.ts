@@ -5,7 +5,7 @@ export interface Experience {
 	period: string;
 	bullets: string[];
 	summary?: string;
-	/** Shows the link to the WMS simulator and the conveyor belt under this role. */
+	/** Shows the button that opens the warehouse simulator, and the conveyor belt, under this role. */
 	showSimulator?: boolean;
 	/** Anchor id for the role, so the Skills section can link to it. */
 	id?: string;
