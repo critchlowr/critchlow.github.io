@@ -84,7 +84,10 @@
 		// RunSummary replaces this panel and focuses its own heading.
 		if (key.startsWith('victory')) return;
 		const active = document.activeElement as HTMLElement | null;
-		const wasLost = !active || active === document.body;
+		// A button that was just disabled still counts as focused in Safari and
+		// Firefox, but it no longer takes key presses. Confirm pick does this when
+		// the next location is short.
+		const wasLost = !active || active === document.body || active.matches(':disabled');
 		const wasOnHeading = !!active && active.tagName === 'H3' && !!panelRoot?.contains(active);
 		if (!wasLost && !wasOnHeading && !(active === panelRoot)) return;
 
@@ -139,8 +142,9 @@
 		`${gamePhase}:${staging ? 'staging' : currentPick ? `pick-${locationHasEnough}` : 'wait'}:${readyOrders.length}:${shortOrders.length}`
 	);
 
+	// min-h-11 keeps every action 44px tall, the site's minimum for a touch target.
 	const button =
-		'rounded-md px-6 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed';
+		'min-h-11 rounded-md px-6 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed';
 	// Primary actions use the site's brand colour; the rest use the semantic fills.
 	const primary = `${button} bg-brand text-on-brand hover:bg-brand-strong`;
 	const fill = `${button} text-white`;
@@ -213,7 +217,7 @@
 					>
 						<div class="mb-3 flex items-center justify-between">
 							<span class="text-accent-700 dark:text-accent-200 font-mono text-xs font-semibold">
-								{currentPick.orderId}
+								Order #{currentPick.orderId}
 							</span>
 							<span class="text-ink-muted text-xs">{currentOrder.customer}</span>
 						</div>
@@ -295,7 +299,7 @@
 						<ul class="mb-3 space-y-0.5">
 							{#each readyOrders as entry (entry.orderId)}
 								<li class="text-ink-strong text-sm">
-									<span class="font-mono text-xs font-semibold">{entry.orderId}</span>
+									<span class="font-mono text-xs font-semibold">Order #{entry.orderId}</span>
 									{entry.customer}
 								</li>
 							{/each}
@@ -317,7 +321,7 @@
 					>
 						<div class="mb-2 flex items-center justify-between">
 							<span class="text-ink-strong font-mono text-xs font-semibold">
-								{entry.orderId}
+								Order #{entry.orderId}
 							</span>
 							<span class="text-ink-muted text-xs">{entry.customer}</span>
 						</div>

@@ -4,15 +4,18 @@
 	import Publications from '#lib/components/sections/Publications.svelte';
 	import Skills from '#lib/components/sections/Skills.svelte';
 	import Education from '#lib/components/sections/Education.svelte';
+	import { publications } from '#lib/data/content.ts';
+
+	const site = 'https://ryancritchlow.com';
 
 	const description =
 		'Ryan Critchlow is a UX researcher focused on accessibility, with a peer-reviewed paper presented at ASSETS 2026 and an M.S. in Computer Science concentrating in human-computer interaction.';
 
 	const personSchema = {
-		'@context': 'https://schema.org',
 		'@type': 'Person',
+		'@id': `${site}/#person`,
 		name: 'Ryan Critchlow',
-		url: 'https://ryancritchlow.com',
+		url: site,
 		image: 'https://ryancritchlow.com/images/ryancritchlow.jpeg',
 		email: 'mailto:critchlow.rc@gmail.com',
 		jobTitle: 'UX Researcher',
@@ -38,8 +41,51 @@
 		]
 	};
 
+	/*
+		The ASSETS paper as a scholarly article. Title, authors, DOI and PDF come from
+		the publications list, so this cannot drift from the Research section. The
+		rest is from the paper's own front matter.
+	*/
+	const paper = publications.find((p) => p.status === 'published');
+	const paperSchema = paper && {
+		'@type': 'ScholarlyArticle',
+		'@id': paper.href,
+		headline: paper.title,
+		name: paper.title,
+		url: paper.href,
+		sameAs: paper.href,
+		identifier: {
+			'@type': 'PropertyValue',
+			propertyID: 'doi',
+			value: paper.href?.replace('https://doi.org/', '')
+		},
+		author: paper.authors
+			.split(/,\s*(?:and\s+)?/)
+			.map((name) =>
+				name === 'Ryan Critchlow' ? { '@id': personSchema['@id'] } : { '@type': 'Person', name }
+			),
+		datePublished: '2026-10',
+		inLanguage: 'en',
+		isPartOf: {
+			'@type': 'CreativeWork',
+			name: 'The 28th International ACM SIGACCESS Conference on Computers and Accessibility (ASSETS 2026)'
+		},
+		publisher: { '@type': 'Organization', name: 'Association for Computing Machinery' },
+		license: 'https://creativecommons.org/licenses/by/4.0/',
+		encoding: {
+			'@type': 'MediaObject',
+			contentUrl: `${site}${paper.pdfHref}`,
+			encodingFormat: 'application/pdf'
+		}
+	};
+
+	const schema = {
+		'@context': 'https://schema.org',
+		'@graph': paperSchema ? [personSchema, paperSchema] : [personSchema]
+	};
+
 	// Escaping `<` stops a closing script tag inside the data from ending the block.
-	const personJsonLd = JSON.stringify(personSchema).replace(/</g, '\\u003c');
+	const jsonLd = JSON.stringify(schema).replace(/</g, '\\u003c');
 </script>
 
 <svelte:head>
@@ -62,7 +108,7 @@
 		above. ESLint's Svelte parser fails on a bare closing script tag here, hence `<\/`.
 	-->
 	<!-- eslint-disable-next-line svelte/no-at-html-tags, no-useless-escape -->
-	{@html `<script type="application/ld+json">${personJsonLd}<\/script>`}
+	{@html `<script type="application/ld+json">${jsonLd}<\/script>`}
 </svelte:head>
 
 <!-- The introduction first, then the research and where it was done. -->

@@ -79,10 +79,10 @@ test('a wave creates one pick per order line and releases every order', () => {
 test('a wave allocates only the stock that is on hand', () => {
 	const run = releasedRun();
 
-	// ORD-003 wants 5 photos; the pick location holds 2.
-	assert.equal(pickOf(run, 'ORD-003', 'PEX-01').qtyToPick, 2);
-	assert.equal(stock(run, 'PEX-01').qtyAllocated, 2);
-	// Two orders share one item: 3 for ORD-001 and 2 for ORD-003.
+	// Order 1003 wants 5 kazoos; the pick location holds 2.
+	assert.equal(pickOf(run, '1003', 'PKZ-01').qtyToPick, 2);
+	assert.equal(stock(run, 'PKZ-01').qtyAllocated, 2);
+	// Two orders share one item: 3 for order 1001 and 2 for order 1003.
 	assert.equal(stock(run, 'BBP-01').qtyAllocated, 5);
 });
 
@@ -93,17 +93,14 @@ test('a second wave creates nothing, because no order is still open', () => {
 
 test('confirming a pick takes the stock and credits the order line', () => {
 	const run = releasedRun();
-	const pick = pickOf(run, 'ORD-001', 'BBP-01');
+	const pick = pickOf(run, '1001', 'BBP-01');
 
 	executePick(pick, run.inventory, run.orderLines);
 
 	assert.equal(pick.status, 'Picked');
 	assert.equal(stock(run, 'BBP-01').qtyOnHand, 7);
 	assert.equal(stock(run, 'BBP-01').qtyAllocated, 2);
-	assert.equal(
-		run.orderLines.find((l) => l.orderId === 'ORD-001' && l.lineNum === 1)!.qtyPicked,
-		3
-	);
+	assert.equal(run.orderLines.find((l) => l.orderId === '1001' && l.lineNum === 1)!.qtyPicked, 3);
 });
 
 test('the mayonnaise location is counted at 5 but physically empty', () => {
@@ -114,7 +111,7 @@ test('the mayonnaise location is counted at 5 but physically empty', () => {
 
 test('reporting an empty location shorts the pick and zeroes the location', () => {
 	const run = releasedRun();
-	const pick = pickOf(run, 'ORD-002', 'MAYO-01');
+	const pick = pickOf(run, '1002', 'MAYO-01');
 
 	const result = reportEmpty(pick, run.inventory, run.picks, run.orderLines);
 
@@ -133,7 +130,7 @@ test('reporting a part-empty location takes what is there and shorts the rest', 
 	const run = releasedRun();
 	// One unit is physically on the shelf; the pick asks for two.
 	stock(run, 'MAYO-01').qtyMissing = 4;
-	const pick = pickOf(run, 'ORD-002', 'MAYO-01');
+	const pick = pickOf(run, '1002', 'MAYO-01');
 
 	const result = reportEmpty(pick, run.inventory, run.picks, run.orderLines);
 
@@ -150,14 +147,14 @@ test('reporting a part-empty location takes what is there and shorts the rest', 
 test('reporting empty shorts every other open pick of the same item', () => {
 	const run = releasedRun();
 
-	reportEmpty(pickOf(run, 'ORD-001', 'BBP-01'), run.inventory, run.picks, run.orderLines);
+	reportEmpty(pickOf(run, '1001', 'BBP-01'), run.inventory, run.picks, run.orderLines);
 
-	assert.equal(pickOf(run, 'ORD-003', 'BBP-01').status, 'Short');
+	assert.equal(pickOf(run, '1003', 'BBP-01').status, 'Short');
 });
 
 test('reporting empty does nothing to a pick that is already picked', () => {
 	const run = releasedRun();
-	const pick = pickOf(run, 'ORD-001', 'BBP-01');
+	const pick = pickOf(run, '1001', 'BBP-01');
 	executePick(pick, run.inventory, run.orderLines);
 
 	const result = reportEmpty(pick, run.inventory, run.picks, run.orderLines);
@@ -169,7 +166,7 @@ test('reporting empty does nothing to a pick that is already picked', () => {
 
 test('replenishment moves reserve forward and re-opens the short pick', () => {
 	const run = releasedRun();
-	const pick = pickOf(run, 'ORD-002', 'MAYO-01');
+	const pick = pickOf(run, '1002', 'MAYO-01');
 	reportEmpty(pick, run.inventory, run.picks, run.orderLines);
 
 	completeReplen('MAYO-01', 2, run.inventory, run.picks);
@@ -183,7 +180,7 @@ test('replenishment moves reserve forward and re-opens the short pick', () => {
 
 test('replenishment leaves a short pick alone when it cannot cover it', () => {
 	const run = releasedRun();
-	const pick = pickOf(run, 'ORD-002', 'MAYO-01');
+	const pick = pickOf(run, '1002', 'MAYO-01');
 	reportEmpty(pick, run.inventory, run.picks, run.orderLines);
 
 	completeReplen('MAYO-01', 1, run.inventory, run.picks);
@@ -194,90 +191,84 @@ test('replenishment leaves a short pick alone when it cannot cover it', () => {
 test('uncovered demand is replenishable up to what reserve holds', () => {
 	const run = releasedRun();
 
-	// ORD-003 line 1: 5 ordered, 2 on a pick, 3 uncovered, 2 in reserve.
-	assert.deepEqual(getReplenishableDemand('ORD-003', 1, run.orderLines, run.picks, run.inventory), {
-		sku: 'PEX-01',
+	// Order 1003, line 1: 5 ordered, 2 on a pick, 3 uncovered, 2 in reserve.
+	assert.deepEqual(getReplenishableDemand('1003', 1, run.orderLines, run.picks, run.inventory), {
+		sku: 'PKZ-01',
 		replenQty: 2,
 		location: 'C-03-02'
 	});
 	// A fully covered line has nothing to replenish.
-	assert.equal(
-		getReplenishableDemand('ORD-001', 1, run.orderLines, run.picks, run.inventory),
-		null
-	);
+	assert.equal(getReplenishableDemand('1001', 1, run.orderLines, run.picks, run.inventory), null);
 });
 
 test('a complete order packs, loads and ships', () => {
 	const run = releasedRun();
-	pickAndStage(run, 'ORD-001');
-	assert.equal(order(run, 'ORD-001').status, 'Staged');
-	assert.equal(canPackComplete('ORD-001', run.orderLines, run.picks), true);
+	pickAndStage(run, '1001');
+	assert.equal(order(run, '1001').status, 'Staged');
+	assert.equal(canPackComplete('1001', run.orderLines, run.picks), true);
 
-	assert.equal(packOrder('ORD-001', run.orderLines, run.picks), true);
+	assert.equal(packOrder('1001', run.orderLines, run.picks), true);
 	loadAll(run.picks);
 	shipAllLoaded(run.picks, run.orderLines, run.orders);
 
-	assert.equal(order(run, 'ORD-001').status, 'Shipped');
+	assert.equal(order(run, '1001').status, 'Shipped');
 	assert.deepEqual(
-		run.orderLines.filter((l) => l.orderId === 'ORD-001').map((l) => l.qtyShipped),
+		run.orderLines.filter((l) => l.orderId === '1001').map((l) => l.qtyShipped),
 		[3, 2]
 	);
 });
 
 test('a short order refuses to pack unless it is forced', () => {
 	const run = releasedRun();
-	pickAndStage(run, 'ORD-003');
+	pickAndStage(run, '1003');
 
-	assert.deepEqual(getPackShortfall('ORD-003', run.orderLines, run.picks), [
-		{ lineNum: 1, sku: 'PEX-01', itemName: 'Photo of Your Ex', missingQty: 3 }
+	assert.deepEqual(getPackShortfall('1003', run.orderLines, run.picks), [
+		{ lineNum: 1, sku: 'PKZ-01', itemName: 'Pocket Kazoo', missingQty: 3 }
 	]);
-	assert.equal(canPackComplete('ORD-003', run.orderLines, run.picks), false);
-	assert.equal(packOrder('ORD-003', run.orderLines, run.picks), false);
-	assert.equal(packOrder('ORD-003', run.orderLines, run.picks, true), true);
+	assert.equal(canPackComplete('1003', run.orderLines, run.picks), false);
+	assert.equal(packOrder('1003', run.orderLines, run.picks), false);
+	assert.equal(packOrder('1003', run.orderLines, run.picks, true), true);
 });
 
 test('a short order shipped short ends as Shipped with the shortfall unshipped', () => {
 	const run = releasedRun();
-	pickAndStage(run, 'ORD-003');
-	packOrder('ORD-003', run.orderLines, run.picks, true);
+	pickAndStage(run, '1003');
+	packOrder('1003', run.orderLines, run.picks, true);
 	loadAll(run.picks);
 	shipAllLoaded(run.picks, run.orderLines, run.orders);
 
-	assert.equal(order(run, 'ORD-003').status, 'Shipped');
-	assert.equal(
-		run.orderLines.find((l) => l.orderId === 'ORD-003' && l.lineNum === 1)!.qtyShipped,
-		2
-	);
+	assert.equal(order(run, '1003').status, 'Shipped');
+	assert.equal(run.orderLines.find((l) => l.orderId === '1003' && l.lineNum === 1)!.qtyShipped, 2);
 });
 
 test('holding an order keeps its stock in staging and off the truck', () => {
 	const run = releasedRun();
-	pickAndStage(run, 'ORD-003');
+	pickAndStage(run, '1003');
 
-	holdOrder('ORD-003', run.orders, run.picks);
+	holdOrder('1003', run.orders, run.picks);
 	loadAll(run.picks);
 	shipAllLoaded(run.picks, run.orderLines, run.orders);
 
-	assert.equal(order(run, 'ORD-003').status, 'Held');
-	assert.ok(run.picks.filter((p) => p.orderId === 'ORD-003').every((p) => p.status === 'Held'));
+	assert.equal(order(run, '1003').status, 'Held');
+	assert.ok(run.picks.filter((p) => p.orderId === '1003').every((p) => p.status === 'Held'));
 });
 
 test('an order with a staged pick and an open pick shows Partial Stage', () => {
 	const run = releasedRun();
-	executePick(pickOf(run, 'ORD-001', 'BBP-01'), run.inventory, run.orderLines);
+	executePick(pickOf(run, '1001', 'BBP-01'), run.inventory, run.orderLines);
 	stageAll(run.picks);
 	refreshOrderStatuses(run.orders, run.orderLines, run.picks);
 
-	assert.equal(order(run, 'ORD-001').status, 'Partial Stage');
+	assert.equal(order(run, '1001').status, 'Partial Stage');
 });
 
 test('line progress counts each line at the furthest step it has reached', () => {
 	const run = releasedRun();
-	executePick(pickOf(run, 'ORD-001', 'BBP-01'), run.inventory, run.orderLines);
+	executePick(pickOf(run, '1001', 'BBP-01'), run.inventory, run.orderLines);
 	stageAll(run.picks);
-	executePick(pickOf(run, 'ORD-001', 'HMM-01'), run.inventory, run.orderLines);
+	executePick(pickOf(run, '1001', 'HMM-01'), run.inventory, run.orderLines);
 
-	assert.deepEqual(orderLineStatus('ORD-001', run.orderLines, run.picks), {
+	assert.deepEqual(orderLineStatus('1001', run.orderLines, run.picks), {
 		picked: 2,
 		staged: 1,
 		packed: 0,
@@ -290,14 +281,14 @@ test('line progress counts each line at the furthest step it has reached', () =>
 
 test('the run is over once every order has shipped or been held', () => {
 	const run = releasedRun();
-	reportEmpty(pickOf(run, 'ORD-002', 'MAYO-01'), run.inventory, run.picks, run.orderLines);
+	reportEmpty(pickOf(run, '1002', 'MAYO-01'), run.inventory, run.picks, run.orderLines);
 	completeReplen('MAYO-01', 2, run.inventory, run.picks);
-	for (const id of ['ORD-001', 'ORD-002', 'ORD-003']) pickAndStage(run, id);
+	for (const id of ['1001', '1002', '1003']) pickAndStage(run, id);
 	assert.equal(allOrdersResolved(run.orders), false);
 
-	packOrder('ORD-001', run.orderLines, run.picks);
-	packOrder('ORD-002', run.orderLines, run.picks);
-	holdOrder('ORD-003', run.orders, run.picks);
+	packOrder('1001', run.orderLines, run.picks);
+	packOrder('1002', run.orderLines, run.picks);
+	holdOrder('1003', run.orders, run.picks);
 	loadAll(run.picks);
 	shipAllLoaded(run.picks, run.orderLines, run.orders);
 

@@ -21,7 +21,7 @@
 
 		// A note for anyone who opens the console.
 		console.log(
-			'%cORD-000  ·  1 line  ·  Staged\n%cYou found the pick list. Say hello: critchlow.rc@gmail.com',
+			'%cOrder #1000  ·  1 line  ·  Staged\n%cYou found the pick list. Say hello: critchlow.rc@gmail.com',
 			'font-family:monospace;font-weight:700;color:#7a2a26',
 			'font-family:monospace;color:#5a4d3f'
 		);

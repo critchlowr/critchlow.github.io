@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { dialog } from '#lib/actions/dialog.ts';
 
 	interface Props {
 		open: boolean;
@@ -9,36 +8,53 @@
 	}
 
 	let { open = false, onclose, children }: Props = $props();
+	let el = $state<HTMLDialogElement>();
 
-	// Stop the page behind from scrolling while the dialog is open.
+	/*
+		A native modal dialog. showModal() makes the rest of the page inert, keeps
+		Tab inside, and lets Escape close it wherever focus is.
+	*/
 	$effect(() => {
-		if (!open) return;
+		const dialog = el;
+		if (!dialog || !open) return;
+
+		dialog.showModal();
+		// Focus the dialog itself, so its name is read out. The browser would pick
+		// the first control, which in the game is Reset.
+		dialog.focus();
+		// Stop the page behind from scrolling while the dialog is open.
 		document.body.style.overflow = 'hidden';
+
 		return () => {
+			dialog.close();
 			document.body.style.overflow = '';
 		};
 	});
 </script>
 
-{#if open}
-	<!--
-		Named by the heading WarehouseGame renders, so the name and the visible title
-		cannot drift apart. Keyboard users close with Escape (from use:dialog) or the
-		Close button in the header; the backdrop click is a pointer convenience, and
-		the target check stops clicks inside the panel from counting.
-	-->
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<div
-		class="fixed inset-0 z-50 flex items-stretch justify-center bg-black/60 backdrop-blur-sm md:items-center"
-		role="dialog"
-		aria-modal="true"
-		aria-labelledby="wms-dialog-title"
-		tabindex="-1"
-		use:dialog={{ onclose, initialFocus: 'container' }}
-		onclick={(e) => {
-			if (e.target === e.currentTarget) onclose();
-		}}
-	>
+<!--
+	Named by the heading WarehouseGame renders, so the name and the visible title
+	cannot drift apart. The element fills the screen and is its own backdrop, so a
+	click that lands on it, and not on the panel inside, closes the dialog. Keyboard
+	users close with Escape or the Close button in the header.
+
+	Escape arrives as `cancel`. It is stopped there and passed to `onclose`, so
+	closing always goes through the one path that also resets the shift.
+-->
+<dialog
+	bind:this={el}
+	class="text-ink fixed inset-0 m-0 h-full max-h-none w-full max-w-none items-stretch justify-center border-0 bg-black/60 p-0 backdrop-blur-sm open:flex md:items-center"
+	aria-labelledby="wms-dialog-title"
+	tabindex="-1"
+	oncancel={(e) => {
+		e.preventDefault();
+		onclose();
+	}}
+	onclick={(e) => {
+		if (e.target === e.currentTarget) onclose();
+	}}
+>
+	{#if open}
 		<!--
 			Fixed height, so the window does not resize between phases; the panel
 			inside scrolls instead. On mobile it is h-full rather than 100dvh: while
@@ -46,14 +62,19 @@
 			header, with its Close and Reset buttons, off the top of the screen.
 		-->
 		<div
-			class="bg-surface modal-panel relative z-10 flex h-full w-screen flex-col overflow-hidden shadow-2xl md:h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-lg"
+			class="bg-surface modal-panel relative flex h-full w-screen flex-col overflow-hidden shadow-2xl md:h-[85vh] md:w-[90vw] md:max-w-5xl md:rounded-lg"
 		>
 			{@render children()}
 		</div>
-	</div>
-{/if}
+	{/if}
+</dialog>
 
 <style>
+	/* The element is the backdrop; the browser's own would sit behind it unseen. */
+	dialog::backdrop {
+		background: none;
+	}
+
 	/* Keep the header clear of a notch and the panel clear of the home indicator. */
 	.modal-panel {
 		padding-top: env(safe-area-inset-top);

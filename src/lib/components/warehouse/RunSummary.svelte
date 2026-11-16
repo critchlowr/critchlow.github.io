@@ -75,7 +75,7 @@
 		{#each outcomes as order (order.orderId)}
 			<li class="border-edge bg-surface-raised rounded-md border px-3 py-2 text-sm">
 				<span class="text-ink-strong font-mono text-xs font-semibold">
-					{order.orderId}
+					Order #{order.orderId}
 				</span>
 				<span class="text-ink-muted">{order.customer}</span>
 				<p class="text-ink-strong mt-0.5">{order.result}</p>
@@ -90,7 +90,10 @@
 			<li>No locations reported empty.</li>
 		{:else}
 			{#each log.emptyReports as report, i (i)}
-				<li>{report.location} reported empty ({report.itemName}).</li>
+				<!-- A location code stays on one line; it is hard to read broken at a hyphen. -->
+				<li>
+					<span class="whitespace-nowrap">{report.location}</span> reported empty ({report.itemName}).
+				</li>
 			{/each}
 		{/if}
 		{#if log.replenishments.length === 0}
@@ -99,7 +102,8 @@
 			{#each log.replenishments as replen, i (i)}
 				<li>
 					Replenished {replen.qty}
-					{replen.itemName} from reserve to {replen.location}.
+					{replen.itemName} from reserve to
+					<span class="whitespace-nowrap">{replen.location}</span>.
 				</li>
 			{/each}
 		{/if}

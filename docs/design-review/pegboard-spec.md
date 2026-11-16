@@ -62,15 +62,15 @@ follow the same order. There is no About section: its content is on the board.
 
 One fact per tile, in this order in the markup:
 
-| Tile         | Ground           | Content                                       | Action                        |
-| ------------ | ---------------- | --------------------------------------------- | ----------------------------- |
-| Name         | `hero`           | Name (h1), tagline, one sentence, two buttons | Get in touch, résumé          |
-| Photo        | image            | Portrait                                      | none                          |
-| Availability | `tan`            | The availability line, shared with the footer | none                          |
-| Paper        | `feature`        | "Presented at ASSETS 2026", title, nomination | Whole tile links to Research  |
-| Körber       | `espresso`       | Three years in technical support engineering  | Button opens the simulator    |
-| Degree       | `chip`           | M.S. in Computer Science, HCI                 | Whole tile links to Education |
-| Personal     | `surface-raised` | The lab logo and one personal line            | none                          |
+| Tile         | Ground           | Content                                       | Action                                                       |
+| ------------ | ---------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| Name         | `hero`           | Name (h1), tagline, one sentence, two buttons | Get in touch, résumé                                         |
+| Photo        | image            | Portrait                                      | none                                                         |
+| Availability | `tan`            | The availability line, shared with the footer | none                                                         |
+| Paper        | `feature`        | "Presented at ASSETS 2026", title, nomination | Whole tile links to Research                                 |
+| Körber       | `espresso`       | Three years in technical support engineering  | Tile links to its Experience row; button opens the simulator |
+| Degree       | `chip`           | M.S. in Computer Science, HCI                 | Whole tile links to Education                                |
+| Personal     | `surface-raised` | The lab logo and one personal line            | none                                                         |
 
 The paper tile takes its title and nomination from the publications list in
 `content.ts`, so the two cannot drift apart.
@@ -102,6 +102,8 @@ name, paper and Körber tiles, the published paper and the simulator callout).
 
 - One dialog, mounted in the layout (`SimulatorDialog.svelte`) and opened through
   `src/lib/stores/simulator.svelte.ts`. There is no simulator page.
+- It is a native `<dialog>` opened with `showModal()`, so the browser makes the page
+  behind it inert, keeps Tab inside and closes it on Escape.
 - Entry points: the Körber tile on the board, the callout in the Körber row, and the
   `/simulator` address, which moves to `/` and opens the dialog.
 - First screen: two sentences, the Wave to Ship sequence, a note on empty locations,
@@ -137,7 +139,8 @@ The row slide needs `interpolate-size`; other browsers open the row at once.
 
 ## Accessibility notes
 
-- Header buttons, phone menu links and all buttons are 44px or taller. A linked tile's
+- Header buttons, phone menu links and all buttons, including the simulator's, are
+  44px or taller. A linked tile's
   whole area is its target.
 - Illustrations and the large logo are decorative and hidden from assistive tech.
 - The heading order is h1 on the name tile, h2 per tile and per section, h3 per
@@ -146,6 +149,15 @@ The row slide needs `interpolate-size`; other browsers open the row at once.
   masked logos and the plus sign are redrawn in system colours.
 - `scripts/a11y-audit.mjs` plays a full shift from the Körber row and checks the
   `/simulator` address lands on `/` with the dialog open.
+
+## Search engines and mobile browsers
+
+- The main page carries JSON-LD for the person and for the ASSETS paper as a
+  `ScholarlyArticle`. The paper's title, authors, DOI and PDF come from `content.ts`.
+- `static/sitemap.xml` lists the main page and the paper PDF; `static/robots.txt`
+  points to it.
+- `theme-color` is the page ground, `surface`, in each theme. `app.html` sets it
+  before first paint and the theme store updates it when the theme changes.
 
 ## Rebuilding the heading font
 

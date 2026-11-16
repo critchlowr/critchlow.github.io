@@ -53,7 +53,7 @@
 			class="border-edge bg-surface-raised flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border px-3 py-2"
 		>
 			<span class="text-ink-muted shrink-0 font-mono text-xs font-semibold whitespace-nowrap"
-				>{order.orderId}</span
+				>Order #{order.orderId}</span
 			>
 			<span class="text-ink-muted min-w-0 flex-1 text-sm">{order.customer}</span>
 			<div class="flex shrink-0 items-center gap-2 max-sm:w-full sm:ml-auto">

@@ -8,6 +8,15 @@ function createThemeStore() {
 		const isDark =
 			m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 		document.documentElement.classList.toggle('dark', isDark);
+
+		// Mobile browsers colour their toolbars from this. It follows the page ground.
+		const ground = getComputedStyle(document.documentElement)
+			.getPropertyValue('--t-surface')
+			.trim();
+		if (!ground) return;
+		for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+			meta.content = ground;
+		}
 	}
 
 	function init() {
