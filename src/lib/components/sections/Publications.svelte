@@ -52,6 +52,11 @@
 								/>
 							</p>
 						{/if}
+						{#if pub.pdfHref}
+							<p class="feature-link mt-3">
+								<ArrowLink href={pub.pdfHref} label={pub.pdfLabel ?? 'Download the paper (PDF)'} />
+							</p>
+						{/if}
 						{#if pub.funding}
 							<p class="text-on-feature-muted mt-5 text-sm">{pub.funding}</p>
 						{/if}

@@ -212,7 +212,10 @@ export const publications: Publication[] = [
 			'Coded all 35 papers in the review corpus against a codebook the research team had developed iteratively, and helped identify six recurring patterns of ableism. A second researcher reviewed a subset for consistency. I presented the paper at the conference. It was my first conference talk.',
 		href: 'https://doi.org/10.1145/3797867.3829046',
 		hrefLabel: 'Read the paper in the ACM Digital Library',
-		external: true
+		external: true,
+		// The published version. It is licensed CC BY 4.0, so it can be served from here.
+		pdfHref: '/Ableism_Unchecked_ASSETS_2026.pdf',
+		pdfLabel: 'Download the paper (PDF, 1 MB)'
 	},
 	{
 		authors: 'Anonymous authors',

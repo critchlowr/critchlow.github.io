@@ -38,6 +38,9 @@ export interface Publication {
 	hrefLabel?: string;
 	/** Opens in a new tab. */
 	external?: boolean;
+	/** A copy of the paper served from this site, and the link text for it. */
+	pdfHref?: string;
+	pdfLabel?: string;
 }
 
 export interface ContactLink {
