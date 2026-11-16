@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { contact, hero } from '$lib/data/content';
-	import ContactLink from '$lib/components/ui/ContactLink.svelte';
+	import { contact, hero } from '#lib/data/content.ts';
+	import ContactLink from '#lib/components/ui/ContactLink.svelte';
 </script>
 
 <footer id="contact" class="bg-footer" aria-labelledby="contact-heading">

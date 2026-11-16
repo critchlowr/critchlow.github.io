@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Hero from '$lib/components/sections/Hero.svelte';
-	import Experience from '$lib/components/sections/Experience.svelte';
-	import Publications from '$lib/components/sections/Publications.svelte';
-	import Skills from '$lib/components/sections/Skills.svelte';
-	import Education from '$lib/components/sections/Education.svelte';
+	import Hero from '#lib/components/sections/Hero.svelte';
+	import Experience from '#lib/components/sections/Experience.svelte';
+	import Publications from '#lib/components/sections/Publications.svelte';
+	import Skills from '#lib/components/sections/Skills.svelte';
+	import Education from '#lib/components/sections/Education.svelte';
 
 	const description =
 		'Ryan Critchlow is a UX researcher focused on accessibility, with a peer-reviewed paper presented at ASSETS 2026 and an M.S. in Computer Science concentrating in human-computer interaction.';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { OrderStatus } from '$lib/data/warehouse';
+	import type { OrderStatus } from '#lib/data/warehouse.ts';
 
 	interface Props {
 		/** An order status. A " (Short)" suffix keeps the base status's colour. */

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { orderLineStatus, type Order, type OrderLine, type Pick } from '$lib/data/warehouse';
+	import { orderLineStatus, type Order, type OrderLine, type Pick } from '#lib/data/warehouse.ts';
 	import StatusBadge from './StatusBadge.svelte';
 
 	interface Props {

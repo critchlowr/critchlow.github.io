@@ -1,9 +1,48 @@
+import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [
+		tailwindcss(),
+		// SvelteKit 3 takes its options here. It no longer reads svelte.config.js.
+		sveltekit({
+			preprocess: vitePreprocess(),
+			adapter: adapter({
+				fallback: '404.html'
+			}),
+			/**
+			 * Content Security Policy. GitHub Pages cannot send response headers, so
+			 * SvelteKit writes this into each prerendered page as a <meta> tag and adds
+			 * the hash of its own inline bootstrap script to script-src.
+			 *
+			 * - Everything is self-hosted, so every fetch directive is 'self'.
+			 * - style-src needs 'unsafe-inline' for the style="" attributes Svelte renders.
+			 * - frame-ancestors, report-uri and sandbox are ignored in a <meta> policy, so
+			 *   they are left out rather than implied.
+			 * - The theme script in app.html runs before this tag is parsed, so it is not
+			 *   governed by the policy and needs no hash.
+			 * - No upgrade-insecure-requests: every URL is already relative or https, and
+			 *   Safari applies it to http://localhost, which breaks images in local dev.
+			 */
+			csp: {
+				mode: 'hash',
+				directives: {
+					'default-src': ['self'],
+					'script-src': ['self'],
+					'style-src': ['self', 'unsafe-inline'],
+					'img-src': ['self'],
+					'font-src': ['self'],
+					'connect-src': ['self'],
+					'object-src': ['none'],
+					'base-uri': ['self'],
+					'form-action': ['self']
+				}
+			}
+		})
+	],
 	build: {
 		// Fonts always ship as files. Vite would otherwise inline the smallest
 		// subsets as data: URIs, which bloats the CSS and is blocked by font-src.

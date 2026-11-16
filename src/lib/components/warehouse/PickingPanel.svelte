@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import type { Shortfall } from '$lib/data/warehouse';
+	import type { Shortfall } from '#lib/data/warehouse.ts';
 
 	/** An order at the pack station, and why it can or cannot ship complete. */
 	export interface PackQueueEntry {
@@ -18,8 +18,8 @@
 		type Pick,
 		type InventoryItem,
 		type GamePhase
-	} from '$lib/data/warehouse';
-	import Card from '$lib/components/ui/Card.svelte';
+	} from '#lib/data/warehouse.ts';
+	import Card from '#lib/components/ui/Card.svelte';
 
 	interface Props {
 		gamePhase: GamePhase;

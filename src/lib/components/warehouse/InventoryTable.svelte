@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { scrollable } from '$lib/actions/scrollable';
-	import type { InventoryItem } from '$lib/data/warehouse';
+	import { scrollable } from '#lib/actions/scrollable.ts';
+	import type { InventoryItem } from '#lib/data/warehouse.ts';
 
 	interface Props {
 		inventory: InventoryItem[];

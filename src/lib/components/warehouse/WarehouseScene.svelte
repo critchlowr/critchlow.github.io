@@ -24,7 +24,7 @@
 
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
-	import { WAREHOUSE_NAME, physicalOnHand, type InventoryItem } from '$lib/data/warehouse';
+	import { WAREHOUSE_NAME, physicalOnHand, type InventoryItem } from '#lib/data/warehouse.ts';
 
 	interface Props {
 		action: SceneAction;

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { publications, credentials, researchInterests } from '$lib/data/content';
-	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import ArrowLink from '$lib/components/ui/ArrowLink.svelte';
+	import { publications, credentials, researchInterests } from '#lib/data/content.ts';
+	import SectionWrapper from '#lib/components/ui/SectionWrapper.svelte';
+	import ArrowLink from '#lib/components/ui/ArrowLink.svelte';
 
 	const statusLabel = { published: 'Peer-reviewed', 'under-review': 'Under review' };
 

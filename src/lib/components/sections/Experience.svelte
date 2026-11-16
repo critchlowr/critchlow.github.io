@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { experience } from '$lib/data/content';
-	import SectionWrapper from '$lib/components/ui/SectionWrapper.svelte';
-	import ConveyorBelt from '$lib/components/ui/ConveyorBelt.svelte';
-	import Icon from '$lib/components/ui/Icon.svelte';
-	import JobStickers from '$lib/components/ui/JobStickers.svelte';
-	import { simulator } from '$lib/stores/simulator.svelte';
+	import { experience } from '#lib/data/content.ts';
+	import SectionWrapper from '#lib/components/ui/SectionWrapper.svelte';
+	import ConveyorBelt from '#lib/components/ui/ConveyorBelt.svelte';
+	import Icon from '#lib/components/ui/Icon.svelte';
+	import JobStickers from '#lib/components/ui/JobStickers.svelte';
+	import { simulator } from '#lib/stores/simulator.svelte.ts';
 
 	/*
 		Each role is one row that unfolds. A link elsewhere on the page can point at a

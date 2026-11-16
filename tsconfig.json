@@ -1,16 +1,11 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	// SvelteKit writes this base config into node_modules when it syncs. It sets
+	// the module options, including .ts extensions on imports, which the tests
+	// need because they run on Node directly.
+	"extends": "$app/tsconfig",
 	"compilerOptions": {
-		// The tests run on Node directly, which needs the .ts extension on imports.
-		"allowImportingTsExtensions": true,
-		"allowJs": true,
-		"checkJs": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true,
-		"moduleResolution": "bundler"
-	}
+		"strict": true
+	},
+	"include": ["src", "tests", "vite.config.ts"]
 }

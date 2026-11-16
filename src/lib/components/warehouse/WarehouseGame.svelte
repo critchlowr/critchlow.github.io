@@ -28,8 +28,8 @@
 		getShortQtyForSku,
 		getReplenishableDemand,
 		nextPickId
-	} from '$lib/data/warehouse';
-	import Icon from '$lib/components/ui/Icon.svelte';
+	} from '#lib/data/warehouse.ts';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import WarehouseScene, { type SceneAction } from './WarehouseScene.svelte';
 	import OrderStatusBar from './OrderStatusBar.svelte';
 	import PickingPanel from './PickingPanel.svelte';
