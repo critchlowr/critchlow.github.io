@@ -90,9 +90,9 @@ const ITEM_NAMES: Record<string, string> = {
 
 export function createSeedOrders(): Order[] {
 	return [
-		{ orderId: '1001', customer: 'Little Baby', status: 'Open' },
-		{ orderId: '1002', customer: 'Giraffe Incorporated', status: 'Open' },
-		{ orderId: '1003', customer: 'Kind of Insignificant Solutions', status: 'Open' }
+		{ orderId: '1001', customer: 'Little Baby Toy Shop', status: 'Open' },
+		{ orderId: '1002', customer: 'Giraffe General Store', status: 'Open' },
+		{ orderId: '1003', customer: 'Small Town Party Supply', status: 'Open' }
 	];
 }
 
